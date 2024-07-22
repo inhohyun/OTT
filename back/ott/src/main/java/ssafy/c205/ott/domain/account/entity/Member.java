@@ -32,29 +32,26 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
     private String phoneNumber;
+    private float height;
+    private float weight;
+    private String introduction;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
-    private float height;
-
-    @Column(nullable = false)
-    private float weight;
-
     @Enumerated(EnumType.STRING)
     private BodyType bodyType;
-    private String introduction;
 
     @Enumerated(EnumType.STRING)
     private ActiveStatus activeStatus;
 
-    private String profileImageUrl;
-
     @Enumerated(EnumType.STRING)
     private PublicStatus publicStatus;
+
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
 
     @OneToMany(mappedBy = "member")
     private List<Closet> closets = new ArrayList<>();
@@ -67,9 +64,6 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberTag> memberTags = new ArrayList<>();
-
-    @Enumerated(EnumType.STRING)
-    private MemberRole role;
 
     @Builder
     public Member(String name, String sso, String email, MemberRole role) {
