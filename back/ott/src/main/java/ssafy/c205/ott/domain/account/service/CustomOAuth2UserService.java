@@ -5,6 +5,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.oauth.dto.*;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
@@ -19,6 +20,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -70,8 +72,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
 
             existData.updateEmailAndName(oAuth2Response.getEmail(), oAuth2Response.getName());
-
-            memberRepository.save(existData);
 
             MemberDTO memberDTO = new MemberDTO();
             memberDTO.setName(existData.getName());
