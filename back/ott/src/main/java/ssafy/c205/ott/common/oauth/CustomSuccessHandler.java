@@ -19,6 +19,7 @@ import ssafy.c205.ott.common.oauth.service.RefreshService;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import ssafy.c205.ott.domain.account.entity.MemberRole;
 
 @Component
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+        MemberRole role = MemberRole.valueOf(auth.getAuthority());
 
         //토큰 생성
         String accessToken = jwtUtil.createJwt("access", username, role, 600000L);
