@@ -2,17 +2,24 @@ package ssafy.c205.ott.domain.lookbook.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookCreateDto;
+import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
+import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/lookbook")
-public class LookBookController {
+public class LookbookController {
+
+    private final LookbookService lookbookService;
+
     //룩북 생성
     @PostMapping("/")
-    public ResponseEntity<?> createLookBook() {
+    public ResponseEntity<?> createLookBook(@ModelAttribute LookbookCreateDto lookbookCreateDto) {
         return null;
     }
 
@@ -66,5 +73,7 @@ public class LookBookController {
 
     //태그를 통해 룩북 검색 -> UserId 부분 태그들로 변경할것
     @GetMapping("/search")
-    public ResponseEntity<?> searchLookBook(@RequestBody String userId) {}
+    public ResponseEntity<?> searchLookBook(@RequestBody String[] tags, String userId) {
+        return null;
+    }
 }
