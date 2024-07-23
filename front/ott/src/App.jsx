@@ -2,6 +2,7 @@ import GlobalStyle from './styles/GlobalStyles';
 import Layout from './styles/Layout';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login/Login'
+import MainPage from './pages/MainPage/MainPage';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
-
+            <Route path='/mainpage' element={<MainPage />} />
 
 
 

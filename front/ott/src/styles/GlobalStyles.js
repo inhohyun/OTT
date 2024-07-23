@@ -18,6 +18,10 @@ const GlobalStyle = createGlobalStyle`
     background-color: #f0f0f0;
     font-family: 'dohyeon', sans-serif; /* 여기서 폰트를 적용합니다 */
   }
+
+  nav {
+  font-family : 'dohyeon'
+  }
 `;
 
 export default GlobalStyle;
