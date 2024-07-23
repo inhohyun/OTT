@@ -28,7 +28,7 @@ public class LookbookController {
 
     //룩북 수정
     @PutMapping("/{lookbook_id}")
-    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId) {
+    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDetailDto lookbookDetailDto) {
         return null;
     }
 
