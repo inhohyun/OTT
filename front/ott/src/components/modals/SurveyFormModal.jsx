@@ -1,15 +1,16 @@
-import './SurveyFormModal.css';
+import ProgressBar from "./ProgressBar";
 
-export default function SurveyFormModal({ show, children }) {
-	if (!show) {
-		return null;
-	}	
+export default function SurveyFormModal({ show, children, step, totalSteps }) {
+  if (!show) {
+    return null;
+  } 
 
-	return (
-		<div className="modal-overlay">
-			<div className="modal-content">
-				{children}
-			</div>
-		</div>
-	);
-};
+  return (
+    <div className="fixed inset-0 flex justify-center items-center">
+      <div className="bg-white p-5 rounded-lg max-w-md w-11/12 shadow-lg">
+        <ProgressBar step={step} totalSteps={totalSteps} />
+        {children}
+      </div>
+    </div>
+  );
+}
