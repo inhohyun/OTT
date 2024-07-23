@@ -48,7 +48,12 @@ public class LookbookController {
     //룩북 삭제하기
     @DeleteMapping("/{lookbook_id}")
     public ResponseEntity<?> deleteLookbook(@PathVariable String lookbookId) {
-        return null;
+        boolean deleteSuccess = lookbookService.deleteLookbook(lookbookId);
+        if (deleteSuccess) {
+            return new ResponseEntity<String>("룩북 삭제를 성공하였습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("룩북 삭제를 실패하였습니다.", HttpStatus.CONFLICT);
+        }
     }
 
     //룩북 좋아요

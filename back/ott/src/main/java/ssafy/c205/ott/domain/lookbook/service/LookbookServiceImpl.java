@@ -9,6 +9,7 @@ import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
+import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class LookbookServiceImpl implements LookbookService {
     private LookbookRepository lookbookRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private LookbookTagRepository lookbookTagRepository;
 
     @Override
     public void createLookbook(LookbookCreateDto lookbookCreateDto) {
@@ -82,6 +85,30 @@ public class LookbookServiceImpl implements LookbookService {
         } else {
             log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
             return null;
+        }
+    }
+
+    @Override
+    public boolean deleteLookbook(String lookbookId) {
+        //룩북 불러오기
+        Optional<Lookbook> odl = lookbookRepository.findById(Long.parseLong(lookbookId));
+        Lookbook lookbook = null;
+        if (odl.isPresent()) {
+            lookbook = odl.get();
+            //태그 카운트 줄이기
+            for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
+                Tag tag = lookbookTag.getTag();
+                tag.setCount(tag.getCount() - 1);
+                tagRepository.save(tag);
+                lookbookRepository.deleteById(lookbookTag.getId());
+            }
+            //룩북 삭제
+            lookbookRepository.delete(lookbook);
+            log.info("룩북 제거 성공");
+            return true;
+        } else {
+            log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
+            return false;
         }
     }
 }

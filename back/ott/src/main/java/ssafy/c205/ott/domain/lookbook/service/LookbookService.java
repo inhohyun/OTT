@@ -8,4 +8,5 @@ public interface LookbookService {
 
     LookbookDetailDto detailLookbook(String lookbookId);
 
+    boolean deleteLookbook(String lookbookId);
 }
