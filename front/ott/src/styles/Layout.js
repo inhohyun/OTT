@@ -14,6 +14,10 @@ const Layout = styled.div`
   @media (max-width: 600px) {
     width: 100%;
   }
+
+  @media (max-width: 600px) and (orientation: portrait) {
+    width: 100vw;
+  }
 `;
 
 export default Layout;
