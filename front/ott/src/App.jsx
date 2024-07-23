@@ -7,6 +7,9 @@ import UserPage from './pages/UserPage/Userpage'
 import SurveyStart from './pages/Survey/SurveyStart';
 import SurveyIng from './pages/Survey/SurveyIng';
 
+import MainPage from './pages/MainPage/MainPage';
+
+
 function App() {
   return (
     <>
@@ -18,9 +21,7 @@ function App() {
             <Route path="/userPage" element={<UserPage />} />
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
-
-
-
+            <Route path='/mainpage' element={<MainPage />} />
           </Routes>
         </Router>     
       </Layout>
