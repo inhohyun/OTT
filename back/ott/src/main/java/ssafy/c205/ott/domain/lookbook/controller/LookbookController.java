@@ -3,6 +3,7 @@ package ssafy.c205.ott.domain.lookbook.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookCreateDto;
@@ -17,10 +18,11 @@ public class LookbookController {
 
     private final LookbookService lookbookService;
 
-    //룩북 생성
+    //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     @PostMapping("/")
     public ResponseEntity<?> createLookBook(@ModelAttribute LookbookCreateDto lookbookCreateDto) {
-        return null;
+        lookbookService.createLookbook(lookbookCreateDto);
+        return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
     }
 
     //룩북 수정
