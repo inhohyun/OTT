@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookCreateDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
@@ -12,6 +13,7 @@ import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -58,5 +60,28 @@ public class LookbookServiceImpl implements LookbookService {
 
         //룩북 추가하기
         lookbookRepository.save(lookbook);
+    }
+
+    @Override
+    public LookbookDetailDto detailLookbook(String lookbookId) {
+        Optional<Lookbook> odl = lookbookRepository.findById(Long.parseLong(lookbookId));
+        LookbookDetailDto lookbookDetailDto = new LookbookDetailDto();
+        Lookbook lookbook = null;
+        if (odl.isPresent()) {
+            lookbook = odl.get();
+            lookbookDetailDto.setContent(lookbook.getContent());
+            lookbookDetailDto.setId(lookbook.getId());
+            lookbookDetailDto.setLookbookItems(lookbook.getLookbookItemList());
+            lookbookDetailDto.setLookbookImages(lookbook.getLookbookImages());
+            lookbookDetailDto.setLookbookTags(lookbook.getLookbookTags());
+            lookbookDetailDto.setMember(lookbook.getMember());
+            lookbookDetailDto.setHitCount(lookbook.getHitCount() + 1);
+            lookbook.setHitCount(lookbook.getHitCount() + 1);
+            lookbookRepository.save(lookbook);
+            return lookbookDetailDto;
+        } else {
+            log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
+            return null;
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookCreateDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 
@@ -20,62 +21,69 @@ public class LookbookController {
 
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     @PostMapping("/")
-    public ResponseEntity<?> createLookBook(@ModelAttribute LookbookCreateDto lookbookCreateDto) {
+    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookCreateDto lookbookCreateDto) {
         lookbookService.createLookbook(lookbookCreateDto);
         return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
     }
 
     //룩북 수정
     @PutMapping("/{lookbook_id}")
-    public ResponseEntity<?> updateLookBook(@PathVariable String lookbookId) {
+    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId) {
         return null;
     }
 
-    //룩북 상세보기
+    //룩북 상세보기 -> 옷이 조회되지 않을때 예외처리 완료 / 다른 예외 생각해볼것
     @GetMapping("/{lookbook_id}")
-    public ResponseEntity<?> detailLookBook(@PathVariable String lookbookId) {
-        return null;
+    public ResponseEntity<?> detailLookbook(@PathVariable String lookbookId) {
+        LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId);
+        if (lookbookDetailDto == null) {
+            log.error("룩북 상세조회 실패");
+            return new ResponseEntity<String>("해당 룩북을 찾지 못했습니다.",HttpStatus.NOT_FOUND);
+        } else {
+            log.info("룩북 상세보기 성공");
+            return new ResponseEntity<LookbookDetailDto>(lookbookDetailDto, HttpStatus.OK);
+        }
     }
 
     //룩북 삭제하기
     @DeleteMapping("/{lookbook_id}")
-    public ResponseEntity<?> deleteLookBook(@PathVariable String lookbookId) {
+    public ResponseEntity<?> deleteLookbook(@PathVariable String lookbookId) {
         return null;
     }
 
     //룩북 좋아요
     @PostMapping("/{lookbook_id}/like")
-    public ResponseEntity<?> likeLookBook(@PathVariable String lookbookId) {
+    public ResponseEntity<?> likeLookbook(@PathVariable String lookbookId) {
         return null;
     }
 
     //룩북 좋아요 수 조회
     @GetMapping("/{lookbook_id}/like-count")
-    public ResponseEntity<?> likeLookBookCount(@PathVariable String lookbookId) {
+    public ResponseEntity<?> likeLookbookCount(@PathVariable String lookbookId) {
         return null;
     }
 
     //나의 공개된 룩북 보기
     @GetMapping("/public")
-    public ResponseEntity<?> publicLookBook(@RequestBody String userId) {
+    public ResponseEntity<?> publicLookbook(@RequestBody String userId) {
         return null;
     }
 
     //나의 비공개된 룩북 보기
     @GetMapping("/private")
-    public ResponseEntity<?> privateLookBook(@RequestBody String userId) {
+    public ResponseEntity<?> privateLookbook(@RequestBody String userId) {
         return null;
     }
 
     //팔로우 중인 사람의 룩북 조회
     @GetMapping("/followings")
-    public ResponseEntity<?> followingLookBook(@RequestBody String userId) {
+    public ResponseEntity<?> followingLookbook(@RequestBody String userId) {
         return null;
     }
 
     //태그를 통해 룩북 검색 -> UserId 부분 태그들로 변경할것
     @GetMapping("/search")
-    public ResponseEntity<?> searchLookBook(@RequestBody String[] tags, String userId) {
+    public ResponseEntity<?> searchLookbook(@RequestBody String[] tags, String userId) {
         return null;
     }
 }
