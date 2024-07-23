@@ -6,17 +6,17 @@ import java.util.List;
 
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.hibernate.annotations.processing.Pattern;
 import ssafy.c205.ott.common.entity.BaseEntity;
 import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.closet.entity.Closet;
-import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
-    // Todo: sso, accessToken, refreshToken 해결
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,15 +26,19 @@ public class Member extends BaseEntity {
     private String name;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String sso;
 
     @Column(unique = true)
     private String email;
 
+    @Column(length = 25)
+    private String nickname;
+    @Column(length = 11)
     private String phoneNumber;
     private float height;
     private float weight;
+    @Column(length = 100)
     private String introduction;
     private String profileImageUrl;
 
@@ -71,10 +75,26 @@ public class Member extends BaseEntity {
         this.sso = sso;
         this.email = email;
         this.role = role;
+        this.activeStatus = ActiveStatus.ACTIVE;
     }
 
-    public void updateEmailAndName(String email, String name) {
+    public void updateNameAndEmail(String email, String name) {
         this.email = email;
         this.name = name;
+    }
+
+    public void updateMember(String phoneNumber, String introduction,
+                             String profileImageUrl, float height, float weight, Gender gender,
+                             BodyType bodyType, PublicStatus publicStatus) {
+        this.email = email;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.introduction = introduction;
+        this.profileImageUrl = profileImageUrl;
+        this.height = height;
+        this.weight = weight;
+        this.gender = gender;
+        this.bodyType = bodyType;
+        this.publicStatus = publicStatus;
     }
 }
