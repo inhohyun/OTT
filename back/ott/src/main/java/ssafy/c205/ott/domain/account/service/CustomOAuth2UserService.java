@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.account.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -7,18 +8,19 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.oauth.dto.*;
+import ssafy.c205.ott.domain.account.dto.request.MemberLoginUpdateRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.MemberRegisterRequestDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberDto;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 
 @Service
+@RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
-
-    public CustomOAuth2UserService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    private final MemberWriteService memberWriteService;
 
     @Transactional
     @Override
@@ -53,31 +55,40 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (existData == null) {
 
-            Member member = Member.builder()
+            MemberRegisterRequestDto memberRegisterRequestDto = MemberRegisterRequestDto.builder()
                     .name(oAuth2Response.getName())
                     .sso(sso)
                     .email(oAuth2Response.getEmail())
                     .role(MemberRole.USER)
                     .build();
 
-            memberRepository.save(member);
+            memberWriteService.registerMember(memberRegisterRequestDto);
 
-            MemberDTO memberDTO = new MemberDTO();
-            memberDTO.setName(member.getName());
-            memberDTO.setSso(member.getSso());
-            memberDTO.setEmail(member.getEmail());
-            memberDTO.setRole(member.getRole());
+            MemberDto memberDTO = MemberDto.builder()
+                    .name(memberRegisterRequestDto.getName())
+                    .sso(memberRegisterRequestDto.getSso())
+                    .email(memberRegisterRequestDto.getEmail())
+                    .role(memberRegisterRequestDto.getRole())
+                    .build();
+
 
             return new CustomOAuth2User(memberDTO);
         } else {
 
-            existData.updateEmailAndName(oAuth2Response.getEmail(), oAuth2Response.getName());
+            MemberLoginUpdateRequestDto memberLoginUpdateRequestDto = MemberLoginUpdateRequestDto.builder()
+                    .memberId(existData.getId())
+                    .email(oAuth2Response.getEmail())
+                    .name(oAuth2Response.getName())
+                    .build();
 
-            MemberDTO memberDTO = new MemberDTO();
-            memberDTO.setName(existData.getName());
-            memberDTO.setSso(existData.getSso());
-            memberDTO.setEmail(existData.getEmail());
-            memberDTO.setRole(existData.getRole());
+            memberWriteService.updateNameAndEmail(memberLoginUpdateRequestDto);
+
+            MemberDto memberDTO = MemberDto.builder()
+                    .name(existData.getName())
+                    .sso(existData.getSso())
+                    .email(existData.getEmail())
+                    .role(existData.getRole())
+                    .build();
 
             return new CustomOAuth2User(memberDTO);
         }
