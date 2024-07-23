@@ -1,47 +1,135 @@
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-  }
-  
-  .login-card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .logo {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-  
-  .kakao-login-button {
-    background-color: #ffeb00;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .kakao-login-button img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
-  
+.iphone-15-pro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.frame-child {
+  border-radius: 27px;
+  z-index: 1;
+}
+.frame-child,
+.frame-item,
+.preview-3-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.preview-3-icon {
+  top: 50px;
+  left: 30px;
+  width: 56px;
+  height: 18px;
+  object-fit: cover;
+  z-index: 1;
+}
+.vector-group {
+  position: absolute;
+  top: 117px;
+  left: 138px;
+  width: 116px;
+  height: 116px;
+  z-index: 2;
+}
+.vector-parent {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  width: 393px;
+  height: 762px;
+}
+.p,
+.p1 {
+  margin: 0;
+}
+.join-connect-container {
+  align-self: stretch;
+  position: relative;
+  letter-spacing: -0.5px;
+  line-height: 37.5px;
+  z-index: 2;
+}
+.p2,
+.p3 {
+  margin: 0;
+}
+.lorem-ipsum-dolor-container {
+  align-self: stretch;
+  position: relative;
+  font-size: 16px;
+  line-height: 28.16px;
+  color: var(--color-black);
+  z-index: 2;
+}
+.join-connect-this-fast-growi-parent {
+  position: absolute;
+  top: 347px;
+  left: 13px;
+  width: 379.6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 23px;
+  text-align: center;
+  font-size: 31.3px;
+  color: #242424;
+  font-family: var(--font-zen-kaku-gothic-antique);
+}
+.icon-kakao {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.icon-kakao-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 1.5px 0 0;
+}
+.div1 {
+  position: relative;
+  display: inline-block;
+  min-width: 86px;
+}
+.kakao-login,
+.label {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.label {
+  flex: 1;
+  justify-content: center;
+}
+.kakao-login {
+  position: absolute;
+  top: 603px;
+  left: 27px;
+  border-radius: 6px;
+  background-color: #fee500;
+  width: 350px;
+  justify-content: flex-start;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+  z-index: 2;
+  text-align: left;
+  font-size: 14.5px;
+  color: var(--color-black);
+  font-family: var(--font-reggae-one);
+}
+.div {
+  width: 100%;
+  height: 852px;
+  position: relative;
+  line-height: normal;
+  letter-spacing: normal;
+}
