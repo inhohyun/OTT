@@ -15,6 +15,7 @@ function App() {
         <Router> 
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/userPage" element={<UserPage />} />
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
 
