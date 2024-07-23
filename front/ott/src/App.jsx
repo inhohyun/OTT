@@ -1,12 +1,22 @@
 import GlobalStyle from './styles/GlobalStyles';
 import Layout from './styles/Layout';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login/Login'
 
 function App() {
   return (
     <>
       <GlobalStyle />
       <Layout>
-        <h1>Hello, World</h1>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Login />} />
+
+
+
+
+          </Routes>
+        </Router>     
       </Layout>
     </>
   );
