@@ -1,12 +1,12 @@
-package ssafy.c205.ott.common.oauth.dto;
+package ssafy.c205.ott.domain.account.dto.response;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 
+@Builder
 @Getter
-@Setter
-public class MemberDTO {
+public class MemberDto {
 
     private MemberRole role;
     private String name;
