@@ -1,0 +1,63 @@
+/* src/pages/Survey/SurveyIng.css */
+.survey-ing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-image: url('../../assets/images/background_image_survey.png');
+    background-size: cover;
+    position: relative;
+  }
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px; /* Adjust spacing below the heading as needed */
+  color: #333; /* Adjust text color as needed */
+  font-size: 35px;
+  font-weight: 100;
+}
+  
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  display: block;
+  font-weight: 100;
+  font-size: 20px;
+}
+
+.form-group input {
+  width: 80%;
+  max-width: 300px;
+  padding: 10px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  display: block;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  background: #847ef8;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  display: block; /* Ensure the button takes up full width */
+  margin-left: auto;
+  margin-right: auto; /* Center the button horizontally */
+  width: 80%;
+  max-width: 100px;
+  text-align: center;
+}
+
+button:hover {
+  background: #847ef8;
+}

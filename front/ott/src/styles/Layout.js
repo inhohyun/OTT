@@ -9,7 +9,6 @@ const Layout = styled.div`
   min-height: 100vh;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
 
   @media (max-width: 600px) {
     width: 100%;
