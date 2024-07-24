@@ -2,13 +2,11 @@ package ssafy.c205.ott.domain.lookbook.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookCreateDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
-import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 
 @Slf4j
@@ -20,16 +18,22 @@ public class LookbookController {
     private final LookbookService lookbookService;
 
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
+    //Todo : 이미지 잘 저장되는지와 이미지를 선택 했는지 예외처리
     @PostMapping("/")
-    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookCreateDto lookbookCreateDto) {
+    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto) {
         lookbookService.createLookbook(lookbookCreateDto);
         return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
     }
 
     //룩북 수정
     @PutMapping("/{lookbook_id}")
-    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDetailDto lookbookDetailDto) {
-        return null;
+    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDto lookbookDto) {
+        boolean isUpdateSuccess = lookbookService.updateLookbook(lookbookId, lookbookDto);
+        if (isUpdateSuccess) {
+            return new ResponseEntity<String>("옷 정보 수정을 완료했습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("옷 정보 수정을 실패했습니다.",HttpStatus.CONFLICT);
+        }
     }
 
     //룩북 상세보기 -> 옷이 조회되지 않을때 예외처리 완료 / 다른 예외 생각해볼것
@@ -38,7 +42,7 @@ public class LookbookController {
         LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId);
         if (lookbookDetailDto == null) {
             log.error("룩북 상세조회 실패");
-            return new ResponseEntity<String>("해당 룩북을 찾지 못했습니다.",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("해당 룩북을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
         } else {
             log.info("룩북 상세보기 성공");
             return new ResponseEntity<LookbookDetailDto>(lookbookDetailDto, HttpStatus.OK);
@@ -48,8 +52,8 @@ public class LookbookController {
     //룩북 삭제하기
     @DeleteMapping("/{lookbook_id}")
     public ResponseEntity<?> deleteLookbook(@PathVariable String lookbookId) {
-        boolean deleteSuccess = lookbookService.deleteLookbook(lookbookId);
-        if (deleteSuccess) {
+        boolean isDeleteSuccess = lookbookService.deleteLookbook(lookbookId);
+        if (isDeleteSuccess) {
             return new ResponseEntity<String>("룩북 삭제를 성공하였습니다.", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("룩북 삭제를 실패하였습니다.", HttpStatus.CONFLICT);
