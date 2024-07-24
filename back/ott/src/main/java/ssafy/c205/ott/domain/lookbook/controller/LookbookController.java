@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -85,25 +88,30 @@ public class LookbookController {
 
     //나의 공개된 룩북 보기
     @GetMapping("/public")
-    public ResponseEntity<?> publicLookbook(@RequestBody String userId) {
-        return null;
+    public ResponseEntity<?> publicLookbook(@RequestBody String uid) {
+        List<Lookbook> publicLookbooks = lookbookService.findPublicLookbooks(uid);
+        if (publicLookbooks == null) {
+            log.error("{}의 공개된 룩북을 조회하지 못함", uid);
+            return new ResponseEntity<String>("공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<Lookbook>>(publicLookbooks, HttpStatus.OK);
     }
 
     //나의 비공개된 룩북 보기
     @GetMapping("/private")
-    public ResponseEntity<?> privateLookbook(@RequestBody String userId) {
+    public ResponseEntity<?> privateLookbook(@RequestBody String uid) {
         return null;
     }
 
     //팔로우 중인 사람의 룩북 조회
     @GetMapping("/followings")
-    public ResponseEntity<?> followingLookbook(@RequestBody String userId) {
+    public ResponseEntity<?> followingLookbook(@RequestBody String uid) {
         return null;
     }
 
     //태그를 통해 룩북 검색 -> UserId 부분 태그들로 변경할것
     @GetMapping("/search")
-    public ResponseEntity<?> searchLookbook(@RequestBody String[] tags, String userId) {
+    public ResponseEntity<?> searchLookbook(@RequestBody String[] tags, String uid) {
         return null;
     }
 }

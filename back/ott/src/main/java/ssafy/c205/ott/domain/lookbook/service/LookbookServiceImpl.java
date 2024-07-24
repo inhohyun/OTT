@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.LookbookTag;
+import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
@@ -179,5 +180,10 @@ public class LookbookServiceImpl implements LookbookService {
         }
         int cntLike = lookbookLikes.size();
         return cntLike;
+    }
+
+    @Override
+    public List<Lookbook> findPublicLookbooks(String uid) {
+        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid), PublicStatus.PUBLIC);
     }
 }
