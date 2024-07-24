@@ -1,19 +1,31 @@
-import React,{ useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Lookbook from '../lookbook/Lookbook';
+import LookbookList from '../lookbook/LookbookList';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
+import plus from '../../assets/icons/plusicon.png';
 
 const FeedFollow = () => {
-    // Dummy data for followers
     const followers = ['팔로워1', '팔로워2', '팔로워3', '팔로워4', '팔로워5', '팔로워6'];
 
-    // Create an array with the length of 10 for rendering multiple Lookbook components
-    const lookbooks = Array.from({ length: 10 });
+    const allLookbooks = {
+        '팔로워1': Array.from({ length: 5 }),
+        '팔로워2': Array.from({ length: 20 }),
+        '팔로워3': Array.from({ length: 8 }),
+        '팔로워4': Array.from({ length: 15 }),
+        '팔로워5': Array.from({ length: 3 }),
+        '팔로워6': Array.from({ length: 12 }),
+    };
 
-    // References for scroll containers
+    const initialLimit = 10;
+
+    const [visibleLookbooks, setVisibleLookbooks] = useState(
+        followers.reduce((acc, follower) => ({ ...acc, [follower]: initialLimit }), {})
+    );
+    const [selectedFollower, setSelectedFollower] = useState(null);
+
     const scrollRefs = useRef(followers.map(() => React.createRef()));
 
-    // Scroll functions
     const scrollLeft = (ref) => {
         if (ref.current) {
             ref.current.scrollBy({ left: -200, behavior: 'smooth' });
@@ -26,15 +38,35 @@ const FeedFollow = () => {
         }
     };
 
+    const showMore = (follower) => {
+        setSelectedFollower(follower);
+    };
+
+    const closeDetailedView = () => {
+        setSelectedFollower(null);
+    };
+
     return (
-        <div className="flex flex-col items-start w-full p-5 space-y-5">
+        <div className="relative flex flex-col items-start w-full p-5 space-y-5">
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
                 }
                 .scrollbar-hide {
-                    -ms-overflow-style: none; /* IE and Edge */
-                    scrollbar-width: none; /* Firefox */
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                .button-no-style {
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                    cursor: pointer;
+                    position: relative;
+                    top: -70px;
+                }
+                .button-no-style img {
+                    display: block;
                 }
             `}</style>
             {followers.map((follower, index) => (
@@ -47,9 +79,18 @@ const FeedFollow = () => {
                             style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                         <div ref={scrollRefs.current[index]} className="flex space-x-4 overflow-x-auto py-4 scrollbar-hide">
-                            {lookbooks.map((_, lookbookIndex) => (
-                                <Lookbook key={lookbookIndex} />
+                            {allLookbooks[follower].slice(0, visibleLookbooks[follower]).map((_, lookbookIndex) => (
+                                <div key={lookbookIndex} className="flex items-center justify-center">
+                                    <Lookbook />
+                                </div>
                             ))}
+                            {visibleLookbooks[follower] < allLookbooks[follower].length && (
+                                <div className="flex items-center justify-center">
+                                    <button onClick={() => showMore(follower)} className="button-no-style">
+                                        <img src={plus} alt="Show more" className="w-6 h-6" />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         <button
                             onClick={() => scrollRight(scrollRefs.current[index])}
@@ -59,6 +100,13 @@ const FeedFollow = () => {
                     </div>
                 </div>
             ))}
+            {selectedFollower && (
+                <LookbookList
+                    tag={selectedFollower}
+                    lookbooks={allLookbooks[selectedFollower]}
+                    onClose={closeDetailedView}
+                />
+            )}
         </div>
     );
 };

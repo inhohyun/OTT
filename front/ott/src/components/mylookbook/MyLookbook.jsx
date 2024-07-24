@@ -57,7 +57,7 @@ const MyLookbook = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin: 0 4px; /* Reduced margin */
+                    margin: 0 2px; /* Further reduced margin */
                 }
                 .button-no-style {
                     background: none;
@@ -83,7 +83,7 @@ const MyLookbook = () => {
                             ))}
                             {visibleLookbooks[tag] < allLookbooks[tag].length && (
                                 <div className="show-more-button">
-                                    <button onClick={() => showMore(tag)} className="button-no-style">
+                                    <button onClick={() => showMore(tag)} className="relative top-[-70px] bg-transparent border-none p-0 m-0 cursor-pointer">
                                         <img src={plus} alt="Show more" className="w-6 h-6" />
                                     </button>
                                 </div>
