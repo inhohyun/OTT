@@ -8,8 +8,8 @@ const Notification = ({ show, onClose, notifications }) => {
           <h3 className="text-xl font-bold absolute left-1/2 transform -translate-x-1/2">알림 목록</h3>
           <p 
             onClick={onClose} 
-            className="text-xl font-bold cursor-pointer w-10 h-10 absolute right-0 top-0"
-            style={{ top: '-12px' }}
+            className="text-xxl font-bold cursor-pointer w-10 h-10 absolute right-0 top-0"
+            style={{ top: '-12px', right: '-30px' }}
           >
             &times;
           </p>

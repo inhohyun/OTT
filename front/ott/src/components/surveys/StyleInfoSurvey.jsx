@@ -5,19 +5,29 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 export default function StyleInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
   const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState(formData.tags || []);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
+    setErrorMessage('');
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim() !== '' && tags.length < 5) {
-      const newTags = [...tags, searchText.trim()];
-      setTags(newTags);
-      setFormData({ ...formData, tags: newTags });
-      setSearchText('');
+    if (searchText.trim() === '') {
+      return;
     }
+    if (tags.includes(searchText.trim())) {
+      setErrorMessage('이미 존재하는 태그입니다.');
+      return;
+    }
+    if (tags.length >= 5) {
+      return;
+    }
+    const newTags = [...tags, searchText.trim()];
+    setTags(newTags);
+    setFormData({ ...formData, tags: newTags });
+    setSearchText('');
   };
 
   const handleTagRemove = (tag) => {
@@ -31,7 +41,7 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
       <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">선호하는 스타일</h2>
       <p className="text-center text-gray-600 mb-5">(최소 2개, 최대 5개)</p>
       <form onSubmit={handleSearchSubmit} className="space-y-6">
-        <div className="relative mb-10 flex justify-between items-center">
+        <div className="relative mb-2 flex justify-between items-center">
           <input
             type="text"
             id="style"
@@ -47,6 +57,7 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
             <FontAwesomeIcon icon={faSearch} />
           </span>
         </div>
+        {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
         <div className="flex flex-wrap gap-2 mb-10">
           {tags.map(tag => (
             <div key={tag} className="flex items-center bg-violet-400 text-white px-3 py-1 rounded-full">
@@ -71,7 +82,7 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
           이전
         </button>
         <button
-          type="submit"
+          type="button"
           disabled={tags.length < 2}
           className={`py-2 px-5 rounded-full mt-5 cursor-pointer text-lg ${
             tags.length >= 2 ? 'bg-violet-400 text-white hover:bg-violet-300' : 'bg-gray-300 text-gray-500 cursor-not-allowed'

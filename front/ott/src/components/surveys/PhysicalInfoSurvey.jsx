@@ -17,6 +17,18 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
 
   return (
     <>
+      <style>
+        {`
+          input[type=number]::-webkit-inner-spin-button,
+          input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+          input[type=number] {
+            -moz-appearance: textfield;
+          }
+        `}
+      </style>
       <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">신체 정보</h2>
       <form onSubmit={handleNext} className="space-y-6">
         <div className="relative mb-5 flex justify-between items-center">

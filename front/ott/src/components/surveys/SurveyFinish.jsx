@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import finishIcon from '../../assets/images/survey/survey_finish.png';
 
-export default function SurveyFinish() {
+export default function SurveyFinish({ formData }) {
   const navigate = useNavigate();
 
   const handleComplete = function() {
     navigate('/mainpage');
+    console.log(formData)
   }
 
   return (

@@ -4,30 +4,36 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 export default function PersonalInfoSurvey({ formData, setFormData, handleNext }) {
   const [isNicknameValidated, setIsNicknameValidated] = useState(false);
+  const [nameError, setNameError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [nicknameError, setNicknameError] = useState('');
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     if (id === 'name') {
-      // Only allow Korean characters and set max length to 8
-      const regex = /^[가-힣]{0,8}$/;
-      if (!regex.test(value)) {
-        return; // Do not update the state if the value is invalid
+      if (/^[ㄱ-힣]*$/.test(value) || value === '') {
+        setNameError('');
+        setFormData({ ...formData, [id]: value });
+      } else {
+        setNameError('한글만 입력 가능합니다.');
       }
     } else if (id === 'phone') {
-      // Only allow numbers and set max length to 11
-      const regex = /^\d{0,11}$/;
-      if (!regex.test(value)) {
-        return; // Do not update the state if the value is invalid
+      if (/^\d*$/.test(value) || value === '') {
+        setPhoneError('');
+        setFormData({ ...formData, [id]: value });
+      } else {
+        setPhoneError('숫자만 입력 가능합니다.');
       }
     } else if (id === 'nickname') {
-      // Only allow English letters, numbers, and underscores
-      const regex = /^[a-zA-Z0-9_]*$/;
-      if (!regex.test(value)) {
-        return; // Do not update the state if the value is invalid
+      if (/^[a-zA-Z0-9_]*$/.test(value) || value === '') {
+        setNicknameError('');
+        setFormData({ ...formData, [id]: value });
+      } else {
+        setNicknameError('영어, 숫자, _만 입력 가능합니다.');
       }
+    } else {
+      setFormData({ ...formData, [id]: value });
     }
-
-    setFormData({ ...formData, [id]: value });
     setIsNicknameValidated(false); // Reset validation status on input change
   };
 
@@ -52,8 +58,9 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
             onChange={handleChange}
             required
             maxLength="8"
-            className="w-4/5 max-w-md p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400"
+            className={`w-4/5 max-w-md p-3 rounded-full border ${nameError ? 'border-red-500' : 'border-violet-300'} mx-auto block box-border focus:border-violet-400`}
           />
+          {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
         </div>
         <div className="relative mb-5">
           <label htmlFor="phone" className="block ml-1 mb-1 font-thin text-lg">전화번호</label>
@@ -65,8 +72,9 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
             onChange={handleChange}
             required
             maxLength="11"
-            className="w-4/5 max-w-md p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400"
+            className={`w-4/5 max-w-md p-3 rounded-full border ${phoneError ? 'border-red-500' : 'border-violet-300'} mx-auto block box-border focus:border-violet-400`}
           />
+          {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
         </div>
         <div className="relative mb-5 ">
           <label htmlFor="nickname" className="block ml-1 mb-1 font-thin text-lg">닉네임</label>
@@ -79,7 +87,7 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
               onChange={handleChange}
               required
               maxLength="25"
-              className="w-full p-3 rounded-full border border-violet-300 box-border focus:border-violet-400 pr-10"
+              className={`w-full p-3 rounded-full border ${nicknameError ? 'border-red-500' : 'border-violet-300'} box-border focus:border-violet-400 pr-10`}
             />
             <span
               onClick={handleValidateNickname}
@@ -88,6 +96,7 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
               <FontAwesomeIcon icon={faCheckCircle} />
             </span>
           </div>
+          {nicknameError && <p className="text-red-500 text-sm mt-1">{nicknameError}</p>}
         </div>
         <div className="flex justify-center">
           <button
