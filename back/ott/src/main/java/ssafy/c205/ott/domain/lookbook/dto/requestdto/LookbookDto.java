@@ -7,7 +7,7 @@ import ssafy.c205.ott.common.entity.PublicStatus;
 
 @Getter @Setter @ToString
 public class LookbookDto {
-    private String userId;
+    private String uid;
     private String content;
     private String[] clothes;
     private String[] tags;

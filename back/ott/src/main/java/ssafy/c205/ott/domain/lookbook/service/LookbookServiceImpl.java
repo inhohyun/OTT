@@ -4,10 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.LookbookTag;
+import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.entity.Favorite;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
+import ssafy.c205.ott.domain.lookbook.repository.FavoriteRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
@@ -25,6 +29,8 @@ public class LookbookServiceImpl implements LookbookService {
     private TagRepository tagRepository;
     @Autowired
     private LookbookTagRepository lookbookTagRepository;
+    @Autowired
+    private FavoriteRepository favoriteRepository;
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto) {
@@ -152,5 +158,16 @@ public class LookbookServiceImpl implements LookbookService {
         } else {
             return false;
         }
+    }
+
+    //Todo : 멤버값(Member) 넣어주기
+    @Override
+    public boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
+        Optional<Lookbook> ol = lookbookRepository.findById(Long.valueOf(lookbookFavoriteDto.getLookbookId()));
+        if (ol.isPresent()) {
+            Lookbook lookbook = ol.get();
+            favoriteRepository.save(new Favorite(lookbook));
+            return true;
+        } else return false;
     }
 }

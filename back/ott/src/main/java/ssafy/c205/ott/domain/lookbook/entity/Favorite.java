@@ -20,4 +20,13 @@ public class Favorite extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lookbook_id")
     private Lookbook lookbook;
+
+    public Favorite(Member member, Lookbook lookbook) {
+        this.member = member;
+        this.lookbook = lookbook;
+    }
+
+    public Favorite(Lookbook lookbook) {
+        this.lookbook = lookbook;
+    }
 }

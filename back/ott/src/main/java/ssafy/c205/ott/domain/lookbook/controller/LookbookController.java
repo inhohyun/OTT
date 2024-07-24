@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 
@@ -62,8 +63,13 @@ public class LookbookController {
 
     //룩북 좋아요
     @PostMapping("/{lookbook_id}/like")
-    public ResponseEntity<?> likeLookbook(@PathVariable String lookbookId) {
-        return null;
+    public ResponseEntity<?> likeLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
+        boolean isFavoriteSuccess = lookbookService.likeLookbook(lookbookFavoriteDto);
+        if (isFavoriteSuccess) {
+            return new ResponseEntity<String>("룩북 좋아요를 성공했습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("룩북 좋아요를 실패했습니다.", HttpStatus.CONFLICT);
+        }
     }
 
     //룩북 좋아요 수 조회
