@@ -4,7 +4,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function StyleInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
   const [searchText, setSearchText] = useState('');
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(formData.tags || []);
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
@@ -21,13 +21,15 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
   };
 
   const handleTagRemove = (tag) => {
-    setTags(tags.filter(t => t !== tag));
+    const newTags = tags.filter(t => t !== tag);
+    setTags(newTags);
+    setFormData({ ...formData, tags: newTags });
   };
 
   return (
     <>
       <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">선호하는 스타일</h2>
-      <p className="text-center text-gray-600 mb-5">(최대 5개)</p>
+      <p className="text-center text-gray-600 mb-5">(최소 2개, 최대 5개)</p>
       <form onSubmit={handleSearchSubmit} className="space-y-6">
         <div className="relative mb-10 flex justify-between items-center">
           <input
@@ -60,22 +62,25 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
           ))}
         </div>
       </form>
-        <div className="flex justify-between w-4/5 max-w-md mx-auto">
-          <button
-            type="button"
-            className="border border-violet-500 bg-white text-violet-500 py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-50"
-            onClick={handlePrev}
-          >
-            이전
-          </button>
-          <button
-            type="submit"
-            className="bg-violet-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-300"
-            onClick={handleNext}
-          >
-            다음
-          </button>
-        </div>
+      <div className="flex justify-between w-4/5 max-w-md mx-auto">
+        <button
+          type="button"
+          className="border border-violet-500 bg-white text-violet-500 py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-50"
+          onClick={handlePrev}
+        >
+          이전
+        </button>
+        <button
+          type="submit"
+          disabled={tags.length < 2}
+          className={`py-2 px-5 rounded-full mt-5 cursor-pointer text-lg ${
+            tags.length >= 2 ? 'bg-violet-400 text-white hover:bg-violet-300' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+          onClick={handleNext}
+        >
+          다음
+        </button>
+      </div>
     </>
   );
 }

@@ -1,6 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import finishIcon from '../../assets/images/survey/survey_finish.png';
 
 export default function SurveyFinish() {
+  const navigate = useNavigate();
+
+  const handleComplete = function() {
+    navigate('/mainpage');
+  }
+
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded-lg text-center max-w-sm mx-auto">
@@ -22,7 +29,10 @@ export default function SurveyFinish() {
         <p className="text-stone-400 mb-2">
           알려드립니다.
         </p>
-        <button className="bg-violet-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-300">
+        <button 
+          className="bg-violet-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-300"
+          onClick={handleComplete}
+        >
           완료
         </button>
       </div>

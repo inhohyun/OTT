@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SurveyFormModal from '../../components/modals/SurveyFormModal';
+import SurveyFormModal from '../../components/surveys/SurveyFormModal';
 import backgroundImage from '../../assets/images/background_image_survey.png';
 import PersonalInfoSurvey from '../../components/surveys/PersonalInfoSurvey';
 import PhysicalInfoSurvey from '../../components/surveys/PhysicalInfoSurvey';
