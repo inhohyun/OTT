@@ -56,11 +56,11 @@ const MainPage = () => {
 
   return (
     <div
-      className="relative flex flex-col items-center w-full h-full mx-auto bg-cover"
+      className="relative flex flex-col items-center w-full h-full min-h-screen bg-cover"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <NavBar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
-      <div className="content w-full">
+      <div className="content w-full flex-grow">
         {renderComponent()}
       </div>
     </div>
@@ -68,5 +68,3 @@ const MainPage = () => {
 };
 
 export default MainPage;
-
-

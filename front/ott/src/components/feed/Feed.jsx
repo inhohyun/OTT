@@ -1,6 +1,10 @@
+import FeedNoFollow from "./FeedNoFollow";
+
 const Feed = () =>{
     return (
-        <div>피드 컴포넌트</div>
+        <div>
+            <FeedNoFollow />
+        </div>
     );
 };
 
