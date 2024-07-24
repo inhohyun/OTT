@@ -34,7 +34,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
 
 const userPage = () => {
   return <>
-    userPage
+    <NavBar></NavBar>
   </>
 }
 

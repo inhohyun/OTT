@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function StyleInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
   const [searchText, setSearchText] = useState('');
@@ -36,6 +38,12 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
             placeholder="검색할 스타일을 입력하세요"
             className="w-full p-2 rounded-full border border-violet-300 box-border focus:border-violet-400"
           />
+          <span 
+            onClick={handleSearchSubmit}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 cursor-pointer"
+          >
+            <FontAwesomeIcon icon={faSearch} />
+          </span>
         </div>
         <div className="flex flex-wrap gap-2 mb-10">
           {tags.map(tag => (
@@ -55,7 +63,7 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
         <div className="flex justify-between w-4/5 max-w-md mx-auto">
           <button
             type="button"
-            className="bg-gray-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-gray-500"
+            className="border border-violet-500 bg-white text-violet-500 py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-50"
             onClick={handlePrev}
           >
             이전

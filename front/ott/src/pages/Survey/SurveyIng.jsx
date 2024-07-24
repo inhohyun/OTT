@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import SurveyFormModal from '../../components/modals/SurveyFormModal';
 import backgroundImage from '../../assets/images/background_image_survey.png';
-import PersonalInfoSurvey from './PersonalInfoSurvey';
-import PhysicalInfoSurvey from './PhysicalInfoSurvey';
-import StyleInfoSurvey from './StyleInfoSurvey';
-import SurveyFinish from './SurveyFinish';
+import PersonalInfoSurvey from '../../components/surveys/PersonalInfoSurvey';
+import PhysicalInfoSurvey from '../../components/surveys/PhysicalInfoSurvey';
+import StyleInfoSurvey from '../../components/surveys/StyleInfoSurvey';
+import SurveyFinish from '../../components/surveys/SurveyFinish';
 
 export default function SurveyIng() {
   const [isModalOpen, setModalOpen] = useState(true);
