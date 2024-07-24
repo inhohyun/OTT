@@ -12,24 +12,33 @@ export default function SurveyIng() {
   const totalSteps = 4;
   const [formData, setFormData] = useState({});
 
-  const handleNext = (e) => {
+  const handleNext = function(e) {
     e.preventDefault();
     if (step < totalSteps) {
       setStep(step + 1);
+      console.log(formData)
     } else {
       console.log('설문 제출 완료', formData);
       setModalOpen(false);
     }
   };
 
+  const handlePrev = function() {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  
+
   const renderFormContent = () => {
     switch (step) {
       case 1:
         return <PersonalInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} />;
       case 2:
-        return <PhysicalInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+        return <PhysicalInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} handlePrev={handlePrev} />;
       case 3:
-        return <StyleInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+        return <StyleInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} handlePrev={handlePrev} />;
       case 4:
         return <SurveyFinish formData={formData} setFormData={setFormData} handleNext={handleNext} />;
       default:
