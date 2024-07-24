@@ -24,6 +24,7 @@ import java.util.List;
 public class MemberWriteService {
     //Todo: 이미지 업로드 및 url 가져오기 구현
     private final MemberRepository memberRepository;
+    private final MemberValidator memberValidator;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
         Member member = Member.builder()
@@ -41,7 +42,10 @@ public class MemberWriteService {
     public UpdateMemberSuccessDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto) {
 
         Member member = memberRepository.findById(memberUpdateRequestDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
-        member.updateMember(memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getProfileImageUrl(), memberUpdateRequestDto.getHeight()
+
+        memberValidator.validateMemberNickname(memberUpdateRequestDto.getNickname());
+
+        member.updateMember(memberUpdateRequestDto.getNickname(), memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getProfileImageUrl(), memberUpdateRequestDto.getHeight()
                 , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus());
         return new UpdateMemberSuccessDto(member.getId());
     }
