@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
-import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
@@ -17,9 +16,7 @@ import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -182,8 +179,55 @@ public class LookbookServiceImpl implements LookbookService {
         return cntLike;
     }
 
+    // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
     @Override
     public List<Lookbook> findPublicLookbooks(String uid) {
         return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid), PublicStatus.PUBLIC);
+    }
+
+    // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
+    @Override
+    public List<Lookbook> findPrivateLookbooks(String uid) {
+        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid), PublicStatus.PRIVATE);
+    }
+
+    @Override
+    public List<Lookbook> findByTag(String[] tags) {
+        HashMap<Long, Integer> map = new HashMap<>();
+        for (String tag : tags) {
+            Tag tagEntity = tagRepository.findByName(tag);
+            //태그가 존재하지 않으면 다음 태그로 넘어감
+            if (tagEntity == null) continue;
+
+            //태그가 포함된 룩북들을 가지고 옴
+            List<LookbookTag> findLookbooks = lookbookTagRepository.findByTagName(tag);
+            for (LookbookTag findLookbook : findLookbooks) {
+                Lookbook lookbook = findLookbook.getLookbook();
+                long id = lookbook.getId();
+
+                //검색 태그 카운팅
+                if (map.containsKey(id)) {
+                    map.put(id, map.get(id) + 1);
+                } else {
+                    map.put(id, 1);
+                }
+            }
+        }
+        // Hashmap value값을 기반으로 sort
+        List<Long> keys = new ArrayList<>(map.keySet());
+        Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
+
+        // sort된 key값(lookbookid)로 룩북 정보를 가져와 리스트에 저장
+        List<Lookbook> lookbooks = new ArrayList<>();
+        for (Long key : keys) {
+            Optional<Lookbook> ol = lookbookRepository.findById(key);
+            if (ol.isPresent()) {
+                Lookbook lookbook = ol.get();
+                lookbooks.add(lookbook);
+            }
+        }
+
+        //return
+        return lookbooks;
     }
 }

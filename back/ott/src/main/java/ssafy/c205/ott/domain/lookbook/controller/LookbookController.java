@@ -100,7 +100,11 @@ public class LookbookController {
     //나의 비공개된 룩북 보기
     @GetMapping("/private")
     public ResponseEntity<?> privateLookbook(@RequestBody String uid) {
-        return null;
+        List<Lookbook> privateLookbooks = lookbookService.findPrivateLookbooks(uid);
+        if (privateLookbooks == null) {
+            return new ResponseEntity<String>("비공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<Lookbook>>(privateLookbooks, HttpStatus.OK);
     }
 
     //팔로우 중인 사람의 룩북 조회
@@ -112,6 +116,10 @@ public class LookbookController {
     //태그를 통해 룩북 검색 -> UserId 부분 태그들로 변경할것
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@RequestBody String[] tags, String uid) {
-        return null;
+        List<Lookbook> findByTags = lookbookService.findByTag(tags);
+        if (findByTags == null) {
+            return new ResponseEntity<String>("태그가 포함된 게시물을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<Lookbook>>(findByTags, HttpStatus.OK);
     }
 }

@@ -21,4 +21,8 @@ public interface LookbookService {
     int cntLikeLookbook(String lookbookId);
 
     List<Lookbook> findPublicLookbooks(String uid);
+
+    List<Lookbook> findPrivateLookbooks(String uid);
+
+    List<Lookbook> findByTag(String[] tags);
 }
