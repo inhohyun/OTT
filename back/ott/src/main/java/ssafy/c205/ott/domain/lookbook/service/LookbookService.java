@@ -14,4 +14,6 @@ public interface LookbookService {
     boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto);
 
     boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto);
+
+    int cntLikeLookbook(String lookbookId);
 }

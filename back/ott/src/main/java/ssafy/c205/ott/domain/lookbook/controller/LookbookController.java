@@ -33,7 +33,7 @@ public class LookbookController {
         if (isUpdateSuccess) {
             return new ResponseEntity<String>("옷 정보 수정을 완료했습니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<String>("옷 정보 수정을 실패했습니다.",HttpStatus.CONFLICT);
+            return new ResponseEntity<String>("옷 정보 수정을 실패했습니다.", HttpStatus.CONFLICT);
         }
     }
 
@@ -75,7 +75,12 @@ public class LookbookController {
     //룩북 좋아요 수 조회
     @GetMapping("/{lookbook_id}/like-count")
     public ResponseEntity<?> likeLookbookCount(@PathVariable String lookbookId) {
-        return null;
+        int likeCnt = lookbookService.cntLikeLookbook(lookbookId);
+        if (likeCnt == -1) {
+            return new ResponseEntity<String>("좋아요 개수를 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<Integer>(likeCnt, HttpStatus.OK);
+        }
     }
 
     //나의 공개된 룩북 보기

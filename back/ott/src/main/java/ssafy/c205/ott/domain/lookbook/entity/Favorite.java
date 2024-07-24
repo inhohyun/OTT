@@ -29,4 +29,7 @@ public class Favorite extends BaseEntity {
     public Favorite(Lookbook lookbook) {
         this.lookbook = lookbook;
     }
+
+    public Favorite() {
+    }
 }

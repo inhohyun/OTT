@@ -170,4 +170,14 @@ public class LookbookServiceImpl implements LookbookService {
             return true;
         } else return false;
     }
+
+    @Override
+    public int cntLikeLookbook(String lookbookId) {
+        List<Favorite> lookbookLikes = favoriteRepository.findByLookbookId(Long.parseLong(lookbookId));
+        if (lookbookLikes == null) {
+            return -1;
+        }
+        int cntLike = lookbookLikes.size();
+        return cntLike;
+    }
 }
