@@ -38,7 +38,7 @@ public class AmazonS3Util {
         for (MultipartFile multipartFile : multipartFiles) {
 
             if (isDuplicate(multipartFile)) {
-//                throw new Exception400("file", ErrorMessage.DUPLICATE_IMAGE);
+                throw new Exception400("file", ErrorMessage.DUPLICATE_IMAGE);
             }
 
             String uploadedUrl = saveFile(multipartFile);
@@ -53,8 +53,6 @@ public class AmazonS3Util {
     public void deleteFile(String fileUrl) {
         String[] urlParts = fileUrl.split("/");
         String fileBucket = urlParts[2].split("\\.")[0];
-        System.out.println("urlParts = " + Arrays.toString(urlParts));
-        System.out.println("fileBucket = " + fileBucket);
 
         if (!fileBucket.equals(bucket)) {
             throw new Exception400("fileUrl", ErrorMessage.NO_IMAGE_EXIST);
