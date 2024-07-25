@@ -43,7 +43,7 @@ const LookbookDetail = ({ lookbook, onClose }) => {
                     </div>
                     <div className="flex flex-col items-start gap-2 mt-3 ml-3">
                         {tags.map((tag, index) => (
-                            <span key={index} className="bg-black text-white text-xs rounded-lg px-2 py-1 inline-block" style={{fontSize:'11px'}}>{tag}</span>
+                            <span key={index} className="bg-black text-white text-xs rounded-lg px-2 py-1 inline-block" style={{fontSize:'10px'}}>{tag}</span>
                         ))}
                     </div>
                 </div>
@@ -79,11 +79,13 @@ const LookbookDetail = ({ lookbook, onClose }) => {
                             판매용 댓글
                         </p>
                     </div>
+                    <div className="overflow-y-auto" style={{ maxHeight: '200px' }}>
                     {showSellComments ? (
                         <SellComment comments={comments} />
                     ) : (
                         <Comment comments={comments} />
                     )}
+                    </div>
                 </div>
             </div>
         </div>

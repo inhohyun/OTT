@@ -12,9 +12,40 @@ const Lookbook = () => {
         date: '2024년 7월 16일',
         timeAgo: '몇시간 전',
         likes: 120,
-        comments: 15,
         creatorName: '이름',
         tags: ['#여름', '#한여름의 도시남', '#태그 또 뭐하지'],
+        comments : [
+            {
+                author: '사용자1',
+                text: '이 옷 정말 좋아요!',
+                time: '2시간 전',
+            },
+            {
+                author: '사용자2',
+                text: '이 색상이 정말 예쁘네요.',
+                time: '1시간 전',
+            },
+            {
+                author: '사용자2',
+                text: '이 색상이 정말 예쁘네요.',
+                time: '1시간 전',
+            },
+            {
+                author: '사용자2',
+                text: '이 색상이 정말 예쁘네요.',
+                time: '1시간 전',
+            },
+            {
+                author: '사용자2',
+                text: '이 색상이 정말 예쁘네요.',
+                time: '1시간 전',
+            },
+            {
+                author: '사용자2',
+                text: '이 색상이 정말 예쁘네요.',
+                time: '1시간 전',
+            },
+        ]
     };
 
     const handleShowDetail = () => {
@@ -41,7 +72,7 @@ const Lookbook = () => {
                 <div className="px-3 pb-1 flex justify-end items-center">
                     <div className="flex items-center space-x-1">
                         <span className="text-gray-600 text-xs">❤ {dummyLookbook.likes}</span>
-                        <span className="text-gray-600 text-xs">🗨 {dummyLookbook.comments}</span>
+                        <span className="text-gray-600 text-xs">🗨 {dummyLookbook.comments.length}</span>
                     </div>
                 </div>
             </div>
