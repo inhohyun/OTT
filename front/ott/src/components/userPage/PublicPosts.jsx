@@ -44,7 +44,7 @@ const PublicPosts = () => {
                         style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                     ></button>
                     <div ref={containerRef} className="overflow-x-auto scrollbar-hide flex space-x-4">
-                        <div className="flex flex-col space-y-4">
+                        <div className="flex flex-col">
                             <div className="flex space-x-4">
                                 {lookbooks.slice(0, 5).map((_, index) => (
                                     <Lookbook key={index} size="small"/>

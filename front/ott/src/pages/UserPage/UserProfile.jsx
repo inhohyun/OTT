@@ -6,6 +6,7 @@ import Following from '@/components/userPage/Following';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import lockIcon from '../../assets/icons/lockicon.png';
 import settingIcon from '../../assets/icons/Setting_icon.png';
+
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   const postNumber = 100;
   const follwerNumber = 100;
@@ -69,29 +70,22 @@ const UserProfile = () => {
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon">
       <div
-        className="w-[600px] h-[852px] relative leading-normal tracking-normal bg-cover bg-no-repeat bg-center"
+        className="w-[600px] h-[852px] relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="absolute top-[77px] left-[242px] w-[116px] h-[116px] z-[2]">
+        <div className="w-full flex justify-center mt-8">
           <img
-            className="absolute top-0 left-0 w-full h-full rounded-full"
+            className="w-[70px] h-[70px] rounded-full"
             alt="User Icon"
             src={mainIcon}
           />
         </div>
-        <div className="absolute top-[210px] w-full text-center">
-        <div className="flex items-center justify-center">
+        <div className="w-full flex items-center justify-center mt-6">
           <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
           <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">mediamodifier</p>
-          <img src={settingIcon} alt="수정" className="w-6 h-6 mr-2"/>
+          <img src={settingIcon} alt="수정" className="w-6 h-6 ml-2"/>
         </div>
-      </div>
-
-        <div
-          className={`absolute top-[260px] w-full flex justify-center ${
-            tags.length > 3 ? 'flex-wrap' : ''
-          } space-x-2`}
-        >
+        <div className={`w-full flex justify-center mt-6 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}>
           {tags.map((tag) => (
             <span
               key={tag}
@@ -101,7 +95,7 @@ const UserProfile = () => {
             </span>
           ))}
         </div>
-        <div className="absolute top-[310px] w-full">
+        <div className="w-full mt-6">
           <NavBar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
           <div className="mt-4 text-[rgba(0,0,0,0.5)]">{renderComponent}</div>
         </div>

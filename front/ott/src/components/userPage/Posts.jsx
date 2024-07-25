@@ -31,10 +31,10 @@ const Posts = () => {
           비공개
         </button>
       </div>
-      <div className="mt-4">
+      <div>
         {activePostType === 'public' ? <PublicPosts /> : <PrivatePosts />}
       </div>
-      <div className="mt-4 flex justify-center">
+      <div className="flex justify-center">
         <button
           className="w-[184px] py-1 px-5 pt-2 cursor-pointer rounded-full bg-violet-200 text-black flex items-center justify-center"
           onClick={handleLookbookRegister}
