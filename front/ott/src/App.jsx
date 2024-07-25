@@ -8,7 +8,7 @@ import SurveyStart from "./pages/Survey/SurveyStart";
 import SurveyIng from "./pages/Survey/SurveyIng";
 import MainPage from "./pages/MainPage/MainPage";
 import ClosetPage from "./pages/Closet/ClosetPage";
-
+import UpdateProfile from './pages/UserPage/UpdateProfile';
 function App() {
   return (
     <>
@@ -22,6 +22,7 @@ function App() {
             <Route path="/survey_ing" element={<SurveyIng />} />
             <Route path="/mainpage" element={<MainPage />} />
             <Route path="/closet" element={<ClosetPage />} />
+            <Route path="/updateProfile" element={< UpdateProfile/>} />
           </Routes>
         </Router>
       </Layout>

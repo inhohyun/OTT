@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // useNavigate를 import 합니다
 import mainIcon from '../../assets/icons/main.logo.png';
 import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
@@ -50,6 +51,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
 
 const UserProfile = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
+  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다
   const tags = ['한여름의 도시남', '댄디남', '훈남', '여자들이 좋아하는', '소개팅'];
 
   let renderComponent;
@@ -83,7 +85,12 @@ const UserProfile = () => {
         <div className="w-full flex items-center justify-center mt-6">
           <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
           <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">mediamodifier</p>
-          <img src={settingIcon} alt="수정" className="w-6 h-6 ml-2"/>
+          <img 
+            src={settingIcon} 
+            alt="수정" 
+            className="w-6 h-6 ml-2 cursor-pointer" 
+            onClick={() => navigate('/updateProfile')} 
+          />
         </div>
         <div className={`w-full flex justify-center mt-6 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}>
           {tags.map((tag) => (

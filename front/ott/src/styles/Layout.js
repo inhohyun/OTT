@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Layout = styled.div`
-  width: 600px;
+  max-width: 390px;
   display: flex;
   flex-direction: column;
   align-items: center;
