@@ -49,13 +49,13 @@ const Header = () => {
           <img 
             src={closetImage} 
             alt="closet go"
-            className='w-7 h-7 mb-0.5 cursor-pointer' 
+            className='w-6 h-6 mb-0.5 cursor-pointer' 
             onClick={handleClosetClick}
           />
           <img 
             src={notificationImage} 
             alt="notification go"
-            className='w-9 h-9 cursor-pointer' 
+            className='w-7 h-7 cursor-pointer' 
             onClick={handleNotificationClick}
           />
         </div>
