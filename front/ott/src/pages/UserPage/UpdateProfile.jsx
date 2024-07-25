@@ -1,22 +1,37 @@
-import React from 'react';
-import backgroundImage from '../../assets/images/background_image_main.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import backgroundImage from "../../assets/images/background_image_main.png";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 const UpdateProfile = () => {
+  const navigate = useNavigate();
+
+  const redirectProfile = () => {
+    navigate("/userPage"); // 사용자 프로필 페이지로 이동
+  };
+
   return (
     <div
       className="w-full h-screen flex items-center justify-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md">
-        <form className="space-y-6">
+        <form
+          className="space-y-6"
+          onSubmit={(e) => {
+            e.preventDefault(); // 기본 제출 동작 방지
+            redirectProfile(); // 사용자 프로필 페이지로 리디렉트
+          }}
+        >
           <div className="flex items-center mb-5">
-            <label htmlFor="name" className="w-1/4 ml-1 mb-1 font-thin text-lg">이름</label>
+            <label htmlFor="name" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              이름
+            </label>
             <input
               type="text"
               id="name"
@@ -26,7 +41,12 @@ const UpdateProfile = () => {
             />
           </div>
           <div className="flex items-center mb-5">
-            <label htmlFor="phone" className="w-1/4 ml-1 mb-1 font-thin text-lg">전화번호</label>
+            <label
+              htmlFor="phone"
+              className="w-1/4 ml-1 mb-1 font-thin text-lg"
+            >
+              전화번호
+            </label>
             <input
               type="text"
               id="phone"
@@ -36,7 +56,12 @@ const UpdateProfile = () => {
             />
           </div>
           <div className="flex items-center mb-5">
-            <label htmlFor="nickname" className="w-1/4 ml-1 mb-1 font-thin text-lg">닉네임</label>
+            <label
+              htmlFor="nickname"
+              className="w-1/4 ml-1 mb-1 font-thin text-lg"
+            >
+              닉네임
+            </label>
             <div className="relative flex items-center w-3/4">
               <input
                 type="text"
@@ -51,7 +76,12 @@ const UpdateProfile = () => {
             </div>
           </div>
           <div className="flex items-center mb-5">
-            <label htmlFor="height" className="w-1/4 ml-1 mb-1 font-thin text-lg">키</label>
+            <label
+              htmlFor="height"
+              className="w-1/4 ml-1 mb-1 font-thin text-lg"
+            >
+              키
+            </label>
             <input
               type="text"
               id="height"
@@ -61,7 +91,12 @@ const UpdateProfile = () => {
             />
           </div>
           <div className="flex items-center mb-5">
-            <label htmlFor="weight" className="w-1/4 ml-1 mb-1 font-thin text-lg">몸무게</label>
+            <label
+              htmlFor="weight"
+              className="w-1/4 ml-1 mb-1 font-thin text-lg"
+            >
+              몸무게
+            </label>
             <input
               type="text"
               id="weight"
@@ -71,7 +106,12 @@ const UpdateProfile = () => {
             />
           </div>
           <div className="flex items-center mb-5">
-            <label htmlFor="bodyType" className="w-1/4 ml-1 mb-1 font-thin text-lg">체형</label>
+            <label
+              htmlFor="bodyType"
+              className="w-1/4 ml-1 mb-1 font-thin text-lg"
+            >
+              체형
+            </label>
             <input
               type="text"
               id="bodyType"

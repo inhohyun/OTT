@@ -22,11 +22,14 @@ const Login = () => {
   }, [navigate]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div
-        className="w-[600px] h-[852px] relative flex flex-col items-center bg-cover bg-no-repeat bg-center"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
+    <div
+      className="w-full h-full flex items-center justify-center min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="w-[600px] h-[852px] relative flex flex-col items-center bg-cover bg-no-repeat bg-center">
         <div className="mt-16 w-[116px] h-[116px]">
           <img
             className="w-full h-full rounded-full"
@@ -44,25 +47,31 @@ const Login = () => {
             <p>친구들의 추천까지 전부 받아보세요</p>
           </div>
         </div>
-        <div className="mt-12 flex flex-col items-center gap-4">
-          <img
-            className="rounded-md w-[350px] h-[45px] cursor-pointer"
-            alt="카카오 로그인"
-            src={kakao}
-            onClick={onKakaoLoginClick}
-          />
-          <img
-            className="rounded-md w-[350px] h-[45px] cursor-pointer"
-            alt="네이버 로그인"
-            src={naver}
-            onClick={onNaverLoginClick}
-          />
-          <img
-            className="rounded-md w-[350px] h-[45px] cursor-pointer"
-            alt="구글 로그인"
-            src={google}
-            onClick={onGoogleLoginClick}
-          />
+        <div className="mt-24 flex flex-col items-center gap-4">
+          <div className="mb-4">
+            <img
+              className="rounded-md w-[350px] h-[45px] cursor-pointer"
+              alt="카카오 로그인"
+              src={kakao}
+              onClick={onKakaoLoginClick}
+            />
+          </div>
+          <div className="mb-4">
+            <img
+              className="rounded-md w-[350px] h-[45px] cursor-pointer"
+              alt="네이버 로그인"
+              src={naver}
+              onClick={onNaverLoginClick}
+            />
+          </div>
+          <div>
+            <img
+              className="rounded-md w-[350px] h-[45px] cursor-pointer"
+              alt="구글 로그인"
+              src={google}
+              onClick={onGoogleLoginClick}
+            />
+          </div>
         </div>
       </div>
     </div>
