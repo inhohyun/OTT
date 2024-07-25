@@ -60,7 +60,7 @@ const MainPage = () => {
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <NavBar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
-      <div className="content w-full flex-grow">
+      <div className="content w-full flex-grow box-border mb-20">
         {renderComponent()}
       </div>
     </div>
@@ -68,3 +68,5 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
+

@@ -9,8 +9,8 @@ const LookbookList = ({ tag, lookbooks, onClose }) => {
             onClick={onClose}
         >
             <div 
-                className="bg-white p-4 rounded-2xl shadow-lg w-full max-w-md overflow-hidden"
-                style={{ maxHeight: '90vh' }} // Adjust max height
+                className="bg-white p-4 rounded-2xl shadow-lg w-full max-w-xs overflow-hidden"
+                style={{ maxHeight: '70vh' }} // Adjust max height
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center mb-4">

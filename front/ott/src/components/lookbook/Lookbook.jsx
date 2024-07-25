@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import LookbookDetail from './LookbookDetail';
-import lookbookimg from '../../../public/icon-512x512.png'
+import lookbookimg from '../../../public/icon-512x512.png';
 
 const Lookbook = () => {
     const [isDetailVisible, setIsDetailVisible] = useState(false);
 
-    // Dummy data for the lookbook
     const dummyLookbook = {
         id: 1,
         name: 'Summer Collection',
@@ -30,19 +29,19 @@ const Lookbook = () => {
         <>
             <div
                 onClick={handleShowDetail}
-                className="w-40 h-50 rounded-lg overflow-hidden shadow-lg bg-white m-3 flex-shrink-0 cursor-pointer"
+                className="w-[120px] h-[170px] rounded-lg overflow-hidden shadow-lg bg-white m-2 flex-shrink-0 cursor-pointer"
             >
-                <div className="px-4 py-2 flex justify-between items-center">
-                    <div className="font-bold text-base mb-1">{dummyLookbook.creatorName}</div>
+                <div className="px-2 py-1 flex justify-between items-center">
+                    <div className="font-bold text-xs mb-1">{dummyLookbook.creatorName}</div>
                     <p className="text-gray-600 text-xs">{dummyLookbook.timeAgo}</p>
                 </div>
-                <div className="px-3 py-1">
-                    <img className="w-full h-24 object-cover" src={dummyLookbook.image} alt={dummyLookbook.name} />
+                <div className="px-3 py-1 mb-1">
+                    <img className="w-full h-20 object-cover" src={dummyLookbook.image} alt={dummyLookbook.name} />
                 </div>
-                <div className="px-4 pb-2 flex justify-end items-center">
+                <div className="px-3 pb-1 flex justify-end items-center">
                     <div className="flex items-center space-x-1">
-                        <span className="text-gray-600 text-base">❤ {dummyLookbook.likes}</span>
-                        <span className="text-gray-600 text-base">🗨 {dummyLookbook.comments}</span>
+                        <span className="text-gray-600 text-xs">❤ {dummyLookbook.likes}</span>
+                        <span className="text-gray-600 text-xs">🗨 {dummyLookbook.comments}</span>
                     </div>
                 </div>
             </div>

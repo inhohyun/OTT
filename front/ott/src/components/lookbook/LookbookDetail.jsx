@@ -6,12 +6,10 @@ import SellComment from '../comment/SellComment';
 const LookbookDetail = ({ lookbook, onClose }) => {
     if (!lookbook) return null;
 
-    // Safeguard to ensure these properties are arrays
     const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
     const itemsForSale = Array.isArray(lookbook.itemsForSale) ? lookbook.itemsForSale : [];
     const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
 
-    // State to determine which comment section to display
     const [showSellComments, setShowSellComments] = useState(false);
 
     return (
@@ -20,7 +18,7 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             onClick={onClose}
         >
             <div 
-                className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-full relative h-[90vh] overflow-y-auto"
+                className="bg-white p-6 rounded-2xl shadow-lg max-w-xs w-full relative h-[75vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button 
@@ -40,12 +38,12 @@ const LookbookDetail = ({ lookbook, onClose }) => {
                 </div>
                 <div className="w-full border-solid border-t-2 border-slate-500 mt-4"></div>
                 <div className="mb-4 flex mt-2">
-                    <div className="flex justify-center w-[200px] h-[200px]">
+                    <div className="flex justify-center w-[150px] h-[150px]">
                         <img src={lookbook.image} alt={lookbook.name} className="w-full h-auto object-cover rounded-lg" />
                     </div>
                     <div className="flex flex-col items-start gap-2 mt-3 ml-3">
                         {tags.map((tag, index) => (
-                            <span key={index} className="bg-black text-white text-sm rounded-lg px-2 py-1 inline-block">{tag}</span>
+                            <span key={index} className="bg-black text-white text-xs rounded-lg px-2 py-1 inline-block" style={{fontSize:'11px'}}>{tag}</span>
                         ))}
                     </div>
                 </div>
