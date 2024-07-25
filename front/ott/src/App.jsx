@@ -20,15 +20,14 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/userPage" element={<UserProfile />} />
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
-            <Route path="/mainpage" element={<MainPage />} />
-            <Route path="/closet" element={<ClosetPage />} />
-            <Route path="/updateProfile" element={< UpdateProfile/>} />
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
+            
             <Route element={<CommonLayout />}>
+              <Route path="/updateProfile" element={< UpdateProfile/>} />
+              <Route path="/userPage" element={<UserProfile />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
             </Route>

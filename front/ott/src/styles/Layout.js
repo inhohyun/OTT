@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const Layout = styled.div`
-
   max-width: 390px;
   display: flex;
   flex-direction: column;
@@ -11,7 +10,7 @@ const Layout = styled.div`
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 600px) {
+  @media (max-width: 390px) {
     width: 100%;
   }
 
