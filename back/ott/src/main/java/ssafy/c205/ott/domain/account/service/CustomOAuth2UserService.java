@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.oauth.dto.*;
 import ssafy.c205.ott.domain.account.dto.request.MemberLoginUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRegisterRequestDto;
-import ssafy.c205.ott.domain.account.dto.response.MemberDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberRegisterDto;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
@@ -64,7 +64,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             memberWriteService.registerMember(memberRegisterRequestDto);
 
-            MemberDto memberDTO = MemberDto.builder()
+            MemberRegisterDto memberRegisterDTO = MemberRegisterDto.builder()
                     .name(memberRegisterRequestDto.getName())
                     .sso(memberRegisterRequestDto.getSso())
                     .email(memberRegisterRequestDto.getEmail())
@@ -72,7 +72,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
 
-            return new CustomOAuth2User(memberDTO);
+            return new CustomOAuth2User(memberRegisterDTO);
         } else {
 
             MemberLoginUpdateRequestDto memberLoginUpdateRequestDto = MemberLoginUpdateRequestDto.builder()
@@ -83,14 +83,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             memberWriteService.updateNameAndEmail(memberLoginUpdateRequestDto);
 
-            MemberDto memberDTO = MemberDto.builder()
+            MemberRegisterDto memberRegisterDTO = MemberRegisterDto.builder()
                     .name(existData.getName())
                     .sso(existData.getSso())
                     .email(existData.getEmail())
                     .role(existData.getRole())
                     .build();
 
-            return new CustomOAuth2User(memberDTO);
+            return new CustomOAuth2User(memberRegisterDTO);
         }
 
     }

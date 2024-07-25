@@ -6,7 +6,7 @@ import ssafy.c205.ott.domain.account.entity.MemberRole;
 
 @Builder
 @Getter
-public class MemberDto {
+public class MemberRegisterDto {
 
     private MemberRole role;
     private String name;
