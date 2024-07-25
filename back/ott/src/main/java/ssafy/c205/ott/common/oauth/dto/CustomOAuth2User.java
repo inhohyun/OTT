@@ -2,7 +2,7 @@ package ssafy.c205.ott.common.oauth.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import ssafy.c205.ott.domain.account.dto.response.MemberDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberRegisterDto;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class CustomOAuth2User implements OAuth2User {
 
-    private final MemberDto memberDTO;
+    private final MemberRegisterDto memberRegisterDTO;
 
-    public CustomOAuth2User(MemberDto memberDTO) {
-        this.memberDTO = memberDTO;
+    public CustomOAuth2User(MemberRegisterDto memberRegisterDTO) {
+        this.memberRegisterDTO = memberRegisterDTO;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CustomOAuth2User implements OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return memberDTO.getRole().name();
+                return memberRegisterDTO.getRole().name();
             }
         });
 
@@ -39,10 +39,10 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return memberDTO.getName();
+        return memberRegisterDTO.getName();
     }
 
     public String getUsername() {
-        return memberDTO.getSso();
+        return memberRegisterDTO.getSso();
     }
 }
