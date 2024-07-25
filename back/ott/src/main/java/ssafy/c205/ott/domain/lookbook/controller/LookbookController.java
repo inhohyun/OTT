@@ -1,5 +1,9 @@
 package ssafy.c205.ott.domain.lookbook.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,10 +21,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/lookbook")
+@Tag(name = "룩북 컨트롤러", description = "룩북 생성, 조회, 삭제, 룩북 좋아요 등 전반적인 룩북을 관리하는 클래스")
 public class LookbookController {
 
     private final LookbookService lookbookService;
 
+    @Operation(summary = "룩북 생성하기", description = "<big>룩북 데이터를</big> 생성합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "룩북 저장을 완료하였습니다."),
+    })
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     //Todo : 이미지 잘 저장되는지와 이미지를 선택 했는지 예외처리
     @PostMapping("/")
@@ -30,17 +39,25 @@ public class LookbookController {
     }
 
     //룩북 수정
+    @Operation(summary = "룩북 수정하기", description = "<big>룩북 데이터를</big>를 수정합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "룩북 정보 수정을 완료했습니다."),
+    })
     @PutMapping("/{lookbook_id}")
     public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDto lookbookDto) {
         boolean isUpdateSuccess = lookbookService.updateLookbook(lookbookId, lookbookDto);
         if (isUpdateSuccess) {
-            return new ResponseEntity<String>("옷 정보 수정을 완료했습니다.", HttpStatus.OK);
+            return new ResponseEntity<String>("룩북 정보 수정을 완료했습니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<String>("옷 정보 수정을 실패했습니다.", HttpStatus.CONFLICT);
+            return new ResponseEntity<String>("룩북 정보 수정을 실패했습니다.", HttpStatus.CONFLICT);
         }
     }
 
     //룩북 상세보기 -> 옷이 조회되지 않을때 예외처리 완료 / 다른 예외 생각해볼것
+    @Operation(summary = "룩북 상세조회하기", description = "<big>룩북 상세데이터를</big> 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "해당 룩북의 상세 데이터"),
+    })
     @GetMapping("/{lookbook_id}")
     public ResponseEntity<?> detailLookbook(@PathVariable String lookbookId) {
         LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId);
@@ -54,6 +71,10 @@ public class LookbookController {
     }
 
     //룩북 삭제하기
+    @Operation(summary = "룩북 삭제하기", description = "<big>룩북 데이터를</big> 삭제합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "룩북 삭제를 성공하였습니다."),
+    })
     @DeleteMapping("/{lookbook_id}")
     public ResponseEntity<?> deleteLookbook(@PathVariable String lookbookId) {
         boolean isDeleteSuccess = lookbookService.deleteLookbook(lookbookId);
@@ -65,6 +86,10 @@ public class LookbookController {
     }
 
     //룩북 좋아요
+    @Operation(summary = "룩북 좋아요", description = "<big>룩북을</big>좋아요합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "룩북 좋아요를 성공했습니다."),
+    })
     @PostMapping("/{lookbook_id}/like")
     public ResponseEntity<?> likeLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
         boolean isFavoriteSuccess = lookbookService.likeLookbook(lookbookFavoriteDto);
@@ -76,6 +101,10 @@ public class LookbookController {
     }
 
     //룩북 좋아요 수 조회
+    @Operation(summary = "룩북 좋아요 수 조회하기", description = "<big>룩북 좋아요 개수를</big>를 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "룩북의 좋아요 개수"),
+    })
     @GetMapping("/{lookbook_id}/like-count")
     public ResponseEntity<?> likeLookbookCount(@PathVariable String lookbookId) {
         int likeCnt = lookbookService.cntLikeLookbook(lookbookId);
@@ -87,6 +116,10 @@ public class LookbookController {
     }
 
     //나의 공개된 룩북 보기
+    @Operation(summary = "나의 공개된 룩북 조회", description = "<big>나의 공개된 룩북 데이터를</big>조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "나의 공개된 룩북을 리스트로 반환"),
+    })
     @GetMapping("/public")
     public ResponseEntity<?> publicLookbook(@RequestBody String uid) {
         List<Lookbook> publicLookbooks = lookbookService.findPublicLookbooks(uid);
@@ -98,6 +131,10 @@ public class LookbookController {
     }
 
     //나의 비공개된 룩북 보기
+    @Operation(summary = "나의 비공개된 룩북조회하기", description = "<big>나의 비공개된 룩북 데이터를</big>조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "나의 비공개된 룩북 조회"),
+    })
     @GetMapping("/private")
     public ResponseEntity<?> privateLookbook(@RequestBody String uid) {
         List<Lookbook> privateLookbooks = lookbookService.findPrivateLookbooks(uid);
@@ -108,12 +145,20 @@ public class LookbookController {
     }
 
     //팔로우 중인 사람의 룩북 조회
+    @Operation(summary = "팔로워 룩북 조회하기", description = "<big>팔로잉하는 사람들의 룩북을</big>조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "팔로잉 룩북 리스트를 반환"),
+    })
     @GetMapping("/followings")
     public ResponseEntity<?> followingLookbook(@RequestBody String uid) {
         return null;
     }
 
     //태그를 통해 룩북 검색 -> UserId 부분 태그들로 변경할것
+    @Operation(summary = "태그로 이루어진 룩북 검색", description = "<big>태그로 이루어진 룩북을</big>조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "해당 태그의 룩북을 리스트로 반환"),
+    })
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@RequestBody String[] tags, String uid) {
         List<Lookbook> findByTags = lookbookService.findByTag(tags);

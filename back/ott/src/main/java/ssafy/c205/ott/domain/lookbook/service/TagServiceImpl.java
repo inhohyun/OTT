@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class TagServiceImpl implements TagService {
         Tag tagEntity = tagRepository.findByName(tagName);
         if (tagEntity == null) {
             Tag tag = new Tag(tagName, 1L);
+            tag.setCreatedAt(LocalDateTime.now());
             tagRepository.save(tag);
         } else {
             tagEntity.setCount(tagEntity.getCount() + 1L);
