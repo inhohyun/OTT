@@ -21,9 +21,7 @@ class MemberValidatorTest {
     EntityManager em;
 
     @Autowired
-    MemberWriteService memberWriteService;
-    @Autowired
-    private MemberRepository memberRepository;
+    MemberValidator memberValidator;
 
     @Test
     void 닉네임중복테스트() {
@@ -39,33 +37,7 @@ class MemberValidatorTest {
         em.flush();
         em.clear();
 
-        Member member2 = Member.builder()
-                .name("박지응")
-                .email("123123@naver.com")
-                .sso("testtest")
-                .role(MemberRole.USER)
-                .build();
-        em.persist(member2);
-        em.flush();
-        em.clear();
-
-        Member findMember = memberRepository.findById(2L).get();
-
-
-        MemberUpdateRequestDto requestDto = MemberUpdateRequestDto.builder()
-                .memberId(findMember.getId())
-                .nickname("JiEung2")
-                .phoneNumber(findMember.getPhoneNumber())
-                .introduction(findMember.getIntroduction())
-                .profileImageUrl(findMember.getProfileImageUrl())
-                .height(findMember.getHeight())
-                .weight(findMember.getWeight())
-                .gender(findMember.getGender())
-                .bodyType(findMember.getBodyType())
-                .publicStatus(findMember.getPublicStatus())
-                .build();
-
-        Assertions.assertThatThrownBy(() -> memberWriteService.updateMember(requestDto))
+        Assertions.assertThatThrownBy(() -> memberValidator.validateMemberNickname("JiEung2"))
                 .isInstanceOf(MemberNicknameDuplicateException.class);
     }
 }
