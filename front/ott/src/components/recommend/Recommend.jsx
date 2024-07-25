@@ -1,17 +1,30 @@
-import { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Lookbook from '../lookbook/Lookbook';
-import leftArrow from '../../assets/icons/left_arrow_icon.png'
-import rightArrow from '../../assets/icons/right_arrow_icon.png'
-
+import LookbookList from '../lookbook/LookbookList';
+import leftArrow from '../../assets/icons/left_arrow_icon.png';
+import rightArrow from '../../assets/icons/right_arrow_icon.png';
+import plus from '../../assets/icons/plusicon.png';
 
 const Recommend = () => {
-    // Create an array with the length of 10 for rendering multiple Lookbook components
-    const lookbooks = Array.from({ length: 10 });
+    // Example lookbooks data with more than 10 items for some categories
+    const lookbooksData = {
+        '키·몸무게': Array.from({ length: 15 }, (_, idx) => ({ id: idx + 1, attributes: { height: 180, weight: 75, bodyType: 'Athletic', style: 'Casual' } })),
+        '체형': Array.from({ length: 8 }, (_, idx) => ({ id: idx + 1, attributes: { height: 160, weight: 60, bodyType: 'Slim', style: 'Formal' } })),
+        '선호 스타일': Array.from({ length: 12 }, (_, idx) => ({ id: idx + 1, attributes: { height: 170, weight: 70, bodyType: 'Average', style: 'Casual' } })),
+    };
+
+    const initialLimit = 10; // Limit to show initially
+    const [visibleLookbooks, setVisibleLookbooks] = useState(
+        Object.keys(lookbooksData).reduce((acc, key) => ({ ...acc, [key]: initialLimit }), {})
+    );
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     // References for scroll containers
-    const cmKgSectionRef = useRef(null);
-    const typeSectionRef = useRef(null);
-    const styleSectionRef = useRef(null);
+    const scrollRefs = {
+        '키·몸무게': useRef(null),
+        '체형': useRef(null),
+        '선호 스타일': useRef(null),
+    };
 
     // Scroll functions
     const scrollLeft = (ref) => {
@@ -26,79 +39,76 @@ const Recommend = () => {
         }
     };
 
+    // Show more lookbooks in modal
+    const showMore = (category) => {
+        setSelectedCategory(category);
+    };
+
+    const closeDetailedView = () => {
+        setSelectedCategory(null);
+    };
+
     return (
-        <div className="flex flex-col items-start w-full p-5 space-y-5">
+        <div className="relative flex flex-col items-start w-full p-5 space-y-5">
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
                 }
-
                 .scrollbar-hide {
-                    -ms-overflow-style: none; /* IE and Edge */
-                    scrollbar-width: none; /* Firefox */
-        
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                .lookbook-container, .show-more-button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 2px; /* Further reduced margin */
+                }
+                .button-no-style {
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    cursor: pointer;
                 }
             `}</style>
-            <div className="w-full">
-                <p className="ml-2 text-xl font-bold">#키·몸무게</p>
-                <div className="relative">
-                <button
-                    onClick={() => scrollLeft(cmKgSectionRef)}
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-                    style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
-                ></button>
-                    <div ref={cmKgSectionRef} className="flex space-x-4 overflow-x-auto py-4 scrollbar-hide">
-                        {lookbooks.map((_, index) => (
-                            <Lookbook key={index} />
-                        ))}
+            {Object.keys(lookbooksData).map((category, index) => (
+                <div key={category} className="w-full">
+                    <p className="ml-2 text-xl font-bold">#{category}</p>
+                    <div className="relative">
+                        <button
+                            onClick={() => scrollLeft(scrollRefs[category])}
+                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+                            style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+                        ></button>
+                        <div ref={scrollRefs[category]} className="flex overflow-x-auto py-4 scrollbar-hide">
+                            {lookbooksData[category].slice(0, visibleLookbooks[category]).map((lookbook, lookbookIndex) => (
+                                <div key={lookbook.id} className="lookbook-container">
+                                    <Lookbook key={lookbook.id} data={lookbook} />
+                                </div>
+                            ))}
+                            {visibleLookbooks[category] < lookbooksData[category].length && (
+                                <div className="show-more-button">
+                                    <button onClick={() => showMore(category)} className="relative top-[-70px] bg-transparent border-none p-0 m-0 cursor-pointer">
+                                        <img src={plus} alt="Show more" className="w-6 h-6" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <button
+                            onClick={() => scrollRight(scrollRefs[category])}
+                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+                            style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+                        ></button>
                     </div>
-                    <button onClick={() => scrollRight(cmKgSectionRef)} 
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-                        style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
-                        >
-                    </button>
                 </div>
-            </div>
-            <div className="w-full">
-                <p className="ml-2 text-xl font-bold">#체형</p>
-                <div className="relative">
-                <button
-                    onClick={() => scrollLeft(typeSectionRef)}
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-                    style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
-                ></button>
-                    <div ref={typeSectionRef} className="flex space-x-4 overflow-x-auto py-4 scrollbar-hide">
-                        {lookbooks.map((_, index) => (
-                            <Lookbook key={index} />
-                        ))}
-                    </div>
-                    <button onClick={() => scrollRight(typeSectionRef)} 
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-                        style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
-                        >
-                    </button>
-                </div>
-            </div>
-            <div className="w-full">
-                <p className="ml-2 text-xl font-bold">#선호 스타일</p>
-                <div className="relative">
-                <button
-                    onClick={() => scrollLeft(styleSectionRef)}
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-                    style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
-                ></button>
-                    <div ref={styleSectionRef} className="flex space-x-4 overflow-x-auto py-4 scrollbar-hide">
-                        {lookbooks.map((_, index) => (
-                            <Lookbook key={index} />
-                        ))}
-                    </div>
-                    <button
-                    onClick={() => scrollRight(styleSectionRef)}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-                    style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
-                ></button>
-                </div>
-            </div>
+            ))}
+            {selectedCategory && (
+                <LookbookList
+                    tag={selectedCategory}
+                    lookbooks={lookbooksData[selectedCategory]}
+                    onClose={closeDetailedView}
+                />
+            )}
         </div>
     );
 };

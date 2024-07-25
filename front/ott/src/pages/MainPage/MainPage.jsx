@@ -2,11 +2,12 @@ import { useState } from 'react';
 import Recommend from '../../components/recommend/Recommend.jsx';
 import Feed from '../../components/feed/Feed';
 import MyLookbook from '../../components/mylookbook/MyLookbook';
+import Header from '../../components/common/Header.jsx';
 import backgroundImage from '../../assets/images/background_image_main.png';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
-    <nav className="flex justify-around w-full mb-5 bg-white p-2">
+    <nav className="flex justify-around w-full mb-5 bg-white p-2 -mt-2">
       <button
         className={`bg-transparent border-none font-dohyeon text-slate-400 text-lg py-2 px-5 mx-3 cursor-pointer rounded-full ${
           activeComponent === 'recommendation' ? 'bg-violet-200 text-slate-400' : ''
@@ -46,7 +47,7 @@ const MainPage = () => {
       case 'recommendation':
         return <Recommend />;
       case 'feed':
-        return <Feed />;
+        return <Feed setActiveComponent={setActiveComponent} />;
       case 'myLookbook':
         return <MyLookbook />;
       default:
@@ -59,6 +60,7 @@ const MainPage = () => {
       className="relative flex flex-col items-center w-full h-full min-h-screen bg-cover"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
+      <Header className="mb-1"/>
       <NavBar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
       <div className="content w-full flex-grow">
         {renderComponent()}

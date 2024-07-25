@@ -1,6 +1,14 @@
 export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    if (id === 'height' || id === 'weight') {
+      // Only allow numbers and restrict length to 3 digits
+      const regex = /^\d{0,3}$/;
+      if (!regex.test(value)) {
+        return; // Do not update the state if the value is invalid
+      }
+    }
+    setFormData({ ...formData, [id]: value });
   };
 
   const handleCardClick = (bodyType) => {
@@ -9,17 +17,30 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
 
   return (
     <>
+      <style>
+        {`
+          input[type=number]::-webkit-inner-spin-button,
+          input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+          input[type=number] {
+            -moz-appearance: textfield;
+          }
+        `}
+      </style>
       <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">신체 정보</h2>
       <form onSubmit={handleNext} className="space-y-6">
         <div className="relative mb-5 flex justify-between items-center">
           <label htmlFor="height" className="block ml-1 mb-1 font-thin text-lg">당신의 키는?</label>
           <div className="relative flex items-center">
             <input
-              type="text"
+              type="number"
               id="height"
               value={formData.height || ''}
               onChange={handleChange}
               required
+              max="999"
               className="w-20 p-2 rounded-full border border-stone-300 box-border"
             />
             <span className="absolute right-3 text-stone-400">cm</span>
@@ -29,11 +50,12 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
           <label htmlFor="weight" className="block ml-1 mb-1 font-thin text-lg">당신의 몸무게는?</label>
           <div className="relative flex items-center">
             <input
-              type="text"
+              type="number"
               id="weight"
               value={formData.weight || ''}
               onChange={handleChange}
               required
+              max="999"
               className="w-20 p-2 rounded-full border border-stone-300 box-border"
             />
             <span className="absolute right-3 text-stone-400">kg</span>
@@ -47,9 +69,7 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
                 key={type}
                 onClick={() => handleCardClick(type)}
                 className={`cursor-pointer p-4 rounded-lg border text-center text-stone-400 ${
-                  formData.bodyType === type
-                    ? 'bg-violet-200'
-                    : ''
+                  formData.bodyType === type ? 'bg-violet-200' : ''
                 }`}
               >
                 {type}
