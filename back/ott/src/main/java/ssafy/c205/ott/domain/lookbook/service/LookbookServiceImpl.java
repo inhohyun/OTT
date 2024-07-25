@@ -8,6 +8,7 @@ import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.entity.ActiveStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Favorite;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
@@ -16,11 +17,13 @@ import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
 @Service
 public class LookbookServiceImpl implements LookbookService {
+
     @Autowired
     private LookbookRepository lookbookRepository;
     @Autowired
@@ -39,11 +42,16 @@ public class LookbookServiceImpl implements LookbookService {
 
         //내용 설정
         lookbook.setContent(lookbookCreateDto.getContent());
-        log.info("Lookbook 입력내용 = {}, 들어간 내용 = {}", lookbookCreateDto.getContent(), lookbook.getContent());
+        log.info("Lookbook 입력내용 = {}, 들어간 내용 = {}", lookbookCreateDto.getContent(),
+            lookbook.getContent());
 
         //공개여부 설정
         lookbook.setPublicStatus(lookbookCreateDto.getPublicStatus());
-        log.info("Lookbook 입력 공개여부 = {}, 들어간 내용 = {}", lookbookCreateDto.getPublicStatus(), lookbook.getContent());
+        log.info("Lookbook 입력 공개여부 = {}, 들어간 내용 = {}", lookbookCreateDto.getPublicStatus(),
+            lookbook.getContent());
+
+        //룩북 생성 날짜 저장
+        lookbook.setCreatedAt(LocalDateTime.now());
 
         //태그 유무 확인 및 태그 추가
         List<LookbookTag> lookbookTags = new ArrayList<>();
@@ -85,6 +93,7 @@ public class LookbookServiceImpl implements LookbookService {
             lookbookDetailDto.setLookbookTags(lookbook.getLookbookTags());
             lookbookDetailDto.setMember(lookbook.getMember());
             lookbookDetailDto.setHitCount(lookbook.getHitCount() + 1);
+            lookbookDetailDto.setCreatedAt(lookbook.getCreatedAt());
             lookbook.setHitCount(lookbook.getHitCount() + 1);
             lookbookRepository.save(lookbook);
             return lookbookDetailDto;
@@ -109,7 +118,7 @@ public class LookbookServiceImpl implements LookbookService {
                 lookbookTagRepository.deleteById(lookbookTag.getId());
             }
             //룩북 삭제
-            lookbookRepository.delete(lookbook);
+            lookbook.setActiveStatus(ActiveStatus.INACTIVE);
             log.info("룩북 제거 성공");
             return true;
         } else {
@@ -161,17 +170,21 @@ public class LookbookServiceImpl implements LookbookService {
     //Todo : 멤버값(Member) 넣어주기
     @Override
     public boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
-        Optional<Lookbook> ol = lookbookRepository.findById(Long.valueOf(lookbookFavoriteDto.getLookbookId()));
+        Optional<Lookbook> ol = lookbookRepository.findById(
+            Long.valueOf(lookbookFavoriteDto.getLookbookId()));
         if (ol.isPresent()) {
             Lookbook lookbook = ol.get();
             favoriteRepository.save(new Favorite(lookbook));
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int cntLikeLookbook(String lookbookId) {
-        List<Favorite> lookbookLikes = favoriteRepository.findByLookbookId(Long.parseLong(lookbookId));
+        List<Favorite> lookbookLikes = favoriteRepository.findByLookbookId(
+            Long.parseLong(lookbookId));
         if (lookbookLikes == null) {
             return -1;
         }
@@ -182,13 +195,15 @@ public class LookbookServiceImpl implements LookbookService {
     // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
     @Override
     public List<Lookbook> findPublicLookbooks(String uid) {
-        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid), PublicStatus.PUBLIC);
+        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid),
+            PublicStatus.PUBLIC);
     }
 
     // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
     @Override
     public List<Lookbook> findPrivateLookbooks(String uid) {
-        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid), PublicStatus.PRIVATE);
+        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid),
+            PublicStatus.PRIVATE);
     }
 
     @Override
@@ -197,7 +212,9 @@ public class LookbookServiceImpl implements LookbookService {
         for (String tag : tags) {
             Tag tagEntity = tagRepository.findByName(tag);
             //태그가 존재하지 않으면 다음 태그로 넘어감
-            if (tagEntity == null) continue;
+            if (tagEntity == null) {
+                continue;
+            }
 
             //태그가 포함된 룩북들을 가지고 옴
             List<LookbookTag> findLookbooks = lookbookTagRepository.findByTagName(tag);

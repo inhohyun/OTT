@@ -9,6 +9,7 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -21,4 +22,6 @@ public class LookbookDetailDto {
     private List<LookbookTag> lookbookTags;
     private List<Comment> comments;
     private List<LookbookImage> lookbookImages;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

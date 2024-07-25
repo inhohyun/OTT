@@ -26,6 +26,9 @@ public class Lookbook extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PublicStatus publicStatus = PublicStatus.PUBLIC;
 
+    @Enumerated(EnumType.STRING)
+    private ActiveStatus activeStatus = ActiveStatus.ACTIVE;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
