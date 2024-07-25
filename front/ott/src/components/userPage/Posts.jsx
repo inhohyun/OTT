@@ -12,8 +12,8 @@ const Posts = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center overflow-y-auto overflow-x-hidden pb-16 text-center">
-      <div className="flex justify-center space-x-2 font-dohyeon mt-4">
+    <div className="w-full text-center">
+      <div className="flex justify-center space-x-2 font-dohyeon">
         <button
           className={`py-2 px-5 cursor-pointer rounded-full ${
             activePostType === "public"
@@ -35,10 +35,14 @@ const Posts = () => {
           비공개
         </button>
       </div>
-      <div className="flex-grow">
+      <div className="mt-[-2]">
+        {" "}
+        {/* 간격을 줄이기 위해 margin-top을 2로 설정 */}
         {activePostType === "public" ? <PublicPosts /> : <PrivatePosts />}
       </div>
       <div className="flex justify-center mt-4">
+        {" "}
+        {/* 간격을 줄이기 위해 margin-top을 4로 설정 */}
         <button
           className="w-[184px] py-1 px-5 cursor-pointer rounded-full bg-violet-200 text-black flex items-center justify-center"
           onClick={handleLookbookRegister}

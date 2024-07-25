@@ -48,10 +48,9 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
     </nav>
   );
 };
-
 const UserProfile = () => {
   const [activeComponent, setActiveComponent] = useState("posts");
-  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다
+  const navigate = useNavigate();
   const tags = [
     "한여름의 도시남",
     "댄디남",
@@ -84,14 +83,16 @@ const UserProfile = () => {
       }}
     >
       <div className="w-full h-full relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center">
-        <div className="w-full flex justify-center mt-8">
+        <div className="w-full flex justify-center mt-[-200px]">
           <img
             className="w-[70px] h-[70px] rounded-full"
             alt="User Icon"
             src={mainIcon}
           />
         </div>
-        <div className="w-full flex items-center justify-center mt-6">
+        <div className="w-full flex items-center justify-center mt-2">
+          {" "}
+          {/* mt-6에서 mt-2로 변경 */}
           <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
           <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
             mediamodifier
