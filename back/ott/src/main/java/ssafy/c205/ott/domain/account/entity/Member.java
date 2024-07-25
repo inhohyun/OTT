@@ -76,6 +76,7 @@ public class Member extends BaseEntity {
         this.email = email;
         this.role = role;
         this.activeStatus = ActiveStatus.ACTIVE;
+        this.publicStatus = PublicStatus.PUBLIC;
     }
 
     public void updateNameAndEmail(String email, String name) {
@@ -95,5 +96,9 @@ public class Member extends BaseEntity {
         this.gender = gender;
         this.bodyType = bodyType;
         this.publicStatus = publicStatus;
+    }
+
+    public void deleteMember() {
+        this.activeStatus = ActiveStatus.INACTIVE;
     }
 }
