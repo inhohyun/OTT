@@ -11,6 +11,9 @@ import ClosetPage from "./pages/Closet/ClosetPage";
 import Header from './components/common/Header';
 import Footer from "./components/common/Footer";
 import UpdateProfile from './pages/UserPage/UpdateProfile';
+import SearchPage from "./pages/Search/SearchPage";
+import WebRTCPage from "./pages/WebRTC/WebRTCPage";
+import AiPage from "./pages/Ai/AiPage";
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
               <Route path="/updateProfile" element={< UpdateProfile/>} />
+              <Route path="/search" element={< SearchPage/>} />
+              <Route path="/webrtc" element={< WebRTCPage/>} />
+              <Route path="/ai" element={< AiPage/>} />
             </Route>
           </Routes>
         </Router>

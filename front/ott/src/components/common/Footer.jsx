@@ -6,11 +6,20 @@ import fitIcon from '../../assets/icons/aiicon.png';
 import camIcon from '../../assets/icons/webrtcicon.png';
 import profileIcon from '../../assets/icons/profileicon.png';
 import footerBackgroundImg from '../../assets/images/footer_background.png';
+import whiteX from '../../assets/icons/deleteicon.png';
 
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeButton, setActiveButton] = useState('');
+
+  // Set the initial active button based on the current pathname
+  const getCurrentPage = () => {
+    const path = location.pathname.slice(1);
+    if (path) return path;
+    return 'mainpage'; // Default to mainpage
+  };
+
+  const [activeButton, setActiveButton] = useState(getCurrentPage);
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
@@ -22,6 +31,8 @@ const Footer = () => {
     // Reset the active button only when navigating to the closet page
     if (location.pathname === '/closet') {
       setActiveButton('');
+    } else {
+      setActiveButton(getCurrentPage());
     }
   }, [location.pathname]);
 
@@ -62,16 +73,16 @@ const Footer = () => {
         </div>
         <div
           className="flex flex-col items-center bg-violet-500 rounded-full cursor-pointer w-12 h-12 justify-center"
-          onClick={() => handleButtonClick('fit')}
+          onClick={() => handleButtonClick('ai')}
           style={{ marginBottom: '30px' }}
         >
-          <img src={fitIcon} alt="Fit" className="w-8 h-8 mb-1" />
+          <img src={activeButton === 'ai' ? whiteX : fitIcon} alt="Fit" className="w-8 h-8 mb-1" />
         </div>
         <div
           className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
-            activeButton === 'cam' ? 'bg-violet-300 rounded-full' : ''
+            activeButton === 'webrtc' ? 'bg-violet-300 rounded-full' : ''
           }`}
-          onClick={() => handleButtonClick('cam')}
+          onClick={() => handleButtonClick('webrtc')}
           style={{ marginTop: '10px', marginLeft: '30px' }} // Adjust marginLeft for positioning
         >
           <img src={camIcon} alt="Cam" className="w-6 h-6" />
