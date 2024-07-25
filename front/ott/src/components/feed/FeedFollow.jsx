@@ -75,7 +75,7 @@ const FeedFollow = () => {
                     <div className="relative">
                         <button
                             onClick={() => scrollLeft(scrollRefs.current[index])}
-                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
                             style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                         <div ref={scrollRefs.current[index]} className="flex overflow-x-auto py-4 scrollbar-hide">
@@ -94,7 +94,7 @@ const FeedFollow = () => {
                         </div>
                         <button
                             onClick={() => scrollRight(scrollRefs.current[index])}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
                             style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                     </div>
