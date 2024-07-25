@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
-import ssafy.c205.ott.domain.account.dto.response.MemberDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberRegisterDto;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 
 import java.io.IOException;
@@ -72,13 +72,13 @@ public class JWTFilter extends OncePerRequestFilter {
         MemberRole role = jwtUtil.getRole(accessToken);
 
         //userDTO를 생성하여 값 set
-        MemberDto memberDTO = MemberDto.builder()
+        MemberRegisterDto memberRegisterDTO = MemberRegisterDto.builder()
                 .sso(sso)
                 .role(MemberRole.USER)
                 .build();
 
         //UserDetails에 회원 정보 객체 담기
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberDTO);
+        CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberRegisterDTO);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
