@@ -5,22 +5,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
-import ssafy.c205.ott.domain.account.dto.response.DeleteMemberSuccessDto;
-import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
-import ssafy.c205.ott.domain.account.dto.response.UpdateMemberSuccessDto;
-import ssafy.c205.ott.domain.account.dto.response.ValidateNicknameSuccessDto;
+import ssafy.c205.ott.domain.account.dto.response.*;
+import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.account.service.MemberReadService;
 import ssafy.c205.ott.domain.account.service.MemberValidator;
 import ssafy.c205.ott.domain.account.service.MemberWriteService;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberReadService memberReadService;
     private final MemberWriteService memberWriteService;
     private final MemberValidator memberValidator;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<MemberInfoDto> getMember(@PathVariable Long id) {
@@ -44,6 +47,17 @@ public class MemberController {
     public ResponseEntity<ValidateNicknameSuccessDto> validateNickname(@PathVariable String nickname) {
         ValidateNicknameSuccessDto nicknameSuccessDto = memberValidator.validateMemberNickname(nickname);
         return ResponseEntity.ok(nicknameSuccessDto);
+    }
+
+    @GetMapping("/more")
+    public ResponseEntity<List<MemberSearchResponseDto>> getMoreMembers(@RequestParam(name = "nickname", required = false) String nickname,
+                                                                        @RequestParam(name = "offset", defaultValue = "0") int offset,
+                                                                        @RequestParam(name = "limit", defaultValue = "10") int limit) {
+        List<Member> members = memberRepository.findByNicknameContaining(nickname, offset, limit);
+        List<MemberSearchResponseDto> memberSearchResponseDtos = members.stream()
+                .map(MemberSearchResponseDto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(memberSearchResponseDtos);
     }
 
 }
