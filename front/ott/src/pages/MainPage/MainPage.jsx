@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Recommend from '../../components/recommend/Recommend.jsx';
 import Feed from '../../components/feed/Feed';
 import MyLookbook from '../../components/mylookbook/MyLookbook';
-import Header from '../../components/common/Header.jsx';
 import backgroundImage from '../../assets/images/background_image_main.png';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
@@ -60,7 +59,6 @@ const MainPage = () => {
       className="relative flex flex-col items-center w-full h-full min-h-screen bg-cover"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <Header className="mb-1"/>
       <NavBar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
       <div className="content w-full flex-grow">
         {renderComponent()}
