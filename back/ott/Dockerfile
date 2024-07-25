@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # JAR 파일을 컨테이너로 복사
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE
 COPY ${JAR_FILE} app.jar
 
 # 애플리케이션 포트 설정
