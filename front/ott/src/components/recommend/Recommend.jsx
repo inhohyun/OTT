@@ -77,7 +77,7 @@ const Recommend = () => {
                     <div className="relative">
                         <button
                             onClick={() => scrollLeft(scrollRefs[category])}
-                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
                             style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                         <div ref={scrollRefs[category]} className="flex overflow-x-auto py-4 scrollbar-hide">
@@ -96,7 +96,7 @@ const Recommend = () => {
                         </div>
                         <button
                             onClick={() => scrollRight(scrollRefs[category])}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
                             style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                     </div>
