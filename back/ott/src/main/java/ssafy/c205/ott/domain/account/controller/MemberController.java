@@ -34,4 +34,9 @@ public class MemberController {
         return ResponseEntity.ok(updateMemberSuccessDto);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id) {
+        DeleteMemberSuccessDto deleteMemberSuccessDto = memberWriteService.deleteMember(MemberRequestDto.builder().id(id).build());
+        return ResponseEntity.ok(deleteMemberSuccessDto);
+    }
 }
