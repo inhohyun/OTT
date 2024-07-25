@@ -4,8 +4,13 @@ import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
 import Following from '@/components/userPage/Following';
 import backgroundImage from '../../assets/images/background_image_main.png';
-
+import lockIcon from '../../assets/icons/lockicon.png';
+import settingIcon from '../../assets/icons/Setting_icon.png';
 const NavBar = ({ activeComponent, setActiveComponent }) => {
+  const postNumber = 100;
+  const follwerNumber = 100;
+  const followingNumber = 100;
+
   return (
     <nav className="w-full text-center flex justify-around text-lg mt- font-dohyeon">
       <button
@@ -16,7 +21,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         aria-label="게시글"
         style={{ fontFamily: 'dohyeon' }}
       >
-        게시글
+        {postNumber} 게시글
       </button>
       <button
         className={`bg-transparent border-none text-[rgba(0,0,0,0.5)] py-2 px-5 cursor-pointer rounded-full ${
@@ -26,7 +31,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         aria-label="팔로워"
         style={{ fontFamily: 'dohyeon' }}
       >
-        팔로워
+        {follwerNumber} 팔로워
       </button>
       <button
         className={`bg-transparent border-none text-[rgba(0,0,0,0.5)] py-2 px-5 cursor-pointer rounded-full ${
@@ -36,7 +41,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         aria-label="팔로잉"
         style={{ fontFamily: 'dohyeon' }}
       >
-        팔로잉
+        {followingNumber} 팔로잉
       </button>
     </nav>
   );
@@ -75,8 +80,13 @@ const UserProfile = () => {
           />
         </div>
         <div className="absolute top-[210px] w-full text-center">
+        <div className="flex items-center justify-center">
+          <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
           <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">mediamodifier</p>
+          <img src={settingIcon} alt="수정" className="w-6 h-6 mr-2"/>
         </div>
+      </div>
+
         <div
           className={`absolute top-[260px] w-full flex justify-center ${
             tags.length > 3 ? 'flex-wrap' : ''
