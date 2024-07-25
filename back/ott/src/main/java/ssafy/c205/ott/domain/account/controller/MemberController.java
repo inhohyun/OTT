@@ -39,4 +39,11 @@ public class MemberController {
         DeleteMemberSuccessDto deleteMemberSuccessDto = memberWriteService.deleteMember(MemberRequestDto.builder().id(id).build());
         return ResponseEntity.ok(deleteMemberSuccessDto);
     }
+
+    @GetMapping("/validate-nickname/{nickname}")
+    public ResponseEntity<ValidateNicknameSuccessDto> validateNickname(@PathVariable String nickname) {
+        ValidateNicknameSuccessDto nicknameSuccessDto = memberValidator.validateMemberNickname(nickname);
+        return ResponseEntity.ok(nicknameSuccessDto);
+    }
+
 }
