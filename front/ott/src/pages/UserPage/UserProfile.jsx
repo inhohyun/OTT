@@ -114,12 +114,17 @@ const UserProfile = () => {
             </span>
           ))}
         </div>
-        <div className="w-full mt-6">
+        <div className="w-full mt-6 flex flex-col items-center">
           <NavBar
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
           />
-          <div className="mt-4 text-[rgba(0,0,0,0.5)]">{renderComponent}</div>
+          <div
+            className="mt-4 text-[rgba(0,0,0,0.5)] w-full flex justify-center"
+            style={{ height: "400px" }}
+          >
+            {renderComponent}
+          </div>
         </div>
       </div>
     </div>
