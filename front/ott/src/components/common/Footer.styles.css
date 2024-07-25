@@ -1,0 +1,6 @@
+.footer-bg {
+  background-image: url('../../assets/images/footer_background.png');
+  background-size: cover; /* This makes the image cover the entire element */
+  background-position: bottom center; /* This positions the image at the bottom center */
+  background-repeat: no-repeat; /* This prevents the image from repeating */
+}

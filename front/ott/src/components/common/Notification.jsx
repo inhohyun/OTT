@@ -42,9 +42,9 @@ const Notification = ({ show, onClose, notifications }) => {
           {notifications.slice(0, visibleNotifications).map((notification, index) => (
             <div key={index} className="mb-4 p-4 bg-white bg-opacity-40 rounded-lg shadow-md flex justify-between items-center">
               <div>
-                <p className="text-sm">{notification.who}님이 {notification.what}</p>
+                <p className="text-xs">{notification.who}님이 {notification.what}</p> {/* Reduced the size */}
               </div>
-              <p className="text-xs text-gray-400">{notification.when}</p>
+              <p className="text-xxs text-gray-400">{notification.when}</p> {/* Reduced the size */}
             </div>
           ))}
         </div>
