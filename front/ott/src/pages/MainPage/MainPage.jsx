@@ -47,7 +47,7 @@ const MainPage = () => {
       case 'recommendation':
         return <Recommend />;
       case 'feed':
-        return <Feed />;
+        return <Feed setActiveComponent={setActiveComponent} />;
       case 'myLookbook':
         return <MyLookbook />;
       default:
