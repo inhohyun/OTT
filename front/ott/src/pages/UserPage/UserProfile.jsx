@@ -76,11 +76,14 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="w-full h-full flex items-center justify-center font-dohyeon">
-      <div
-        className="w-full h-full relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
+    <div
+      className="w-full h-full flex items-center justify-center font-dohyeon min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="w-full h-full relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center">
         <div className="w-full flex justify-center mt-8">
           <img
             className="w-[70px] h-[70px] rounded-full"
