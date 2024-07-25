@@ -28,4 +28,10 @@ public class MemberController {
         return ResponseEntity.ok(memberInfoDto);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
+        UpdateMemberSuccessDto updateMemberSuccessDto = memberWriteService.updateMember(memberUpdateRequestDto);
+        return ResponseEntity.ok(updateMemberSuccessDto);
+    }
+
 }
