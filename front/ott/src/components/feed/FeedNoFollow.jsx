@@ -1,15 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/icons/main.logo.png';
 
 const FeedNoFollow = ({ setActiveComponent }) => {
+  const navigate = useNavigate();
+
   const handleRecommendationClick = () => {
     setActiveComponent('recommendation');
+  };
+
+  const handleSearchClick = () => {
+    navigate('/search'); // 검색 페이지로 이동
   };
 
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto mt-[10vh]" style={{ width: '70%' }}>
       <div className="w-full bg-violet-200 bg-opacity-60 rounded-t-2xl p-4 relative">
-        {/* Move the logo container down without affecting the purple background */}
         <div className="flex items-center justify-center w-20 h-20 bg-white rounded-full mx-auto" style={{ position: 'relative', top: '25px' }}>
           <img src={logo} alt="No Follow" className="w-[60px] h-[60px] rounded-full" />
         </div>
@@ -30,13 +36,13 @@ const FeedNoFollow = ({ setActiveComponent }) => {
           <button 
             className="bg-violet-200 text-violet-700 font-semibold py-2 px-4 rounded-full shadow-md font-dohyeon"
             style={{ fontFamily: 'dohyeon' }}
+            onClick={handleSearchClick}
           >
             검색하기
           </button>
         </div>
       </div>
     </div>
-
   );
 };
 

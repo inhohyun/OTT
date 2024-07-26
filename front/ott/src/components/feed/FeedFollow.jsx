@@ -47,8 +47,8 @@ const FeedFollow = () => {
     };
 
     return (
-        <div className="relative flex flex-col items-start w-full p-5 space-y-5">
-<style>{`
+        <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
+            <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
                 }
@@ -60,25 +60,36 @@ const FeedFollow = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin: 0 2px; /* Further reduced margin */
+                    margin: 0;
+                    padding: 0;
+                }
+                .lookbook-container {
+                    margin-right : -10px;
                 }
                 .button-no-style {
                     background: none;
                     border: none;
                     padding: 0;
                     cursor: pointer;
+                    box-shadow: none; /* 그림자 제거 */
+                    outline: none; /* 포커스 시 표시 제거 */
                 }
             `}</style>
             {followers.map((follower, index) => (
                 <div key={follower} className="w-full">
-                    <p className="ml-2 text-xl font-bold">{follower}</p>
+                    <p className="ml-2 text-lg font-bold">{follower}</p>
                     <div className="relative">
                         <button
                             onClick={() => scrollLeft(scrollRefs.current[index])}
-                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
-                            style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+                            className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6 button-no-style"
+                            style={{ 
+                                backgroundImage: `url(${leftArrow})`, 
+                                backgroundSize: 'contain', 
+                                backgroundRepeat: 'no-repeat', 
+                                backgroundPosition: 'center'
+                            }}
                         ></button>
-                        <div ref={scrollRefs.current[index]} className="flex overflow-x-auto py-4 scrollbar-hide">
+                        <div ref={scrollRefs.current[index]} className="flex overflow-x-auto py-3 scrollbar-hide">
                             {allLookbooks[follower].slice(0, visibleLookbooks[follower]).map((_, lookbookIndex) => (
                                 <div key={lookbookIndex} className="lookbook-container">
                                     <Lookbook />
@@ -86,7 +97,7 @@ const FeedFollow = () => {
                             ))}
                             {visibleLookbooks[follower] < allLookbooks[follower].length && (
                                 <div className="show-more-button">
-                                    <button onClick={() => showMore(follower)} className="relative top-[-70px] bg-transparent border-none p-0 m-0 cursor-pointer">
+                                    <button onClick={() => showMore(follower)} className="relative bg-transparent border-none p-2 cursor-pointer">
                                         <img src={plus} alt="Show more" className="w-6 h-6" />
                                     </button>
                                 </div>
@@ -94,8 +105,13 @@ const FeedFollow = () => {
                         </div>
                         <button
                             onClick={() => scrollRight(scrollRefs.current[index])}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
-                            style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+                            className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6 button-no-style"
+                            style={{ 
+                                backgroundImage: `url(${rightArrow})`, 
+                                backgroundSize: 'contain', 
+                                backgroundRepeat: 'no-repeat', 
+                                backgroundPosition: 'center'
+                            }}
                         ></button>
                     </div>
                 </div>
