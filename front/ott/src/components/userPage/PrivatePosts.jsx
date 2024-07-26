@@ -28,7 +28,7 @@ const PrivatePosts = () => {
   return (       
     <>
    
-     <div className="flex flex-col items-center w-full p-5 space-y-5"> 
+     <div className="flex flex-col items-center w-full space-y-5"> 
      <p>비공개 게시물입니다.</p>
     <style>{`
         .scrollbar-hide {
