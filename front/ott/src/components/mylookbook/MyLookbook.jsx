@@ -19,10 +19,8 @@ const MyLookbook = () => {
     );
     const [selectedTag, setSelectedTag] = useState(null);
 
-    // References for scroll containers
     const scrollRefs = useRef(tags.map(() => React.createRef()));
 
-    // Scroll functions
     const scrollLeft = (ref) => {
         if (ref.current) {
             ref.current.scrollBy({ left: -200, behavior: 'smooth' });
@@ -44,7 +42,7 @@ const MyLookbook = () => {
     };
 
     return (
-        <div className="relative flex flex-col items-start w-full p-5 space-y-5">
+        <div className="relative flex flex-col items-start w-full pl-2 space-y-5">
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
@@ -57,7 +55,11 @@ const MyLookbook = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin: 0 2px; /* Further reduced margin */
+                    margin: 0; /* Reduced margin */
+                    padding: 0;
+                }
+                .lookbook-container {
+                    margin-right: -10px;
                 }
                 .button-no-style {
                     background: none;
@@ -72,7 +74,7 @@ const MyLookbook = () => {
                     <div className="relative">
                         <button
                             onClick={() => scrollLeft(scrollRefs.current[index])}
-                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
+                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-6 h-6"
                             style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                         <div ref={scrollRefs.current[index]} className="flex overflow-x-auto py-4 scrollbar-hide">
@@ -83,7 +85,7 @@ const MyLookbook = () => {
                             ))}
                             {visibleLookbooks[tag] < allLookbooks[tag].length && (
                                 <div className="show-more-button">
-                                    <button onClick={() => showMore(tag)} className="relative top-[-70px] bg-transparent border-none p-0 m-0 cursor-pointer">
+                                    <button onClick={() => showMore(tag)} className="relative bg-transparent border-none p-0 mb-32 cursor-pointer">
                                         <img src={plus} alt="Show more" className="w-6 h-6" />
                                     </button>
                                 </div>
@@ -91,7 +93,7 @@ const MyLookbook = () => {
                         </div>
                         <button
                             onClick={() => scrollRight(scrollRefs.current[index])}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-8 h-8"
+                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 mr-2 rounded-full w-6 h-6"
                             style={{ backgroundImage: `url(${rightArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
                     </div>

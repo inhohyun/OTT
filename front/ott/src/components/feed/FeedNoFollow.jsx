@@ -7,7 +7,7 @@ const FeedNoFollow = ({ setActiveComponent }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-md mx-auto mt-40" style={{ width: '45%' }}>
+    <div className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto mt-[10vh]" style={{ width: '70%' }}>
       <div className="w-full bg-violet-200 bg-opacity-60 rounded-t-2xl p-4 relative">
         {/* Move the logo container down without affecting the purple background */}
         <div className="flex items-center justify-center w-20 h-20 bg-white rounded-full mx-auto" style={{ position: 'relative', top: '25px' }}>
@@ -36,6 +36,7 @@ const FeedNoFollow = ({ setActiveComponent }) => {
         </div>
       </div>
     </div>
+
   );
 };
 

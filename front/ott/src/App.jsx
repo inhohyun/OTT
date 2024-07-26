@@ -22,16 +22,13 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
-            <Route path="/survey_start" element={<SurveyStart />} />
-            <Route path="/survey_ing" element={<SurveyIng />} />
-            
             <Route element={<CommonLayout />}>
               <Route path="/updateProfile" element={< UpdateProfile/>} />
               <Route path="/userPage" element={<UserProfile />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
+              <Route path="/userPage" element={<UserProfile />} />
             </Route>
-
           </Routes>
         </Router>
       </Layout>
