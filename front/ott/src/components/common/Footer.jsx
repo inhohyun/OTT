@@ -1,76 +1,104 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import homeIcon from '../../assets/icons/homeicon.png';
 import searchIcon from '../../assets/icons/searchicon.png';
 import fitIcon from '../../assets/icons/aiicon.png';
 import camIcon from '../../assets/icons/webrtcicon.png';
 import profileIcon from '../../assets/icons/profileicon.png';
 import footerBackgroundImg from '../../assets/images/footer_background.png';
+import whiteX from '../../assets/icons/deleteicon.png';
 
 const Footer = () => {
   const navigate = useNavigate();
-  const [activeButton, setActiveButton] = useState('');
+  const location = useLocation();
+
+  // Set the initial active button based on the current pathname
+  const getCurrentPage = () => {
+    const path = location.pathname.slice(1);
+    if (path) return path;
+    return 'mainpage'; // Default to mainpage
+  };
+
+  const [activeButton, setActiveButton] = useState(getCurrentPage);
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
+    // Navigate to the corresponding page
+    navigate(`/${buttonName}`);
   };
+
+  const handleXButtonClick = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
+  useEffect(() => {
+    // Reset the active button only when navigating to the closet page
+    if (location.pathname === '/closet') {
+      setActiveButton('');
+    } else {
+      setActiveButton(getCurrentPage());
+    }
+  }, [location.pathname]);
 
   return (
     <footer
       className="w-full p-4 relative flex justify-center items-center z-50"
       style={{
         backgroundImage: `url(${footerBackgroundImg})`,
-        backgroundSize: '390px 120px', // Customize the size here
+        backgroundSize: 'cover', // Adjust the size here
         backgroundPosition: 'center bottom', // Adjust position as needed
         backgroundRepeat: 'no-repeat',
         position: 'fixed',
         bottom: 0,
         height: '100px', // Set a fixed height for the footer
+        maxWidth: '390px', // Set a max-width for the footer
+        left: '50%',
+        transform: 'translateX(-50%)',
       }}
     >
-      <div className="relative w-full max-w-screen-lg mx-auto" style={{ height: '100px' }}>
+      <div className="relative w-full flex justify-between items-center px-4" style={{ height: '100%' }}>
         <div
-          className={`absolute flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
-            activeButton === 'home' ? 'bg-violet-300 rounded-full' : ''
+          className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
+            activeButton === 'mainpage' ? 'bg-violet-300 rounded-full' : ''
           }`}
-          onClick={() => handleButtonClick('home')}
-          style={{ left: '330px', top: '35px' }} // Adjust left and top for positioning
+          onClick={() => handleButtonClick('mainpage')}
+          style={{ marginTop: '30px', marginRight: '30px' }} // Adjust marginRight for positioning
         >
           <img src={homeIcon} alt="Home" className="w-6 h-6" />
         </div>
         <div
-          className={`absolute flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
+          className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
             activeButton === 'search' ? 'bg-violet-300 rounded-full' : ''
           }`}
           onClick={() => handleButtonClick('search')}
-          style={{ left: '400px', top: '25px' }} // Adjust left and top for positioning
+          style={{ marginTop: '10px', marginRight: '30px' }} // Adjust marginRight for positioning
         >
           <img src={searchIcon} alt="Search" className="w-6 h-6" />
         </div>
         <div
-          className="absolute flex flex-col items-center bg-violet-500 rounded-full cursor-pointer w-12 h-12 justify-center"
-          onClick={() => handleButtonClick('fit')}
-          style={{ left: '490px', top: '0' }} // Adjust left and top for positioning
+          className="flex flex-col items-center bg-violet-500 rounded-full cursor-pointer w-12 h-12 justify-center"
+          onClick={activeButton === 'ai' ? handleXButtonClick : () => handleButtonClick('ai')}
+          style={{ marginBottom: '30px' }}
         >
-          <img src={fitIcon} alt="Fit" className="w-8 h-8 mb-1" />
+          <img src={activeButton === 'ai' ? whiteX : fitIcon} alt="Fit" className="w-8 h-8 mb-1" />
         </div>
         <div
-          className={`absolute flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
-            activeButton === 'cam' ? 'bg-violet-300 rounded-full' : ''
+          className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
+            activeButton === 'webrtc' ? 'bg-violet-300 rounded-full' : ''
           }`}
-          onClick={() => handleButtonClick('cam')}
-          style={{ left: '580px', top: '25px' }} // Adjust left and top for positioning
+          onClick={() => handleButtonClick('webrtc')}
+          style={{ marginTop: '10px', marginLeft: '30px' }} // Adjust marginLeft for positioning
         >
           <img src={camIcon} alt="Cam" className="w-6 h-6" />
         </div>
         <div
-          className={`absolute flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
-            activeButton === 'profile' ? 'bg-violet-300 rounded-full' : ''
+          className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
+            activeButton === 'userPage' ? 'bg-violet-300 rounded-full' : ''
           }`}
-          onClick={() => handleButtonClick('profile')}
-          style={{ left: '650px', top: '35px' }} // Adjust left and top for positioning
+          onClick={() => handleButtonClick('userPage')}
+          style={{ marginTop: '30px', marginLeft: '30px' }} // Adjust marginLeft for positioning
         >
-          <img src={profileIcon} alt="Profile" className="w-6 h-6" />
+          <img src={profileIcon} alt="userPage" className="w-6 h-6" />
         </div>
       </div>
     </footer>

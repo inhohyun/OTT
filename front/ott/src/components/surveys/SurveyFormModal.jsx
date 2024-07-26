@@ -7,7 +7,7 @@ export default function SurveyFormModal({ show, children, step, totalSteps }) {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center">
-      <div className="bg-white p-5 rounded-lg max-w-md w-11/12 shadow-lg">
+      <div className="bg-white p-5 rounded-lg max-w-xs w-11/12 shadow-lg">
         <ProgressBar step={step} totalSteps={totalSteps} />
         {children}
       </div>

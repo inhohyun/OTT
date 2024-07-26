@@ -154,7 +154,7 @@ const UpdateProfile = () => {
             <button onClick={() => handleBodyTypeSelect('슬림')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">슬림</button>
             <button onClick={() => handleBodyTypeSelect('슬림 탄탄')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"> 슬림 탄탄</button>
             <button onClick={() => handleBodyTypeSelect('보통')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">보통</button>
-            <button onClick={() => handleBodyTypeSelect('통통')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">통통</button>
+            <button onClick={() => handleBodyTypeSelect('통통')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 ">통통</button>
           </div>
         </div>
       </Modal>

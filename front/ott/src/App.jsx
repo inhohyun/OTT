@@ -8,9 +8,12 @@ import SurveyStart from "./pages/Survey/SurveyStart";
 import SurveyIng from "./pages/Survey/SurveyIng";
 import MainPage from "./pages/MainPage/MainPage";
 import ClosetPage from "./pages/Closet/ClosetPage";
-import UpdateProfile from './pages/UserPage/UpdateProfile';
 import Header from './components/common/Header';
 import Footer from "./components/common/Footer";
+import UpdateProfile from './pages/UserPage/UpdateProfile';
+import SearchPage from "./pages/Search/SearchPage";
+import WebRTCPage from "./pages/WebRTC/WebRTCPage";
+import AiPage from "./pages/Ai/AiPage";
 
 function App() {
   return (
@@ -23,11 +26,13 @@ function App() {
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
             <Route element={<CommonLayout />}>
-              <Route path="/updateProfile" element={< UpdateProfile/>} />
               <Route path="/userPage" element={<UserProfile />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
-              <Route path="/userPage" element={<UserProfile />} />
+              <Route path="/updateProfile" element={< UpdateProfile/>} />
+              <Route path="/search" element={< SearchPage/>} />
+              <Route path="/webrtc" element={< WebRTCPage/>} />
+              <Route path="/ai" element={< AiPage/>} />
             </Route>
           </Routes>
         </Router>

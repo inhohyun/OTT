@@ -16,6 +16,7 @@ module.exports = {
     },
     fontSize: {
       inherit: "inherit",
+      xxs: "0.625rem"
     },
   },
   corePlugins: {
