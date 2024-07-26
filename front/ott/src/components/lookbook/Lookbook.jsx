@@ -62,8 +62,8 @@ const Lookbook = () => {
                 className="w-[120px] h-[160px]  rounded-[5px] overflow-hidden shadow-lg bg-white m-2 flex-shrink-0 cursor-pointer"
             >
                 <div className="px-2 py-1 flex justify-between items-center">
-                    <div className="font-bold text-xs mb-1">{dummyLookbook.creatorName}</div>
-                    <p className="text-gray-600 text-xs">{dummyLookbook.timeAgo}</p>
+                    <div className="font-bold text-xs mb-1 text-[15px]">{dummyLookbook.creatorName}</div>
+                    <p className="text-stone-300 text-xs text-[8px]">{dummyLookbook.timeAgo}</p>
                 </div>
                 <div className="px-3 py-1 mb-1">
                     <img className="w-full h-20 object-cover" src={dummyLookbook.image} alt={dummyLookbook.name} />
