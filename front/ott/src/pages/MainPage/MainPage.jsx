@@ -5,8 +5,8 @@ import MyLookbook from '../../components/mylookbook/MyLookbook';
 import backgroundImage from '../../assets/images/background_image_main.png';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
-  return (
-    <nav className="flex justify-around w-full mb-5 bg-white p-2 -mt-2">
+  return (  
+    <nav className="flex justify-around w-full bg-white p-2 -mt-2">
       <button
         className={`bg-transparent border-none font-dohyeon text-slate-400 text-lg py-2 px-5 mx-3 cursor-pointer rounded-full ${
           activeComponent === 'recommendation' ? 'bg-violet-200 text-slate-400' : ''

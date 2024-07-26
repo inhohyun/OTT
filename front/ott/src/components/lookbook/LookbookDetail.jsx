@@ -17,9 +17,25 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
             onClick={onClose}
         >
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 5px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #888;
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                }
+            `}</style>
             <div 
-                className="bg-white p-6 rounded-2xl shadow-lg max-w-xs w-full relative h-[75vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
+                className="bg-white p-6 rounded-2xl shadow-lg max-w-xs w-full relative h-[75vh] overflow-y-auto custom-scrollbar"
+                onClick={(e) => e.stopPropagation()} // Prevent click propagation to avoid closing the modal
             >
                 <button 
                     className="absolute top-4 right-4 p-0 bg-transparent border-none" 
@@ -79,12 +95,12 @@ const LookbookDetail = ({ lookbook, onClose }) => {
                             판매용 댓글
                         </p>
                     </div>
-                    <div className="overflow-y-auto" style={{ maxHeight: '200px' }}>
-                    {showSellComments ? (
-                        <SellComment comments={comments} />
-                    ) : (
-                        <Comment comments={comments} />
-                    )}
+                    <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: '200px' }}>
+                        {showSellComments ? (
+                            <SellComment comments={comments} />
+                        ) : (
+                            <Comment comments={comments} />
+                        )}
                     </div>
                 </div>
             </div>
