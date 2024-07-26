@@ -80,7 +80,7 @@ const Recommend = () => {
                             className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-6 h-6"
                             style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
-                        <div ref={scrollRefs[category]} className="flex overflow-x-auto py-2 scrollbar-hide">
+                        <div ref={scrollRefs[category]} className="flex overflow-x-auto py-3 scrollbar-hide">
                             {lookbooksData[category].slice(0, visibleLookbooks[category]).map((lookbook) => (
                                 <div key={lookbook.id} className="lookbook-container">
                                     <Lookbook data={lookbook} />

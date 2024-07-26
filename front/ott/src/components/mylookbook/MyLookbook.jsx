@@ -42,7 +42,7 @@ const MyLookbook = () => {
     };
 
     return (
-        <div className="relative flex flex-col items-start w-full pl-2 space-y-5">
+        <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
@@ -77,7 +77,7 @@ const MyLookbook = () => {
                             className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-6 h-6"
                             style={{ backgroundImage: `url(${leftArrow})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
                         ></button>
-                        <div ref={scrollRefs.current[index]} className="flex overflow-x-auto py-4 scrollbar-hide">
+                        <div ref={scrollRefs.current[index]} className="flex overflow-x-auto py-3 scrollbar-hide">
                             {allLookbooks[tag].slice(0, visibleLookbooks[tag]).map((_, lookbookIndex) => (
                                 <div key={lookbookIndex} className="lookbook-container">
                                     <Lookbook />
