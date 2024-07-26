@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const Layout = styled.div`
+ width: 100%;
   max-width: 390px;
   display: flex;
   flex-direction: column;
@@ -14,9 +15,6 @@ const Layout = styled.div`
     width: 100%;
   }
 
-  @media (max-width: 600px) and (orientation: portrait) {
-    width: 100vw;
-  }
 `;
 
 export default Layout;

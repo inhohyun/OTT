@@ -44,10 +44,13 @@ const Posts = () => {
         {" "}
         {/* 간격을 줄이기 위해 margin-top을 4로 설정 */}
         <button
-          className="w-[184px] py-1 px-5 cursor-pointer rounded-full bg-violet-200 text-black flex items-center justify-center"
+          className="w-[184px] py-1 px-5 cursor-pointer rounded-full bg-violet-200 text-black flex items-center justify-center mb-40"
+          style={{ fontFamily: 'dohyeon' }}
           onClick={handleLookbookRegister}
         >
-          <img src={AddIcon} alt="룩북 아이콘" className="w-6 h-6 mr-2" />
+          <img src={AddIcon} alt="룩북 아이콘" className="w-6 h-6 mr-2" 
+             
+          />
           룩북 등록
         </button>
       </div>

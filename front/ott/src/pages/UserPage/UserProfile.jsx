@@ -72,8 +72,11 @@ const UserProfile = () => {
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon">
       <div
-        className="w-[390px] h-[100vh] relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        className="w-[390px] h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})`,
+      
+        
+      }}
       >
         <div className="w-full flex justify-center mt-8">
           <img
@@ -92,11 +95,11 @@ const UserProfile = () => {
             onClick={() => navigate('/updateProfile')} 
           />
         </div>
-        <div className={`w-full flex justify-center mt-6 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}>
+        <div className={`flex justify-center mt-5 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}>
           {tags.map((tag) => (
             <span
               key={tag}
-              className="bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-2"
+              className="bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-30"
             >
               {tag}
             </span>

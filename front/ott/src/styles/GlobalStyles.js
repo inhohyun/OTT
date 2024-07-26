@@ -24,6 +24,9 @@ const GlobalStyle = createGlobalStyle`
   nav {
   font-family : 'dohyeon'
   }
+    #root {
+    width: 100%;
+  }
 `;
 
 export default GlobalStyle;
