@@ -27,6 +27,10 @@ const Footer = () => {
     navigate(`/${buttonName}`);
   };
 
+  const handleXButtonClick = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   useEffect(() => {
     // Reset the active button only when navigating to the closet page
     if (location.pathname === '/closet') {
@@ -73,7 +77,7 @@ const Footer = () => {
         </div>
         <div
           className="flex flex-col items-center bg-violet-500 rounded-full cursor-pointer w-12 h-12 justify-center"
-          onClick={() => handleButtonClick('ai')}
+          onClick={activeButton === 'ai' ? handleXButtonClick : () => handleButtonClick('ai')}
           style={{ marginBottom: '30px' }}
         >
           <img src={activeButton === 'ai' ? whiteX : fitIcon} alt="Fit" className="w-8 h-8 mb-1" />
