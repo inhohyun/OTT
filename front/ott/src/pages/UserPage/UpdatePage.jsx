@@ -1,21 +1,22 @@
-import React, { useState } from "react";
-import Modal from "react-modal";
-import backgroundImage from "../../assets/images/background_image_main.png";
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faSearch } from "@fortawesome/free-solid-svg-icons";
-import mainIcon from "../../assets/icons/main.logo.png";
-import closeIcon from "../../assets/icons/deleteicon.png"; // 닫기 아이콘 이미지 경로
-
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import backgroundImage from '../../assets/images/background_image_main.png';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import mainIcon from '../../assets/icons/main.logo.png';
+import closeIcon from '../../assets/icons/deleteicon.png'; // 닫기 아이콘 이미지 경로
+import Switch from '../../components/userPage/Switch';
 const UpdatePage = () => {
   const navigate = useNavigate();
 
   const redirectProfile = () => {
-    navigate("/userPage");
+    navigate('/userPage');
   };
 
-  const [bodyType, setBodyType] = useState("");
+  const [bodyType, setBodyType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const onClose = () => setIsModalOpen(false);
@@ -26,28 +27,32 @@ const UpdatePage = () => {
   };
 
   const handleOutsideClick = (e) => {
-    if (e.target.classList.contains("modal-overlay")) {
+    if (e.target.classList.contains('modal-overlay')) {
       onClose();
     }
   };
+  const handleCheckboxChange = (e) => {
+    // 체크박스 변경 후 처리
+    setIsChecked(!isChecked);
+  };
 
   // 태그 추가 기능
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
-    setErrorMessage("");
+    setErrorMessage('');
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim() === "") {
+    if (searchText.trim() === '') {
       return;
     }
     if (tags.includes(searchText.trim())) {
-      setErrorMessage("이미 존재하는 태그입니다.");
+      setErrorMessage('이미 존재하는 태그입니다.');
       return;
     }
     if (tags.length >= 5) {
@@ -55,7 +60,7 @@ const UpdatePage = () => {
     }
     const newTags = [...tags, searchText.trim()];
     setTags(newTags);
-    setSearchText("");
+    setSearchText('');
   };
 
   const handleTagRemove = (tag) => {
@@ -70,15 +75,11 @@ const UpdatePage = () => {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="w-full flex justify-center mt-8">
-          <img
-            className="w-[70px] h-[70px] rounded-full"
-            alt="User Icon"
-            src={mainIcon}
-          />
+          <img className="w-[70px] h-[70px] rounded-full" alt="User Icon" src={mainIcon} />
         </div>
-        <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-6">
-          mediamodifier
-        </p>
+
+        <Switch isChecked={isChecked} handleCheckboxChange={handleCheckboxChange} />
+        <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-6">mediamodifier</p>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form
             className="space-y-6 mb-"
@@ -88,10 +89,7 @@ const UpdatePage = () => {
             }}
           >
             <div className="flex items-center mb-5">
-              <label
-                htmlFor="name"
-                className="w-1/4 ml-1 mb-1 font-thin text-lg"
-              >
+              <label htmlFor="name" className="w-1/4 ml-1 mb-1 font-thin text-lg">
                 이름
               </label>
               <input
@@ -103,10 +101,7 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label
-                htmlFor="phone"
-                className="w-1/4 ml-1 mb-1 font-thin text-lg"
-              >
+              <label htmlFor="phone" className="w-1/4 ml-1 mb-1 font-thin text-lg">
                 전화번호
               </label>
               <input
@@ -118,10 +113,7 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label
-                htmlFor="nickname"
-                className="w-1/4 ml-1 mb-1 font-thin text-lg"
-              >
+              <label htmlFor="nickname" className="w-1/4 ml-1 mb-1 font-thin text-lg">
                 닉네임
               </label>
               <div className="relative flex items-center w-3/4">
@@ -138,10 +130,7 @@ const UpdatePage = () => {
               </div>
             </div>
             <div className="flex items-center mb-5">
-              <label
-                htmlFor="height"
-                className="w-1/4 ml-1 mb-1 font-thin text-lg"
-              >
+              <label htmlFor="height" className="w-1/4 ml-1 mb-1 font-thin text-lg">
                 키
               </label>
               <input
@@ -153,10 +142,7 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label
-                htmlFor="weight"
-                className="w-1/4 ml-1 mb-1 font-thin text-lg"
-              >
+              <label htmlFor="weight" className="w-1/4 ml-1 mb-1 font-thin text-lg">
                 몸무게
               </label>
               <input
@@ -168,10 +154,7 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label
-                htmlFor="bodyType"
-                className="w-1/4 ml-1 mb-1 font-thin text-lg"
-              >
+              <label htmlFor="bodyType" className="w-1/4 ml-1 mb-1 font-thin text-lg">
                 체형
               </label>
               <input
@@ -187,10 +170,8 @@ const UpdatePage = () => {
             {/* 태그 추가 */}
             <div className="space-y-6">
               <h4 className="text-2xl mb-5 text-gray-800 font-thin">
-                선호하는 스타일{" "}
-                <span className="text-sm text-[10px] text-stone-400">
-                  (최대 5개)
-                </span>
+                선호하는 스타일{' '}
+                <span className="text-sm text-[10px] text-stone-400">(최대 5개)</span>
               </h4>
               <div className="relative mb-2 flex justify-between items-center">
                 <input
@@ -198,7 +179,7 @@ const UpdatePage = () => {
                   id="style"
                   value={searchText}
                   onChange={handleSearchChange}
-                  placeholder="Search"
+                  placeholder="검색할 스타일을 입력하세요"
                   className="w-full p-2 rounded-full border border-violet-300 box-border focus:border-violet-400"
                 />
                 <span
@@ -208,9 +189,7 @@ const UpdatePage = () => {
                   <FontAwesomeIcon icon={faSearch} />
                 </span>
               </div>
-              {errorMessage && (
-                <p className="text-red-500 text-sm mb-2">{errorMessage}</p>
-              )}
+              {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
               <div className="flex flex-wrap gap-2 mb-10">
                 {tags.map((tag) => (
                   <div
@@ -260,25 +239,25 @@ const UpdatePage = () => {
               <h2 className="text-xl font-bold mb-4">당신의 체형은?</h2>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <button
-                  onClick={() => handleBodyTypeSelect("슬림")}
+                  onClick={() => handleBodyTypeSelect('슬림')}
                   className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
                 >
                   슬림
                 </button>
                 <button
-                  onClick={() => handleBodyTypeSelect("슬림 탄탄")}
+                  onClick={() => handleBodyTypeSelect('슬림 탄탄')}
                   className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
                 >
                   슬림 탄탄
                 </button>
                 <button
-                  onClick={() => handleBodyTypeSelect("보통")}
+                  onClick={() => handleBodyTypeSelect('보통')}
                   className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
                 >
                   보통
                 </button>
                 <button
-                  onClick={() => handleBodyTypeSelect("통통")}
+                  onClick={() => handleBodyTypeSelect('통통')}
                   className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
                 >
                   통통
