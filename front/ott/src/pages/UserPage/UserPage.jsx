@@ -20,7 +20,7 @@ const UserPage = () => {
     "소개팅",
   ];
   const username = "mediamodifier";
-
+  const isMe = true; // 본인 여부
   let renderComponent;
   switch (activeComponent) {
     case "posts":
