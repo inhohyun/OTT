@@ -13,7 +13,7 @@ const Posts = () => {
 
   return (
     <div className="w-full text-center">
-      <div className="flex justify-center space-x-2 font-dohyeon">
+      <div className="flex justify-center space-x-2">
         <button
           className={`py-2 px-5 cursor-pointer rounded-full ${
             activePostType === "public"
@@ -21,6 +21,7 @@ const Posts = () => {
               : "text-gray-400"
           }`}
           onClick={() => setActivePostType("public")}
+          style={{ fontFamily: "dohyeon" }}
         >
           공개
         </button>
@@ -31,6 +32,7 @@ const Posts = () => {
               : "text-gray-400"
           }`}
           onClick={() => setActivePostType("private")}
+          style={{ fontFamily: "dohyeon" }}
         >
           비공개
         </button>
@@ -44,14 +46,14 @@ const Posts = () => {
         {" "}
         {/* 간격을 줄이기 위해 margin-top을 4로 설정 */}
         <button
-          className="w-[184px] py-1 px-5 cursor-pointer rounded-full bg-violet-200 text-black flex items-center justify-center mb-40"
-          style={{ fontFamily: 'dohyeon' }}
+          className="w-[220px] py-1 px-5 cursor-pointer rounded-full bg-violet-200 text-white flex items-center justify-center mb-40 relative"
+          style={{ fontFamily: "dohyeon" }}
           onClick={handleLookbookRegister}
         >
-          <img src={AddIcon} alt="룩북 아이콘" className="w-6 h-6 mr-2" 
-             
-          />
-          룩북 등록
+          <span className="flex items-center">
+            <img src={AddIcon} alt="룩북 아이콘" className="w-6 h-6 mr-2" />
+            룩북 등록
+          </span>
         </button>
       </div>
     </div>
