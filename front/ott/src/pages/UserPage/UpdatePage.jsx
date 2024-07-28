@@ -71,15 +71,19 @@ const UpdatePage = () => {
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon">
       <div
-        className="w-[390px] h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
+        className="w-full h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="w-full flex justify-center mt-8">
           <img className="w-[70px] h-[70px] rounded-full" alt="User Icon" src={mainIcon} />
         </div>
 
-        <Switch isChecked={isChecked} handleCheckboxChange={handleCheckboxChange} />
-        <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-6">mediamodifier</p>
+        <div className="flex mr-[40px] mt-[16px]">
+          <Switch isChecked={isChecked} handleCheckboxChange={handleCheckboxChange} />
+          <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-[7px] ml-[5px]">
+            mediamodifier
+          </p>
+        </div>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form
             className="space-y-6 mb-"

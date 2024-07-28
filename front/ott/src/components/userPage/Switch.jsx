@@ -14,7 +14,7 @@ const Switch = ({ isChecked, handleCheckboxChange }) => {
           className="sr-only"
         />
         <div
-          className={`shadow-card flex h-[46px] w-[82px] items-center justify-between rounded-full ${
+          className={`shadow-card flex h-[30px] w-[50px] items-center justify-between rounded-full ${
             !isChecked ? 'bg-violet-500' : 'bg-stone-500'
           }`}
         >
