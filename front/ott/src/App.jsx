@@ -14,6 +14,7 @@ import UpdateProfile from './pages/UserPage/UpdateProfile';
 import SearchPage from "./pages/Search/SearchPage";
 import WebRTCPage from "./pages/WebRTC/WebRTCPage";
 import AiPage from "./pages/Ai/AiPage";
+import LookbookCreate from "./pages/Create/LookbookCreate";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="/search" element={< SearchPage/>} />
               <Route path="/webrtc" element={< WebRTCPage/>} />
               <Route path="/ai" element={< AiPage/>} />
+              <Route path="/lookbookcreate" element={<LookbookCreate />} />
             </Route>
           </Routes>
         </Router>

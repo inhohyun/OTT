@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import LookbookDetail from './LookbookDetail';
 import lookbookimg from '../../../public/icon-512x512.png';
+import hearticon from '../../assets/icons/hearticon.png';
+import commenticon from '../../assets/icons/commenticon.png';
 
 const Lookbook = () => {
     const [isDetailVisible, setIsDetailVisible] = useState(false);
@@ -70,8 +72,14 @@ const Lookbook = () => {
                 </div>
                 <div className="px-3 pb-1 flex justify-end items-center">
                     <div className="flex items-center space-x-1">
-                        <span className="text-gray-600 text-xs">❤ {dummyLookbook.likes}</span>
-                        <span className="text-gray-600 text-xs">🗨 {dummyLookbook.comments.length}</span>
+                        <div className="flex items-center">
+                            <img src={hearticon} alt="hearticon" className="w-4 mr-1 mt-1" />
+                            <span className="text-gray-600 text-[10px] mt-1">{dummyLookbook.likes}</span>
+                        </div>
+                        <div className="flex items-center">
+                            <img src={commenticon} alt="commenticon" className="w-4 mr-1 mt-1" />
+                            <span className="text-gray-600 text-[10px] mt-1">{dummyLookbook.comments.length}</span>
+                        </div>
                     </div>
                 </div>
             </div>

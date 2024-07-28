@@ -26,7 +26,7 @@ const LookbookList = ({ tag, lookbooks, onClose }) => {
             `}</style>
             <div 
                 className="bg-white p-2 rounded-2xl shadow-lg w-full max-w-xs overflow-hidden"
-                style={{ maxHeight: '85vh' }}
+                style={{ maxHeight: '75vh' }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center mb-2 mt-2">
@@ -35,7 +35,7 @@ const LookbookList = ({ tag, lookbooks, onClose }) => {
                         <img src={deleteicon} alt="Close" className="w-full h-full bg-transparent" />
                     </button>
                 </div>
-                <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(80vh - 64px)' }}>
+                <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(75vh - 64px)' }}>
                     <div className="grid grid-cols-2 gap-0 mb-0"> {/* gap과 margin 줄이기 */}
                         {lookbooks.map((lookbook, index) => (
                             <Lookbook key={index} data={lookbook} />
