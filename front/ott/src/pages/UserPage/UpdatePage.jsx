@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import Modal from 'react-modal';
+import Modal from "react-modal";
 import backgroundImage from "../../assets/images/background_image_main.png";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import mainIcon from '../../assets/icons/main.logo.png';
-import closeIcon from '../../assets/icons/deleteicon.png'; // 닫기 아이콘 이미지 경로
+import mainIcon from "../../assets/icons/main.logo.png";
+import closeIcon from "../../assets/icons/deleteicon.png"; // 닫기 아이콘 이미지 경로
 
-const UpdateProfile = () => {
+const UpdatePage = () => {
   const navigate = useNavigate();
 
   const redirectProfile = () => {
     navigate("/userPage");
   };
 
-  const [bodyType, setBodyType] = useState('');
+  const [bodyType, setBodyType] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -40,7 +40,9 @@ const UpdateProfile = () => {
           alt="User Icon"
           src={mainIcon}
         />
-        <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-6">mediamodifier</p>
+        <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-6">
+          mediamodifier
+        </p>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form
             className="space-y-6 mb-"
@@ -50,7 +52,10 @@ const UpdateProfile = () => {
             }}
           >
             <div className="flex items-center mb-5">
-              <label htmlFor="name" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="name"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 이름
               </label>
               <input
@@ -62,7 +67,10 @@ const UpdateProfile = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="phone" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="phone"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 전화번호
               </label>
               <input
@@ -74,7 +82,10 @@ const UpdateProfile = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="nickname" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="nickname"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 닉네임
               </label>
               <div className="relative flex items-center w-3/4">
@@ -91,7 +102,10 @@ const UpdateProfile = () => {
               </div>
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="height" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="height"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 키
               </label>
               <input
@@ -103,7 +117,10 @@ const UpdateProfile = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="weight" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="weight"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 몸무게
               </label>
               <input
@@ -115,7 +132,10 @@ const UpdateProfile = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="bodyType" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="bodyType"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 체형
               </label>
               <input
@@ -146,15 +166,39 @@ const UpdateProfile = () => {
         className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
       >
         <div className="relative bg-white p-8 rounded-lg shadow-md">
-          <button onClick={closeModal} className="absolute top-4 right-4 cursor-pointer">
+          <button
+            onClick={closeModal}
+            className="absolute top-4 right-4 cursor-pointer"
+          >
             <img src={closeIcon} alt="닫기" className="w-6 h-6" />
           </button>
           <h2 className="text-xl font-bold mb-4">당신의 체형은?</h2>
           <div className="grid grid-cols-2 gap-4 text-center">
-            <button onClick={() => handleBodyTypeSelect('슬림')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">슬림</button>
-            <button onClick={() => handleBodyTypeSelect('슬림 탄탄')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"> 슬림 탄탄</button>
-            <button onClick={() => handleBodyTypeSelect('보통')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">보통</button>
-            <button onClick={() => handleBodyTypeSelect('통통')} className="p-4 bg-gray-200 rounded hover:bg-gray-300 ">통통</button>
+            <button
+              onClick={() => handleBodyTypeSelect("슬림")}
+              className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+            >
+              슬림
+            </button>
+            <button
+              onClick={() => handleBodyTypeSelect("슬림 탄탄")}
+              className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+            >
+              {" "}
+              슬림 탄탄
+            </button>
+            <button
+              onClick={() => handleBodyTypeSelect("보통")}
+              className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+            >
+              보통
+            </button>
+            <button
+              onClick={() => handleBodyTypeSelect("통통")}
+              className="p-4 bg-gray-200 rounded hover:bg-gray-300 "
+            >
+              통통
+            </button>
           </div>
         </div>
       </Modal>
@@ -162,4 +206,4 @@ const UpdateProfile = () => {
   );
 };
 
-export default UpdateProfile;
+export default UpdatePage;
