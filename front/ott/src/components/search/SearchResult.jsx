@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
-import LookbookList from '../lookbook/LookbookList';
 
 const SearchResult = ({ results, searchQuery, isChecked }) => {
   const [visibleResults, setVisibleResults] = useState(4);
@@ -49,12 +48,6 @@ const SearchResult = ({ results, searchQuery, isChecked }) => {
         >
           더보기
         </p>
-      )}
-      {isChecked && (
-        <LookbookList
-          tag={searchQuery}
-          lookbooks={results}
-        />
       )}
     </div>
   );
