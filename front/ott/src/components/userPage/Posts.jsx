@@ -46,7 +46,7 @@ const Posts = () => {
         {" "}
         {/* 간격을 줄이기 위해 margin-top을 4로 설정 */}
         <button
-          className="w-[220px] py-1 px-5 cursor-pointer rounded-full bg-violet-200 text-white flex items-center justify-center mb-40 relative"
+          className="w-[220px] py-2 px-5 cursor-pointer rounded-full bg-violet-200 text-white flex items-center justify-center mb-20 relative mt-5"
           style={{ fontFamily: "dohyeon" }}
           onClick={handleLookbookRegister}
         >

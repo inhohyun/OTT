@@ -69,7 +69,7 @@ const UserPage = () => {
           {tags.map((tag) => (
             <span
               key={tag}
-              className="bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-30a mt-2"
+              className="bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-30 mt-2"
             >
               {tag}
             </span>
