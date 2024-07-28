@@ -40,7 +40,7 @@ const PersonSearchResult = ({ results, searchQuery }) => {
   }
 
   if (!filteredResults.length) {
-    return <p className="text-gray-500 text-center">No results matching your search query.</p>;
+    return <p className="text-gray-500 text-center">검색 결과가 없습니다.</p>;
   }
 
   return (

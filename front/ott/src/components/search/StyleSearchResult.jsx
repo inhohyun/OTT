@@ -35,7 +35,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
   };
 
   if (!results.length) {
-    return <p className="text-gray-500 text-center">검색어와 일치하는 결과가 없습니다</p>;
+    return null;
   }
 
   return (
