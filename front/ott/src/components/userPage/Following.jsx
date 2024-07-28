@@ -51,17 +51,14 @@ const Following = () => {
     { name: "이준호", image: "" },
     { name: "최수진", image: "" },
     { name: "한지민", image: "" },
-    { name: "전가현", image: "" },
-    { name: "김민수", image: "" },
-    { name: "박지윤", image: "" },
-    { name: "이준호", image: "" },
-    { name: "최수진", image: "" },
-    { name: "한지민", image: "" },
   ];
 
   return (
     <div className="flex flex-col items-center">
-      <div className="backdrop-blur-md bg-white bg-opacity-40 text-stone-500 p-6 rounded-2xl max-w-md w-full h-[500px] overflow-y-auto">
+      <div
+        className="backdrop-blur-md bg-white bg-opacity-40 text-stone-500 p-6 rounded-2xl max-w-md w-full overflow-y-auto"
+        style={{ maxHeight: "calc(100vh - 150px)" }}
+      >
         <div className="flex justify-center items-center mb-4 relative">
           <h3 className="text-xl font-bold">팔로잉 목록</h3>
         </div>
@@ -105,4 +102,3 @@ const Following = () => {
 };
 
 export default Following;
-``;

@@ -26,20 +26,18 @@ const UpdatePage = () => {
   };
 
   return (
-    <div
-      className="flex items-center justify-center w-full h-screen"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="flex flex-col items-center mt-8">
-        <img
-          className="w-[70px] h-[70px] rounded-full"
-          alt="User Icon"
-          src={mainIcon}
-        />
+    <div className="w-full h-full flex items-center justify-center font-dohyeon">
+      <div
+        className="w-[390px] h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
+        <div className="w-full flex justify-center mt-8">
+          <img
+            className="w-[70px] h-[70px] rounded-full"
+            alt="User Icon"
+            src={mainIcon}
+          />
+        </div>
         <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-6">
           mediamodifier
         </p>
@@ -157,51 +155,52 @@ const UpdatePage = () => {
             </div>
           </form>
         </div>
-      </div>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="체형 선택"
-        ariaHideApp={false}
-        className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
-      >
-        <div className="relative bg-white p-8 rounded-lg shadow-md">
-          <button
-            onClick={closeModal}
-            className="absolute top-4 right-4 cursor-pointer"
-          >
-            <img src={closeIcon} alt="닫기" className="w-6 h-6" />
-          </button>
-          <h2 className="text-xl font-bold mb-4">당신의 체형은?</h2>
-          <div className="grid grid-cols-2 gap-4 text-center">
+
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          contentLabel="체형 선택"
+          ariaHideApp={false}
+          className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="relative bg-white p-8 rounded-lg shadow-md">
             <button
-              onClick={() => handleBodyTypeSelect("슬림")}
-              className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+              onClick={closeModal}
+              className="absolute top-4 right-4 cursor-pointer"
             >
-              슬림
+              <img src={closeIcon} alt="닫기" className="w-6 h-6" />
             </button>
-            <button
-              onClick={() => handleBodyTypeSelect("슬림 탄탄")}
-              className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
-            >
-              {" "}
-              슬림 탄탄
-            </button>
-            <button
-              onClick={() => handleBodyTypeSelect("보통")}
-              className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
-            >
-              보통
-            </button>
-            <button
-              onClick={() => handleBodyTypeSelect("통통")}
-              className="p-4 bg-gray-200 rounded hover:bg-gray-300 "
-            >
-              통통
-            </button>
+            <h2 className="text-xl font-bold mb-4">당신의 체형은?</h2>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <button
+                onClick={() => handleBodyTypeSelect("슬림")}
+                className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+              >
+                슬림
+              </button>
+              <button
+                onClick={() => handleBodyTypeSelect("슬림 탄탄")}
+                className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+              >
+                {" "}
+                슬림 탄탄
+              </button>
+              <button
+                onClick={() => handleBodyTypeSelect("보통")}
+                className="p-4 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+              >
+                보통
+              </button>
+              <button
+                onClick={() => handleBodyTypeSelect("통통")}
+                className="p-4 bg-gray-200 rounded hover:bg-gray-300 "
+              >
+                통통
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
     </div>
   );
 };
