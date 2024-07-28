@@ -18,11 +18,11 @@ const UpdatePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const onClose = () => setIsModalOpen(false);
 
   const handleBodyTypeSelect = (type) => {
     setBodyType(type);
-    closeModal();
+    onClose();
   };
 
   return (
@@ -158,18 +158,18 @@ const UpdatePage = () => {
 
         <Modal
           isOpen={isModalOpen}
-          onRequestClose={closeModal}
+          onRequestClose={onClose}
           contentLabel="체형 선택"
           ariaHideApp={false}
           className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
         >
           <div className="relative bg-white p-8 rounded-lg shadow-md">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 cursor-pointer"
+            <p
+              onClick={onClose}
+              className="text-lg font-bold cursor-pointer w-8 h-8 absolute right-0 top-5"
             >
-              <img src={closeIcon} alt="닫기" className="w-6 h-6" />
-            </button>
+              &times;
+            </p>
             <h2 className="text-xl font-bold mb-4">당신의 체형은?</h2>
             <div className="grid grid-cols-2 gap-4 text-center">
               <button
