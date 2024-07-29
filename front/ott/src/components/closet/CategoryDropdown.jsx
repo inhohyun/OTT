@@ -4,15 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory'; // Adjust the import path as needed
 
-const CategoryDropdown = ({ selectedCategory, onCategoryChange }) => {
-  const [categories, setCategories] = useState([
-    { value: '전체', label: '전체' },
-    { value: '상의', label: '상의' },
-    { value: '하의', label: '하의' },
-    { value: '아우터', label: '아우터' },
-    { value: '한벌옷', label: '한벌옷' },
-    { value: '즐겨찾기', label: '즐겨찾기' },
-  ]);
+const CategoryDropdown = ({ selectedCategory, onCategoryChange, categories, onAddCategory }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const customStyles = {
@@ -32,15 +24,14 @@ const CategoryDropdown = ({ selectedCategory, onCategoryChange }) => {
   };
 
   const handleAddCategory = (newCategory) => {
-    const newCategoryObj = { value: newCategory, label: newCategory };
-    setCategories([...categories, newCategoryObj]);
+    onAddCategory(newCategory);
   };
 
   return (
-    <div className="my-8 w-full max-w-xs flex items-center">
+    <div className="my-12 w-full max-w-xs flex items-center">
       <Select
-        options={categories}
-        value={categories.find(category => category.value === selectedCategory) || { value: '전체', label: '전체' }}
+        options={categories.map(category => ({ value: category, label: category }))}
+        value={{ value: selectedCategory, label: selectedCategory }}
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
@@ -55,7 +46,6 @@ const CategoryDropdown = ({ selectedCategory, onCategoryChange }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAddCategory={handleAddCategory}
-        existingCategories={categories}
       />
     </div>
   );
