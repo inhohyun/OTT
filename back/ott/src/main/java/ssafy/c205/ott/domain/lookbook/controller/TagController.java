@@ -18,7 +18,7 @@ import ssafy.c205.ott.domain.lookbook.service.TagService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tag")
+@RequestMapping("/api/tag")
 @Tag(name = "태그 컨트롤러", description = "태그 생성, 수정, 삭제 등 전반적인 태그를 관리하는 클래스")
 public class TagController {
 

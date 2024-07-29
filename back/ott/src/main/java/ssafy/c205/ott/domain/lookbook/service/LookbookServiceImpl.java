@@ -42,19 +42,22 @@ public class LookbookServiceImpl implements LookbookService {
         for (String tag : lookbookCreateDto.getTags()) {
             Tag tagEntity = tagRepository.findByName(tag);
             if (tagEntity == null) {
-                tagRepository.save(Tag.builder()
+                tagRepository.save(Tag
+                    .builder()
                     .name(tag)
                     .count(1L)
                     .build());
             } else {
-                tagRepository.save(Tag.builder()
+                tagRepository.save(Tag
+                    .builder()
                     .id(tagEntity.getId())
                     .name(tagEntity.getName())
                     .count(tagEntity.getCount() + 1)
                     .build());
             }
             //Todo : lookbook 어떻게 넣을지 생각
-            lookbookTags.add(LookbookTag.builder()
+            lookbookTags.add(LookbookTag
+                .builder()
 //                .lookbook(lookbook)
                 .tag(tagRepository.findByName(tag))
                 .build());
@@ -64,7 +67,8 @@ public class LookbookServiceImpl implements LookbookService {
 
         //룩북 추가하기
         //Todo : 옷 내용들, 옷 사진, 사용자 넣을 것
-        lookbookRepository.save(Lookbook.builder()
+        lookbookRepository.save(Lookbook
+            .builder()
             .content(lookbookCreateDto.getContent())
             .publicStatus(lookbookCreateDto.getPublicStatus())
             .lookbookTags(lookbookTags)
@@ -77,11 +81,13 @@ public class LookbookServiceImpl implements LookbookService {
         Lookbook lookbook = null;
         if (odl.isPresent()) {
             lookbook = odl.get();
-            lookbookRepository.save(Lookbook.builder()
+            lookbookRepository.save(Lookbook
+                .builder()
                 .id(lookbook.getId())
                 .hitCount(lookbook.getHitCount() + 1)
                 .build());
-            return LookbookDetailDto.builder()
+            return LookbookDetailDto
+                .builder()
                 .content(lookbook.getContent())
                 .id(lookbook.getId())
                 .lookbookItems(lookbook.getLookbookItemList())
@@ -110,7 +116,8 @@ public class LookbookServiceImpl implements LookbookService {
                 if (tag.getCount() == 1) {
                     tagRepository.delete(tag);
                 } else {
-                    tagRepository.save(Tag.builder()
+                    tagRepository.save(Tag
+                        .builder()
                         .id(tag.getId())
                         .count(tag.getCount() - 1)
                         .build());
@@ -118,7 +125,8 @@ public class LookbookServiceImpl implements LookbookService {
                 lookbookTagRepository.deleteById(lookbookTag.getId());
             }
             //룩북 삭제
-            lookbookRepository.save(Lookbook.builder()
+            lookbookRepository.save(Lookbook
+                .builder()
                 .id(lookbook.getId())
                 .activeStatus(ActiveStatus.INACTIVE)
                 .build());
@@ -155,17 +163,20 @@ public class LookbookServiceImpl implements LookbookService {
             for (String tag : lookbookUpdateDto.getTags()) {
                 Tag tagEntity = tagRepository.findByName(tag);
                 if (tagEntity == null) {
-                    tagRepository.save(Tag.builder()
+                    tagRepository.save(Tag
+                        .builder()
                         .name(tag)
                         .count(1L)
                         .build());
                 } else {
-                    tagRepository.save(Tag.builder()
+                    tagRepository.save(Tag
+                        .builder()
                         .id(tagEntity.getId())
                         .count(tagEntity.getCount() + 1)
                         .build());
                 }
-                LookbookTag lookbookTag = LookbookTag.builder()
+                LookbookTag lookbookTag = LookbookTag
+                    .builder()
                     .tag(tagRepository.findByName(tag))
                     .lookbook(lookbook)
                     .build();
@@ -177,7 +188,8 @@ public class LookbookServiceImpl implements LookbookService {
             //Todo : 옷 부분 끝나고 옷 정보 수정 구현
 
             //Todo : 옷 사진이랑 옷정보 수정정보 넣읅것
-            lookbookRepository.save(Lookbook.builder()
+            lookbookRepository.save(Lookbook
+                .builder()
                 .id(lookbook.getId())
                 .publicStatus(lookbookUpdateDto.getPublicStatus())
                 .content(lookbookUpdateDto.getContent())
@@ -196,11 +208,24 @@ public class LookbookServiceImpl implements LookbookService {
             Long.valueOf(lookbookFavoriteDto.getLookbookId()));
         if (ol.isPresent()) {
             Lookbook lookbook = ol.get();
-            favoriteRepository.save(new Favorite(lookbook));
+            favoriteRepository.save(Favorite
+                .builder()
+                .lookbook(lookbook)
+                .build());
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean dislikeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
+        //Todo : 멤버 id로 id(pk)값 찾아서 null 위치에 넣기 / 예외 생각
+        Favorite favoriteLookbook = favoriteRepository.findByLookbookIdAndUserId(
+            Long.parseLong(lookbookFavoriteDto.getLookbookId()),
+            null);
+        favoriteRepository.delete(favoriteLookbook);
+        return true;
     }
 
     @Override

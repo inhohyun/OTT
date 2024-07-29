@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/lookbook")
+@RequestMapping("/api/lookbook")
 @Tag(name = "룩북 컨트롤러", description = "룩북 생성, 조회, 삭제, 룩북 좋아요 등 전반적인 룩북을 관리하는 클래스")
 public class LookbookController {
 
@@ -97,6 +97,20 @@ public class LookbookController {
             return new ResponseEntity<String>("룩북 좋아요를 성공했습니다.", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("룩북 좋아요를 실패했습니다.", HttpStatus.CONFLICT);
+        }
+    }
+
+    @Operation(summary = "룩북 좋아요 삭제", description = "<big>룩북을</big>좋아요를 삭제합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "룩북 좋아요 삭제를 성공했습니다."),
+    })
+    @PostMapping("/{lookbook_id}/dislike")
+    public ResponseEntity<?> dislikeLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
+        boolean isFavoriteSuccess = lookbookService.dislikeLookbook(lookbookFavoriteDto);
+        if (isFavoriteSuccess) {
+            return new ResponseEntity<String>("룩북 좋아요 삭제를 성공했습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("룩북 좋아요 삭제를 실패했습니다.", HttpStatus.CONFLICT);
         }
     }
 

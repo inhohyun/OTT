@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     List<Favorite> findByLookbookId(Long lookbookId);
+    Favorite findByLookbookIdAndUserId(Long lookbookId, Long userId);
 }

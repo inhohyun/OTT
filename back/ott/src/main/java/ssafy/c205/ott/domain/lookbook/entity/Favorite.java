@@ -1,6 +1,7 @@
 package ssafy.c205.ott.domain.lookbook.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
@@ -22,12 +23,10 @@ public class Favorite extends BaseEntity {
     @JoinColumn(name = "lookbook_id")
     private Lookbook lookbook;
 
-    public Favorite(Member member, Lookbook lookbook) {
+    @Builder
+    public Favorite(Long id, Member member, Lookbook lookbook) {
+        this.id = id;
         this.member = member;
-        this.lookbook = lookbook;
-    }
-
-    public Favorite(Lookbook lookbook) {
         this.lookbook = lookbook;
     }
 

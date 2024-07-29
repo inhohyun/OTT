@@ -18,6 +18,8 @@ public interface LookbookService {
 
     boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto);
 
+    boolean dislikeLookbook(LookbookFavoriteDto lookbookFavoriteDto);
+
     int cntLikeLookbook(String lookbookId);
 
     List<Lookbook> findPublicLookbooks(String uid);
