@@ -8,18 +8,18 @@ import {
 } from 'react-router-dom'; // Outlet 추가
 import './styles/tailwind.css';
 import Login from './pages/Login/LoginPage';
-import UserProfile from './pages/UserPage/UserPage';
 import SurveyStart from './pages/Survey/SurveyStart';
 import SurveyIng from './pages/Survey/SurveyIng';
 import MainPage from './pages/MainPage/MainPage';
 import ClosetPage from './pages/Closet/ClosetPage';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
-import UpdateUserPage from './pages/UserPage/UpdatePage';
+import UpdatePage from './pages/UserPage/UpdatePage';
 import SearchPage from './pages/Search/SearchPage';
 import WebRTCPage from './pages/WebRTC/WebRTCPage';
 import AiPage from './pages/Ai/AiPage';
 import LookbookCreate from './pages/Create/LookbookCreate';
+import UserPage from './pages/UserPage/UserPage';
 
 function App() {
   return (
@@ -32,10 +32,10 @@ function App() {
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
             <Route element={<CommonLayout />}>
-              <Route path="/userPage" element={<UserProfile />} />
+              <Route path="/userPage" element={<UserPage />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
-              <Route path="/UpdateUserPage" element={<UpdateUserPage />} />
+              <Route path="/UpdatePage" element={<UpdatePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
               <Route path="/ai" element={<AiPage />} />

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faTshirt } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,7 +11,7 @@ const Switch = ({ isChecked, handleCheckboxChange }) => {
           onChange={handleCheckboxChange}
           className="sr-only"
         />
-        <div className="shadow-card flex h-[46px] w-[82px] items-center justify-between rounded-full bg-violet-500">
+        <div className="shadow-card flex h-[30px] w-[60px] items-center justify-between rounded-full bg-violet-500">
           <span
             className={`flex h-full w-1/2 items-center justify-center rounded-full ${
               !isChecked ? 'bg-white text-violet-500' : 'text-white'
