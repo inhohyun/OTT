@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
 import AiResult from './AiResult'; // AiResult 컴포넌트를 import
-import ClothesGrid from '@/components/closet/ClothesGrid'; // ClothesGrid 컴포넌트를 import
+import ClothesGridSingleLine from './ClothesGridSingleLine'; // ClothesGridSingleLine 컴포넌트를 import
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -36,8 +36,13 @@ const Modal = ({ isOpen, onClose }) => {
   const [isTryingOn, setIsTryingOn] = useState(false); // 상태 추가
 
   const handlePutOn = () => {
-    console.log('Put on');
-    setIsTryingOn(true); // 입어보기 버튼 클릭 시 상태 변경
+    if (selectedClothing) {
+      console.log('Selected Clothing ID:', selectedClothing.id);
+      console.log('Selected Filter:', filter);
+      setIsTryingOn(true); // 입어보기 버튼 클릭 시 상태 변경
+    } else {
+      console.log('No clothing selected');
+    }
   };
 
   const handleClothingClick = (clothing) => {
@@ -172,10 +177,10 @@ const Modal = ({ isOpen, onClose }) => {
                 <option value="아우터">아우터</option>
               </select>
             </div>
-            <ClothesGrid
+            <ClothesGridSingleLine
               clothes={filteredClothes}
               onToggleLike={handleToggleLike}
-              isSingleLine={true}
+              onClothingClick={handleClothingClick}
             />
             <button className="try-on-button" onClick={handlePutOn}>
               입어보기
