@@ -13,6 +13,7 @@ import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.ActiveStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Favorite;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
@@ -235,8 +236,7 @@ public class LookbookServiceImpl implements LookbookService {
         if (lookbookLikes == null) {
             return -1;
         }
-        int cntLike = lookbookLikes.size();
-        return cntLike;
+        return lookbookLikes.size();
     }
 
     // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
@@ -254,7 +254,7 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public List<Lookbook> findByTag(String[] tags) {
+    public List<TagLookbookDto> findByTag(String[] tags) {
         HashMap<Long, Integer> map = new HashMap<>();
         for (String tag : tags) {
             Tag tagEntity = tagRepository.findByName(tag);
@@ -282,12 +282,25 @@ public class LookbookServiceImpl implements LookbookService {
         Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
 
         // sort된 key값(lookbookid)로 룩북 정보를 가져와 리스트에 저장
-        List<Lookbook> lookbooks = new ArrayList<>();
+        List<TagLookbookDto> lookbooks = new ArrayList<>();
         for (Long key : keys) {
             Optional<Lookbook> ol = lookbookRepository.findById(key);
             if (ol.isPresent()) {
                 Lookbook lookbook = ol.get();
-                lookbooks.add(lookbook);
+                lookbooks.add(TagLookbookDto
+                    .builder()
+                    .id(lookbook.getId())
+                    .hitCount(lookbook.getHitCount())
+                    .content(lookbook.getContent())
+                    .publicStatus(lookbook.getPublicStatus())
+                    .activeStatus(lookbook.getActiveStatus())
+                    .member(lookbook.getMember())
+                    .lookbookItemList(lookbook.getLookbookItemList())
+                    .lookbookTags(lookbook.getLookbookTags())
+                    .comments(lookbook.getComments())
+                    .lookbookImages(lookbook.getLookbookImages())
+                    .build()
+                );
             }
         }
 

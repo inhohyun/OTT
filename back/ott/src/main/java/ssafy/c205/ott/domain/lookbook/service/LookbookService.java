@@ -3,6 +3,7 @@ package ssafy.c205.ott.domain.lookbook.service;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 
 import java.util.List;
@@ -26,5 +27,5 @@ public interface LookbookService {
 
     List<Lookbook> findPrivateLookbooks(String uid);
 
-    List<Lookbook> findByTag(String[] tags);
+    List<TagLookbookDto> findByTag(String[] tags);
 }

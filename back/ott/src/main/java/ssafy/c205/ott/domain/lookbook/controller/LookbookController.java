@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 
@@ -175,10 +176,10 @@ public class LookbookController {
     })
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@RequestBody String[] tags, String uid) {
-        List<Lookbook> findByTags = lookbookService.findByTag(tags);
+        List<TagLookbookDto> findByTags = lookbookService.findByTag(tags);
         if (findByTags == null) {
             return new ResponseEntity<String>("태그가 포함된 게시물을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Lookbook>>(findByTags, HttpStatus.OK);
+        return new ResponseEntity<List<TagLookbookDto>>(findByTags, HttpStatus.OK);
     }
 }
