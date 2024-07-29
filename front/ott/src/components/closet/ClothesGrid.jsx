@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 
-const ClothesGrid = ({ clothes, onToggleLike, isSingleLine = false }) => {
+const ClothesGrid = ({ clothes, onToggleLike }) => {
   const [visibleItems, setVisibleItems] = useState(12); // Adjust this if needed
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
@@ -47,7 +47,7 @@ const ClothesGrid = ({ clothes, onToggleLike, isSingleLine = false }) => {
       ref={containerRef}
     >
       <div
-        className={`grid ${isSingleLine ? 'grid-flow-col auto-cols-max' : 'grid-flow-row grid-cols-2'} gap-4`}
+        className="grid grid-flow-col auto-cols-max grid-rows-2 gap-4"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {clothes.slice(0, visibleItems).map((item) => {
