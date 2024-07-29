@@ -1,11 +1,12 @@
 package ssafy.c205.ott.domain.lookbook.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
 import ssafy.c205.ott.domain.account.entity.Member;
 
-@Entity
+@Entity @Getter
 public class Favorite extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

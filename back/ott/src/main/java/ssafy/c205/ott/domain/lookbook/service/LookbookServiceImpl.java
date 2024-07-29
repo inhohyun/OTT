@@ -133,16 +133,21 @@ public class LookbookServiceImpl implements LookbookService {
     @Override
     public boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto) {
         Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(lookbookId));
+        List<LookbookTag> lookbookTags = new ArrayList<>();
         if (ol.isPresent()) {
             Lookbook lookbook = ol.get();
-            lookbook.setPublicStatus(lookbookUpdateDto.getPublicStatus());  //공개여부 수정
-            lookbook.setContent(lookbookUpdateDto.getContent());            //본문 수정
 
             //기존 태그 삭제
             for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
                 Tag tag = lookbookTag.getTag();
-                tag.setCount(tag.getCount() - 1);
-                tagRepository.save(tag);
+                if (tag.getCount() == 1) {
+                    tagRepository.delete(tag);
+                } else {
+                    tagRepository.save(Tag.builder()
+                        .id(tag.getId())
+                        .count(tag.getCount() - 1)
+                        .build());
+                }
                 lookbookTagRepository.delete(lookbookTag);
             }
 
@@ -150,20 +155,34 @@ public class LookbookServiceImpl implements LookbookService {
             for (String tag : lookbookUpdateDto.getTags()) {
                 Tag tagEntity = tagRepository.findByName(tag);
                 if (tagEntity == null) {
-                    tagEntity = new Tag();
-                    tagEntity.setName(tag);
-                    tagEntity.setCount(1L);
-                    tagRepository.save(tagEntity);
+                    tagRepository.save(Tag.builder()
+                        .name(tag)
+                        .count(1L)
+                        .build());
                 } else {
-                    tagEntity.setCount(tagEntity.getCount() + 1L);
-                    tagRepository.save(tagEntity);
+                    tagRepository.save(Tag.builder()
+                        .id(tagEntity.getId())
+                        .count(tagEntity.getCount() + 1)
+                        .build());
                 }
+                LookbookTag lookbookTag = LookbookTag.builder()
+                    .tag(tagRepository.findByName(tag))
+                    .lookbook(lookbook)
+                    .build();
+                lookbookTagRepository.save(lookbookTag);
+                lookbookTags.add(lookbookTag);
             }
 
             //옷 정보 수정
             //Todo : 옷 부분 끝나고 옷 정보 수정 구현
 
-            lookbookRepository.save(lookbook);
+            //Todo : 옷 사진이랑 옷정보 수정정보 넣읅것
+            lookbookRepository.save(Lookbook.builder()
+                .id(lookbook.getId())
+                .publicStatus(lookbookUpdateDto.getPublicStatus())
+                .content(lookbookUpdateDto.getContent())
+                .lookbookTags(lookbookTags)
+                .build());
             return true;
         } else {
             return false;

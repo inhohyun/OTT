@@ -13,7 +13,6 @@ import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
 
 @Entity
-@Setter
 @ToString
 @Getter
 public class Tag extends BaseEntity {
