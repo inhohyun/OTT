@@ -29,45 +29,63 @@ import shirt3Back from '../../assets/images/clothes/shirt3-1.jpg';
 
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
-  const clothes = [
-    { id: 1, category: '한벌옷', frontImage: dress1, backImage: dress1Back },
-    { id: 2, category: '한벌옷', frontImage: dress2 },
-    { id: 3, category: '한벌옷', frontImage: dress3 },
-    { id: 4, category: '아우터', frontImage: outer1, backImage: outer1Back },
-    { id: 5, category: '아우터', frontImage: outer2, backImage: outer2Back },
-    { id: 6, category: '아우터', frontImage: outer3, backImage: outer3Back },
-    { id: 7, category: '하의', frontImage: pants1, backImage: pants1Back },
-    { id: 8, category: '하의', frontImage: pants2, backImage: pants2Back },
-    { id: 9, category: '하의', frontImage: pants3, backImage: pants3Back },
-    { id: 10, category: '상의', frontImage: shirt1, backImage: shirt1Back },
-    { id: 11, category: '상의', frontImage: shirt2, backImage: shirt2Back },
-    { id: 12, category: '상의', frontImage: shirt3, backImage: shirt3Back },
-  ];
+  const [clothes, setClothes] = useState([
+    { id: 1, category: '한벌옷', frontImage: dress1, backImage: dress1Back, isLiked: false },
+    { id: 2, category: '한벌옷', frontImage: dress2, isLiked: false },
+    { id: 3, category: '한벌옷', frontImage: dress3, isLiked: false },
+    { id: 4, category: '아우터', frontImage: outer1, backImage: outer1Back, isLiked: false },
+    { id: 5, category: '아우터', frontImage: outer2, backImage: outer2Back, isLiked: false },
+    { id: 6, category: '아우터', frontImage: outer3, backImage: outer3Back, isLiked: false },
+    { id: 7, category: '하의', frontImage: pants1, backImage: pants1Back, isLiked: false },
+    { id: 8, category: '하의', frontImage: pants2, backImage: pants2Back, isLiked: false },
+    { id: 9, category: '하의', frontImage: pants3, backImage: pants3Back, isLiked: false },
+    { id: 10, category: '상의', frontImage: shirt1, backImage: shirt1Back, isLiked: false },
+    { id: 11, category: '상의', frontImage: shirt2, backImage: shirt2Back, isLiked: false },
+    { id: 12, category: '상의', frontImage: shirt3, backImage: shirt3Back, isLiked: false },
+  ]);
 
   const handleCategoryChange = (newCategory) => {
     setSelectedCategory(newCategory);
   };
 
   const handleAddClothes = () => {
-    // Implement logic to add new clothes
-    const newClothes = { id: clothes.length + 1, category: '상의', frontImage: '../../assets/images/clothes/shirt1.jpg' }; // Example data
+    const newClothes = { id: clothes.length + 1, category: '상의', frontImage: '../../assets/images/clothes/shirt1.jpg', isLiked: false }; // Example data
     setClothes([...clothes, newClothes]);
+  };
+
+  const handleToggleLike = (id) => {
+    setClothes(prevClothes =>
+      prevClothes.map(item =>
+        item.id === id ? { ...item, isLiked: !item.isLiked } : item
+      )
+    );
   };
 
   const filteredClothes = selectedCategory === '전체'
     ? clothes
-    : clothes.filter(item => item.category === selectedCategory);
+    : selectedCategory === '즐겨찾기'
+      ? clothes.filter(item => item.isLiked)
+      : clothes.filter(item => item.category === selectedCategory);
 
   return (
     <div
-      className="relative flex flex-col items-center w-full h-full min-h-screen bg-cover"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="relative flex flex-col items-center w-full min-h-screen bg-cover"
+      style={{ backgroundImage: `url(${backgroundImage})`, paddingBottom: '7.5rem' }} // pb-30 equivalent
     >
       <CategoryDropdown
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
-<ClothesGrid clothes={filteredClothes} />    </div>
+      <ClothesGrid clothes={filteredClothes} onToggleLike={handleToggleLike} />
+      <div className="flex justify-center mt-5" style={{ paddingBottom: '7.5rem' }}>
+        <button
+          onClick={handleAddClothes}
+          className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
+        >
+          + 옷 추가하기
+        </button>
+      </div>    
+    </div>
   );
 };
 

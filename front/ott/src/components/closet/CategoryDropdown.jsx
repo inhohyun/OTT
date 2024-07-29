@@ -11,6 +11,7 @@ const CategoryDropdown = ({ selectedCategory, onCategoryChange }) => {
     { value: '하의', label: '하의' },
     { value: '아우터', label: '아우터' },
     { value: '한벌옷', label: '한벌옷' },
+    { value: '즐겨찾기', label: '즐겨찾기' },
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -36,7 +37,7 @@ const CategoryDropdown = ({ selectedCategory, onCategoryChange }) => {
   };
 
   return (
-    <div className="my-12 w-full max-w-xs flex items-center">
+    <div className="my-8 w-full max-w-xs flex items-center">
       <Select
         options={categories}
         value={categories.find(category => category.value === selectedCategory) || { value: '전체', label: '전체' }}
