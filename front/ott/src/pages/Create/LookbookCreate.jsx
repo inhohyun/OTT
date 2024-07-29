@@ -20,8 +20,6 @@ const clothesData = {
     ],
 };
 
-const noImageUrl = 'https://via.placeholder.com/150?text=No+Image';
-
 const LookbookCreate = () => {
     const [isPublic, setIsPublic] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -43,8 +41,8 @@ const LookbookCreate = () => {
         e.preventDefault();
         const item = draggedItem;
         const canvasRect = e.target.getBoundingClientRect();
-        const x = e.clientX - canvasRect.left;
-        const y = e.clientY - canvasRect.top;
+        const x = e.clientX - canvasRect.left - 50; // Adjusting for the center of the item
+        const y = e.clientY - canvasRect.top - 50;  // Adjusting for the center of the item
 
         setCanvasItems(prevItems => {
             const uniqueKey = `${item.category}-${item.id}`;
@@ -106,7 +104,7 @@ const LookbookCreate = () => {
                             <img
                                 key={item.uniqueKey}
                                 src={item.image}
-                                alt="Dropped item"
+                                alt={item.name}
                                 style={{ position: 'absolute', left: item.x, top: item.y, width: '100px', height: '100px', cursor: 'move' }}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, item)}
