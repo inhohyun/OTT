@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
-import closeIcon from '../../assets/icons/deleteicon.png'; // 닫기 아이콘 이미지 경로
 import Switch from '../../components/userPage/Switch';
 const UpdatePage = () => {
   const navigate = useNavigate();
@@ -26,12 +25,7 @@ const UpdatePage = () => {
     onClose();
   };
 
-  const handleOutsideClick = (e) => {
-    if (e.target.classList.contains('modal-overlay')) {
-      onClose();
-    }
-  };
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = () => {
     // 체크박스 변경 후 처리
     setIsChecked(!isChecked);
   };
@@ -75,11 +69,18 @@ const UpdatePage = () => {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="w-full flex justify-center mt-8">
-          <img className="w-[70px] h-[70px] rounded-full" alt="User Icon" src={mainIcon} />
+          <img
+            className="w-[70px] h-[70px] rounded-full"
+            alt="User Icon"
+            src={mainIcon}
+          />
         </div>
 
         <div className="flex mr-[40px] mt-[16px]">
-          <Switch isChecked={isChecked} handleCheckboxChange={handleCheckboxChange} />
+          <Switch
+            isChecked={isChecked}
+            handleCheckboxChange={handleCheckboxChange}
+          />
           <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-[7px] ml-[5px]">
             mediamodifier
           </p>
@@ -93,7 +94,10 @@ const UpdatePage = () => {
             }}
           >
             <div className="flex items-center mb-5">
-              <label htmlFor="name" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="name"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 이름
               </label>
               <input
@@ -105,7 +109,10 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="phone" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="phone"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 전화번호
               </label>
               <input
@@ -117,7 +124,10 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="nickname" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="nickname"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 닉네임
               </label>
               <div className="relative flex items-center w-3/4">
@@ -134,7 +144,10 @@ const UpdatePage = () => {
               </div>
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="height" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="height"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 키
               </label>
               <input
@@ -146,7 +159,10 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="weight" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="weight"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 몸무게
               </label>
               <input
@@ -158,7 +174,10 @@ const UpdatePage = () => {
               />
             </div>
             <div className="flex items-center mb-5">
-              <label htmlFor="bodyType" className="w-1/4 ml-1 mb-1 font-thin text-lg">
+              <label
+                htmlFor="bodyType"
+                className="w-1/4 ml-1 mb-1 font-thin text-lg"
+              >
                 체형
               </label>
               <input
@@ -175,7 +194,9 @@ const UpdatePage = () => {
             <div className="space-y-6">
               <h4 className="text-2xl mb-5 text-gray-800 font-thin">
                 선호하는 스타일{' '}
-                <span className="text-sm text-[10px] text-stone-400">(최대 5개)</span>
+                <span className="text-sm text-[10px] text-stone-400">
+                  (최대 5개)
+                </span>
               </h4>
               <div className="relative mb-2 flex justify-between items-center">
                 <input
@@ -193,7 +214,9 @@ const UpdatePage = () => {
                   <FontAwesomeIcon icon={faSearch} />
                 </span>
               </div>
-              {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
+              {errorMessage && (
+                <p className="text-red-500 text-sm mb-2">{errorMessage}</p>
+              )}
               <div className="flex flex-wrap gap-2 mb-10">
                 {tags.map((tag) => (
                   <div
@@ -232,7 +255,7 @@ const UpdatePage = () => {
           className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
           overlayClassName="modal-overlay" // 오버레이에 클래스 추가
         >
-          <div id="modal-overlay" onClick={handleOutsideClick}>
+          <div id="modal-overlay" onClick={onClose}>
             <div className="relative bg-white p-8 rounded-lg shadow-md">
               <p
                 onClick={onClose}
