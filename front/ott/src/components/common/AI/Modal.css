@@ -11,4 +11,33 @@
 
 .modal-container {
   animation: slideInUp 0.5s ease-out;
+  background-color: rgba(193, 192, 243, 0.3); /* 보라색 유리 효과를 위한 색상 */
+  backdrop-filter: blur(16.4px); /* 블러 효과 추가 */
+  border-radius: 10px;
+  padding: 16px;
+  width: 90%;
+  max-width: 350px;
+  margin: auto;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.try-on-button {
+  background-color: #918ef4; /* 버튼 배경색 변경 */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  width: 100%;
+  cursor: pointer;
+  font-family: 'dohyeon', sans-serif; /* 폰트 적용 */
 }

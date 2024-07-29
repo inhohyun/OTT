@@ -7,8 +7,9 @@ import dressThree from '../../../assets/images/clothes/dress3.jpg';
 import outerOne from '../../../assets/images/clothes/outer1.jpg';
 import outerTwo from '../../../assets/images/clothes/outer2.jpg';
 import outerThree from '../../../assets/images/clothes/outer3.jpg';
-import AiProceeding from './AiProceeding';
-import AiResult from './AiResult';
+// import AiProceeding from './AiProceeding';
+// import AiResult from './AiResult';
+
 const Modal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
@@ -57,15 +58,8 @@ const Modal = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-lg p-6 w-11/12 max-w-xs mx-auto relative modal-container"
-        onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '350px' }}
-      >
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <p
           onClick={onClose}
           className="text-lg font-bold cursor-pointer w-8 h-8 absolute right-[1px] top-3"
@@ -97,10 +91,7 @@ const Modal = ({ isOpen, onClose }) => {
             />
           ))}
         </div>
-        <button
-          className="bg-violet-500 text-white py-2 px-4 rounded mt-4 w-full cursor-pointer"
-          onClick={() => handlePutOn()}
-        >
+        <button className="try-on-button" onClick={() => handlePutOn()}>
           입어보기
         </button>
       </div>
