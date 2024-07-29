@@ -1,24 +1,29 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-export default function StyleInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
-  const [searchText, setSearchText] = useState('');
+export default function StyleInfoSurvey({
+  formData,
+  setFormData,
+  handleNext,
+  handlePrev,
+}) {
+  const [searchText, setSearchText] = useState("");
   const [tags, setTags] = useState(formData.tags || []);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
-    setErrorMessage('');
+    setErrorMessage("");
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim() === '') {
+    if (searchText.trim() === "") {
       return;
     }
     if (tags.includes(searchText.trim())) {
-      setErrorMessage('이미 존재하는 태그입니다.');
+      setErrorMessage("이미 존재하는 태그입니다.");
       return;
     }
     if (tags.length >= 5) {
@@ -27,18 +32,20 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
     const newTags = [...tags, searchText.trim()];
     setTags(newTags);
     setFormData({ ...formData, tags: newTags });
-    setSearchText('');
+    setSearchText("");
   };
 
   const handleTagRemove = (tag) => {
-    const newTags = tags.filter(t => t !== tag);
+    const newTags = tags.filter((t) => t !== tag);
     setTags(newTags);
     setFormData({ ...formData, tags: newTags });
   };
 
   return (
     <>
-      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">선호하는 스타일</h2>
+      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">
+        선호하는 스타일
+      </h2>
       <p className="text-center text-gray-600 mb-5">(최소 2개, 최대 5개)</p>
       <form onSubmit={handleSearchSubmit} className="space-y-6">
         <div className="relative mb-2 flex justify-between items-center">
@@ -50,17 +57,22 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
             placeholder="검색할 스타일을 입력하세요"
             className="w-full p-2 rounded-full border border-violet-300 box-border focus:border-violet-400"
           />
-          <span 
+          <span
             onClick={handleSearchSubmit}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 cursor-pointer"
           >
             <FontAwesomeIcon icon={faSearch} />
           </span>
         </div>
-        {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
+        {errorMessage && (
+          <p className="text-red-500 text-sm mb-2">{errorMessage}</p>
+        )}
         <div className="flex flex-wrap gap-2 mb-10">
-          {tags.map(tag => (
-            <div key={tag} className="flex items-center bg-violet-400 text-white px-3 py-1 rounded-full">
+          {tags.map((tag) => (
+            <div
+              key={tag}
+              className="flex items-center bg-violet-400 text-white px-3 py-1 rounded-full"
+            >
               <span>{tag}</span>
               <button
                 type="button"
@@ -85,7 +97,9 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
           type="button"
           disabled={tags.length < 2}
           className={`py-2 px-5 rounded-full mt-5 cursor-pointer text-lg ${
-            tags.length >= 2 ? 'bg-violet-400 text-white hover:bg-violet-300' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            tags.length >= 2
+              ? "bg-violet-400 text-white hover:bg-violet-300"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           onClick={handleNext}
         >

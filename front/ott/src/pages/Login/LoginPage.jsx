@@ -6,7 +6,7 @@ import naver from "../../assets/images/login/naver_login.png";
 import google from "../../assets/images/login/google_login.png";
 import backgroundImage from "../../assets/images/background_image_survey.png";
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate(); // 네비게이트 훅 사용
 
   const onKakaoLoginClick = useCallback(() => {
@@ -78,4 +78,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
