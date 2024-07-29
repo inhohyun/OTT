@@ -1,5 +1,6 @@
 import React from 'react';
-import defaultImage from '../../assets/images/default_picture.png';
+import defaultImage from '../../../assets/images/default_picture.png';
+import './Modal.css';
 
 const Modal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -10,7 +11,7 @@ const Modal = ({ isOpen, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg p-6 w-11/12 max-w-xs mx-auto relative"
+        className="bg-white rounded-lg p-6 w-11/12 max-w-xs mx-auto relative modal-container"
         onClick={(e) => e.stopPropagation()}
         style={{ maxWidth: '350px' }}
       >
