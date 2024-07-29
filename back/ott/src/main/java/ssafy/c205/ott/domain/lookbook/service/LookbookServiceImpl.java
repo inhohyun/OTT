@@ -10,13 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
+import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.ActiveStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Favorite;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
+import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
+import ssafy.c205.ott.domain.lookbook.entity.LookbookImageStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 import ssafy.c205.ott.domain.lookbook.repository.FavoriteRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
@@ -35,11 +40,22 @@ public class LookbookServiceImpl implements LookbookService {
     private LookbookTagRepository lookbookTagRepository;
     @Autowired
     private FavoriteRepository favoriteRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto) {
         //태그 유무 확인 및 태그 추가
         List<LookbookTag> lookbookTags = new ArrayList<>();
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(
+            Long.parseLong(lookbookCreateDto.getUid()),
+            ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
+        Member member = null;
+        if (om.isPresent()) {
+            member = om.get();
+        } else {
+            log.error("멤버를 찾을 수 없음");
+        }
         for (String tag : lookbookCreateDto.getTags()) {
             Tag tagEntity = tagRepository.findByName(tag);
             if (tagEntity == null) {
@@ -67,10 +83,11 @@ public class LookbookServiceImpl implements LookbookService {
         //Todo : 옷 끝나면 옷 정보 및 사진 넣기
 
         //룩북 추가하기
-        //Todo : 옷 내용들, 옷 사진, 사용자 넣을 것
+        //Todo : 옷 내용들, 옷 사진
         lookbookRepository.save(Lookbook
             .builder()
             .content(lookbookCreateDto.getContent())
+            .member(member)
             .publicStatus(lookbookCreateDto.getPublicStatus())
             .lookbookTags(lookbookTags)
             .build());
@@ -202,15 +219,25 @@ public class LookbookServiceImpl implements LookbookService {
         }
     }
 
-    //Todo : 멤버값(Member) 넣어주기
     @Override
     public boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(
+            Long.parseLong(lookbookFavoriteDto.getUid()),
+            ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
+        Member member = null;
+        if (om.isPresent()) {
+            member = om.get();
+        } else {
+            log.error("사용자를 찾을 수 없음 ");
+            return false;
+        }
         Optional<Lookbook> ol = lookbookRepository.findById(
             Long.valueOf(lookbookFavoriteDto.getLookbookId()));
         if (ol.isPresent()) {
             Lookbook lookbook = ol.get();
             favoriteRepository.save(Favorite
                 .builder()
+                .member(member)
                 .lookbook(lookbook)
                 .build());
             return true;
@@ -221,10 +248,9 @@ public class LookbookServiceImpl implements LookbookService {
 
     @Override
     public boolean dislikeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
-        //Todo : 멤버 id로 id(pk)값 찾아서 null 위치에 넣기 / 예외 생각
         Favorite favoriteLookbook = favoriteRepository.findByLookbookIdAndMemberId(
             Long.parseLong(lookbookFavoriteDto.getLookbookId()),
-            null);
+            Long.parseLong(lookbookFavoriteDto.getUid()));
         favoriteRepository.delete(favoriteLookbook);
         return true;
     }
@@ -239,18 +265,46 @@ public class LookbookServiceImpl implements LookbookService {
         return lookbookLikes.size();
     }
 
-    // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
     @Override
-    public List<Lookbook> findPublicLookbooks(String uid) {
-        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid),
-            PublicStatus.PUBLIC);
+    public List<FindLookbookDto> findPublicLookbooks(String uid) {
+        List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
+            Long.parseLong(uid),
+            PublicStatus.PUBLIC, ActiveStatus.ACTIVE);
+        List<FindLookbookDto> findLookbookDtos = new ArrayList<>();
+        for (Lookbook lookbook : lookbooks) {
+            for (LookbookImage lookbookImage : lookbook.getLookbookImages()) {
+                if (lookbookImage.getLookbookImageStatus() == LookbookImageStatus.THUMBNAIL) {
+                    findLookbookDtos.add(FindLookbookDto
+                        .builder()
+                        .uid(lookbook.getMember().getId())
+                        .createdAt(lookbook.getCreatedAt())
+                        .imageURL(lookbookImage.getImageUrl())
+                        .build());
+                }
+            }
+        }
+        return findLookbookDtos;
     }
 
-    // Todo : 룩북 썸네일 경로, 룩북의 유저정보, 생성일자로 보내줄 것
     @Override
-    public List<Lookbook> findPrivateLookbooks(String uid) {
-        return lookbookRepository.findByMemberIdAndPublicStatus(Long.parseLong(uid),
-            PublicStatus.PRIVATE);
+    public List<FindLookbookDto> findPrivateLookbooks(String uid) {
+        List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
+            Long.parseLong(uid),
+            PublicStatus.PRIVATE, ActiveStatus.ACTIVE);
+        List<FindLookbookDto> findLookbookDtos = new ArrayList<>();
+        for (Lookbook lookbook : lookbooks) {
+            for (LookbookImage lookbookImage : lookbook.getLookbookImages()) {
+                if (lookbookImage.getLookbookImageStatus() == LookbookImageStatus.THUMBNAIL) {
+                    findLookbookDtos.add(FindLookbookDto
+                        .builder()
+                        .uid(lookbook.getMember().getId())
+                        .createdAt(lookbook.getCreatedAt())
+                        .imageURL(lookbookImage.getImageUrl())
+                        .build());
+                }
+            }
+        }
+        return findLookbookDtos;
     }
 
     @Override
@@ -267,6 +321,10 @@ public class LookbookServiceImpl implements LookbookService {
             List<LookbookTag> findLookbooks = lookbookTagRepository.findByTagName(tag);
             for (LookbookTag findLookbook : findLookbooks) {
                 Lookbook lookbook = findLookbook.getLookbook();
+                //삭제된 게시물이면 나오면 안됨
+                if (lookbook.getActiveStatus() == ActiveStatus.INACTIVE) {
+                    continue;
+                }
                 long id = lookbook.getId();
 
                 //검색 태그 카운팅
@@ -303,8 +361,6 @@ public class LookbookServiceImpl implements LookbookService {
                 );
             }
         }
-
-        //return
         return lookbooks;
     }
 }
