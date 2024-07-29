@@ -1,8 +1,11 @@
 package ssafy.c205.ott.domain.account.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.common.ApiResponse;
+import ssafy.c205.ott.common.security.CustomMemberDetails;
+import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
@@ -58,6 +61,15 @@ public class MemberController {
                 .map(MemberSearchResponseDto::new)
                 .collect(Collectors.toList());
         return ApiResponse.success(memberSearchResponseDtos);
+    }
+
+    @PostMapping("/follow/{targetId}")
+    public ApiResponse<FollowResponseDto> followMember(@PathVariable Long targetId, @AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        FollowRequestDto followRequestDto = FollowRequestDto.builder()
+                .requestMemberId(memberDetails.getMemberId())
+                .targetMemberId(targetId)
+                .build();
+        return ApiResponse.success(memberWriteService.followMember(followRequestDto));
     }
 
 }
