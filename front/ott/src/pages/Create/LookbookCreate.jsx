@@ -16,36 +16,7 @@ const clothesData = {
       image:
         'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
     },
-    {
-      id: 3,
-      name: 'Blouse',
-      image:
-        'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
-    },
-    {
-      id: 4,
-      name: 'Blouse',
-      image:
-        'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
-    },
-    {
-      id: 5,
-      name: 'Blouse',
-      image:
-        'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
-    },
-    {
-      id: 6,
-      name: 'Blouse',
-      image:
-        'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
-    },
-    {
-      id: 7,
-      name: 'Blouse',
-      image:
-        'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
-    },
+    // 추가 아이템들
   ],
   하의: [
     {
@@ -61,34 +32,7 @@ const clothesData = {
         'https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg',
     },
   ],
-  겉옷: [
-    {
-      id: 1,
-      name: 'Jacket',
-      image:
-        'https://images.pexels.com/photos/9218538/pexels-photo-9218538.jpeg',
-    },
-    {
-      id: 2,
-      name: 'Coat',
-      image:
-        'https://images.pexels.com/photos/6044973/pexels-photo-6044973.jpeg',
-    },
-  ],
-  신발: [
-    {
-      id: 1,
-      name: 'Sneakers',
-      image:
-        'https://images.pexels.com/photos/1240892/pexels-photo-1240892.jpeg',
-    },
-    {
-      id: 2,
-      name: 'Boots',
-      image:
-        'https://images.pexels.com/photos/1598508/pexels-photo-1598508.jpeg',
-    },
-  ],
+  // 다른 카테고리들
 };
 
 const LookbookCreate = () => {
@@ -110,13 +54,20 @@ const LookbookCreate = () => {
   };
 
   const handleAddToCanvas = (item) => {
-    setCanvasItems((prevItems) => {
-      const uniqueKey = `${item.category}-${item.id}-${Math.random()}`;
-      const x = 10; // 초기 x 좌표
-      const y = 10; // 초기 y 좌표
+    const exists = canvasItems.some(
+      (canvasItem) =>
+        canvasItem.id === item.id && canvasItem.category === item.category
+    );
 
-      return [...prevItems, { ...item, x, y, uniqueKey }];
-    });
+    if (!exists) {
+      setCanvasItems((prevItems) => {
+        const uniqueKey = `${item.category}-${item.id}`;
+        const x = 10;
+        const y = 10;
+
+        return [...prevItems, { ...item, x, y, uniqueKey }];
+      });
+    }
   };
 
   const handleDragStart = (item) => {
@@ -127,20 +78,28 @@ const LookbookCreate = () => {
     e.preventDefault();
     if (!draggedItem) return;
 
-    const canvasRect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - canvasRect.left - 50; // 중앙 정렬
-    const y = e.clientY - canvasRect.top - 50;
+    const exists = canvasItems.some(
+      (canvasItem) =>
+        canvasItem.id === draggedItem.id &&
+        canvasItem.category === draggedItem.category
+    );
 
-    setCanvasItems((prevItems) => [
-      ...prevItems,
-      {
-        ...draggedItem,
-        x,
-        y,
-        uniqueKey: `${draggedItem.category}-${draggedItem.id}-${Math.random()}`,
-      },
-    ]);
-    setDraggedItem(null);
+    if (!exists) {
+      const canvasRect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - canvasRect.left - 50;
+      const y = e.clientY - canvasRect.top - 50;
+
+      setCanvasItems((prevItems) => [
+        ...prevItems,
+        {
+          ...draggedItem,
+          x,
+          y,
+          uniqueKey: `${draggedItem.category}-${draggedItem.id}`,
+        },
+      ]);
+      setDraggedItem(null);
+    }
   };
 
   const handleDragOver = (e) => {
@@ -181,8 +140,8 @@ const LookbookCreate = () => {
     if (draggedItemIndex === null || !isDragging) return;
 
     const canvasRect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - canvasRect.left - 50; // 아이템 중심에 맞춰 조정
-    const y = e.clientY - canvasRect.top - 50; // 아이템 중심에 맞춰 조정
+    const x = e.clientX - canvasRect.left - 50;
+    const y = e.clientY - canvasRect.top - 50;
 
     setCanvasItems((prevItems) => {
       const newItems = [...prevItems];
@@ -196,8 +155,8 @@ const LookbookCreate = () => {
 
     const touch = e.touches[0];
     const canvasRect = e.currentTarget.getBoundingClientRect();
-    const x = touch.clientX - canvasRect.left - 50; // 아이템 중심에 맞춰 조정
-    const y = touch.clientY - canvasRect.top - 50; // 아이템 중심에 맞춰 조정
+    const x = touch.clientX - canvasRect.left - 50;
+    const y = touch.clientY - canvasRect.top - 50;
 
     setCanvasItems((prevItems) => {
       const newItems = [...prevItems];
@@ -237,7 +196,7 @@ const LookbookCreate = () => {
 
   const scrollLeft = () => {
     if (categoryRef.current) {
-      categoryRef.current.scrollLeft -= 100; // 스크롤 할 픽셀 수 조정 가능
+      categoryRef.current.scrollLeft -= 100;
     }
   };
 
@@ -254,11 +213,11 @@ const LookbookCreate = () => {
     >
       <style>{`
           .scrollbar-hide {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
           }
           .scrollbar-hide::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
           }
         `}</style>
       <div className="bg-white bg-opacity-60 p-6 rounded-lg shadow-lg w-full max-w-md">
@@ -350,24 +309,37 @@ const LookbookCreate = () => {
               ref={categoryRef}
               className="flex overflow-x-auto gap-2 scrollbar-hide"
             >
-              {clothesData[selectedCategory].map((item) => (
-                <img
-                  key={item.id}
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 cursor-pointer"
-                  onClick={() =>
-                    handleAddToCanvas({
-                      ...item,
-                      category: selectedCategory,
-                    })
-                  }
-                  draggable
-                  onDragStart={() =>
-                    handleDragStart({ ...item, category: selectedCategory })
-                  }
-                />
-              ))}
+              {clothesData[selectedCategory].map((item) => {
+                const isAdded = canvasItems.some(
+                  (canvasItem) =>
+                    canvasItem.id === item.id &&
+                    canvasItem.category === item.category
+                );
+                return (
+                  <div className="relative" key={item.id}>
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-20 h-20 cursor-pointer"
+                      onClick={() =>
+                        handleAddToCanvas({
+                          ...item,
+                          category: selectedCategory,
+                        })
+                      }
+                      draggable
+                      onDragStart={() =>
+                        handleDragStart({ ...item, category: selectedCategory })
+                      }
+                    />
+                    {isAdded && (
+                      <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center text-white text-xs">
+                        추가됨
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
             {clothesData[selectedCategory].length > 2 && (
               <button
