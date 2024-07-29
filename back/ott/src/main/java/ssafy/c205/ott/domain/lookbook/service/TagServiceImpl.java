@@ -48,14 +48,14 @@ public class TagServiceImpl implements TagService {
         }
 
         //태그를 찾은 경우
-        tagEntity.setCount(tagEntity.getCount() - 1);
-        if (tagEntity.getCount() == 0) {
-            //태그의 카운트가 0개면 태그를 삭제
+        if (tagEntity.getCount() == 1) {
             tagRepository.delete(tagEntity);
-            return;
+        } else {
+            tagRepository.save(Tag.builder()
+                .id(tagEntity.getId())
+                .name(tagName)
+                .count(tagEntity.getCount() - 1)
+                .build());
         }
-
-        //그게 아니라면 태그 카운트 수 최신화
-        tagRepository.save(tagEntity);
     }
 }
