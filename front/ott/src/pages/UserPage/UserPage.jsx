@@ -14,10 +14,12 @@ const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다
   const tags = ['한여름의 도시남', '댄디남', '훈남', '여자들이 좋아하는', '소개팅'];
+
   const username = '닉네임';
-  const isMe = false; // 본인 여부
+  const isMe = true; // 본인 여부
   const isPublic = false; // 계정 공개 여부
   let renderComponent;
+
   switch (activeComponent) {
     case 'posts':
       renderComponent = <Posts isMe={isMe} isPublic={isPublic} />;
@@ -45,7 +47,7 @@ const UserPage = () => {
           <img className="w-[70px] h-[70px] rounded-full" alt="User Icon" src={mainIcon} />
         </div>
         <div className={`w-full flex items-center justify-center mt-6 ${!isMe ? 'ml-8' : ''}`}>
-          {!isPublic && <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />}
+          {!isPublic && isMe && <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />}
           <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">{username}</p>
           {isMe ? (
             <img

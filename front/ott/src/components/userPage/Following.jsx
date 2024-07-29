@@ -54,7 +54,7 @@ const Following = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mb-20">
       <div
         className="backdrop-blur-md bg-white bg-opacity-40 text-stone-500 p-6 rounded-2xl max-w-md w-full overflow-y-auto"
         style={{ maxHeight: "calc(100vh - 150px)" }}

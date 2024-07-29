@@ -18,7 +18,7 @@ import Footer from "./components/common/Footer";
 import UpdateProfile from "./pages/UserPage/UpdatePage";
 import SearchPage from "./pages/Search/SearchPage";
 import WebRTCPage from "./pages/WebRTC/WebRTCPage";
-import UpdateProfile from "./pages/UserPage/UpdateProfile";
+import UpdateUserPage from "./pages/UserPage/UpdatePage";
 import AiPage from "./pages/Ai/AiPage";
 
 function App() {

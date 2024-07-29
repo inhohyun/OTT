@@ -60,7 +60,7 @@ const Followers = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mb-20">
       <div className="backdrop-blur-md bg-white bg-opacity-40 text-stone-500 p-6 rounded-2xl max-w-md w-full h-full overflow-y-auto">
         <div className="flex justify-center items-center mb-4 relative">
           <h3 className="text-xl font-bold">팔로워 목록</h3>

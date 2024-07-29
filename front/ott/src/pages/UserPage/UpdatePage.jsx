@@ -69,7 +69,7 @@ const UpdatePage = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center font-dohyeon">
+    <div className="w-full h-full flex items-center justify-center font-dohyeon mb-20">
       <div
         className="w-full h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -213,7 +213,7 @@ const UpdatePage = () => {
               </div>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center ">
               <button
                 type="submit"
                 className="py-2 px-5 rounded-full mt-5 cursor-pointer text-lg bg-violet-400 text-white hover:bg-violet-300"
