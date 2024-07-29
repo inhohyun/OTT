@@ -142,8 +142,11 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay custom-scrollbar" onClick={onClose}>
+      <div
+        className="modal-container custom-scrollbar"
+        onClick={(e) => e.stopPropagation()}
+      >
         <p
           onClick={onClose}
           className="text-lg font-bold cursor-pointer w-8 h-8 absolute right-[1px] top-3"
