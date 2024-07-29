@@ -28,11 +28,11 @@ public class SwaggerConfiguration {
 
     @Bean
     public GroupedOpenApi lookbookApi() {
-        return GroupedOpenApi.builder().group("OTT-LOOKBOOK").pathsToMatch("/lookbook/**").build();
+        return GroupedOpenApi.builder().group("OTT-LOOKBOOK").pathsToMatch("/api/lookbook/**").build();
     }
 
     @Bean
     public GroupedOpenApi tagApi() {
-        return GroupedOpenApi.builder().group("OTT-Tag").pathsToMatch("/tag/**").build();
+        return GroupedOpenApi.builder().group("OTT-Tag").pathsToMatch("/api/tag/**").build();
     }
 }

@@ -222,7 +222,7 @@ public class LookbookServiceImpl implements LookbookService {
     @Override
     public boolean dislikeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
         //Todo : 멤버 id로 id(pk)값 찾아서 null 위치에 넣기 / 예외 생각
-        Favorite favoriteLookbook = favoriteRepository.findByLookbookIdAndUserId(
+        Favorite favoriteLookbook = favoriteRepository.findByLookbookIdAndMemberId(
             Long.parseLong(lookbookFavoriteDto.getLookbookId()),
             null);
         favoriteRepository.delete(favoriteLookbook);
