@@ -28,10 +28,6 @@ public class Tag extends BaseEntity {
 
     private Long count = 0L;
 
-    public Tag(String name) {
-        this.name = name;
-    }
-
     public Tag() {
     }
 

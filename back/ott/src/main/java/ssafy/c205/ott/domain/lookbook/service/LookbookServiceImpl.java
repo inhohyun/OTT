@@ -107,12 +107,21 @@ public class LookbookServiceImpl implements LookbookService {
             //태그 카운트 줄이기
             for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
                 Tag tag = lookbookTag.getTag();
-                tag.setCount(tag.getCount() - 1);
-                tagRepository.save(tag);
+                if (tag.getCount() == 1) {
+                    tagRepository.delete(tag);
+                } else {
+                    tagRepository.save(Tag.builder()
+                        .id(tag.getId())
+                        .count(tag.getCount() - 1)
+                        .build());
+                }
                 lookbookTagRepository.deleteById(lookbookTag.getId());
             }
             //룩북 삭제
-            lookbook.setActiveStatus(ActiveStatus.INACTIVE);
+            lookbookRepository.save(Lookbook.builder()
+                .id(lookbook.getId())
+                .activeStatus(ActiveStatus.INACTIVE)
+                .build());
             log.info("룩북 제거 성공");
             return true;
         } else {
