@@ -14,6 +14,7 @@ const Modal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const [selectedClothing, setSelectedClothing] = useState(null);
+  const [filter, setFilter] = useState('all');
 
   const handlePutOn = () => {
     // TODO - 입어보기 버튼 컨트롤
@@ -24,38 +25,53 @@ const Modal = ({ isOpen, onClose }) => {
     setSelectedClothing(clothing);
   };
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
   const savedClothes = [
     {
       id: 1,
       src: dressOne,
       alt: 'Clothing 1',
+      division: 'dress',
     },
     {
       id: 2,
       src: dressTwo,
       alt: 'Clothing 2',
+      division: 'dress',
     },
     {
       id: 3,
       src: dressThree,
       alt: 'Clothing 3',
+      division: 'dress',
     },
     {
       id: 4,
       src: outerOne,
       alt: 'Clothing 4',
+      division: 'tops',
     },
     {
       id: 5,
       src: outerTwo,
       alt: 'Clothing 5',
+      division: 'tops',
     },
     {
       id: 6,
       src: outerThree,
       alt: 'Clothing 6',
+      division: 'tops',
     },
   ];
+
+  const filteredClothes =
+    filter === 'all'
+      ? savedClothes
+      : savedClothes.filter((clothing) => clothing.division === filter);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -76,8 +92,20 @@ const Modal = ({ isOpen, onClose }) => {
           className="w-full h-auto mb-4 mt-4"
         />
         <h4>저장된 옷</h4>
+        <div className="mb-4">
+          <select
+            value={filter}
+            onChange={handleFilterChange}
+            className="dropdown"
+          >
+            <option value="all">모두</option>
+            <option value="tops">상의</option>
+            <option value="bottoms">하의</option>
+            <option value="dress">드레스</option>
+          </select>
+        </div>
         <div className="flex overflow-x-auto space-x-2 mb-4">
-          {savedClothes.map((clothing) => (
+          {filteredClothes.map((clothing) => (
             <img
               key={clothing.id}
               src={clothing.src}

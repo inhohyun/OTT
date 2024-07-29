@@ -37,7 +37,20 @@
   padding: 8px 16px;
   border-radius: 8px;
   margin-top: 16px;
-  width: 100%;
+  width: 80%; /* 버튼 가로 크기 조정 */
   cursor: pointer;
   font-family: 'dohyeon', sans-serif; /* 폰트 적용 */
+  display: block;
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
+.dropdown {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #918ef4;
+  border-radius: 8px;
+  font-family: 'dohyeon', sans-serif; /* 폰트 적용 */
+  background-color: white;
+  color: black;
+  cursor: pointer;
 }
