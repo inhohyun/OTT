@@ -4,10 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 
-const ClothesGrid = ({ clothes, onToggleLike }) => {
+const ClothesGrid = ({ clothes, onToggleLike, isSingleLine = false }) => {
   const [visibleItems, setVisibleItems] = useState(12); // Adjust this if needed
   const containerRef = useRef(null);
-  const [visibleImages, setVisibleImages] = useState(clothes.map(item => ({ id: item.id, isFront: true })));
+  const [visibleImages, setVisibleImages] = useState(
+    clothes.map((item) => ({ id: item.id, isFront: true }))
+  );
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -31,20 +33,31 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
   }, []);
 
   const handleToggleImage = (id) => {
-    setVisibleImages(prev =>
-      prev.map(item => item.id === id ? { ...item, isFront: !item.isFront } : item)
+    setVisibleImages((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, isFront: !item.isFront } : item
+      )
     );
   };
 
   return (
-    <div className="w-full overflow-x-auto p-1" style={{ position: 'relative' }} ref={containerRef}>
-      <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-4" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div
+      className="w-full overflow-x-auto p-1"
+      style={{ position: 'relative' }}
+      ref={containerRef}
+    >
+      <div
+        className={`grid ${isSingleLine ? 'grid-flow-col auto-cols-max' : 'grid-flow-row grid-cols-2'} gap-4`}
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
         {clothes.slice(0, visibleItems).map((item) => {
-          const isFrontVisible = visibleImages.find(image => image.id === item.id)?.isFront;
+          const isFrontVisible = visibleImages.find(
+            (image) => image.id === item.id
+          )?.isFront;
           return (
-            <div 
-              key={item.id} 
-              className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center" 
+            <div
+              key={item.id}
+              className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center"
               style={{ minWidth: '180px', height: '230px' }} // Adjust the width and height
             >
               <img
@@ -64,13 +77,16 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
                 onClick={() => onToggleLike(item.id)}
                 className="absolute top-3 left-3 p-1 cursor-pointer"
               >
-                <FontAwesomeIcon icon={item.isLiked ? faSolidStar : faRegularStar} className="w-4 h-4 text-purple-300" />
+                <FontAwesomeIcon
+                  icon={item.isLiked ? faSolidStar : faRegularStar}
+                  className="w-4 h-4 text-purple-300"
+                />
               </div>
             </div>
           );
         })}
       </div>
-      
+
       <style>
         {`
           .w-full {

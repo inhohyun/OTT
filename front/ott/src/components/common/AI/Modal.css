@@ -8,7 +8,6 @@
     opacity: 1;
   }
 }
-
 .modal-container {
   animation: slideInUp 0.5s ease-out;
   background-color: rgba(193, 192, 243, 0.3); /* 보라색 유리 효과를 위한 색상 */
@@ -31,19 +30,6 @@
   z-index: 50;
 }
 
-.try-on-button {
-  background-color: #918ef4; /* 버튼 배경색 변경 */
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  margin-top: 16px;
-  width: 80%; /* 버튼 가로 크기 조정 */
-  cursor: pointer;
-  font-family: 'dohyeon', sans-serif; /* 폰트 적용 */
-  display: block;
-  margin: 0 auto; /* 가운데 정렬 */
-}
-
 .dropdown {
   width: 100%;
   padding: 8px;
@@ -53,4 +39,28 @@
   background-color: white;
   color: black;
   cursor: pointer;
+}
+
+.clothes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.clothes-item.selected {
+  border: 2px solid #918ef4;
+  border-radius: 8px;
+}
+
+.try-on-button {
+  background-color: #918ef4; /* 버튼 배경색 변경 */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  width: 50%; /* 버튼 가로 크기 조정 */
+  cursor: pointer;
+  font-family: 'dohyeon', sans-serif; /* 폰트 적용 */
+  display: block;
+  margin: 0 auto; /* 가운데 정렬 */
 }
