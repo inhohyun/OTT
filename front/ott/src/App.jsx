@@ -10,9 +10,9 @@ import MainPage from "./pages/MainPage/MainPage";
 import ClosetPage from "./pages/Closet/ClosetPage";
 import Header from './components/common/Header';
 import Footer from "./components/common/Footer";
-import UpdateProfile from './pages/UserPage/UpdateProfile';
 import SearchPage from "./pages/Search/SearchPage";
 import WebRTCPage from "./pages/WebRTC/WebRTCPage";
+import UpdateProfile from "./pages/UserPage/UpdateProfile";
 import AiPage from "./pages/Ai/AiPage";
 
 function App() {
