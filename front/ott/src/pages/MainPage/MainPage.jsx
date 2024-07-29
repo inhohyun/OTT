@@ -13,6 +13,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
             ? 'bg-violet-200 text-slate-400'
             : ''
         }`}
+        style={{fontFamily:'dohyeon'}}
         onClick={() => setActiveComponent('recommendation')}
       >
         추천
@@ -21,6 +22,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         className={`bg-transparent border-none font-dohyeon text-slate-400 text-lg py-2 px-5 mx-1 sm:mx-3 cursor-pointer rounded-full ${
           activeComponent === 'feed' ? 'bg-violet-200 text-slate-400' : ''
         }`}
+        style={{fontFamily:'dohyeon'}}
         onClick={() => setActiveComponent('feed')}
       >
         피드
@@ -29,6 +31,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         className={`bg-transparent border-none font-dohyeon text-slate-400 text-lg py-2 px-5 mx-1 sm:mx-3 cursor-pointer rounded-full ${
           activeComponent === 'myLookbook' ? 'bg-violet-200 text-slate-400' : ''
         }`}
+        style={{fontFamily:'dohyeon'}}
         onClick={() => setActiveComponent('myLookbook')}
       >
         내룩북

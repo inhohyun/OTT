@@ -98,23 +98,26 @@ const Recommend = () => {
                     cursor: pointer;
                 }
             `}</style>
+
       {Object.keys(lookbooksData).map((category) => (
         <div key={category} className="w-full">
           <p className="ml-2 text-lg font-bold">#{category}</p>
           <div className="relative">
             <button
               onClick={() => scrollLeft(scrollRefs[category])}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-6 h-6"
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
               style={{
                 backgroundImage: `url(${leftArrow})`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
+                border: 'none',
+                backgroundColor: 'transparent', // 배경 색상 제거
               }}
             ></button>
             <div
               ref={scrollRefs[category]}
-              className="flex overflow-x-auto py-2 scrollbar-hide"
+              className="flex overflow-x-auto py-3 scrollbar-hide"
             >
               {lookbooksData[category]
                 .slice(0, visibleLookbooks[category])
@@ -137,12 +140,14 @@ const Recommend = () => {
             </div>
             <button
               onClick={() => scrollRight(scrollRefs[category])}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 mr-2 rounded-full w-6 h-6 z-10"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 mr-2 w-6 h-6"
               style={{
                 backgroundImage: `url(${rightArrow})`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
+                border: 'none',
+                backgroundColor: 'transparent', // 배경 색상 제거
               }}
             ></button>
           </div>

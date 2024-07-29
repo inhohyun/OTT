@@ -42,7 +42,7 @@ const MyLookbook = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-start w-full pl-2 space-y-5">
+    <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
       <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
@@ -68,23 +68,26 @@ const MyLookbook = () => {
                     cursor: pointer;
                 }
             `}</style>
+
       {tags.map((tag, index) => (
         <div key={tag} className="w-full">
           <p className="ml-2 text-xl font-bold">#{tag}</p>
           <div className="relative">
             <button
               onClick={() => scrollLeft(scrollRefs.current[index])}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full w-6 h-6"
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
               style={{
                 backgroundImage: `url(${leftArrow})`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
+                border: 'none',
+                backgroundColor: 'transparent', // 배경 색상 제거
               }}
             ></button>
             <div
               ref={scrollRefs.current[index]}
-              className="flex overflow-x-auto py-4 scrollbar-hide"
+              className="flex overflow-x-auto py-3 scrollbar-hide"
             >
               {allLookbooks[tag]
                 .slice(0, visibleLookbooks[tag])
@@ -106,12 +109,14 @@ const MyLookbook = () => {
             </div>
             <button
               onClick={() => scrollRight(scrollRefs.current[index])}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 mr-2 rounded-full w-6 h-6"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2  p-1 mr-2 w-6 h-6"
               style={{
                 backgroundImage: `url(${rightArrow})`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
+                border: 'none',
+                backgroundColor: 'transparent', // 배경 색상 제거
               }}
             ></button>
           </div>

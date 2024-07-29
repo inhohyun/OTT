@@ -15,10 +15,11 @@ import MainPage from './pages/MainPage/MainPage';
 import ClosetPage from './pages/Closet/ClosetPage';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
+import UpdateUserPage from './pages/UserPage/UpdatePage';
 import SearchPage from './pages/Search/SearchPage';
 import WebRTCPage from './pages/WebRTC/WebRTCPage';
-import UpdateUserPage from './pages/UserPage/UpdatePage';
 import AiPage from './pages/Ai/AiPage';
+import LookbookCreate from './pages/Create/LookbookCreate';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
               <Route path="/ai" element={<AiPage />} />
+              <Route path="/lookbookcreate" element={<LookbookCreate />} />
             </Route>
           </Routes>
         </Router>
