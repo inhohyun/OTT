@@ -12,7 +12,7 @@ export default function SurveyIng() {
   const totalSteps = 4;
   const [formData, setFormData] = useState({});
 
-  const handleNext = function(e) {
+  const handleNext = function (e) {
     e.preventDefault();
     if (step < totalSteps) {
       setStep(step + 1);
@@ -22,31 +22,58 @@ export default function SurveyIng() {
     }
   };
 
-  const handlePrev = function() {
+  const handlePrev = function () {
     if (step > 1) {
       setStep(step - 1);
     }
   };
 
-  
-
   const renderFormContent = () => {
     switch (step) {
       case 1:
-        return <PersonalInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+        return (
+          <PersonalInfoSurvey
+            formData={formData}
+            setFormData={setFormData}
+            handleNext={handleNext}
+          />
+        );
       case 2:
-        return <PhysicalInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} handlePrev={handlePrev} />;
+        return (
+          <PhysicalInfoSurvey
+            formData={formData}
+            setFormData={setFormData}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+          />
+        );
       case 3:
-        return <StyleInfoSurvey formData={formData} setFormData={setFormData} handleNext={handleNext} handlePrev={handlePrev} />;
+        return (
+          <StyleInfoSurvey
+            formData={formData}
+            setFormData={setFormData}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+          />
+        );
       case 4:
-        return <SurveyFinish formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+        return (
+          <SurveyFinish
+            formData={formData}
+            setFormData={setFormData}
+            handleNext={handleNext}
+          />
+        );
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen w-full bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div
+      className="flex justify-center items-center h-screen w-full bg-cover bg-center"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
       <SurveyFormModal show={isModalOpen} step={step} totalSteps={totalSteps}>
         {renderFormContent()}
       </SurveyFormModal>

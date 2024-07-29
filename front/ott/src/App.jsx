@@ -1,25 +1,24 @@
-import GlobalStyle from "./styles/GlobalStyles";
-import Layout from "./styles/Layout";
+import GlobalStyle from './styles/GlobalStyles';
+import Layout from './styles/Layout';
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Outlet,
-} from "react-router-dom"; // Outlet 추가
-import "./styles/tailwind.css";
-import Login from "./pages/Login/LoginPage";
-import UserProfile from "./pages/UserPage/UserPage";
-import SurveyStart from "./pages/Survey/SurveyStart";
-import SurveyIng from "./pages/Survey/SurveyIng";
-import MainPage from "./pages/MainPage/MainPage";
-import ClosetPage from "./pages/Closet/ClosetPage";
-import Header from "./components/common/Header";
-import Footer from "./components/common/Footer";
-import UpdateProfile from "./pages/UserPage/UpdatePage";
-import SearchPage from "./pages/Search/SearchPage";
-import WebRTCPage from "./pages/WebRTC/WebRTCPage";
-import UpdateUserPage from "./pages/UserPage/UpdatePage";
-import AiPage from "./pages/Ai/AiPage";
+} from 'react-router-dom'; // Outlet 추가
+import './styles/tailwind.css';
+import Login from './pages/Login/LoginPage';
+import UserProfile from './pages/UserPage/UserPage';
+import SurveyStart from './pages/Survey/SurveyStart';
+import SurveyIng from './pages/Survey/SurveyIng';
+import MainPage from './pages/MainPage/MainPage';
+import ClosetPage from './pages/Closet/ClosetPage';
+import Header from './components/common/Header';
+import Footer from './components/common/Footer';
+import SearchPage from './pages/Search/SearchPage';
+import WebRTCPage from './pages/WebRTC/WebRTCPage';
+import UpdateUserPage from './pages/UserPage/UpdatePage';
+import AiPage from './pages/Ai/AiPage';
 
 function App() {
   return (
@@ -35,7 +34,7 @@ function App() {
               <Route path="/userPage" element={<UserProfile />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
-              <Route path="/updateProfile" element={<UpdateProfile />} />
+              <Route path="/UpdateUserPage" element={<UpdateUserPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
               <Route path="/ai" element={<AiPage />} />

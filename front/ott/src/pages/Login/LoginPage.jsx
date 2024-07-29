@@ -1,24 +1,24 @@
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom"; // 네비게이트 훅 추가
-import mainIcon from "../../assets/icons/main.logo.png";
-import kakao from "../../assets/images/login/kakao_login.png";
-import naver from "../../assets/images/login/naver_login.png";
-import google from "../../assets/images/login/google_login.png";
-import backgroundImage from "../../assets/images/background_image_survey.png";
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom'; // 네비게이트 훅 추가
+import mainIcon from '../../assets/icons/main.logo.png';
+import kakao from '../../assets/images/login/kakao_login.png';
+import naver from '../../assets/images/login/naver_login.png';
+import google from '../../assets/images/login/google_login.png';
+import backgroundImage from '../../assets/images/background_image_survey.png';
 
 const LoginPage = () => {
   const navigate = useNavigate(); // 네비게이트 훅 사용
 
   const onKakaoLoginClick = useCallback(() => {
-    navigate("./survey_start"); // 설문 시작 페이지로 이동
+    navigate('./survey_start'); // 설문 시작 페이지로 이동
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
-    navigate("./survey_start"); // 설문 시작 페이지로 이동
+    navigate('./survey_start'); // 설문 시작 페이지로 이동
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
-    navigate("./survey_start"); // 설문 시작 페이지로 이동
+    navigate('./survey_start'); // 설문 시작 페이지로 이동
   }, [navigate]);
 
   return (
@@ -26,7 +26,7 @@ const LoginPage = () => {
       className="w-full h-full flex items-center justify-center min-h-screen"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
+        backgroundSize: 'cover',
       }}
     >
       <div className="w-[600px] h-[852px] relative flex flex-col items-center bg-cover bg-no-repeat bg-center">

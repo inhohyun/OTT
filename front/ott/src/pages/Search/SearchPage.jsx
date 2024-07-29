@@ -29,13 +29,20 @@ const SearchPage = () => {
       <main className="flex-grow p-4 w-full max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4">검색 페이지</h1>
         <div className="flex items-center w-full mb-4">
-          <Switch isChecked={isChecked} handleCheckboxChange={handleCheckboxChange} />
+          <Switch
+            isChecked={isChecked}
+            handleCheckboxChange={handleCheckboxChange}
+          />
           <div className="relative flex-grow ml-4">
             <input
               type="text"
               value={searchQuery}
               onChange={handleInputChange}
-              placeholder={isChecked ? "스타일의 태그를 입력하세요" : "사용자 닉네임을 입력하세요"}
+              placeholder={
+                isChecked
+                  ? '스타일의 태그를 입력하세요'
+                  : '사용자 닉네임을 입력하세요'
+              }
               className="border p-2 rounded-full w-full pl-4"
             />
             <FontAwesomeIcon

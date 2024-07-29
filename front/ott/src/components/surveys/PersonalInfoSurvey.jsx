@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
-export default function PersonalInfoSurvey({ formData, setFormData, handleNext }) {
+export default function PersonalInfoSurvey({
+  formData,
+  setFormData,
+  handleNext,
+}) {
   const [isNicknameValidated, setIsNicknameValidated] = useState(false);
   const [nameError, setNameError] = useState('');
   const [phoneError, setPhoneError] = useState('');
@@ -46,10 +50,14 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
 
   return (
     <>
-      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">개인 정보</h2>
+      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">
+        개인 정보
+      </h2>
       <form onSubmit={handleNext} className="space-y-6">
         <div className="relative mb-5">
-          <label htmlFor="name" className="block ml-1 mb-1 font-thin text-lg">이름</label>
+          <label htmlFor="name" className="block ml-1 mb-1 font-thin text-lg">
+            이름
+          </label>
           <input
             type="text"
             id="name"
@@ -60,10 +68,14 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
             maxLength="8"
             className={`w-4/5 max-w-md p-3 rounded-full border ${nameError ? 'border-red-500' : 'border-violet-300'} mx-auto block box-border focus:border-violet-400`}
           />
-          {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
+          {nameError && (
+            <p className="text-red-500 text-sm mt-1">{nameError}</p>
+          )}
         </div>
         <div className="relative mb-5">
-          <label htmlFor="phone" className="block ml-1 mb-1 font-thin text-lg">전화번호</label>
+          <label htmlFor="phone" className="block ml-1 mb-1 font-thin text-lg">
+            전화번호
+          </label>
           <input
             type="text"
             id="phone"
@@ -74,10 +86,17 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
             maxLength="11"
             className={`w-4/5 max-w-md p-3 rounded-full border ${phoneError ? 'border-red-500' : 'border-violet-300'} mx-auto block box-border focus:border-violet-400`}
           />
-          {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
+          {phoneError && (
+            <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+          )}
         </div>
         <div className="relative mb-5 ">
-          <label htmlFor="nickname" className="block ml-1 mb-1 font-thin text-lg">닉네임</label>
+          <label
+            htmlFor="nickname"
+            className="block ml-1 mb-1 font-thin text-lg"
+          >
+            닉네임
+          </label>
           <div className="relative flex items-center w-4/5 max-w-md mx-auto">
             <input
               type="text"
@@ -96,7 +115,9 @@ export default function PersonalInfoSurvey({ formData, setFormData, handleNext }
               <FontAwesomeIcon icon={faCheckCircle} />
             </span>
           </div>
-          {nicknameError && <p className="text-red-500 text-sm mt-1">{nicknameError}</p>}
+          {nicknameError && (
+            <p className="text-red-500 text-sm mt-1">{nicknameError}</p>
+          )}
         </div>
         <div className="flex justify-center">
           <button

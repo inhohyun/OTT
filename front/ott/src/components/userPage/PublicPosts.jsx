@@ -1,8 +1,8 @@
-import { useRef } from "react";
-import Lookbook from "../lookbook/Lookbook";
-import leftArrow from "../../assets/icons/left_arrow_icon.png";
-import rightArrow from "../../assets/icons/right_arrow_icon.png";
-import React from "react";
+import { useRef } from 'react';
+import Lookbook from '../lookbook/Lookbook';
+import leftArrow from '../../assets/icons/left_arrow_icon.png';
+import rightArrow from '../../assets/icons/right_arrow_icon.png';
+import React from 'react';
 
 const PublicPosts = () => {
   // Create an array with the length of 10 for rendering multiple Lookbook components
@@ -14,13 +14,13 @@ const PublicPosts = () => {
   // Scroll functions
   const scrollLeft = (ref) => {
     if (ref.current) {
-      ref.current.scrollBy({ left: -200, behavior: "smooth" });
+      ref.current.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
 
   const scrollRight = (ref) => {
     if (ref.current) {
-      ref.current.scrollBy({ left: 200, behavior: "smooth" });
+      ref.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
 
@@ -43,9 +43,9 @@ const PublicPosts = () => {
             className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
             style={{
               backgroundImage: `url(${leftArrow})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
             }}
           ></button>
           <div
@@ -70,9 +70,9 @@ const PublicPosts = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
             style={{
               backgroundImage: `url(${rightArrow})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
             }}
           ></button>
         </div>

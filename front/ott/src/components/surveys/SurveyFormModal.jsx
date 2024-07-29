@@ -1,9 +1,9 @@
-import ProgressBar from "./ProgressBar";
+import ProgressBar from './ProgressBar';
 
 export default function SurveyFormModal({ show, children, step, totalSteps }) {
   if (!show) {
     return null;
-  } 
+  }
 
   return (
     <div className="fixed inset-0 flex justify-center items-center">

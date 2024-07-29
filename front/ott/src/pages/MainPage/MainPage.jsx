@@ -5,12 +5,13 @@ import MyLookbook from '../../components/mylookbook/MyLookbook';
 import backgroundImage from '../../assets/images/background_image_main.png';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
-  return (  
+  return (
     <nav className="flex justify-around w-full bg-white p-2 -mt-2">
-
       <button
         className={`bg-transparent border-none font-dohyeon text-slate-400 text-lg py-2 px-5 mx-1 sm:mx-3 cursor-pointer rounded-full ${
-          activeComponent === 'recommendation' ? 'bg-violet-200 text-slate-400' : ''
+          activeComponent === 'recommendation'
+            ? 'bg-violet-200 text-slate-400'
+            : ''
         }`}
         onClick={() => setActiveComponent('recommendation')}
       >
@@ -57,16 +58,16 @@ const MainPage = () => {
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <NavBar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
+      <NavBar
+        activeComponent={activeComponent}
+        setActiveComponent={setActiveComponent}
+      />
 
       <div className="content w-full flex-grow box-border mb-20">
         {renderComponent()}
-
       </div>
     </div>
   );
 };
 
 export default MainPage;
-
-

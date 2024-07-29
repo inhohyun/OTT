@@ -1,6 +1,5 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import lockIcon from '@/assets/icons/lockicon.png';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 const Switch = ({ isChecked, handleCheckboxChange }) => {

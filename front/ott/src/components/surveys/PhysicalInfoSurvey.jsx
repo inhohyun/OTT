@@ -1,4 +1,9 @@
-export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
+export default function PhysicalInfoSurvey({
+  formData,
+  setFormData,
+  handleNext,
+  handlePrev,
+}) {
   const handleChange = (e) => {
     const { id, value } = e.target;
     if (id === 'height' || id === 'weight') {
@@ -29,10 +34,14 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
           }
         `}
       </style>
-      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">신체 정보</h2>
+      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">
+        신체 정보
+      </h2>
       <form onSubmit={handleNext} className="space-y-6">
         <div className="relative mb-5 flex justify-between items-center">
-          <label htmlFor="height" className="block ml-1 mb-1 font-thin text-lg">당신의 키는?</label>
+          <label htmlFor="height" className="block ml-1 mb-1 font-thin text-lg">
+            당신의 키는?
+          </label>
           <div className="relative flex items-center">
             <input
               type="number"
@@ -47,7 +56,9 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
           </div>
         </div>
         <div className="relative mb-10 flex justify-between items-center">
-          <label htmlFor="weight" className="block ml-1 mb-1 font-thin text-lg">당신의 몸무게는?</label>
+          <label htmlFor="weight" className="block ml-1 mb-1 font-thin text-lg">
+            당신의 몸무게는?
+          </label>
           <div className="relative flex items-center">
             <input
               type="number"
@@ -62,7 +73,9 @@ export default function PhysicalInfoSurvey({ formData, setFormData, handleNext, 
           </div>
         </div>
         <div className="relative mb-10">
-          <label className="block ml-1 mb-5 font-thin text-lg">당신의 체형은?</label>
+          <label className="block ml-1 mb-5 font-thin text-lg">
+            당신의 체형은?
+          </label>
           <div className="grid grid-cols-2 gap-4">
             {['슬림', '슬림 탄탄', '보통', '통통'].map((type) => (
               <div

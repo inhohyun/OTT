@@ -25,7 +25,9 @@ const Posts = ({ isMe, isPublic }) => {
       <div className="flex justify-center space-x-2">
         <button
           className={`py-2 px-5 cursor-pointer rounded-full ${
-            activePostType === 'public' ? 'bg-violet-200 text-black' : 'text-gray-400'
+            activePostType === 'public'
+              ? 'bg-violet-200 text-black'
+              : 'text-gray-400'
           }`}
           onClick={() => setActivePostType('public')}
           style={{ fontFamily: 'dohyeon' }}
@@ -34,7 +36,9 @@ const Posts = ({ isMe, isPublic }) => {
         </button>
         <button
           className={`py-2 px-5 cursor-pointer rounded-full ${
-            activePostType === 'private' ? 'bg-violet-200 text-black' : 'text-gray-400'
+            activePostType === 'private'
+              ? 'bg-violet-200 text-black'
+              : 'text-gray-400'
           }`}
           onClick={() => setActivePostType('private')}
           style={{ fontFamily: 'dohyeon' }}

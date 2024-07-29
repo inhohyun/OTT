@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function StyleInfoSurvey({
   formData,
@@ -8,22 +8,22 @@ export default function StyleInfoSurvey({
   handleNext,
   handlePrev,
 }) {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState(formData.tags || []);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
-    setErrorMessage("");
+    setErrorMessage('');
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim() === "") {
+    if (searchText.trim() === '') {
       return;
     }
     if (tags.includes(searchText.trim())) {
-      setErrorMessage("이미 존재하는 태그입니다.");
+      setErrorMessage('이미 존재하는 태그입니다.');
       return;
     }
     if (tags.length >= 5) {
@@ -32,7 +32,7 @@ export default function StyleInfoSurvey({
     const newTags = [...tags, searchText.trim()];
     setTags(newTags);
     setFormData({ ...formData, tags: newTags });
-    setSearchText("");
+    setSearchText('');
   };
 
   const handleTagRemove = (tag) => {
@@ -98,8 +98,8 @@ export default function StyleInfoSurvey({
           disabled={tags.length < 2}
           className={`py-2 px-5 rounded-full mt-5 cursor-pointer text-lg ${
             tags.length >= 2
-              ? "bg-violet-400 text-white hover:bg-violet-300"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              ? 'bg-violet-400 text-white hover:bg-violet-300'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
           onClick={handleNext}
         >

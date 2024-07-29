@@ -56,7 +56,10 @@ const Footer = () => {
         transform: 'translateX(-50%)',
       }}
     >
-      <div className="relative w-full flex justify-between items-center px-4" style={{ height: '100%' }}>
+      <div
+        className="relative w-full flex justify-between items-center px-4"
+        style={{ height: '100%' }}
+      >
         <div
           className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${
             activeButton === 'mainpage' ? 'bg-violet-300 rounded-full' : ''
@@ -77,10 +80,18 @@ const Footer = () => {
         </div>
         <div
           className="flex flex-col items-center bg-violet-500 rounded-full cursor-pointer w-12 h-12 justify-center"
-          onClick={activeButton === 'ai' ? handleXButtonClick : () => handleButtonClick('ai')}
+          onClick={
+            activeButton === 'ai'
+              ? handleXButtonClick
+              : () => handleButtonClick('ai')
+          }
           style={{ marginBottom: '30px' }}
         >
-          <img src={activeButton === 'ai' ? whiteX : fitIcon} alt="Fit" className="w-8 h-8 mb-1" />
+          <img
+            src={activeButton === 'ai' ? whiteX : fitIcon}
+            alt="Fit"
+            className="w-8 h-8 mb-1"
+          />
         </div>
         <div
           className={`flex flex-col items-center cursor-pointer w-12 h-12 justify-center ${

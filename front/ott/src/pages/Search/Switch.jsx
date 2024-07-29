@@ -5,27 +5,27 @@ import { faUser, faTshirt } from '@fortawesome/free-solid-svg-icons';
 const Switch = ({ isChecked, handleCheckboxChange }) => {
   return (
     <>
-      <label className='themeSwitcherThree relative inline-flex cursor-pointer select-none items-center'>
+      <label className="themeSwitcherThree relative inline-flex cursor-pointer select-none items-center">
         <input
-          type='checkbox'
+          type="checkbox"
           checked={isChecked}
           onChange={handleCheckboxChange}
-          className='sr-only'
+          className="sr-only"
         />
-        <div className='shadow-card flex h-[46px] w-[82px] items-center justify-between rounded-full bg-violet-500'>
+        <div className="shadow-card flex h-[46px] w-[82px] items-center justify-between rounded-full bg-violet-500">
           <span
             className={`flex h-full w-1/2 items-center justify-center rounded-full ${
               !isChecked ? 'bg-white text-violet-500' : 'text-white'
             }`}
           >
-            <FontAwesomeIcon icon={faUser} className='text-violet-500' />
+            <FontAwesomeIcon icon={faUser} className="text-violet-500" />
           </span>
           <span
             className={`flex h-full w-1/2 items-center justify-center rounded-full ${
               isChecked ? 'bg-white text-violet-500' : 'text-white'
             }`}
           >
-            <FontAwesomeIcon icon={faTshirt} className='text-violet-500' />
+            <FontAwesomeIcon icon={faTshirt} className="text-violet-500" />
           </span>
         </div>
       </label>

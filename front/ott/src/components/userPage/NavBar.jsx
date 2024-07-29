@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   const postNumber = 100;
@@ -9,31 +9,31 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
     <nav className="w-full text-center flex justify-around text-lg mt- font-dohyeon">
       <button
         className={`bg-transparent border-none text-[rgba(0,0,0,0.5)] py-2 px-5 cursor-pointer rounded-full ${
-          activeComponent === "posts" ? "bg-violet-200" : ""
+          activeComponent === 'posts' ? 'bg-violet-200' : ''
         }`}
-        onClick={() => setActiveComponent("posts")}
+        onClick={() => setActiveComponent('posts')}
         aria-label="게시글"
-        style={{ fontFamily: "dohyeon" }}
+        style={{ fontFamily: 'dohyeon' }}
       >
         {postNumber} 게시글
       </button>
       <button
         className={`bg-transparent border-none text-[rgba(0,0,0,0.5)] py-2 px-5 cursor-pointer rounded-full ${
-          activeComponent === "followers" ? "bg-violet-200" : ""
+          activeComponent === 'followers' ? 'bg-violet-200' : ''
         }`}
-        onClick={() => setActiveComponent("followers")}
+        onClick={() => setActiveComponent('followers')}
         aria-label="팔로워"
-        style={{ fontFamily: "dohyeon" }}
+        style={{ fontFamily: 'dohyeon' }}
       >
         {follwerNumber} 팔로워
       </button>
       <button
         className={`bg-transparent border-none text-[rgba(0,0,0,0.5)] py-2 px-5 cursor-pointer rounded-full ${
-          activeComponent === "following" ? "bg-violet-200" : ""
+          activeComponent === 'following' ? 'bg-violet-200' : ''
         }`}
-        onClick={() => setActiveComponent("following")}
+        onClick={() => setActiveComponent('following')}
         aria-label="팔로잉"
-        style={{ fontFamily: "dohyeon" }}
+        style={{ fontFamily: 'dohyeon' }}
       >
         {followingNumber} 팔로잉
       </button>

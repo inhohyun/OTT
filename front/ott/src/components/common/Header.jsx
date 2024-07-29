@@ -38,29 +38,32 @@ const Header = () => {
   return (
     <>
       <header className="w-full bg-white p-4 flex items-center justify-between relative">
-        <div className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer" onClick={handleIconClick}>
-          <img 
-            src={iconImage} 
-            alt="icon image"
-            className='w-40 h-12 mt-2'
-          />
+        <div
+          className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+          onClick={handleIconClick}
+        >
+          <img src={iconImage} alt="icon image" className="w-40 h-12 mt-2" />
         </div>
-        <div className='flex space-x-5 items-center ml-auto'>
-          <img 
-            src={closetImage} 
+        <div className="flex space-x-5 items-center ml-auto">
+          <img
+            src={closetImage}
             alt="closet go"
-            className='w-6 h-6 mb-0.5 cursor-pointer' 
+            className="w-6 h-6 mb-0.5 cursor-pointer"
             onClick={handleClosetClick}
           />
-          <img 
-            src={notificationImage} 
+          <img
+            src={notificationImage}
             alt="notification go"
-            className='w-7 h-7 cursor-pointer' 
+            className="w-7 h-7 cursor-pointer"
             onClick={handleNotificationClick}
           />
         </div>
       </header>
-      <Notification show={showModal} onClose={handleCloseModal} notifications={notifications} />
+      <Notification
+        show={showModal}
+        onClose={handleCloseModal}
+        notifications={notifications}
+      />
     </>
   );
 };
