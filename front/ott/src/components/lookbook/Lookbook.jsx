@@ -20,32 +20,32 @@ const Lookbook = () => {
       {
         author: '사용자1',
         text: '이 옷 정말 좋아요!',
-        time: '2시간 전',
+        time: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 4),
       },
       {
         author: '사용자2',
         text: '이 색상이 정말 예쁘네요.',
-        time: '1시간 전',
+        time: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
       },
       {
         author: '사용자2',
         text: '이 색상이 정말 예쁘네요.',
-        time: '1시간 전',
+        time: new Date(new Date().getTime() - 1000 * 60 * 60 * 4),
       },
       {
         author: '사용자2',
         text: '이 색상이 정말 예쁘네요.',
-        time: '1시간 전',
+        time: new Date(new Date().getTime() - 1000 * 60 * 60 * 3),
       },
       {
         author: '사용자2',
         text: '이 색상이 정말 예쁘네요.',
-        time: '1시간 전',
+        time: new Date(new Date().getTime() - 1000 * 60 * 60),
       },
       {
         author: '사용자2',
         text: '이 색상이 정말 예쁘네요.',
-        time: '1시간 전',
+        time: new Date(new Date().getTime() - 1000 * 60 * 10),
       },
     ],
   };
