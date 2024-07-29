@@ -1,5 +1,10 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +22,6 @@ import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
 @Slf4j
 @Service
 public class LookbookServiceImpl implements LookbookService {
@@ -35,68 +37,60 @@ public class LookbookServiceImpl implements LookbookService {
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto) {
-        Lookbook lookbook = new Lookbook();
-        //유저정보 입력
-        //Todo : 병합 후 유저 정보 넣기
-//        lookbook.setMember();
-
-        //내용 설정
-        lookbook.setContent(lookbookCreateDto.getContent());
-        log.info("Lookbook 입력내용 = {}, 들어간 내용 = {}", lookbookCreateDto.getContent(),
-            lookbook.getContent());
-
-        //공개여부 설정
-        lookbook.setPublicStatus(lookbookCreateDto.getPublicStatus());
-        log.info("Lookbook 입력 공개여부 = {}, 들어간 내용 = {}", lookbookCreateDto.getPublicStatus(),
-            lookbook.getContent());
-
-        //룩북 생성 날짜 저장
-        lookbook.setCreatedAt(LocalDateTime.now());
-
         //태그 유무 확인 및 태그 추가
         List<LookbookTag> lookbookTags = new ArrayList<>();
         for (String tag : lookbookCreateDto.getTags()) {
             Tag tagEntity = tagRepository.findByName(tag);
             if (tagEntity == null) {
-                tagEntity = new Tag();
-                tagEntity.setName(tag);
-                tagEntity.setCount(1L);
-                tagRepository.save(tagEntity);
+                tagRepository.save(Tag.builder()
+                    .name(tag)
+                    .count(1L)
+                    .build());
             } else {
-                Long tagCnt = tagEntity.getCount();
-                tagEntity.setCount(tagCnt + 1L);
-                tagRepository.save(tagEntity);
+                tagRepository.save(Tag.builder()
+                    .id(tagEntity.getId())
+                    .name(tagEntity.getName())
+                    .count(tagEntity.getCount() + 1)
+                    .build());
             }
-            LookbookTag lookbookTag = new LookbookTag();
-            lookbookTag.setLookbook(lookbook);
-            lookbookTag.setTag(tagRepository.findByName(tag));
-            lookbookTags.add(lookbookTag);
+            //Todo : lookbook 어떻게 넣을지 생각
+            lookbookTags.add(LookbookTag.builder()
+//                .lookbook(lookbook)
+                .tag(tagRepository.findByName(tag))
+                .build());
         }
         //옷 사진 추가하기
         //Todo : 옷 끝나면 옷 정보 및 사진 넣기
 
         //룩북 추가하기
-        lookbookRepository.save(lookbook);
+        //Todo : 옷 내용들, 옷 사진, 사용자 넣을 것
+        lookbookRepository.save(Lookbook.builder()
+            .content(lookbookCreateDto.getContent())
+            .publicStatus(lookbookCreateDto.getPublicStatus())
+            .lookbookTags(lookbookTags)
+            .build());
     }
 
     @Override
     public LookbookDetailDto detailLookbook(String lookbookId) {
         Optional<Lookbook> odl = lookbookRepository.findById(Long.parseLong(lookbookId));
-        LookbookDetailDto lookbookDetailDto = new LookbookDetailDto();
         Lookbook lookbook = null;
         if (odl.isPresent()) {
             lookbook = odl.get();
-            lookbookDetailDto.setContent(lookbook.getContent());
-            lookbookDetailDto.setId(lookbook.getId());
-            lookbookDetailDto.setLookbookItems(lookbook.getLookbookItemList());
-            lookbookDetailDto.setLookbookImages(lookbook.getLookbookImages());
-            lookbookDetailDto.setLookbookTags(lookbook.getLookbookTags());
-            lookbookDetailDto.setMember(lookbook.getMember());
-            lookbookDetailDto.setHitCount(lookbook.getHitCount() + 1);
-            lookbookDetailDto.setCreatedAt(lookbook.getCreatedAt());
-            lookbook.setHitCount(lookbook.getHitCount() + 1);
-            lookbookRepository.save(lookbook);
-            return lookbookDetailDto;
+            lookbookRepository.save(Lookbook.builder()
+                .id(lookbook.getId())
+                .hitCount(lookbook.getHitCount() + 1)
+                .build());
+            return LookbookDetailDto.builder()
+                .content(lookbook.getContent())
+                .id(lookbook.getId())
+                .lookbookItems(lookbook.getLookbookItemList())
+                .lookbookImages(lookbook.getLookbookImages())
+                .lookbookTags(lookbook.getLookbookTags())
+                .member(lookbook.getMember())
+                .hitCount(lookbook.getHitCount() + 1)
+                .createdAt(lookbook.getCreatedAt())
+                .build();
         } else {
             log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
             return null;

@@ -41,10 +41,4 @@ public class Tag extends BaseEntity {
         this.name = name;
         this.count = count;
     }
-
-    @Builder
-    public Tag(String name, Long count) {
-        this.name = name;
-        this.count = count;
-    }
 }

@@ -1,6 +1,7 @@
 package ssafy.c205.ott.common.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -23,4 +24,10 @@ public class LookbookTag {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @Builder
+    public LookbookTag(Tag tag, Lookbook lookbook) {
+        this.tag = tag;
+        this.lookbook = lookbook;
+    }
 }

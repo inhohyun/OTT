@@ -1,6 +1,5 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
-import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
