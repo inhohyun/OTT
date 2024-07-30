@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import logo from '@/assets/icons/main.logo.png'; // 로고 이미지 경로를 적절히 수정하세요
+import AiResult from './AiResult'; // AiResult 컴포넌트를 import
 
-const AiProceeding = () => {
+const AiProceeding = ({ selectedClothing }) => {
   const [percentage, setPercentage] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     const duration = 50; // 50초 동안 진행
@@ -17,6 +19,7 @@ const AiProceeding = () => {
         const nextPercentage = prev + increment;
         if (nextPercentage >= targetPercentage) {
           clearInterval(intervalId);
+          setIsCompleted(true);
           return targetPercentage;
         }
         return nextPercentage;
@@ -26,14 +29,16 @@ const AiProceeding = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  if (isCompleted) {
+    return <AiResult selectedClothing={selectedClothing} />;
+  }
+
   return (
     <div
       className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto my-5"
       style={{ width: '70%' }}
     >
       <div className="w-full bg-violet-200 bg-opacity-60 rounded-t-2xl relative">
-        {' '}
-        {/* 패딩 값을 줄임 */}
         <div
           className="flex items-center justify-center w-20 h-20 bg-white rounded-full mx-auto"
           style={{ position: 'relative', top: '10px' }} // top 값을 15px에서 10px로 줄임
@@ -46,16 +51,10 @@ const AiProceeding = () => {
         </div>
       </div>
       <div className="w-full bg-white rounded-b-2xl p-4 flex flex-col items-center">
-        {' '}
-        {/* 패딩 값을 줄임 */}
         <div className="text-center mb-2">
-          {' '}
-          {/* 아래 마진 값을 줄임 */}
           <p className="text-lg font-bold text-slate-500">AI 합성 진행중!!</p>
         </div>
         <div className="w-24 h-24">
-          {' '}
-          {/* 진행 표시기 크기를 줄임 */}
           <CircularProgressbar
             value={percentage}
             text={`${Math.round(percentage)}% 완료`}

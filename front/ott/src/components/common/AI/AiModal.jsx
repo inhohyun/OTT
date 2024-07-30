@@ -4,7 +4,7 @@ import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
 // import AiResult from './AiResult';
 import ClothesGridSingleLine from './ClothesGridSingleLine';
-import AiProceeding from './AiProceeding';
+import AiProceeding from './AiProceeding'; // AiProceeding 컴포넌트를 import
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -33,6 +33,7 @@ import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 const Modal = ({ isOpen, onClose }) => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [numImages, setNumImages] = useState({ value: '4장', label: '4장' }); // 추가된 드롭다운의 상태
   const [isTryingOn, setIsTryingOn] = useState(false);
 
   const [clothes, setClothes] = useState([
@@ -118,6 +119,13 @@ const Modal = ({ isOpen, onClose }) => {
     { value: '한벌옷', label: '한벌옷' },
   ];
 
+  const imageOptions = [
+    { value: '1장', label: '1장' },
+    { value: '2장', label: '2장' },
+    { value: '3장', label: '3장' },
+    { value: '4장', label: '4장' },
+  ];
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -136,11 +144,11 @@ const Modal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  //버튼 클릭시 동작
   const handlePutOn = () => {
     if (selectedClothing) {
       console.log('Selected Clothing ID:', selectedClothing.id);
       console.log('Selected Filter:', filter);
+      console.log('Number of Images:', numImages.value);
       setIsTryingOn(true);
     } else {
       console.log('No clothing selected');
@@ -153,6 +161,10 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handleFilterChange = (option) => {
     setFilter(option.value);
+  };
+
+  const handleNumImagesChange = (option) => {
+    setNumImages(option);
   };
 
   const filteredClothes =
@@ -215,6 +227,17 @@ const Modal = ({ isOpen, onClose }) => {
               onToggleLike={handleToggleLike}
               onClothingClick={handleClothingClick}
             />
+            <h4 className="mt-4">생성할 사진 개수</h4>
+            <div className="mb-4 dropdown-wrapper">
+              <Select
+                options={imageOptions}
+                value={numImages}
+                onChange={handleNumImagesChange}
+                styles={customStyles}
+                className="flex-grow"
+              />
+            </div>
+
             <div className="mt-4">
               <button className="try-on-button" onClick={handlePutOn}>
                 입어보기
