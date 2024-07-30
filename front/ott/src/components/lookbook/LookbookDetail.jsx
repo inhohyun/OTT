@@ -4,6 +4,8 @@ import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
 
 const LookbookDetail = ({ lookbook, onClose }) => {
+  const [showSellComments, setShowSellComments] = useState(false);
+
   if (!lookbook) return null;
 
   const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
@@ -11,8 +13,6 @@ const LookbookDetail = ({ lookbook, onClose }) => {
     ? lookbook.itemsForSale
     : [];
   const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
-
-  const [showSellComments, setShowSellComments] = useState(false);
 
   return (
     <div

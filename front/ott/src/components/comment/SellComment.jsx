@@ -45,7 +45,7 @@ const initialComments = [
   },
 ];
 
-const userRole = 'seller'; // 현재 사용자의 역할: 'seller', 'buyer1', 'buyer2', 'buyer3', 'other'
+const userRole = 'buyer3'; // 현재 사용자의 역할: 'seller', 'buyer1', 'buyer2', 'buyer3', 'other'
 
 const SellComment = () => {
   const [comments, setComments] = useState(initialComments);

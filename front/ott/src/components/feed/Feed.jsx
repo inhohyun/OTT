@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FeedNoFollow from './FeedNoFollow';
 import FeedFollow from './FeedFollow';
 
 const Feed = ({ setActiveComponent }) => {
-  const [showFeedFollow, setShowFeedFollow] = useState(false);
+  const [hasFollow, setHasFollow] = useState(false);
 
-  const handleButtonClick = () => {
-    setShowFeedFollow(true);
+  const checkUserFollowers = () => {
+    const userHasFollowers = true;
+    setHasFollow(userHasFollowers);
   };
+
+  useEffect(() => {
+    checkUserFollowers();
+  }, []);
 
   return (
     <div>
-      <button onClick={handleButtonClick}>o</button>
-      {showFeedFollow ? (
+      {hasFollow ? (
         <FeedFollow setActiveComponent={setActiveComponent} />
       ) : (
         <FeedNoFollow setActiveComponent={setActiveComponent} />
