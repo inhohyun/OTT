@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
 import Select from 'react-select';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import AddCategory from './AddCategory'; // Adjust the import path as needed
 
-const CategoryDropdown = ({
+const DEFAULT_CATEGORIES = [
+  '전체',
+  '상의',
+  '하의',
+  '아우터',
+  '한벌옷',
+  '즐겨찾기',
+];
+
+const CustomCategoryDropdown = ({
   selectedCategory,
   onCategoryChange,
-  categories,
-  onAddCategory,
+  categories = DEFAULT_CATEGORIES, // Default to the predefined categories
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -28,10 +30,6 @@ const CategoryDropdown = ({
     }),
   };
 
-  const handleAddCategory = (newCategory) => {
-    onAddCategory(newCategory);
-  };
-
   return (
     <div className="my-12 w-full max-w-xs flex items-center">
       <Select
@@ -44,19 +42,8 @@ const CategoryDropdown = ({
         styles={customStyles}
         className="flex-grow"
       />
-      <div
-        onClick={() => setIsModalOpen(true)}
-        className="ml-6 p-2 rounded-lg cursor-pointer"
-      >
-        <FontAwesomeIcon icon={faPlus} size="lg" />
-      </div>
-      <AddCategory
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAddCategory={handleAddCategory}
-      />
     </div>
   );
 };
 
-export default CategoryDropdown;
+export default CustomCategoryDropdown;
