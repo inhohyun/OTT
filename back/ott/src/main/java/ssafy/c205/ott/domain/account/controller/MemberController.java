@@ -30,26 +30,22 @@ public class MemberController {
 
     @GetMapping("/{id}")
     public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id) {
-        MemberInfoDto memberInfoDto = memberReadService.memberSearch(MemberRequestDto.builder().id(id).build());
-        return ApiResponse.success(memberInfoDto);
+        return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder().id(id).build()));
     }
 
     @PutMapping("/{id}")
     public ApiResponse<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
-        UpdateMemberSuccessDto updateMemberSuccessDto = memberWriteService.updateMember(memberUpdateRequestDto);
-        return ApiResponse.success(updateMemberSuccessDto);
+        return ApiResponse.success(memberWriteService.updateMember(memberUpdateRequestDto));
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id) {
-        DeleteMemberSuccessDto deleteMemberSuccessDto = memberWriteService.deleteMember(MemberRequestDto.builder().id(id).build());
-        return ApiResponse.success(deleteMemberSuccessDto);
+        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).build()));
     }
 
     @GetMapping("/validate-nickname/{nickname}")
     public ApiResponse<ValidateNicknameSuccessDto> validateNickname(@PathVariable String nickname) {
-        ValidateNicknameSuccessDto nicknameSuccessDto = memberValidator.validateMemberNickname(nickname);
-        return ApiResponse.success(nicknameSuccessDto);
+        return ApiResponse.success(memberValidator.validateMemberNickname(nickname));
     }
 
     @GetMapping("/more")
@@ -57,10 +53,9 @@ public class MemberController {
                                                                         @RequestParam(name = "offset", defaultValue = "0") int offset,
                                                                         @RequestParam(name = "limit", defaultValue = "10") int limit) {
         List<Member> members = memberRepository.findByNicknameContaining(nickname, offset, limit);
-        List<MemberSearchResponseDto> memberSearchResponseDtos = members.stream()
+        return ApiResponse.success(members.stream()
                 .map(MemberSearchResponseDto::new)
-                .collect(Collectors.toList());
-        return ApiResponse.success(memberSearchResponseDtos);
+                .collect(Collectors.toList()));
     }
 
     @PostMapping("/follow/{targetId}")
