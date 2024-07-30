@@ -12,4 +12,6 @@ public interface CommentService {
     void createReply(String postId, String commentId, CommentMessageDto commentMessageDto);
 
     List<CommentSelectResponseDto> selectComment(String postId, CommentSelectDto commentSelectDto);
+
+    void updateComment(String postId, String commentId, CommentMessageDto commentMessageDto);
 }

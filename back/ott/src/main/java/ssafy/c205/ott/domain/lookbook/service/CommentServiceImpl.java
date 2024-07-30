@@ -53,6 +53,8 @@ public class CommentServiceImpl implements CommentService {
             .commentStatus(commentMessageDto.getStatus().equals("DM") ? CommentStatus.DM
                 : CommentStatus.NOT_DELETED)
             .build());
+
+        //Todo : 댓글 추가 예외 처리
     }
 
     @Override
@@ -101,6 +103,8 @@ public class CommentServiceImpl implements CommentService {
             .id(parent.getId())
             .children(children)
             .build());
+
+        //Todo : 대댓글이 잘 작성되었는지 확인하여 예외처리 할 필요
     }
 
     @Override
@@ -143,7 +147,25 @@ public class CommentServiceImpl implements CommentService {
             //responseDto에 추가
             responseDtos.add(commentSelectResponseDto);
         }
-
         return responseDtos;
+    }
+
+    @Override
+    public void updateComment(String postId, String commentId,
+        CommentMessageDto commentMessageDto) {
+        // 댓글 가져오기
+        Comment comment = null;
+        Optional<Comment> oc = commentRepository.findById(Long.parseLong(commentId));
+        //Todo : 댓글 조회 실패 예외처리
+        if (oc.isPresent()) {
+            comment = oc.get();
+        }
+        // 데이터 업데이트
+        commentRepository.save(Comment
+            .builder()
+            .id(comment.getId())
+            .message(commentMessageDto.getMsg())
+            .build());
+        //Todo : 수정 실패 예외처리
     }
 }
