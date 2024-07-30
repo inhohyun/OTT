@@ -2,7 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 
-const AddCategory = ({ isOpen, onClose, onAddCategory, existingCategories }) => {
+const AddCategory = ({
+  isOpen,
+  onClose,
+  onAddCategory,
+  existingCategories,
+}) => {
   const [newCategory, setNewCategory] = useState('');
   const [error, setError] = useState('');
 
@@ -12,7 +17,11 @@ const AddCategory = ({ isOpen, onClose, onAddCategory, existingCategories }) => 
       return;
     }
 
-    if (existingCategories.some(category => category.value === newCategory.trim())) {
+    if (
+      existingCategories.some(
+        (category) => category.value === newCategory.trim()
+      )
+    ) {
       setError('같은 이름의 카테고리가 존재합니다');
       return;
     }
@@ -33,7 +42,9 @@ const AddCategory = ({ isOpen, onClose, onAddCategory, existingCategories }) => 
         >
           <FontAwesomeIcon icon={faTimes} />
         </div>
-        <h2 className="text-xl font-bold mb-4 text-center">카테고리 추가하기</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">
+          카테고리 추가하기
+        </h2>
         <input
           type="text"
           className={`w-full p-2 border rounded-lg mb-4 ${error ? 'border-red-500' : ''}`}

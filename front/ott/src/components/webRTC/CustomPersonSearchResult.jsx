@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faVideo, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
-const PersonSearchResult = ({ results, searchQuery }) => {
+const CustomPersonSearchResult = ({
+  results,
+  searchQuery,
+  onStartVideoChat,
+}) => {
   const [visibleResults, setVisibleResults] = useState(4);
   const [filteredResults, setFilteredResults] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!searchQuery) {
@@ -46,6 +52,10 @@ const PersonSearchResult = ({ results, searchQuery }) => {
     setVisibleResults((prev) => prev + 4); // Show 4 more results
   };
 
+  const startVideoChat = (username) => {
+    navigate(`/video-chat/${username}`);
+  };
+
   if (!searchQuery) {
     return null;
   }
@@ -57,35 +67,48 @@ const PersonSearchResult = ({ results, searchQuery }) => {
   return (
     <div
       className="mt-10 mx-auto backdrop-blur-md bg-violet-200 bg-opacity-40 text-stone-600 p-4 rounded-3xl shadow-md"
-      style={{ width: '80%', maxWidth: '400px' }}
+      style={{
+        width: '80%',
+        maxWidth: '400px',
+        maxHeight: '400px',
+        overflowY: 'auto',
+      }}
     >
       <h2 className="font-bold mb-4 text-center" style={{ fontSize: '16px' }}>
         검색결과
       </h2>
-      <div className="space-y-4 overflow-y-auto" style={{ maxHeight: '300px' }}>
+      <div className="space-y-4">
         {filteredResults.slice(0, visibleResults).map((result, index) => (
           <div
             key={index}
-            className="p-2 rounded-lg relative flex items-center"
+            className="flex justify-between items-center p-2 rounded-lg relative"
           >
-            <FontAwesomeIcon
-              icon={faUserCircle}
-              className="text-gray-400 mr-4"
-              style={{ fontSize: '36px' }}
-            />
-            <div>
-              <h3
-                className="text-base font-semibold mb-2"
-                style={{ fontSize: '14px' }}
-              >
-                {result.title}
-              </h3>
-              <p
-                className="text-xs text-stone-500"
-                style={{ fontSize: '12px' }}
-              >
-                {result.description}
-              </p>
+            <div className="flex items-center">
+              <FontAwesomeIcon
+                icon={faUserCircle}
+                className="text-gray-400 mr-4"
+                style={{ fontSize: '36px' }}
+              />
+              <div>
+                <h3
+                  className="text-base font-semibold mb-2"
+                  style={{ fontSize: '14px' }}
+                >
+                  {result.title}
+                </h3>
+                <p
+                  className="text-xs text-stone-500"
+                  style={{ fontSize: '12px' }}
+                >
+                  {result.description}
+                </p>
+              </div>
+            </div>
+            <div
+              onClick={() => startVideoChat(result.title)}
+              className="text-gray-600 hover:text-gray-800 cursor-pointer"
+            >
+              <FontAwesomeIcon icon={faVideo} className="text-xl" />
             </div>
           </div>
         ))}
@@ -102,4 +125,4 @@ const PersonSearchResult = ({ results, searchQuery }) => {
   );
 };
 
-export default PersonSearchResult;
+export default CustomPersonSearchResult;

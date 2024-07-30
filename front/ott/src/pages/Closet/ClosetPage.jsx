@@ -9,7 +9,12 @@ const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [clothes, setClothes] = useState(clothesData);
   const [categories, setCategories] = useState([
-    '전체', '상의', '하의', '아우터', '한벌옷', '즐겨찾기'
+    '전체',
+    '상의',
+    '하의',
+    '아우터',
+    '한벌옷',
+    '즐겨찾기',
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,14 +30,19 @@ const ClosetPage = () => {
   };
 
   const handleToggleLike = (id) => {
-    setClothes(clothes.map(item => item.id === id ? { ...item, isLiked: !item.isLiked } : item));
+    setClothes(
+      clothes.map((item) =>
+        item.id === id ? { ...item, isLiked: !item.isLiked } : item
+      )
+    );
   };
 
-  const filteredClothes = selectedCategory === '전체'
-    ? clothes
-    : selectedCategory === '즐겨찾기'
-    ? clothes.filter(item => item.isLiked)
-    : clothes.filter(item => item.category === selectedCategory);
+  const filteredClothes =
+    selectedCategory === '전체'
+      ? clothes
+      : selectedCategory === '즐겨찾기'
+        ? clothes.filter((item) => item.isLiked)
+        : clothes.filter((item) => item.category === selectedCategory);
 
   return (
     <div
@@ -58,7 +68,7 @@ const ClosetPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAddClothes={handleAddClothes}
-        categories={categories.filter(cat => cat !== '즐겨찾기')}
+        categories={categories.filter((cat) => cat !== '즐겨찾기')}
       />
     </div>
   );

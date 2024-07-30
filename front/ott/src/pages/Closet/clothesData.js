@@ -23,18 +23,78 @@ import shirt3 from '../../assets/images/clothes/shirt3.jpg';
 import shirt3Back from '../../assets/images/clothes/shirt3-1.jpg';
 
 const clothesData = [
-  { id: 1, category: '한벌옷', frontImage: dress1, backImage: dress1Back, isLiked: false },
+  {
+    id: 1,
+    category: '한벌옷',
+    frontImage: dress1,
+    backImage: dress1Back,
+    isLiked: false,
+  },
   { id: 2, category: '한벌옷', frontImage: dress2, isLiked: false },
   { id: 3, category: '한벌옷', frontImage: dress3, isLiked: false },
-  { id: 4, category: '아우터', frontImage: outer1, backImage: outer1Back, isLiked: false },
-  { id: 5, category: '아우터', frontImage: outer2, backImage: outer2Back, isLiked: false },
-  { id: 6, category: '아우터', frontImage: outer3, backImage: outer3Back, isLiked: false },
-  { id: 7, category: '하의', frontImage: pants1, backImage: pants1Back, isLiked: false },
-  { id: 8, category: '하의', frontImage: pants2, backImage: pants2Back, isLiked: false },
-  { id: 9, category: '하의', frontImage: pants3, backImage: pants3Back, isLiked: false },
-  { id: 10, category: '상의', frontImage: shirt1, backImage: shirt1Back, isLiked: false },
-  { id: 11, category: '상의', frontImage: shirt2, backImage: shirt2Back, isLiked: false },
-  { id: 12, category: '상의', frontImage: shirt3, backImage: shirt3Back, isLiked: false },
+  {
+    id: 4,
+    category: '아우터',
+    frontImage: outer1,
+    backImage: outer1Back,
+    isLiked: false,
+  },
+  {
+    id: 5,
+    category: '아우터',
+    frontImage: outer2,
+    backImage: outer2Back,
+    isLiked: false,
+  },
+  {
+    id: 6,
+    category: '아우터',
+    frontImage: outer3,
+    backImage: outer3Back,
+    isLiked: false,
+  },
+  {
+    id: 7,
+    category: '하의',
+    frontImage: pants1,
+    backImage: pants1Back,
+    isLiked: false,
+  },
+  {
+    id: 8,
+    category: '하의',
+    frontImage: pants2,
+    backImage: pants2Back,
+    isLiked: false,
+  },
+  {
+    id: 9,
+    category: '하의',
+    frontImage: pants3,
+    backImage: pants3Back,
+    isLiked: false,
+  },
+  {
+    id: 10,
+    category: '상의',
+    frontImage: shirt1,
+    backImage: shirt1Back,
+    isLiked: false,
+  },
+  {
+    id: 11,
+    category: '상의',
+    frontImage: shirt2,
+    backImage: shirt2Back,
+    isLiked: false,
+  },
+  {
+    id: 12,
+    category: '상의',
+    frontImage: shirt3,
+    backImage: shirt3Back,
+    isLiked: false,
+  },
 ];
 
 export default clothesData;
