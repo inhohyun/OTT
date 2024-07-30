@@ -111,4 +111,15 @@ public class MemberWriteService {
         return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
+    public FollowResponseDto acceptFollow(FollowRequestDto followRequestDto) {
+        Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
+        Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
+        memberValidator.validateAcceptFollow(followRequestDto);
+
+        Follow follow = followRepository.findByToMemberAndFromMember(targetMember, requestMember).get();
+        follow.updateFollowStatus();
+
+        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_ACCEPT_MESSAGE.getMessage());
+    }
+
 }
