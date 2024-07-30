@@ -122,4 +122,14 @@ public class MemberWriteService {
         return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_ACCEPT_MESSAGE.getMessage());
     }
 
+    public FollowResponseDto rejectFollow(FollowRequestDto followRequestDto) {
+        Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
+        Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
+        memberValidator.validateRejectFollow(followRequestDto);
+
+        followRepository.deleteByToMemberAndFromMember(targetMember, requestMember);
+
+        return createFollowResponseDto(null, 0, FOLLOW_REJECT_MESSAGE.getMessage());
+    }
+
 }
