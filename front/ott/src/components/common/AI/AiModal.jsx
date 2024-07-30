@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
-import AiResult from './AiResult'; // AiResult 컴포넌트를 import
-import ClothesGridSingleLine from './ClothesGridSingleLine'; // ClothesGridSingleLine 컴포넌트를 import
+import AiResult from './AiResult';
+import ClothesGridSingleLine from './ClothesGridSingleLine';
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -31,7 +32,7 @@ import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 const Modal = ({ isOpen, onClose }) => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [isTryingOn, setIsTryingOn] = useState(false); // 상태 추가
+  const [isTryingOn, setIsTryingOn] = useState(false);
 
   const [clothes, setClothes] = useState([
     {
@@ -107,13 +108,38 @@ const Modal = ({ isOpen, onClose }) => {
       isLiked: false,
     },
   ]);
+
+  const categories = [
+    { value: 'all', label: '모두' },
+    { value: '상의', label: '상의' },
+    { value: '하의', label: '하의' },
+    { value: '아우터', label: '아우터' },
+    { value: '한벌옷', label: '한벌옷' },
+  ];
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
+      '&:hover': {
+        borderColor: 'black',
+      },
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#a78bfa' : 'white',
+      color: state.isSelected ? 'white' : 'black',
+    }),
+  };
+
   if (!isOpen) return null;
 
   const handlePutOn = () => {
     if (selectedClothing) {
       console.log('Selected Clothing ID:', selectedClothing.id);
       console.log('Selected Filter:', filter);
-      setIsTryingOn(true); // 입어보기 버튼 클릭 시 상태 변경
+      setIsTryingOn(true);
     } else {
       console.log('No clothing selected');
     }
@@ -123,8 +149,8 @@ const Modal = ({ isOpen, onClose }) => {
     setSelectedClothing(clothing);
   };
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value);
+  const handleFilterChange = (option) => {
+    setFilter(option.value);
   };
 
   const filteredClothes =
@@ -156,7 +182,7 @@ const Modal = ({ isOpen, onClose }) => {
           AI 피팅 서비스
         </h2>
         {isTryingOn ? (
-          <AiResult selectedClothing={selectedClothing} /> // 입어보기 상태일 때 AiResult 컴포넌트 렌더링
+          <AiResult selectedClothing={selectedClothing} />
         ) : (
           <>
             <h4>원본 사진</h4>
@@ -166,18 +192,19 @@ const Modal = ({ isOpen, onClose }) => {
               className="w-full h-auto mb-4 mt-4"
             />
             <h4>저장된 옷</h4>
-            <div className="mb-4">
-              <select
-                value={filter}
+            <div className="mb-4 dropdown-wrapper">
+              <Select
+                options={categories}
+                value={
+                  categories.find((category) => category.value === filter) || {
+                    value: 'all',
+                    label: '모두',
+                  }
+                }
                 onChange={handleFilterChange}
-                className="dropdown"
-              >
-                <option value="all">모두</option>
-                <option value="상의">상의</option>
-                <option value="하의">하의</option>
-                <option value="한벌옷">한벌옷</option>
-                <option value="아우터">아우터</option>
-              </select>
+                styles={customStyles}
+                className="flex-grow"
+              />
             </div>
             <ClothesGridSingleLine
               clothes={filteredClothes}
