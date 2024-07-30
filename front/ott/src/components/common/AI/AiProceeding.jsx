@@ -7,7 +7,7 @@ import AiResult from './AiResult'; // AiResult 컴포넌트를 import
 const AiProceeding = ({ selectedClothing }) => {
   const [percentage, setPercentage] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-
+  //TODO : 해당 컴포넌트에서 비동기 작업을 처리할 것임
   useEffect(() => {
     const duration = 50; // 50초 동안 진행
     const targetPercentage = 99;

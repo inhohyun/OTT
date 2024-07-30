@@ -35,6 +35,7 @@ const Modal = ({ isOpen, onClose }) => {
   const [filter, setFilter] = useState('all');
   const [numImages, setNumImages] = useState({ value: '4장', label: '4장' }); // 추가된 드롭다운의 상태
   const [isTryingOn, setIsTryingOn] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(defaultImage); // 원본 사진 상태
 
   const [clothes, setClothes] = useState([
     {
@@ -167,6 +168,17 @@ const Modal = ({ isOpen, onClose }) => {
     setNumImages(option);
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const filteredClothes =
     filter === 'all'
       ? clothes
@@ -201,10 +213,22 @@ const Modal = ({ isOpen, onClose }) => {
           <>
             <div>
               <h4>원본 사진</h4>
-              <img
-                src={defaultImage}
-                alt="Default"
-                className="w-full h-auto mb-4 mt-4 rounded-lg"
+              <div
+                className="image-container"
+                onClick={() => document.getElementById('imageInput').click()}
+              >
+                <img
+                  src={selectedImage}
+                  alt="Default"
+                  className="w-full h-auto mb-4 mt-4 rounded-lg"
+                />
+              </div>
+              <input
+                type="file"
+                id="imageInput"
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+                accept="image/*" // 모든 이미지 파일을 선택할 수 있도록 설정
               />
             </div>
             <h4>저장된 옷</h4>
