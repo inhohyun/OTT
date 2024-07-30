@@ -49,7 +49,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
 
   return (
     <div
-      className="w-full overflow-x-auto p-1"
+      className="w-full overflow-x-auto"
       style={{ position: 'relative' }}
       ref={containerRef}
     >
@@ -65,7 +65,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
           return (
             <div
               key={item.id}
-              className={`flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center ${isSelected ? 'bg-gray-700' : ''}`}
+              className={`flex-none w-52 h-60 rounded-lg relative flex flex-col items-center ${isSelected ? 'bg-gray-700' : ''}`}
               style={{
                 minWidth: '180px',
                 height: '230px',

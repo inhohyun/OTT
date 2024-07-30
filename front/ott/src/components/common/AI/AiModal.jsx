@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
-import AiResult from './AiResult';
+// import AiResult from './AiResult';
 import ClothesGridSingleLine from './ClothesGridSingleLine';
+import AiProceeding from './AiProceeding';
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -135,6 +136,7 @@ const Modal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  //버튼 클릭시 동작
   const handlePutOn = () => {
     if (selectedClothing) {
       console.log('Selected Clothing ID:', selectedClothing.id);
@@ -182,15 +184,17 @@ const Modal = ({ isOpen, onClose }) => {
           AI 피팅 서비스
         </h2>
         {isTryingOn ? (
-          <AiResult selectedClothing={selectedClothing} />
+          <AiProceeding selectedClothing={selectedClothing} /> // 입어보기 상태일 때 AiProceeding 컴포넌트 렌더링
         ) : (
           <>
-            <h4>원본 사진</h4>
-            <img
-              src={defaultImage}
-              alt="Default"
-              className="w-full h-auto mb-4 mt-4 rounded-lg"
-            />
+            <div>
+              <h4>원본 사진</h4>
+              <img
+                src={defaultImage}
+                alt="Default"
+                className="w-full h-auto mb-4 mt-4 rounded-lg"
+              />
+            </div>
             <h4>저장된 옷</h4>
             <div className="mb-4 dropdown-wrapper">
               <Select
@@ -211,9 +215,11 @@ const Modal = ({ isOpen, onClose }) => {
               onToggleLike={handleToggleLike}
               onClothingClick={handleClothingClick}
             />
-            <button className="try-on-button" onClick={handlePutOn}>
-              입어보기
-            </button>
+            <div className="mt-4">
+              <button className="try-on-button" onClick={handlePutOn}>
+                입어보기
+              </button>
+            </div>
           </>
         )}
       </div>
