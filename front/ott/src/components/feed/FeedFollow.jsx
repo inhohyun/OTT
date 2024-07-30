@@ -7,7 +7,7 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 
 const FeedFollow = () => {
-  const followers = ['이름1', '이름2', '이름3', '이름4'];
+  const followers = ['이름1', '이름2', '이름3', '이름4', '이름6'];
 
   const allLookbooks = followers.reduce((acc, follower) => {
     acc[follower] = dummyLookbooks.filter(
@@ -72,24 +72,24 @@ const FeedFollow = () => {
                     border: none;
                     padding: 0;
                     cursor: pointer;
-                    box-shadow: none;
-                    outline: none;
                 }
             `}</style>
 
       {followers.map((follower, index) => (
         <div key={follower} className="w-full">
-          <p className="ml-2 text-lg font-bold">{follower}</p>
+          <p className="ml-2 text-xl font-bold">{follower}</p>
           <div className="relative">
             {allLookbooks[follower].length > 3 && (
               <button
                 onClick={() => scrollLeft(scrollRefs.current[index])}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6 button-no-style"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
                 style={{
                   backgroundImage: `url(${leftArrow})`,
                   backgroundSize: 'contain',
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
+                  border: 'none',
+                  backgroundColor: 'transparent',
                 }}
               ></button>
             )}
@@ -108,7 +108,7 @@ const FeedFollow = () => {
                 <div className="show-more-button">
                   <button
                     onClick={() => showMore(follower)}
-                    className="relative bg-transparent border-none p-2 cursor-pointer"
+                    className="relative bg-transparent border-none p-2 mb-32 cursor-pointer"
                   >
                     <img src={plus} alt="Show more" className="w-6 h-6" />
                   </button>
@@ -118,12 +118,14 @@ const FeedFollow = () => {
             {allLookbooks[follower].length > 3 && (
               <button
                 onClick={() => scrollRight(scrollRefs.current[index])}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6 button-no-style"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
                 style={{
                   backgroundImage: `url(${rightArrow})`,
                   backgroundSize: 'contain',
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
+                  border: 'none',
+                  backgroundColor: 'transparent',
                 }}
               ></button>
             )}

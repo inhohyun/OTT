@@ -17,6 +17,31 @@ const Lookbook = ({ data }) => {
     setSelectedLookbook(null);
   };
 
+  const calcTimeAgo = (createdAt) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt.replace(' ', 'T'));
+    const diffInSeconds = (now - createdDate) / 1000; // Difference in seconds
+
+    const diffInMinutes = diffInSeconds / 60;
+    const diffInHours = diffInMinutes / 60;
+    const diffInDays = diffInHours / 24;
+    const diffInMonths = diffInDays / 30; // Approximate month
+    const diffInYears = diffInDays / 365; // Approximate year
+
+    if (diffInSeconds < 60) {
+      return `${Math.floor(diffInSeconds)}초 전`;
+    } else if (diffInMinutes < 60) {
+      return `${Math.floor(diffInMinutes)}분 전`;
+    } else if (diffInHours < 24) {
+      return `${Math.floor(diffInHours)}시간 전`;
+    } else if (diffInDays < 30) {
+      return `${Math.floor(diffInDays)}일 전`;
+    } else if (diffInMonths < 12) {
+      return `${Math.floor(diffInMonths)}달 전`;
+    } else {
+      return `${Math.floor(diffInYears)}년 전`;
+    }
+  };
   return (
     <>
       <div
@@ -27,7 +52,9 @@ const Lookbook = ({ data }) => {
           <div className="font-bold text-xs mb-1 text-[15px]">
             {data.creatorName}
           </div>
-          <p className="text-stone-300 text-xs text-[8px]">{data.timeAgo}</p>
+          <p className="text-stone-300 text-xs text-[8px]">
+            {calcTimeAgo(data.date)}
+          </p>
         </div>
         <div className="px-3 py-1 mb-1">
           <img

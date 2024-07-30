@@ -48,7 +48,9 @@ const LookbookDetail = ({ lookbook, onClose }) => {
         <div className="flex items-center mb-4">
           <div className="flex-grow">
             <h2 className="text-xl font-bold">{lookbook.creatorName}</h2>
-            <p className="text-sm text-gray-500">{lookbook.date}</p>
+            <p className="text-sm text-gray-500">
+              {lookbook.date.split(' ')[0]}
+            </p>
           </div>
           <button
             className="bg-purple-300 text-white text-sm px-3 py-3 rounded-lg me-3"

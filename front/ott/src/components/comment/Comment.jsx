@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 const Comment = ({ comments }) => {
   const [commentList, setCommentList] = useState(
-    comments.map(comment => ({
+    comments.map((comment) => ({
       ...comment,
       replies: comment.replies || [], // replies가 undefined일 경우 빈 배열로 초기화
       showReplies: false, // 답글 표시 여부
@@ -78,7 +78,7 @@ const Comment = ({ comments }) => {
             </div>
           </div>
           <div className="flex items-center mt-1">
-          {comment.replies.length > 0 && (
+            {comment.replies.length > 0 && (
               <button
                 onClick={() => toggleReplies(index)}
                 className="text-[10px] mr-2"
