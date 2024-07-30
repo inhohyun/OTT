@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
-@Entity @Getter @Setter
+@Entity @Getter
 public class LookbookTag {
 
     @Id
@@ -29,5 +29,9 @@ public class LookbookTag {
     public LookbookTag(Tag tag, Lookbook lookbook) {
         this.tag = tag;
         this.lookbook = lookbook;
+    }
+
+    public LookbookTag() {
+
     }
 }

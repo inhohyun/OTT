@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 
-@Entity @Getter @Builder
+@Entity @Getter
 public class Notification {
     //Todo: 알림을 통해서 comment로 이동했을 때, comment가 삭제되었다면 예외처리
 
@@ -23,6 +23,7 @@ public class Notification {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
+    @Builder
     public Notification(Long id, String message, NotificationStatus notificationStatus,
         Comment comment) {
         this.id = id;
