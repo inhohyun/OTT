@@ -29,8 +29,8 @@ public class MemberController {
     private final MemberRepository memberRepository;
 
     @GetMapping("/{id}")
-    public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id) {
-        return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder().id(id).build()));
+    public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id, @AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder().id(id).currentId(memberDetails.getMemberId()).build()));
     }
 
     @PutMapping("/{id}")
@@ -39,8 +39,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id) {
-        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).build()));
+    public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id, @AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(memberDetails.getMemberId()).build()));
     }
 
     @GetMapping("/validate-nickname/{nickname}")
