@@ -29,29 +29,9 @@ import shirt3 from '@/assets/images/clothes/shirt3.jpg';
 import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 
 const Modal = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [filter, setFilter] = useState('all');
   const [isTryingOn, setIsTryingOn] = useState(false); // 상태 추가
-
-  const handlePutOn = () => {
-    if (selectedClothing) {
-      console.log('Selected Clothing ID:', selectedClothing.id);
-      console.log('Selected Filter:', filter);
-      setIsTryingOn(true); // 입어보기 버튼 클릭 시 상태 변경
-    } else {
-      console.log('No clothing selected');
-    }
-  };
-
-  const handleClothingClick = (clothing) => {
-    setSelectedClothing(clothing);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value);
-  };
 
   const [clothes, setClothes] = useState([
     {
@@ -127,6 +107,25 @@ const Modal = ({ isOpen, onClose }) => {
       isLiked: false,
     },
   ]);
+  if (!isOpen) return null;
+
+  const handlePutOn = () => {
+    if (selectedClothing) {
+      console.log('Selected Clothing ID:', selectedClothing.id);
+      console.log('Selected Filter:', filter);
+      setIsTryingOn(true); // 입어보기 버튼 클릭 시 상태 변경
+    } else {
+      console.log('No clothing selected');
+    }
+  };
+
+  const handleClothingClick = (clothing) => {
+    setSelectedClothing(clothing);
+  };
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
 
   const filteredClothes =
     filter === 'all'
