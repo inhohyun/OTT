@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,9 @@ import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentChildrenDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentSelectResponseDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.repository.CommentRepository;
@@ -77,7 +81,6 @@ public class CommentServiceImpl implements CommentService {
             parent = oc.get();
         }
 
-
         // 대댓글 저장
         Comment replyComment = Comment
             .builder()
@@ -98,5 +101,49 @@ public class CommentServiceImpl implements CommentService {
             .id(parent.getId())
             .children(children)
             .build());
+    }
+
+    @Override
+    public List<CommentSelectResponseDto> selectComment(String postId,
+        CommentSelectDto commentSelectDto) {
+        Lookbook lookbook = null;
+        List<CommentSelectResponseDto> responseDtos = new ArrayList<>();
+
+        //해당 룩북 조회
+        //Todo : 룩북 조회 실패 예외처리
+        Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
+        if (ol.isPresent()) {
+            lookbook = ol.get();
+        }
+
+        List<Comment> comments = commentRepository.findByLookbookIdAndCommentStatusAndParentIsNull(
+            lookbook.getId(),
+            commentSelectDto.getStatus().equals("DM") ? CommentStatus.DM
+                : CommentStatus.NOT_DELETED);
+        for (Comment comment : comments) {
+            //객체 생성
+            CommentSelectResponseDto commentSelectResponseDto = CommentSelectResponseDto
+                .builder()
+                .nickname(lookbook.getMember().getNickname())
+                .msg(comment.getMessage())
+                .createdAt(comment.getCreatedAt())
+                .children(new ArrayList<>())
+                .build();
+
+            //대댓글 내용 추가
+            for (Comment child : comment.getChildren()) {
+                commentSelectResponseDto.getChildren().add(CommentChildrenDto
+                    .builder()
+                    .createdAt(child.getCreatedAt())
+                    .msg(child.getMessage())
+                    .nickname(child.getMember().getNickname())
+                    .build());
+            }
+
+            //responseDto에 추가
+            responseDtos.add(commentSelectResponseDto);
+        }
+
+        return responseDtos;
     }
 }
