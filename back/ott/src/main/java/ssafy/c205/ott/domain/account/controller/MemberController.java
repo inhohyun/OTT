@@ -85,4 +85,12 @@ public class MemberController {
         return ApiResponse.success(memberWriteService.acceptFollow(followRequestDto));
     }
 
+    @PostMapping("/follow/{requestId}/reject")
+    public ApiResponse<FollowResponseDto> rejectFollow(@PathVariable Long requestId, @AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        FollowRequestDto followRequestDto = FollowRequestDto.builder()
+                .requestMemberId(requestId)
+                .targetMemberId(memberDetails.getMemberId())
+                .build();
+        return ApiResponse.success(memberWriteService.rejectFollow(followRequestDto));
+    }
 }
