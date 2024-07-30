@@ -23,4 +23,14 @@ public class NotificationServiceImpl implements NotificationService {
             .build());
         //Todo : 알림 읽음처리가 잘 되었는지 확인하여 예외처리
     }
+
+    @Override
+    public void deleteNotification(String notificationId) {
+        notificationRepository.save(Notification
+            .builder()
+            .id(Long.parseLong(notificationId))
+            .notificationStatus(NotificationStatus.DELETE)
+            .build());
+        //Todo : 알림 삭제처리가 잘 되었는지 확인하여 예외처리
+    }
 }
