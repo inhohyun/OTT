@@ -5,4 +5,8 @@ public class MemberNotFoundException extends RuntimeException {
     public String getMessage() {
         return MemberExceptionMessage.MEMBER_NOT_FOUND.getMessage();
     }
+
+    public int getStatus() {
+        return MemberExceptionMessage.MEMBER_NOT_FOUND.getStatus();
+    }
 }

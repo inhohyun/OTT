@@ -1,8 +1,11 @@
 package ssafy.c205.ott.domain.account.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ssafy.c205.ott.common.ApiResponse;
+import ssafy.c205.ott.common.security.CustomMemberDetails;
+import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
@@ -26,38 +29,47 @@ public class MemberController {
     private final MemberRepository memberRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberInfoDto> getMember(@PathVariable Long id) {
+    public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id) {
         MemberInfoDto memberInfoDto = memberReadService.memberSearch(MemberRequestDto.builder().id(id).build());
-        return ResponseEntity.ok(memberInfoDto);
+        return ApiResponse.success(memberInfoDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
+    public ApiResponse<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
         UpdateMemberSuccessDto updateMemberSuccessDto = memberWriteService.updateMember(memberUpdateRequestDto);
-        return ResponseEntity.ok(updateMemberSuccessDto);
+        return ApiResponse.success(updateMemberSuccessDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id) {
+    public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id) {
         DeleteMemberSuccessDto deleteMemberSuccessDto = memberWriteService.deleteMember(MemberRequestDto.builder().id(id).build());
-        return ResponseEntity.ok(deleteMemberSuccessDto);
+        return ApiResponse.success(deleteMemberSuccessDto);
     }
 
     @GetMapping("/validate-nickname/{nickname}")
-    public ResponseEntity<ValidateNicknameSuccessDto> validateNickname(@PathVariable String nickname) {
+    public ApiResponse<ValidateNicknameSuccessDto> validateNickname(@PathVariable String nickname) {
         ValidateNicknameSuccessDto nicknameSuccessDto = memberValidator.validateMemberNickname(nickname);
-        return ResponseEntity.ok(nicknameSuccessDto);
+        return ApiResponse.success(nicknameSuccessDto);
     }
 
     @GetMapping("/more")
-    public ResponseEntity<List<MemberSearchResponseDto>> getMoreMembers(@RequestParam(name = "nickname", required = false) String nickname,
+    public ApiResponse<List<MemberSearchResponseDto>> getMoreMembers(@RequestParam(name = "nickname", required = false) String nickname,
                                                                         @RequestParam(name = "offset", defaultValue = "0") int offset,
                                                                         @RequestParam(name = "limit", defaultValue = "10") int limit) {
         List<Member> members = memberRepository.findByNicknameContaining(nickname, offset, limit);
         List<MemberSearchResponseDto> memberSearchResponseDtos = members.stream()
                 .map(MemberSearchResponseDto::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(memberSearchResponseDtos);
+        return ApiResponse.success(memberSearchResponseDtos);
+    }
+
+    @PostMapping("/follow/{targetId}")
+    public ApiResponse<FollowResponseDto> followMember(@PathVariable Long targetId, @AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        FollowRequestDto followRequestDto = FollowRequestDto.builder()
+                .requestMemberId(memberDetails.getMemberId())
+                .targetMemberId(targetId)
+                .build();
+        return ApiResponse.success(memberWriteService.followMember(followRequestDto));
     }
 
 }
