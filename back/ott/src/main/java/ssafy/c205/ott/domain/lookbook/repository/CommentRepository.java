@@ -7,4 +7,5 @@ import ssafy.c205.ott.domain.lookbook.entity.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByLookbookIdAndCommentStatusAndParentIsNull(Long lookbookId, CommentStatus commentStatus);
+    List<Comment> findByLookbookIdAndCommentStatus(Long lookbookId, CommentStatus commentStatus);
 }

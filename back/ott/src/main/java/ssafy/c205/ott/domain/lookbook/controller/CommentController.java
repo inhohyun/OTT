@@ -1,9 +1,13 @@
 package ssafy.c205.ott.domain.lookbook.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +32,10 @@ public class CommentController {
     private final CommentService commentService;
 
     //댓글 작성
+    @Operation(summary = "댓글 작성 메서드", description = "<big>룩북에 댓글</big>작성합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "댓글 작성을 완료했습니다."),
+    })
     @PostMapping("/{post_id}")
     public ResponseEntity<?> createComment(@PathVariable("post_id") String postId, @ModelAttribute
     CommentMessageDto commentMessageDto) {
@@ -36,6 +44,10 @@ public class CommentController {
     }
 
     //대댓글 작성
+    @Operation(summary = "대댓글 작성 메서드", description = "룩북의 댓글에 <big>대댓글</big>을 작성합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "대댓글 작성을 완료했습니다."),
+    })
     @PostMapping("/{post_id}/{comment_id}")
     public ResponseEntity<?> createReply(@PathVariable("post_id") String postId,
         @PathVariable("comment_id") String commentId,
@@ -45,6 +57,10 @@ public class CommentController {
     }
 
     //댓글 조회
+    @Operation(summary = "댓글 조회 메서드", description = "<big>룩북에 댓글</big>을 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "해당 룩북의 모든 댓글"),
+    })
     @GetMapping("/{post_id}")
     public ResponseEntity<?> selectComment(@PathVariable("post_id") String postId, @ModelAttribute
     CommentSelectDto commentSelectDto) {
@@ -54,6 +70,10 @@ public class CommentController {
     }
 
     //댓글 수정
+    @Operation(summary = "댓글 수정 메서드", description = "<big>룩북에 댓글</big>을 수정합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "댓글 수정을 완료했습니다."),
+    })
     @PutMapping("/{post_id}/{comment_id}")
     public ResponseEntity<?> updateComment(@PathVariable("post_id") String postId,
         @PathVariable("comment_id") String commentId,
@@ -62,6 +82,11 @@ public class CommentController {
         return ResponseEntity.ok().body("댓글 수정을 완료했습니다.");
     }
 
+    //댓글 삭제
+    @Operation(summary = "댓글 삭제 메서드", description = "<big>룩북에 댓글</big>을 삭제합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "댓글 삭제를 완료했습니다."),
+    })
     @DeleteMapping("/{post_id}/{comment_id}")
     public ResponseEntity<?> deleteComment(@PathVariable("post_id") String postId,
         @PathVariable("comment_id") String commentId) {
@@ -69,4 +94,17 @@ public class CommentController {
         return ResponseEntity.ok().body("댓글 삭제를 완료했습니다.");
     }
 
+    @Operation(summary = "댓글수 조회 메서드", description = "<big>댓글수를 </big>조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "댓글 수"),
+        @ApiResponse(responseCode = "404", description = "해당 포스트의 댓글을 찾을 수 없습니다."),
+    })
+    @GetMapping("/{post_id}/count")
+    public ResponseEntity<?> countComment(@PathVariable("post_id") String postId) {
+        int countComment = commentService.countComment(postId);
+        if (countComment < 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 포스트의 댓글을 찾을 수 없습니다.");
+        }
+        return ResponseEntity.ok().body(countComment);
+    }
 }

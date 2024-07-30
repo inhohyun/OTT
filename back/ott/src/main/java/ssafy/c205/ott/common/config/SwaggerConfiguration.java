@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfiguration {
 
     @Bean
-    public OpenAPI openAPI(){
+    public OpenAPI openAPI() {
         Info info = new Info().title("OTT API 명세서").description(
             "<h3>OTT API Reference for Developers</h3> 공통 프로젝트 OTT API <br>"
         ).version("v1").contact(new io.swagger.v3.oas.models.info.Contact().name(
@@ -28,11 +28,17 @@ public class SwaggerConfiguration {
 
     @Bean
     public GroupedOpenApi lookbookApi() {
-        return GroupedOpenApi.builder().group("OTT-LOOKBOOK").pathsToMatch("/api/lookbook/**").build();
+        return GroupedOpenApi.builder().group("OTT-LOOKBOOK").pathsToMatch("/api/lookbook/**")
+            .build();
     }
 
     @Bean
     public GroupedOpenApi tagApi() {
         return GroupedOpenApi.builder().group("OTT-Tag").pathsToMatch("/api/tag/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi commentApi() {
+        return GroupedOpenApi.builder().group("OTT-Comment").pathsToMatch("/api/comment/**").build();
     }
 }

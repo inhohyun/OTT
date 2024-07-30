@@ -189,4 +189,15 @@ public class CommentServiceImpl implements CommentService {
 
         //Todo : 삭제 처리 완료 잘되었는지 예외처리
     }
+
+    @Override
+    public int countComment(String postId) {
+        List<Comment> comments = commentRepository.findByLookbookIdAndCommentStatus(
+            Long.parseLong(postId),
+            CommentStatus.NOT_DELETED);
+        if (comments.size() < 0) {
+            return -1;
+        }
+        return comments.size();
+    }
 }
