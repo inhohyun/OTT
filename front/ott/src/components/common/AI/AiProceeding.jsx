@@ -7,10 +7,11 @@ import useStore from '@/data/ai/aiStore';
 const AiProceeding = ({ selectedImage, numImages, selectedClothingId }) => {
   const percentage = useStore((state) => state.percentage);
   const setPercentage = useStore((state) => state.setPercentage);
+  const setCurrentStep = useStore((state) => state.setCurrentStep);
 
   useEffect(() => {
-    const duration = 5; // 50초 동안 진행
-    const targetPercentage = 99;
+    const duration = 5; // 50초 동안 진행, 일단 임시로 5초로 설정
+    const targetPercentage = 99; // 목표 퍼센트는 99
     const increment = targetPercentage / duration;
     const interval = 1000; // 1초마다 업데이트
 
@@ -19,14 +20,15 @@ const AiProceeding = ({ selectedImage, numImages, selectedClothingId }) => {
         const nextPercentage = prev + increment;
         if (nextPercentage >= targetPercentage) {
           clearInterval(intervalId);
-          return targetPercentage;
+          setCurrentStep('AiResult'); // 99%에 도달하면 currentStep을 AiResult로 변경
+          return 99;
         }
         return nextPercentage;
       });
     }, interval);
 
     return () => clearInterval(intervalId);
-  }, [setPercentage]);
+  }, [setPercentage, setCurrentStep]);
 
   // 전달받은 정보를 콘솔에 출력
   useEffect(() => {

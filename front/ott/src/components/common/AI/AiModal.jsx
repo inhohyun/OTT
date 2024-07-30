@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
 import ClothesGridSingleLine from './ClothesGridSingleLine';
 import AiProceeding from './AiProceeding'; // AiProceeding 컴포넌트를 import
-import useStore from '@/data/ai/aiStore';
+import AiResult from './AiResult'; // AiResult 컴포넌트를 import
+import useStore from '@/data/ai/aiStore'; // zustand store import
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -38,8 +39,6 @@ const Modal = ({ isOpen, onClose }) => {
 
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
-  const isModalOpen = useStore((state) => state.isModalOpen);
-  const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
   const [clothes, setClothes] = useState([
     {
@@ -147,13 +146,7 @@ const Modal = ({ isOpen, onClose }) => {
     }),
   };
 
-  useEffect(() => {
-    if (!isOpen) {
-      setIsModalOpen(false);
-      return;
-    }
-    setIsModalOpen(true);
-  }, [isOpen, setIsModalOpen]);
+  if (!isOpen) return null;
 
   const handlePutOn = () => {
     if (selectedClothing) {
@@ -200,10 +193,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div
-      className={`modal-overlay custom-scrollbar ${isModalOpen ? 'visible' : 'invisible'}`}
-      onClick={onClose}
-    >
+    <div className="modal-overlay custom-scrollbar" onClick={onClose}>
       <div
         className="modal-container custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
@@ -223,6 +213,8 @@ const Modal = ({ isOpen, onClose }) => {
             numImages={numImages}
             selectedClothingId={selectedClothing?.id}
           />
+        ) : currentStep === 'AiResult' ? (
+          <AiResult selectedImage={selectedImage} numImages={numImages} />
         ) : (
           <>
             <div>
