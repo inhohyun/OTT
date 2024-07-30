@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import logo from '@/assets/icons/main.logo.png'; // 로고 이미지 경로를 적절히 수정하세요
-import AiResult from './AiResult'; // AiResult 컴포넌트를 import
+import mainIcon from '@/assets/icons/main.logo.png';
+import useStore from '@/data/ai/aiStore';
 
-const AiProceeding = ({ selectedClothing }) => {
-  const [percentage, setPercentage] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-  //TODO : 해당 컴포넌트에서 비동기 작업을 처리할 것임
+const AiProceeding = ({ selectedImage, numImages, selectedClothingId }) => {
+  const percentage = useStore((state) => state.percentage);
+  const setPercentage = useStore((state) => state.setPercentage);
+
   useEffect(() => {
-    const duration = 50; // 50초 동안 진행
+    const duration = 5; // 50초 동안 진행
     const targetPercentage = 99;
     const increment = targetPercentage / duration;
     const interval = 1000; // 1초마다 업데이트
@@ -19,7 +19,6 @@ const AiProceeding = ({ selectedClothing }) => {
         const nextPercentage = prev + increment;
         if (nextPercentage >= targetPercentage) {
           clearInterval(intervalId);
-          setIsCompleted(true);
           return targetPercentage;
         }
         return nextPercentage;
@@ -27,11 +26,14 @@ const AiProceeding = ({ selectedClothing }) => {
     }, interval);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [setPercentage]);
 
-  if (isCompleted) {
-    return <AiResult selectedClothing={selectedClothing} />;
-  }
+  // 전달받은 정보를 콘솔에 출력
+  useEffect(() => {
+    console.log('Selected Image:', selectedImage);
+    console.log('Number of Images:', numImages);
+    console.log('Selected Clothing ID:', selectedClothingId);
+  }, [selectedImage, numImages, selectedClothingId]);
 
   return (
     <div
@@ -41,12 +43,12 @@ const AiProceeding = ({ selectedClothing }) => {
       <div className="w-full bg-violet-200 bg-opacity-60 rounded-t-2xl relative">
         <div
           className="flex items-center justify-center w-20 h-20 bg-white rounded-full mx-auto"
-          style={{ position: 'relative', top: '10px' }} // top 값을 15px에서 10px로 줄임
+          style={{ position: 'relative', top: '10px' }}
         >
           <img
-            src={logo}
-            alt="AI Proceeding"
-            className="w-[50px] h-[50px] rounded-full" // 로고 크기를 줄임
+            src={mainIcon}
+            alt="main"
+            className="w-[50px] h-[50px] rounded-full"
           />
         </div>
       </div>
@@ -62,9 +64,12 @@ const AiProceeding = ({ selectedClothing }) => {
               textColor: '#4A4A4A',
               pathColor: '#a78bfa',
               trailColor: '#d6d6d6',
-              textSize: '12px', // 텍스트 크기를 작게 설정
+              textSize: '12px',
             })}
           />
+        </div>
+        <div className="mt-4">
+          <p>생성할 이미지 수: {numImages.label}</p>
         </div>
       </div>
     </div>

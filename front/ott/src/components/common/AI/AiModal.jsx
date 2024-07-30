@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
-// import AiResult from './AiResult';
 import ClothesGridSingleLine from './ClothesGridSingleLine';
 import AiProceeding from './AiProceeding'; // AiProceeding 컴포넌트를 import
+import useStore from '@/data/ai/aiStore';
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -33,9 +33,13 @@ import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 const Modal = ({ isOpen, onClose }) => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [numImages, setNumImages] = useState({ value: '4장', label: '4장' }); // 추가된 드롭다운의 상태
-  const [isTryingOn, setIsTryingOn] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(defaultImage); // 원본 사진 상태
+  const [numImages, setNumImages] = useState({ value: '4장', label: '4장' });
+  const [selectedImage, setSelectedImage] = useState(defaultImage);
+
+  const currentStep = useStore((state) => state.currentStep);
+  const setCurrentStep = useStore((state) => state.setCurrentStep);
+  const isModalOpen = useStore((state) => state.isModalOpen);
+  const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
   const [clothes, setClothes] = useState([
     {
@@ -143,14 +147,17 @@ const Modal = ({ isOpen, onClose }) => {
     }),
   };
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) {
+      setIsModalOpen(false);
+      return;
+    }
+    setIsModalOpen(true);
+  }, [isOpen, setIsModalOpen]);
 
   const handlePutOn = () => {
     if (selectedClothing) {
-      console.log('Selected Clothing ID:', selectedClothing.id);
-      console.log('Selected Filter:', filter);
-      console.log('Number of Images:', numImages.value);
-      setIsTryingOn(true);
+      setCurrentStep('AiProceeding');
     } else {
       console.log('No clothing selected');
     }
@@ -193,7 +200,10 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay custom-scrollbar" onClick={onClose}>
+    <div
+      className={`modal-overlay custom-scrollbar ${isModalOpen ? 'visible' : 'invisible'}`}
+      onClick={onClose}
+    >
       <div
         className="modal-container custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
@@ -207,8 +217,12 @@ const Modal = ({ isOpen, onClose }) => {
         <h2 className="text-center text-2xl font-semibold mb-4">
           AI 피팅 서비스
         </h2>
-        {isTryingOn ? (
-          <AiProceeding selectedClothing={selectedClothing} /> // 입어보기 상태일 때 AiProceeding 컴포넌트 렌더링
+        {currentStep === 'AiProceeding' ? (
+          <AiProceeding
+            selectedImage={selectedImage}
+            numImages={numImages}
+            selectedClothingId={selectedClothing?.id}
+          />
         ) : (
           <>
             <div>
@@ -228,7 +242,7 @@ const Modal = ({ isOpen, onClose }) => {
                 id="imageInput"
                 style={{ display: 'none' }}
                 onChange={handleImageChange}
-                accept="image/*" // 모든 이미지 파일을 선택할 수 있도록 설정
+                accept="image/*"
               />
             </div>
             <h4>저장된 옷</h4>
