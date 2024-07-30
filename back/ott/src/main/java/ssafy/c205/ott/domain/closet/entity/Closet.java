@@ -25,4 +25,11 @@ public class Closet extends BaseEntity {
     @OneToMany(mappedBy = "closet", fetch = FetchType.LAZY)
     private List<ClosetCategory> closetCategories = new ArrayList<>();
 
+    public Closet(Member member) {
+        this.member = member;
+    }
+
+    public Closet() {
+
+    }
 }
