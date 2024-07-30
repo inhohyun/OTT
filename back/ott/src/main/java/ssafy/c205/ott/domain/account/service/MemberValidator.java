@@ -48,6 +48,13 @@ public class MemberValidator {
         isAlreadyFollowing(targetMemberId, requestMemberId);
     }
 
+    public void validateRejectFollow(FollowRequestDto followRequestDto) {
+        long targetMemberId = followRequestDto.getTargetMemberId();
+        long requestMemberId = followRequestDto.getRequestMemberId();
+        validateSelfFollow(targetMemberId, requestMemberId);
+        isPresentFollowRequest(targetMemberId, requestMemberId);
+    }
+
     private void validateSelfFollow(long targetMemberId, long requestMemberId) {
         if (targetMemberId == requestMemberId)
             throw new SelfFollowException();
