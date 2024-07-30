@@ -168,4 +168,25 @@ public class CommentServiceImpl implements CommentService {
             .build());
         //Todo : 수정 실패 예외처리
     }
+
+    //댓글 삭제
+    @Override
+    public void deleteComment(String postId, String commentId) {
+        Comment comment = null;
+        //댓글 불러오기
+        Optional<Comment> oc = commentRepository.findById(Long.parseLong(commentId));
+        //Todo : 댓글 조회 실패 예외처리
+        if (oc.isPresent()) {       //댓글이 존재하면 저장
+            comment = oc.get();
+        }
+
+        //댓글 삭제하기 => 상태를 Delete 상태로 변경하기
+        commentRepository.save(Comment
+            .builder()
+            .id(comment.getId())
+            .commentStatus(CommentStatus.DELETED)
+            .build());
+
+        //Todo : 삭제 처리 완료 잘되었는지 예외처리
+    }
 }

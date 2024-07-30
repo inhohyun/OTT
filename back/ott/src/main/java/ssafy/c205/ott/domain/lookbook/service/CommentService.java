@@ -14,4 +14,6 @@ public interface CommentService {
     List<CommentSelectResponseDto> selectComment(String postId, CommentSelectDto commentSelectDto);
 
     void updateComment(String postId, String commentId, CommentMessageDto commentMessageDto);
+
+    void deleteComment(String postId, String commentId);
 }
