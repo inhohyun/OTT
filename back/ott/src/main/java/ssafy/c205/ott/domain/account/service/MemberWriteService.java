@@ -68,6 +68,15 @@ public class MemberWriteService {
         return handlePublicFollow(targetMember, requestMember);
     }
 
+    public FollowResponseDto unfollowMember(FollowRequestDto followRequestDto) {
+        Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
+        Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
+        memberValidator.validateUnfollow(followRequestDto);
+        followRepository.deleteByToMemberAndFromMember(targetMember, requestMember);
+
+        return createFollowResponseDto(null, targetMember.getFollowers().size(), UNFOLLOW_SUCCESS_MESSAGE.getMessage());
+    }
+
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
         Follow follow = createFollow(targetMember, requestMember, FollowStatus.ACCEPT);
         followRepository.save(follow);
