@@ -1,12 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import Switch from './Switch'; // Adjust the import path as necessary
 
-const SearchInput = ({
+const CustomSearchInput = ({
   searchQuery,
   handleInputChange,
-  isChecked,
-  handleCheckboxChange,
   handleSearch,
 }) => {
   const handleKeyPress = (e) => {
@@ -17,21 +14,13 @@ const SearchInput = ({
 
   return (
     <div className="flex items-center w-full mb-4">
-      <Switch
-        isChecked={isChecked}
-        handleCheckboxChange={handleCheckboxChange}
-      />
-      <div className="relative flex-grow ml-4">
+      <div className="relative flex-grow">
         <input
           type="text"
           value={searchQuery}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
-          placeholder={
-            isChecked
-              ? '스타일의 태그를 입력하세요'
-              : '사용자 닉네임을 입력하세요'
-          }
+          placeholder="사용자 닉네임을 입력하세요"
           className="border p-2 rounded-full w-full pl-4"
         />
         <FontAwesomeIcon
@@ -44,4 +33,4 @@ const SearchInput = ({
   );
 };
 
-export default SearchInput;
+export default CustomSearchInput;
