@@ -189,7 +189,7 @@ const Modal = ({ isOpen, onClose }) => {
             <img
               src={defaultImage}
               alt="Default"
-              className="w-full h-auto mb-4 mt-4"
+              className="w-full h-auto mb-4 mt-4 rounded-lg"
             />
             <h4>저장된 옷</h4>
             <div className="mb-4 dropdown-wrapper">
