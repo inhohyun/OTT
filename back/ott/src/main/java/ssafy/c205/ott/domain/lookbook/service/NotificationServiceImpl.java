@@ -1,10 +1,14 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationCreateDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationSelectDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.NotificationDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.Notification;
 import ssafy.c205.ott.domain.lookbook.entity.NotificationStatus;
@@ -55,5 +59,27 @@ public class NotificationServiceImpl implements NotificationService {
             .comment(comment)
             .message(comment.getMember().getNickname() + "님이 댓글을 남겼습니다.")
             .build());
+    }
+
+    @Override
+    public List<NotificationDto> getNotifications(NotificationSelectDto notificationSelectDto) {
+        List<NotificationDto> notifications = new ArrayList<>();
+        List<NotificationStatus> notificationStatuses = new ArrayList<>();
+        notificationStatuses.add(NotificationStatus.READ);
+        notificationStatuses.add(NotificationStatus.UNREAD);
+
+        List<Notification> notificationArr = notificationRepository.findByCommentMemberUserIdAndNotificationStatusInOrderByIdDesc(
+            notificationSelectDto.getUid(), notificationStatuses);
+
+        for (Notification notification : notificationArr) {
+            notifications.add(NotificationDto
+                .builder()
+                .notificationStatus(notification.getNotificationStatus())
+                .commentId(notification.getComment().getId())
+                .massage(notification.getMessage())
+                .id(notification.getId())
+                .build());
+        }
+        return notifications;
     }
 }

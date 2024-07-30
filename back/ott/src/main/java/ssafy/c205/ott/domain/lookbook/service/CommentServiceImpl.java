@@ -186,7 +186,6 @@ public class CommentServiceImpl implements CommentService {
             .id(comment.getId())
             .commentStatus(CommentStatus.DELETED)
             .build());
-
         //Todo : 삭제 처리 완료 잘되었는지 예외처리
     }
 
