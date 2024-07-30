@@ -10,13 +10,13 @@ import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
-import ssafy.c205.ott.domain.account.exception.FollowNotFoundException;
 import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,9 +54,16 @@ public class MemberReadService {
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {
-        Follow follow = followRepository.findByToMemberIdAndFromMemberId(member.getId(), memberRequestDto.getId())
-                .orElseThrow(FollowNotFoundException::new);
-        return follow.getFollowStatus();
+        Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(member.getId(), memberRequestDto.getId());
+        if (findFollow.isEmpty()) {
+            return FollowStatus.NOT_FOLLOWING;
+        }
+        Follow follow = findFollow.get();
+        if (follow.getFollowStatus() == FollowStatus.WAIT) {
+            return FollowStatus.WAIT;
+        }
+
+        return FollowStatus.FOLLOWING;
     }
 
     private List<Tag> getTags(Member member) {
