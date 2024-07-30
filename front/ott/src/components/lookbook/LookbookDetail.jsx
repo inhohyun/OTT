@@ -8,6 +8,7 @@ import fillhearticon from '../../assets/icons/fillhearticon.png'; // 새로 추�
 const LookbookDetail = ({ lookbook, onClose }) => {
   const [showSellComments, setShowSellComments] = useState(false);
   const [liked, setLiked] = useState(false); // 하트 아이콘 클릭 상태 관리
+  const [followed, setFollowed] = useState(false); // 팔로우 상태 관리
 
   if (!lookbook) return null;
 
@@ -19,6 +20,10 @@ const LookbookDetail = ({ lookbook, onClose }) => {
 
   const toggleLike = () => {
     setLiked(!liked);
+  };
+
+  const toggleFollow = () => {
+    setFollowed(!followed);
   };
 
   return (
@@ -60,10 +65,11 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             </p>
           </div>
           <button
-            className="bg-purple-300 text-white text-sm px-3 py-3 rounded-lg me-3"
+            className={`text-sm px-3 py-3 rounded-lg me-3 ${followed ? 'bg-transparent border-2 border-solid border-violet-300 text-black' : 'bg-violet-300 text-white'}`}
             style={{ fontFamily: 'dohyeon' }}
+            onClick={toggleFollow}
           >
-            팔로우
+            {followed ? '팔로잉' : '팔로우'}
           </button>
         </div>
         <div className="w-full border-solid border-t-2 border-slate-500 mt-4"></div>
