@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { dummyLookbooks } from '../lookbook/lookbookdata'; // Adjust the import path
 import Lookbook from '../lookbook/Lookbook';
 import LookbookList from '../lookbook/LookbookList';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
@@ -6,26 +7,16 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 
 const FeedFollow = () => {
-  const followers = [
-    '팔로워1',
-    '팔로워2',
-    '팔로워3',
-    '팔로워4',
-    '팔로워5',
-    '팔로워6',
-  ];
+  const followers = ['이름1', '이름2', '이름3'];
 
-  const allLookbooks = {
-    팔로워1: Array.from({ length: 5 }),
-    팔로워2: Array.from({ length: 20 }),
-    팔로워3: Array.from({ length: 8 }),
-    팔로워4: Array.from({ length: 15 }),
-    팔로워5: Array.from({ length: 3 }),
-    팔로워6: Array.from({ length: 12 }),
-  };
+  const allLookbooks = followers.reduce((acc, follower) => {
+    acc[follower] = dummyLookbooks.filter(
+      (lookbook) => lookbook.creatorName === follower
+    );
+    return acc;
+  }, {});
 
   const initialLimit = 10;
-
   const [visibleLookbooks, setVisibleLookbooks] = useState(
     followers.reduce(
       (acc, follower) => ({ ...acc, [follower]: initialLimit }),
@@ -59,7 +50,6 @@ const FeedFollow = () => {
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
       <style>{`
-
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
                 }
@@ -82,57 +72,63 @@ const FeedFollow = () => {
                     border: none;
                     padding: 0;
                     cursor: pointer;
-                    box-shadow: none; /* 그림자 제거 */
-                    outline: none; /* 포커스 시 표시 제거 */
                 }
             `}</style>
 
       {followers.map((follower, index) => (
         <div key={follower} className="w-full">
-          <p className="ml-2 text-lg font-bold">{follower}</p>
+          <p className="ml-2 text-xl font-bold">{follower}</p>
           <div className="relative">
-            <button
-              onClick={() => scrollLeft(scrollRefs.current[index])}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6 button-no-style"
-              style={{
-                backgroundImage: `url(${leftArrow})`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-              }}
-            ></button>
+            {allLookbooks[follower].length > 3 && (
+              <button
+                onClick={() => scrollLeft(scrollRefs.current[index])}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
+                style={{
+                  backgroundImage: `url(${leftArrow})`,
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                }}
+              ></button>
+            )}
             <div
               ref={scrollRefs.current[index]}
               className="flex overflow-x-auto py-3 scrollbar-hide"
             >
               {allLookbooks[follower]
                 .slice(0, visibleLookbooks[follower])
-                .map((_, lookbookIndex) => (
+                .map((lookbook, lookbookIndex) => (
                   <div key={lookbookIndex} className="lookbook-container">
-                    <Lookbook />
+                    <Lookbook data={lookbook} />
                   </div>
                 ))}
               {visibleLookbooks[follower] < allLookbooks[follower].length && (
                 <div className="show-more-button">
                   <button
                     onClick={() => showMore(follower)}
-                    className="relative bg-transparent border-none p-2 cursor-pointer"
+                    className="relative bg-transparent border-none p-2 mb-32 cursor-pointer"
                   >
                     <img src={plus} alt="Show more" className="w-6 h-6" />
                   </button>
                 </div>
               )}
             </div>
-            <button
-              onClick={() => scrollRight(scrollRefs.current[index])}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6 button-no-style"
-              style={{
-                backgroundImage: `url(${rightArrow})`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-              }}
-            ></button>
+            {allLookbooks[follower].length > 3 && (
+              <button
+                onClick={() => scrollRight(scrollRefs.current[index])}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
+                style={{
+                  backgroundImage: `url(${rightArrow})`,
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                }}
+              ></button>
+            )}
           </div>
         </div>
       ))}
