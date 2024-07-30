@@ -5,11 +5,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ssafy.c205.ott.common.ApiResponse;
-import ssafy.c205.ott.domain.account.exception.MemberNicknameDuplicateException;
-import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
+import ssafy.c205.ott.domain.account.exception.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    // 404 - Not Found
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMemberNotFoundException(MemberNotFoundException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 
     // 400 - Bad Request
     @ExceptionHandler(MemberNicknameDuplicateException.class)
@@ -18,11 +24,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    // 404 - Not Found
-    @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleMemberNotFoundException(MemberNotFoundException e) {
+    @ExceptionHandler(AlreadyFollowException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAlreadyFollowException(AlreadyFollowException e) {
         ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     // 500 - Internal Server Error
