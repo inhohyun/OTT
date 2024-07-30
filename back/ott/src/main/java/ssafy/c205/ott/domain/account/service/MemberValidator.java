@@ -33,6 +33,13 @@ public class MemberValidator {
         isAlreadyFollowing(targetMemberId, requestMemberId);
     }
 
+    public void validateUnfollow(FollowRequestDto followRequestDto) {
+        long targetMemberId = followRequestDto.getTargetMemberId();
+        long requestMemberId = followRequestDto.getRequestMemberId();
+        validateSelfFollow(targetMemberId, requestMemberId);
+        isAlreadyUnfollowing(targetMemberId, requestMemberId);
+    }
+
     private void validateSelfFollow(long targetMemberId, long requestMemberId) {
         if (targetMemberId == requestMemberId)
             throw new SelfFollowException();
@@ -40,6 +47,11 @@ public class MemberValidator {
 
     private void isAlreadyFollowing(long targetMemberId, long requestMemberId) {
         if(followRepository.findByToMemberIdAndFromMemberId(targetMemberId, requestMemberId).isPresent())
+            throw new AlreadyFollowException();
+    }
+
+    private void isAlreadyUnfollowing(long targetMemberId, long requestMemberId) {
+        if(followRepository.findByToMemberIdAndFromMemberId(targetMemberId, requestMemberId).isEmpty())
             throw new AlreadyFollowException();
     }
 
