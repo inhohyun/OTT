@@ -67,8 +67,6 @@
   cursor: pointer;
   box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기를 조절 */
   appearance: none; /* 기본 드롭다운 화살표 제거 */
-  -webkit-appearance: none; /* 기본 드롭다운 화살표 제거 (사파리) */
-  -moz-appearance: none; /* 기본 드롭다운 화살표 제거 (파이어폭스) */
 }
 
 .dropdown-wrapper {
@@ -78,7 +76,6 @@
 }
 
 .dropdown-wrapper::after {
-  content: '\25BC'; /* 화살표 모양 추가 */
   position: absolute;
   top: 50%;
   right: 10px;
