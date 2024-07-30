@@ -11,6 +11,7 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationCreateDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentChildrenDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentSelectResponseDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
@@ -25,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final LookbookRepository lookbookRepository;
+    private final NotificationService notificationService;
 
     @Override
     public void createComment(String postId, CommentMessageDto commentMessageDto) {
@@ -54,7 +56,11 @@ public class CommentServiceImpl implements CommentService {
                 : CommentStatus.NOT_DELETED)
             .build());
 
-        //Todo : 댓글 추가 예외 처리
+        //Todo : 댓글 추가 예외 처리, 알림 추가(댓글 ID를 어떻게 넣을지 고민)
+        notificationService.createNotification(NotificationCreateDto
+            .builder()
+            .commentId("1")
+            .build());
     }
 
     @Override
