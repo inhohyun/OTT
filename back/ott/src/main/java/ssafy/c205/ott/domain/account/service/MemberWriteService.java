@@ -12,11 +12,10 @@ import ssafy.c205.ott.domain.account.dto.response.UpdateMemberSuccessDto;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
-import ssafy.c205.ott.domain.account.exception.AlreadyFollowException;
 import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
-import ssafy.c205.ott.domain.account.util.FollowMessage;
+import static ssafy.c205.ott.domain.account.util.FollowMessage.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +38,6 @@ public class MemberWriteService {
         return new RegisterMemberSuccessDto(member.getId());
     }
 
-    private Member findMemberById(Long id) {
-        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
-    }
-
     public UpdateMemberSuccessDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto) {
         Member member = findMemberById(memberUpdateRequestDto.getMemberId());
         member.updateMember(memberUpdateRequestDto.getNickname(), memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getProfileImageUrl(), memberUpdateRequestDto.getHeight()
@@ -63,13 +58,9 @@ public class MemberWriteService {
     }
 
     public FollowResponseDto followMember(FollowRequestDto followRequestDto) {
-        memberValidator.validateFollow(followRequestDto);
         Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
         Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
-
-        if (isAlreadyFollowing(targetMember, requestMember)) {
-            throw new AlreadyFollowException();
-        }
+        memberValidator.validateFollow(followRequestDto);
 
         if (targetMember.getPublicStatus() == PublicStatus.PRIVATE) {
             return handlePrivateFollow(targetMember, requestMember);
@@ -77,22 +68,18 @@ public class MemberWriteService {
         return handlePublicFollow(targetMember, requestMember);
     }
 
-    private boolean isAlreadyFollowing(Member targetMember, Member requestMember) {
-        return followRepository.findByToMemberAndFromMember(targetMember, requestMember).isPresent();
-    }
-
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
         Follow follow = createFollow(targetMember, requestMember, FollowStatus.ACCEPT);
         followRepository.save(follow);
 
-        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FollowMessage.FOLLOW_SUCCESS_MESSAGE.getMessage());
+        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePrivateFollow(Member targetMember, Member requestMember) {
         Follow follow = createFollow(targetMember, requestMember, FollowStatus.WAIT);
         followRepository.save(follow);
 
-        return createFollowResponseDto(follow.getFollowStatus(), 0, FollowMessage.FOLLOW_REQUEST_MESSAGE.getMessage());
+        return createFollowResponseDto(follow.getFollowStatus(), 0, FOLLOW_REQUEST_MESSAGE.getMessage());
     }
 
     private FollowResponseDto createFollowResponseDto(FollowStatus followStatus, int followerCount, String message) {
@@ -109,6 +96,10 @@ public class MemberWriteService {
                 .fromMember(fromMember)
                 .followStatus(followStatus)
                 .build();
+    }
+
+    private Member findMemberById(Long id) {
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
 }
