@@ -78,7 +78,7 @@ public class MemberWriteService {
     }
 
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
-        Follow follow = createFollow(targetMember, requestMember, FollowStatus.ACCEPT);
+        Follow follow = createFollow(targetMember, requestMember, FollowStatus.FOLLOWING);
         followRepository.save(follow);
 
         return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
