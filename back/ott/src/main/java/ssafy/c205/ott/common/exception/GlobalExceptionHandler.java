@@ -17,6 +17,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(FollowRequestNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFollowNotFoundException(FollowRequestNotFoundException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     // 400 - Bad Request
     @ExceptionHandler(MemberNicknameDuplicateException.class)
     public ResponseEntity<ApiResponse<Void>> handleMemberNicknameDuplicateException(MemberNicknameDuplicateException e) {
