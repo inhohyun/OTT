@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
@@ -137,12 +138,12 @@ public class LookbookController {
     })
     @GetMapping("/public")
     public ResponseEntity<?> publicLookbook(@RequestBody String uid) {
-        List<Lookbook> publicLookbooks = lookbookService.findPublicLookbooks(uid);
+        List<FindLookbookDto> publicLookbooks = lookbookService.findPublicLookbooks(uid);
         if (publicLookbooks == null) {
             log.error("{}의 공개된 룩북을 조회하지 못함", uid);
             return new ResponseEntity<String>("공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Lookbook>>(publicLookbooks, HttpStatus.OK);
+        return new ResponseEntity<List<FindLookbookDto>>(publicLookbooks, HttpStatus.OK);
     }
 
     //나의 비공개된 룩북 보기
@@ -152,11 +153,11 @@ public class LookbookController {
     })
     @GetMapping("/private")
     public ResponseEntity<?> privateLookbook(@RequestBody String uid) {
-        List<Lookbook> privateLookbooks = lookbookService.findPrivateLookbooks(uid);
+        List<FindLookbookDto> privateLookbooks = lookbookService.findPrivateLookbooks(uid);
         if (privateLookbooks == null) {
             return new ResponseEntity<String>("비공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Lookbook>>(privateLookbooks, HttpStatus.OK);
+        return new ResponseEntity<List<FindLookbookDto>>(privateLookbooks, HttpStatus.OK);
     }
 
     //팔로우 중인 사람의 룩북 조회

@@ -3,6 +3,7 @@ package ssafy.c205.ott.domain.lookbook.entity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
@@ -37,4 +38,20 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lookbook_id")
     private Lookbook lookbook;
+
+    @Builder
+    public Comment(Long id, String message, CommentStatus commentStatus, Member member,
+        Comment parent,
+        List<Comment> children, Lookbook lookbook) {
+        this.id = id;
+        this.message = message;
+        this.commentStatus = commentStatus;
+        this.member = member;
+        this.parent = parent;
+        this.children = children;
+        this.lookbook = lookbook;
+    }
+
+    public Comment() {
+    }
 }
