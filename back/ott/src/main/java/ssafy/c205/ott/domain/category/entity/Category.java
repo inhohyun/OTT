@@ -18,7 +18,12 @@ public class Category extends BaseEntity {
     private Long id;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
+    public Category() {}
+
+    public Category(String name) {
+        this.name = name;
+    }
 }
