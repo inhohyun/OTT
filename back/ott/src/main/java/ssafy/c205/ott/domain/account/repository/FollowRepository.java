@@ -7,5 +7,5 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    Optional<Follow> findByToMemberAndFromMember(Member toMember, Member fromMember);
+    Optional<Follow> findByToMemberIdAndFromMemberId(Long toMemberId, Long fromMemberId);
 }
