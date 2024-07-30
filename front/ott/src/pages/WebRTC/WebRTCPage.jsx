@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SearchInput from '../../components/search/SearchInput';
+import CustomSearchInput from '../../components/webRTC/CustomSearchInput';
 import CustomPersonSearchResult from '../../components/webRTC/CustomPersonSearchResult';
 import VideoChat from './VideoChatPage';
 import backgroundImage from '../../assets/images/background_image_main.png';
@@ -49,7 +49,7 @@ const WebRTCPage = () => {
       ) : (
         <main className="flex-grow p-4 w-full max-w-md mx-auto mt-5">
           <h1 className="text-2xl font-bold mb-4">화상 중고거래중</h1>
-          <SearchInput
+          <CustomSearchInput
             searchQuery={searchQuery}
             handleInputChange={handleInputChange}
             handleSearch={handleSearch}
