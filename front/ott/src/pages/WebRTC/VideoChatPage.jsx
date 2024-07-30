@@ -1,5 +1,6 @@
+// VideoChatPage.jsx
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import VideoChatModal from '../../components/webRTC/VideoChatModal';
 import CustomClothesGrid from '../../components/webRTC/CustomClothesGrid';
 import CustomCategoryDropdown from '../../components/webRTC/CustomCategoryDropdown';
@@ -16,14 +17,6 @@ const VideoChatPage = () => {
     setSelectedCategory(newCategory);
   };
 
-  const handleToggleLike = (id) => {
-    setClothes((prevClothes) =>
-      prevClothes.map((item) =>
-        item.id === id ? { ...item, isLiked: !item.isLiked } : item
-      )
-    );
-  };
-
   const filteredClothes =
     selectedCategory === '전체'
       ? clothes
@@ -34,9 +27,7 @@ const VideoChatPage = () => {
   return (
     <div
       className="w-full h-screen bg-cover bg-center flex flex-col"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-      }}
+      style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="flex-grow flex items-center justify-center h-1/3">
         <VideoChatModal />
@@ -44,7 +35,7 @@ const VideoChatPage = () => {
       <div className="flex-grow h-2/3">
         <div className="text-center my-2">
           <h2 className="text-xl font-bold mb-2">{username}님의 옷장</h2>
-          <div className="flex justify-center mt-[-5%]">
+          <div className="flex justify-center mt-[-10%]">
             <CustomCategoryDropdown
               selectedCategory={selectedCategory}
               onCategoryChange={handleCategoryChange}
@@ -52,11 +43,8 @@ const VideoChatPage = () => {
             />
           </div>
         </div>
-        <div className="mt-[-5%]">
-          <CustomClothesGrid
-            clothes={filteredClothes}
-            onToggleLike={handleToggleLike}
-          />
+        <div className="mt-[-10%]">
+          <CustomClothesGrid clothes={filteredClothes} />
         </div>
       </div>
     </div>
