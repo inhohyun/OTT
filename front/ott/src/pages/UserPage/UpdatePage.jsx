@@ -63,7 +63,7 @@ const UpdatePage = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center font-dohyeon mb-20">
+    <div className="w-full h-full flex items-center justify-center font-dohyeon mb-40">
       <div
         className="w-full h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
