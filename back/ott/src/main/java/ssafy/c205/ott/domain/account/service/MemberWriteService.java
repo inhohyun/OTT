@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.PublicStatus;
+import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.dto.request.*;
-import ssafy.c205.ott.domain.account.dto.response.DeleteMemberSuccessDto;
-import ssafy.c205.ott.domain.account.dto.response.FollowResponseDto;
-import ssafy.c205.ott.domain.account.dto.response.RegisterMemberSuccessDto;
-import ssafy.c205.ott.domain.account.dto.response.UpdateMemberSuccessDto;
+import ssafy.c205.ott.domain.account.dto.response.*;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
@@ -22,11 +20,12 @@ import ssafy.c205.ott.domain.closet.service.ClosetService;
 @RequiredArgsConstructor
 @Transactional
 public class MemberWriteService {
-    //Todo: 이미지 업로드 및 url 가져오기 구현
+
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
     private final MemberValidator memberValidator;
     private final ClosetService closetService;
+    private final AmazonS3Util amazonS3Util;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
         Member member = Member.builder()
@@ -44,7 +43,7 @@ public class MemberWriteService {
     public UpdateMemberSuccessDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto) {
         Member member = findMemberById(memberUpdateRequestDto.getMemberId());
         member.updateMember(memberUpdateRequestDto.getNickname(), memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getProfileImageUrl(), memberUpdateRequestDto.getHeight()
-                , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus());
+                , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus(), memberUpdateRequestDto.getMemberTags());
         return new UpdateMemberSuccessDto(member.getId());
     }
 
@@ -133,6 +132,14 @@ public class MemberWriteService {
         followRepository.deleteByToMemberAndFromMember(targetMember, requestMember);
 
         return createFollowResponseDto(null, 0, FOLLOW_REJECT_MESSAGE.getMessage());
+    }
+
+    public ProfileImageSuccessDto uploadProfileImage(UploadProfileImageRequestDto uploadProfileImageRequestDto) {
+        String profileImageUrl = amazonS3Util.saveFile(uploadProfileImageRequestDto.getFile());
+        Member member = findMemberById(uploadProfileImageRequestDto.getMemberId());
+        member.updateProfileImage(profileImageUrl);
+
+        return new ProfileImageSuccessDto();
     }
 
 }
