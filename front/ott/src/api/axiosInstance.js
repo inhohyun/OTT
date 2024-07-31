@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
 
 // 응답 인터셉터 설정
 axiosInstance.interceptors.response.use(
-  (response) => response, // 정상 응답은 그대로 반환
+  (response) => response.data, // 정상 응답 중 data만 꺼내주기
   async (error) => {
     const originalRequest = error.config; // 실패한 요청의 설정을 가져옴
     if (error.response.status === 401 && !originalRequest._retry) {

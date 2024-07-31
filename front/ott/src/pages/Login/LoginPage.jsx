@@ -7,7 +7,7 @@ import kakao from '../../assets/images/login/kakao_login.png';
 import naver from '../../assets/images/login/naver_login.png';
 import google from '../../assets/images/login/google_login.png';
 import backgroundImage from '../../assets/images/background_image_survey.png';
-import axios from 'axios';
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -16,18 +16,18 @@ const LoginPage = () => {
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
-    // navigate('/https://i11c205.p.ssafy.io/oauth2/authorization/naver');
+    navigate('/survey_start');
     // window.location.href =
     //   'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
 
-    axios
-      .get('https://i11c205.p.ssafy.io/oauth2/authorization/naver', {
-        withCredentials: true,
-      })
-      .then((res) => {
-        alert(JSON.stringify(res.data));
-      })
-      .catch((error) => alert(error));
+    // axios
+    //   .get('https://i11c205.p.ssafy.io/oauth2/authorization/naver', {
+    //     withCredentials: true,
+    //   })
+    //   .then((res) => {
+    //     alert(JSON.stringify(res.data));
+    //   })
+    //   .catch((error) => alert(error));
     //여기에 추가
   }, [navigate]);
 
@@ -56,13 +56,13 @@ const LoginPage = () => {
           transition={{ duration: 1 }}
         >
           {/* FaceComponent 사용하여 3D 얼굴 렌더링 */}
-          <FaceComponent imgUrl={mainIcon} />
+          {/* <FaceComponent imgUrl={mainIcon} /> */}
 
-          {/* <img
+          <img
             className="w-full h-full rounded-full"
             alt="메인 아이콘"
             src={mainIcon}
-          /> */}
+          />
         </motion.div>
         <motion.div
           className="mt-8 text-center text-[31.3px] text-gray font-zen-kaku-gothic-antique"
