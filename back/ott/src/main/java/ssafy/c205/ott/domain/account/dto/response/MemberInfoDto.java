@@ -30,4 +30,5 @@ public class MemberInfoDto {
     private List<Follow> followers;
     private int followingCount;
     private int followerCount;
+    private boolean isFollowed;
 }

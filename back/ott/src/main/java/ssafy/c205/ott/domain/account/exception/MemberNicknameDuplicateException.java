@@ -6,4 +6,8 @@ public class MemberNicknameDuplicateException extends RuntimeException {
     public String getMessage() {
         return MemberExceptionMessage.MEMBER_NICKNAME_DUPLICATE.getMessage();
     }
+
+    public int getStatus() {
+        return MemberExceptionMessage.MEMBER_NICKNAME_DUPLICATE.getStatus();
+    }
 }

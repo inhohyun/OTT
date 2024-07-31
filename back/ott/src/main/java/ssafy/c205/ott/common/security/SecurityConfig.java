@@ -1,4 +1,4 @@
-package ssafy.c205.ott.common.oauth.config;
+package ssafy.c205.ott.common.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,6 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
     private final CustomClientRegistrationRepository customClientRegistrationRepository;
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -83,10 +82,10 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler));
 
         //경로별 인가 작업
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/", "/reissue").permitAll()
-                        .anyRequest().authenticated());
+//        http
+//                .authorizeHttpRequests((auth) -> auth
+//                        .requestMatchers("/login","/", "/reissue", "/unlink","/delete").permitAll()
+//                        .anyRequest().authenticated());
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
@@ -99,4 +98,10 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+//    @Bean
+//    public OAuth2AuthorizedClientService authorizedClientService(ClientRegistrationRepository clientRegistrationRepository) {
+//        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
+//    }
+
 }
