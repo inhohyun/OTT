@@ -16,8 +16,12 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.item.Repository.ItemRepository;
 import ssafy.c205.ott.domain.item.entity.Item;
+import ssafy.c205.ott.domain.item.entity.ItemImage;
+import ssafy.c205.ott.domain.item.entity.SalesStatus;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImageDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImagePathDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
@@ -28,6 +32,7 @@ import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
 import ssafy.c205.ott.domain.lookbook.entity.LookbookImageStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 import ssafy.c205.ott.domain.lookbook.repository.FavoriteRepository;
+import ssafy.c205.ott.domain.lookbook.repository.LookbookImageRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookItemRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
@@ -47,6 +52,7 @@ public class LookbookServiceImpl implements LookbookService {
     private final ItemRepository itemRepository;
     private final LookbookItemRepository lookbookItemRepository;
     private final AmazonS3Util amazonS3Util;
+    private final LookbookImageRepository lookbookImageRepository;
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file) {
@@ -125,6 +131,14 @@ public class LookbookServiceImpl implements LookbookService {
             .lookbookImages(lookbookImages)
             .lookbookTags(lookbookTags)
             .build());
+
+        //룩북 썸네일 이미지 저장
+        lookbookImageRepository.save(LookbookImage
+            .builder()
+            .lookbookImageStatus(LookbookImageStatus.THUMBNAIL)
+            .imageUrl(s3URL)
+            .lookbook(saveLookbook)
+            .build());
     }
 
     //Todo : Item에서 옷 사진들 가져와서 responseDto에 저장해서 넘기는거 추가
@@ -134,20 +148,64 @@ public class LookbookServiceImpl implements LookbookService {
         Lookbook lookbook = null;
         if (odl.isPresent()) {
             lookbook = odl.get();
-            lookbookRepository.save(Lookbook
+            // 조회수 + 1
+            Lookbook saveLookbook = lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
                 .hitCount(lookbook.getHitCount() + 1)
                 .build());
+
+            // 옷 사진들을 넣어줌
+            List<ClothesImageDto> clothesImagePathDtos = new ArrayList<>();
+            List<LookbookItem> lookbookItemList = lookbook.getLookbookItemList();
+            List<ClothesImageDto> salesClothesDtos = new ArrayList<>();
+            // 옷 개별 이미지 저장
+            for (LookbookItem lookbookItem : lookbookItemList) {
+                Item item = lookbookItem.getItem();
+                boolean isSale = false;
+                if (item.getSalesStatus().equals(SalesStatus.ON_SALE)) {
+                    isSale = true;
+                }
+                List<ItemImage> itemImages = item.getItemImages();
+                for (ItemImage itemImage : itemImages) {
+                    clothesImagePathDtos.add(ClothesImageDto
+                        .builder()
+                        .clothesId(item.getId())
+                        .imagePath(ClothesImagePathDto
+                            .builder()
+                            .path(itemImage.getItemImagePath())
+                            .itemStatus(itemImage.getItemStatus())
+                            .build())
+                        .build());
+                    //판매중이면 판매중인 옷으로 넣어준다.
+                    if (isSale) {
+                        salesClothesDtos.add(ClothesImageDto
+                            .builder()
+                            .clothesId(item.getId())
+                            .imagePath(ClothesImagePathDto
+                                .builder()
+                                .path(itemImage.getItemImagePath())
+                                .itemStatus(itemImage.getItemStatus())
+                                .build())
+                            .build());
+                    }
+                }
+            }
+            List<String> tags = new ArrayList<>();
+            //태그
+            for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
+                tags.add(lookbookTag.getTag().getName());
+            }
             return LookbookDetailDto
                 .builder()
-                .content(lookbook.getContent())
-                .lookbookItems(lookbook.getLookbookItemList())
-                .lookbookImages(lookbook.getLookbookImages())
-                .lookbookTags(lookbook.getLookbookTags())
-                .member(lookbook.getMember())
-                .hitCount(lookbook.getHitCount() + 1)
-                .createdAt(lookbook.getCreatedAt())
+                .content(saveLookbook.getContent())
+                .images(clothesImagePathDtos)
+                .nickname(saveLookbook.getMember().getNickname())
+                .viewCount(saveLookbook.getHitCount())
+                .salesClothes(salesClothesDtos)
+                .createdAt(saveLookbook.getCreatedAt())
+                .tags(tags)
+                .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
                 .build();
         } else {
             log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);

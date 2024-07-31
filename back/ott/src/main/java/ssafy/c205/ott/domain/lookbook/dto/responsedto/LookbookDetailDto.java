@@ -15,12 +15,12 @@ import java.util.List;
 
 @Getter @Setter @ToString @Builder
 public class LookbookDetailDto {
-    private long hitCount;
+    private long viewCount;
     private String content;
-    private Member member;
-    private List<LookbookItem> lookbookItems;
-    private List<LookbookTag> lookbookTags;
-    private List<Comment> comments;
-    private List<LookbookImage> lookbookImages;
+    private String nickname;
+    private List<ClothesImageDto> images;
+    private List<String> tags;
+    private List<ClothesImageDto> salesClothes;
     private LocalDateTime createdAt;
+    private String thumnail;
 }

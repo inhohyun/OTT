@@ -1,9 +1,10 @@
 package ssafy.c205.ott.domain.item.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 
-@Entity
+@Entity @Getter
 public class ItemImage {
 
     @Id
