@@ -6,10 +6,9 @@ export default function SurveyFinish({ formData }) {
   const navigate = useNavigate();
   console.log(formData);
 
-  // Mapping objects for gender and bodyType
   const genderMap = {
-    남성: 'MAN',
-    여성: 'WOMAN',
+    남성: 'M',
+    여성: 'W',
   };
 
   const bodyTypeMap = {
@@ -21,35 +20,32 @@ export default function SurveyFinish({ formData }) {
 
   const handleComplete = async () => {
     try {
-      // Translate Korean gender and bodyType to English uppercase
+      // 한글 데이터 영어 번역
       const translatedGender = genderMap[formData.gender];
       const translatedBodyType = bodyTypeMap[formData.bodyType];
 
-      // Define the data to send, ensure it's formatted as needed by the backend
+      // api 명세서 데이터 구조에 맞게 변환
       const dataToSend = {
         nickname: formData.nickname,
+        name: formData.name,
         phoneNumber: formData.phone,
-        introduction: formData.introduction,
         profileImageUrl: formData.profileImageUrl,
-        height: parseFloat(formData.height), // Convert to float if necessary
-        weight: parseFloat(formData.weight), // Convert to float if necessary
-        gender: translatedGender, // Mapped from Korean to English
-        bodyType: translatedBodyType, // Mapped from Korean to English
-        publicStatus: formData.publicStatus, // Assuming it's already in the correct format
-        memberTags: formData.tags.map((tag) => ({ name: tag })), // Assuming tags need to be objects
+        height: parseFloat(formData.height),
+        weight: parseFloat(formData.weight),
+        gender: translatedGender,
+        bodyType: translatedBodyType,
+        memberTags: formData.tags.map((tag) => ({ name: tag })),
       };
 
-      // Send the PUT request to the backend
+      // axios put 요청
       // await axios.put('http://your-backend-endpoint/api/member', dataToSend);
 
-      // Log the formData for debugging purposes
+      // 백엔드로 넘겨진 데이터 확인
       console.log('Data sent to backend:', dataToSend);
 
-      // Navigate to the main page
       navigate('/mainpage');
     } catch (error) {
       console.error('Error sending data:', error);
-      // Handle the error accordingly, e.g., show a message to the user
     }
   };
 
