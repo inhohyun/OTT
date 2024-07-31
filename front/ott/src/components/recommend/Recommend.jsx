@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { dummyLookbooks } from '../lookbook/lookbookdata'; // Adjust the import path
+import { dummyLookbooks, dummyUsers } from '../lookbook/lookbookdata'; // Adjust the import path
 import Lookbook from '../lookbook/Lookbook';
 import LookbookDetail from '../lookbook/LookbookDetail';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
@@ -14,9 +14,11 @@ const Recommend = () => {
   const userAttributes = {
     height: 175,
     weight: 70,
-    bodyType: 'Slim',
-    style: 'Casual',
+    bodyType: 0,
+    style: '#Casual', // Ensure this matches the format in lookbooks
   };
+
+  const currentUser = 'John';
 
   const initialLimit = 10;
   const [visibleLookbooks, setVisibleLookbooks] = useState(
@@ -52,30 +54,54 @@ const Recommend = () => {
     setSelectedCategory(null);
   };
 
-  const filterLookbooks = (lookbooks, attribute, value) => {
+  const filterLookbooksByNickname = (lookbooks, nicknames) => {
     return lookbooks.filter(
-      (lookbook) => lookbook.attributes[attribute] === value
+      (lookbook) =>
+        nicknames.includes(lookbook.nickname) &&
+        lookbook.nickname !== currentUser
     );
   };
 
+  const filterUsersByAttribute = (users, attribute, value) => {
+    return users.filter((user) => user[attribute] === value);
+  };
+
+  // 1. Filter users based on height or weight
+  const matchingUsersByHeightWeight = dummyUsers.filter(
+    (user) =>
+      user.height === userAttributes.height ||
+      user.weight === userAttributes.weight
+  );
+
+  // 2. Filter users based on body type
+  const matchingUsersByBodyType = filterUsersByAttribute(
+    dummyUsers,
+    'bodyType',
+    userAttributes.bodyType
+  );
+
+  // 3. Filter users based on preferred style tags
+  const matchingUsersByStyle = dummyUsers.filter((user) =>
+    user.tags.includes(userAttributes.style)
+  );
+
+  // 4. Extract nicknames from filtered users
+  const nicknamesByHeightWeight = matchingUsersByHeightWeight.map(
+    (user) => user.nickname
+  );
+  const nicknamesByBodyType = matchingUsersByBodyType.map(
+    (user) => user.nickname
+  );
+  const nicknamesByStyle = matchingUsersByStyle.map((user) => user.nickname);
+
+  // 5. Filter lookbooks based on nicknames
   const filteredLookbooks = {
-    '키·몸무게': filterLookbooks(
+    '키·몸무게': filterLookbooksByNickname(
       dummyLookbooks,
-      'height',
-      userAttributes.height
-    ).filter(
-      (lookbook) => lookbook.attributes.weight === userAttributes.weight
+      nicknamesByHeightWeight
     ),
-    '체형': filterLookbooks(
-      dummyLookbooks,
-      'bodyType',
-      userAttributes.bodyType
-    ),
-    '선호 스타일': filterLookbooks(
-      dummyLookbooks,
-      'style',
-      userAttributes.style
-    ),
+    '체형': filterLookbooksByNickname(dummyLookbooks, nicknamesByBodyType),
+    '선호 스타일': filterLookbooksByNickname(dummyLookbooks, nicknamesByStyle),
   };
 
   return (
@@ -110,7 +136,7 @@ const Recommend = () => {
         <div key={category} className="w-full">
           <p className="ml-2 text-lg font-bold">#{category}</p>
           <div className="relative">
-            {filteredLookbooks[category].length > 3 && (
+            {filteredLookbooks[category]?.length > 3 && (
               <button
                 onClick={() => scrollLeft(scrollRefs[category])}
                 className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
@@ -130,7 +156,7 @@ const Recommend = () => {
               className="flex overflow-x-auto py-3 scrollbar-hide"
             >
               {filteredLookbooks[category]
-                .slice(0, visibleLookbooks[category])
+                ?.slice(0, visibleLookbooks[category])
                 .map((lookbook) => (
                   <div key={lookbook.id} className="lookbook-container">
                     <Lookbook
@@ -140,7 +166,7 @@ const Recommend = () => {
                   </div>
                 ))}
               {visibleLookbooks[category] <
-                filteredLookbooks[category].length && (
+                filteredLookbooks[category]?.length && (
                 <div className="show-more-button">
                   <button
                     onClick={() => showMore(category)}
@@ -152,7 +178,7 @@ const Recommend = () => {
                 </div>
               )}
             </div>
-            {filteredLookbooks[category].length > 3 && (
+            {filteredLookbooks[category]?.length > 3 && (
               <button
                 onClick={() => scrollRight(scrollRefs[category])}
                 className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 mr-2 w-6 h-6"

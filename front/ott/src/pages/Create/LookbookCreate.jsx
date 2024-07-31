@@ -1,14 +1,18 @@
 import React, { useState, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import leftarrow from '../../assets/icons/left_arrow_icon.png';
 import rightarrow from '../../assets/icons/right_arrow_icon.png';
+import shirt1 from '../../assets/images/clothes/shirt1.jpg';
+import pants1 from '../../assets/images/clothes/pants1.jpg';
+import Select from 'react-select';
 
 const clothesData = {
   상의: [
     {
       id: 1,
       name: 'T-Shirt',
-      image: 'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg',
+      image: shirt1,
     },
     {
       id: 2,
@@ -16,14 +20,12 @@ const clothesData = {
       image:
         'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
     },
-    // 추가 아이템들
   ],
   하의: [
     {
       id: 1,
       name: 'Jeans',
-      image:
-        'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg',
+      image: pants1,
     },
     {
       id: 2,
@@ -32,7 +34,7 @@ const clothesData = {
         'https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg',
     },
   ],
-  // 다른 카테고리들
+  // Add other categories as needed
 };
 
 const LookbookCreate = () => {
@@ -46,11 +48,12 @@ const LookbookCreate = () => {
   const [draggedItemIndex, setDraggedItemIndex] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [initialPosition, setInitialPosition] = useState(null);
+  const [showDeleteButton, setShowDeleteButton] = useState(true);
 
   const categoryRef = useRef(null);
 
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+  const handleCategoryChange = (selectedOption) => {
+    setSelectedCategory(selectedOption ? selectedOption.value : null);
   };
 
   const handleAddToCanvas = (item) => {
@@ -113,24 +116,7 @@ const LookbookCreate = () => {
     setInitialPosition({ x: item.x, y: item.y });
   };
 
-  const handleTouchStart = (index) => {
-    setDraggedItemIndex(index);
-    setIsDragging(true);
-    const item = canvasItems[index];
-    setInitialPosition({ x: item.x, y: item.y });
-  };
-
   const handleMouseUpOrLeave = () => {
-    if (draggedItemIndex !== null && !isDragging) {
-      setCanvasItems((prevItems) => {
-        const newItems = [...prevItems];
-        newItems[draggedItemIndex] = {
-          ...newItems[draggedItemIndex],
-          ...initialPosition,
-        };
-        return newItems;
-      });
-    }
     setDraggedItemIndex(null);
     setIsDragging(false);
     setInitialPosition(null);
@@ -148,6 +134,10 @@ const LookbookCreate = () => {
       newItems[draggedItemIndex] = { ...newItems[draggedItemIndex], x, y };
       return newItems;
     });
+  };
+
+  const handleTouchStart = (index) => {
+    handleMouseDown(index);
   };
 
   const handleTouchMove = (e) => {
@@ -170,10 +160,17 @@ const LookbookCreate = () => {
   };
 
   const handleSave = () => {
-    console.log('Canvas Items:', canvasItems);
-    console.log('Tags:', tags);
-    console.log('Description:', description);
-    console.log('Public:', isPublic);
+    setShowDeleteButton(false);
+
+    setTimeout(() => {
+      const canvasArea = document.getElementById('canvasArea');
+      html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
+        const imageData = canvas.toDataURL('image/png');
+        console.log(imageData);
+      });
+
+      setShowDeleteButton(true);
+    }, 100);
   };
 
   const handleKeyDown = (event) => {
@@ -205,6 +202,27 @@ const LookbookCreate = () => {
       categoryRef.current.scrollLeft += 100;
     }
   };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+      '&:hover': {
+        borderColor: 'black',
+      },
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#a78bfa' : 'white',
+      color: state.isSelected ? 'white' : 'black',
+    }),
+  };
+
+  const categoryOptions = Object.keys(clothesData).map((categoryName) => ({
+    value: categoryName,
+    label: categoryName,
+  }));
 
   return (
     <div
@@ -245,56 +263,58 @@ const LookbookCreate = () => {
             저장
           </button>
         </div>
-        <div
-          className="border-2 border-dashed border-gray-300 w-full h-72 mb-4 relative"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUpOrLeave}
-          onMouseLeave={handleMouseUpOrLeave}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleMouseUpOrLeave}
-        >
-          {canvasItems.map((item, index) => (
-            <div
-              key={item.uniqueKey}
-              className="absolute w-24 h-24"
-              style={{
-                left: item.x,
-                top: item.y,
-              }}
-            >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-full cursor-move"
-                onMouseDown={() => handleMouseDown(index)}
-                onTouchStart={() => handleTouchStart(index)}
-              />
-              <button
-                onClick={() => handleDelete(index)}
-                className="absolute top-0 right-0 text-red-500"
-                style={{ background: 'none' }}
+        <div className="border-2 border-dashed w-full h-72 mb-4">
+          <div
+            id="canvasArea"
+            className="w-full h-full mb-4 relative"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleMouseUpOrLeave}
+          >
+            {canvasItems.map((item, index) => (
+              <div
+                key={item.uniqueKey}
+                className="absolute w-24 h-24"
+                style={{
+                  left: item.x,
+                  top: item.y,
+                }}
               >
-                X
-              </button>
-            </div>
-          ))}
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full cursor-move"
+                  onMouseDown={() => handleMouseDown(index)}
+                  onTouchStart={() => handleTouchStart(index)}
+                />
+                {showDeleteButton && (
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="absolute top-0 right-0 text-red-500"
+                    style={{ background: 'none' }}
+                  >
+                    X
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-        <select
-          className="w-full border border-gray-300 text-gray-700 rounded p-2 mb-2 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-          value={selectedCategory || ''}
+        <Select
+          className="mb-2"
+          value={categoryOptions.find(
+            (option) => option.value === selectedCategory
+          )}
           onChange={handleCategoryChange}
-          style={{ fontFamily: 'dohyeon' }}
-        >
-          <option value="">카테고리 선택</option>
-          {Object.keys(clothesData).map((categoryName) => (
-            <option key={categoryName} value={categoryName}>
-              {categoryName}
-            </option>
-          ))}
-        </select>
-        {selectedCategory && (
+          options={categoryOptions}
+          styles={customStyles}
+          placeholder="카테고리 선택"
+        />
+        {selectedCategory && clothesData[selectedCategory] && (
           <div className="flex items-center gap-2">
             {clothesData[selectedCategory].length > 2 && (
               <button
@@ -307,7 +327,7 @@ const LookbookCreate = () => {
             )}
             <div
               ref={categoryRef}
-              className="flex overflow-x-auto gap-2 scrollbar-hide"
+              className="flex overflow-x-auto gap-2 mb-2 scrollbar-hide"
             >
               {clothesData[selectedCategory].map((item) => {
                 const isAdded = canvasItems.some(

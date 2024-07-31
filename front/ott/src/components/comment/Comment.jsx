@@ -4,33 +4,33 @@ const Comment = ({ comments }) => {
   const [commentList, setCommentList] = useState(
     comments.map((comment) => ({
       ...comment,
-      replies: comment.replies || [], // replies가 undefined일 경우 빈 배열로 초기화
-      showReplies: false, // 답글 표시 여부
+      replies: comment.children || [], // Initialize with children if available
+      showReplies: false, // Control the visibility of replies
     }))
   );
   const [newComment, setNewComment] = useState('');
-  const [replyTo, setReplyTo] = useState(null); // 답글을 다는 대상의 인덱스를 관리
-  const inputRef = useRef(null); // 입력 필드에 대한 ref 생성
+  const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
+  const inputRef = useRef(null); // Ref for the input field
 
   const handleAddComment = (e) => {
     e.preventDefault();
     if (newComment.trim() !== '') {
-      const now = new Date();
+      const now = new Date().toISOString(); // Get current time in ISO format
       const newCommentObject = {
-        author: '사용자', // 실제 사용자 이름으로 대체할 수 있습니다.
-        text: newComment,
-        time: now,
-        replies: [], // 대댓글 배열 추가
+        nickname: '사용자', // Replace with the actual user nickname
+        msg: newComment,
+        createdAt: now,
+        replies: [], // Array to store replies
       };
 
       if (replyTo !== null) {
-        // 답글을 다는 경우
+        // Adding a reply to an existing comment
         const updatedComments = [...commentList];
         updatedComments[replyTo].replies.push(newCommentObject);
         setCommentList(updatedComments);
-        setReplyTo(null); // 답글 대상 초기화
+        setReplyTo(null); // Reset the replyTo state
       } else {
-        // 일반 댓글을 다는 경우
+        // Adding a new comment
         setCommentList([...commentList, newCommentObject]);
       }
 
@@ -40,9 +40,9 @@ const Comment = ({ comments }) => {
 
   const handleReply = (index, author) => {
     setReplyTo(index);
-    setNewComment(`@${author} `); // 인풋 필드에 댓글 작성자 이름을 자동으로 추가
-    inputRef.current?.focus(); // 입력 필드로 포커스 이동
-    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // 스크롤 이동
+    setNewComment(`@${author} `);
+    inputRef.current?.focus();
+    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const toggleReplies = (index) => {
@@ -53,7 +53,7 @@ const Comment = ({ comments }) => {
 
   const timeAgo = (time) => {
     const now = new Date();
-    const diff = (now - new Date(time)) / 1000; // 초 단위로 차이 계산
+    const diff = (now - new Date(time)) / 1000;
     if (diff < 60) {
       return `${Math.floor(diff)}초 전`;
     } else if (diff < 3600) {
@@ -71,10 +71,10 @@ const Comment = ({ comments }) => {
         <div key={index} className="mb-4">
           <div className="flex justify-between items-center">
             <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
-              {comment.text}
+              {comment.msg}
             </div>
             <div className="text-[11px] text-slate-500 ml-2 mr-2">
-              {timeAgo(comment.time)}
+              {timeAgo(comment.createdAt)}
             </div>
           </div>
           <div className="flex items-center mt-1">
@@ -88,7 +88,7 @@ const Comment = ({ comments }) => {
               </button>
             )}
             <button
-              onClick={() => handleReply(index, comment.author)}
+              onClick={() => handleReply(index, comment.nickname)}
               className="text-[10px] text-stone-500"
               style={{ background: 'none', fontFamily: 'dohyeon' }}
             >
@@ -101,10 +101,10 @@ const Comment = ({ comments }) => {
                 <div key={replyIndex} className="mb-2">
                   <div className="flex justify-between items-center">
                     <div className="text-[13px] bg-gray-50 rounded-md p-2 flex-grow">
-                      ➥{reply.text}
+                      ➥{reply.msg}
                     </div>
                     <div className="text-[10px] text-slate-500 ml-2 mr-2">
-                      {timeAgo(reply.time)}
+                      {timeAgo(reply.createdAt)}
                     </div>
                   </div>
                 </div>

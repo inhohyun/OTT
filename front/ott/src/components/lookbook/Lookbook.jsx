@@ -50,16 +50,16 @@ const Lookbook = ({ data }) => {
       >
         <div className="px-2 py-1 flex justify-between items-center">
           <div className="font-bold text-xs mb-1 text-[15px]">
-            {data.creatorName}
+            {data.nickname}
           </div>
           <p className="text-stone-300 text-xs text-[8px]">
-            {calcTimeAgo(data.date)}
+            {calcTimeAgo(data.createdAt)}
           </p>
         </div>
         <div className="px-3 py-1 mb-1">
           <img
             className="w-full h-20 object-cover"
-            src={data.image}
+            src={data.thumbnail}
             alt={data.name}
           />
         </div>
@@ -68,7 +68,8 @@ const Lookbook = ({ data }) => {
             <div className="flex items-center">
               <img src={hearticon} alt="hearticon" className="w-4 mr-1 mt-1" />
               <span className="text-gray-600 text-[10px] mt-1">
-                {data.likes}
+                {/* {data.likes} */}
+                좋아요 수
               </span>
             </div>
             <div className="flex items-center">

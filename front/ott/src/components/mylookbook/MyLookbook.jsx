@@ -7,11 +7,11 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 
 const MyLookbook = () => {
-  const currentUser = '이름2'; // Replace with dynamic user data in a real application
+  const currentUser = 'John'; // Replace with dynamic user data in a real application
 
   // Filter lookbooks based on the current user
   const userLookbooks = dummyLookbooks.filter(
-    (lookbook) => lookbook.creatorName === currentUser
+    (lookbook) => lookbook.nickname === currentUser
   );
 
   // Categorize lookbooks by tags

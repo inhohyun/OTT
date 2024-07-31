@@ -1,444 +1,875 @@
 import lookbookimg from '../../../public/icon-192x192.png';
+import clothesimg from '../../assets/images/clothes/shirt1.jpg';
+import clothesbackimg from '../../assets/images/clothes/shirt1-1.jpg';
 
 export const dummyLookbooks = [
   {
     id: 1,
-    name: 'Summer Collection',
-    image: lookbookimg,
-    date: '2024-07-16 14:35:00',
-    likes: 120,
-    creatorName: '이름1',
+    createdAt: '2024-07-16',
+    nickname: 'John',
+    images: [
+      {
+        clothesId: 101,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'FRONT',
+        },
+      },
+      {
+        clothesId: 101,
+        imagePath: {
+          path: clothesbackimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    content: 'rjfkdfjdkaslfjsdaklfjsldakfjkslafjsdalkjadsklf',
     tags: ['#여름', '#도시남'],
-    attributes: {
-      height: 170,
-      weight: 65,
-      bodyType: 'Slim',
-      style: 'Formal',
-    },
+    salesClothes: [
+      {
+        clothesId: 101,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1000,
     comments: [
       {
-        author: '사용자1',
-        text: '이 옷 정말 좋아요!',
-        time: '2024-07-20 12:30:00',
+        nickname: 'kimssafy',
+        msg: '이쁘네요',
+        createdAt: '2024-07-30 17:20:10',
+        children: [
+          {
+            msg: '그러게요',
+            nickname: 'Hohyun',
+            createdAt: '2024-07-30 17:20:50',
+          },
+          {
+            msg: '그러게요22',
+            nickname: 'gahyun',
+            createdAt: '2024-07-30 17:21:50',
+          },
+        ],
       },
     ],
   },
   {
     id: 2,
-    name: 'Autumn Vibes',
-    image: lookbookimg,
-    date: '2024-07-10 11:20:00',
-    likes: 75,
-    creatorName: '이름2',
+    createdAt: '2024-07-10',
+    nickname: 'JaneDoe',
+    images: [
+      {
+        clothesId: 102,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    content: 'Autumn Vibes',
     tags: ['#가을', '#따뜻한'],
-    attributes: {
-      height: 175,
-      weight: 70,
-      bodyType: 'Athletic',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 102,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1500,
     comments: [
       {
-        author: '사용자2',
-        text: '니트가 너무 따뜻해 보이네요.',
-        time: '2024-07-12 09:15:00',
+        nickname: 'AlexJones',
+        msg: '가을 느낌 물씬',
+        createdAt: '2024-07-10 11:45:00',
+        children: [
+          {
+            msg: '좋아요!',
+            nickname: 'SophiaWong',
+            createdAt: '2024-07-10 12:10:00',
+          },
+        ],
       },
     ],
   },
   {
     id: 3,
-    name: 'Winter Wonderland',
-    image: lookbookimg,
-    date: '2024-07-01 09:15:00',
-    likes: 98,
-    creatorName: '이름3',
+    createdAt: '2024-07-01',
+    nickname: 'MikeSmith',
+    images: [
+      {
+        clothesId: 103,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Winter Wonderland',
     tags: ['#겨울', '#코트'],
-    attributes: {
-      height: 180,
-      weight: 75,
-      bodyType: 'Average',
-      style: 'Formal',
-    },
+    salesClothes: [
+      {
+        clothesId: 103,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1100,
     comments: [
       {
-        author: '사용자3',
-        text: '이 코트 어디서 살 수 있나요?',
-        time: '2024-07-05 08:00:00',
+        nickname: 'SarahLee',
+        msg: '정말 따뜻해 보여요!',
+        createdAt: '2024-07-02 10:15:00',
+        children: [],
       },
     ],
   },
   {
     id: 4,
-    name: 'Spring Blossoms',
-    image: lookbookimg,
-    date: '2024-07-15 10:05:00',
-    likes: 54,
-    creatorName: '이름4',
+    createdAt: '2024-07-15',
+    nickname: 'SarahLee',
+    images: [
+      {
+        clothesId: 104,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Spring Blossoms',
     tags: ['#봄', '#화사한'],
-    attributes: {
-      height: 165,
-      weight: 60,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 104,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 950,
     comments: [
       {
-        author: '사용자4',
-        text: '이 룩 너무 상큼해요!',
-        time: '2024-07-18 15:45:00',
+        nickname: 'MikeSmith',
+        msg: '봄 느낌 좋아요!',
+        createdAt: '2024-07-16 09:30:00',
+        children: [],
       },
     ],
   },
   {
     id: 5,
-    name: 'Urban Jungle',
-    image: lookbookimg,
-    date: '2024-07-20 13:45:00',
-    likes: 150,
-    creatorName: '이름5',
+    createdAt: '2024-07-20',
+    nickname: 'ChrisBrown',
+    images: [
+      {
+        clothesId: 105,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Urban Jungle',
     tags: ['#도시', '#스트릿패션'],
-    attributes: {
-      height: 172,
-      weight: 68,
-      bodyType: 'Athletic',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 105,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1300,
     comments: [
       {
-        author: '사용자5',
-        text: '멋진 도심 스타일!',
-        time: '2024-07-25 12:30:00',
+        nickname: 'JaneDoe',
+        msg: '도시적이고 세련된 룩이에요.',
+        createdAt: '2024-07-21 11:00:00',
+        children: [],
       },
     ],
   },
   {
     id: 6,
-    name: 'Beach Breeze',
-    image: lookbookimg,
-    date: '2024-07-10 15:30:00',
-    likes: 177,
-    creatorName: '이름6',
+    createdAt: '2024-07-10',
+    nickname: 'EmilyClark',
+    images: [
+      {
+        clothesId: 106,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Beach Breeze',
     tags: ['#해변', '#휴양지'],
-    attributes: {
-      height: 178,
-      weight: 72,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 106,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1400,
     comments: [
       {
-        author: '사용자6',
-        text: '휴양지 느낌 물씬 나네요.',
-        time: '2024-07-12 10:45:00',
+        nickname: 'DavidKim',
+        msg: '여름 휴양지에서 입기 딱이네요!',
+        createdAt: '2024-07-11 14:20:00',
+        children: [],
       },
     ],
   },
   {
     id: 7,
-    name: 'Classic Elegance',
-    image: lookbookimg,
-    date: '2024-07-14 19:20:00',
-    likes: 200,
-    creatorName: '이름7',
+    createdAt: '2024-07-14',
+    nickname: 'DavidKim',
+    images: [
+      {
+        clothesId: 107,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Classic Elegance',
     tags: ['#클래식', '#엘레강스'],
-    attributes: {
-      height: 168,
-      weight: 64,
-      bodyType: 'Average',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 107,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1600,
     comments: [
       {
-        author: '사용자7',
-        text: '이 정장 너무 멋져요.',
-        time: '2024-07-16 13:00:00',
+        nickname: 'SophiaWong',
+        msg: '우아한 룩이에요!',
+        createdAt: '2024-07-15 15:45:00',
+        children: [],
       },
     ],
   },
   {
     id: 8,
-    name: 'Sporty Spice',
-    image: lookbookimg,
-    date: '2024-07-05 16:00:00',
-    likes: 250,
-    creatorName: '이름8',
+    createdAt: '2024-07-05',
+    nickname: 'SophiaWong',
+    images: [
+      {
+        clothesId: 108,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Sporty Spice',
     tags: ['#운동', '#스포티'],
-    attributes: {
-      height: 175,
-      weight: 70,
-      bodyType: 'Athletic',
-      style: 'Sporty',
-    },
+    salesClothes: [
+      {
+        clothesId: 108,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1800,
     comments: [
       {
-        author: '사용자8',
-        text: '운동하기 딱 좋은 옷!',
-        time: '2024-07-10 11:30:00',
+        nickname: 'AlexJones',
+        msg: '스포티한 느낌 최고!',
+        createdAt: '2024-07-06 12:30:00',
+        children: [],
       },
     ],
   },
   {
     id: 9,
-    name: 'Evening Chic',
-    image: lookbookimg,
-    date: '2024-07-14 18:30:00',
-    likes: 180,
-    creatorName: '이름9',
+    createdAt: '2024-07-14',
+    nickname: 'AlexJones',
+    images: [
+      {
+        clothesId: 109,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Evening Chic',
     tags: ['#저녁', '#시크'],
-    attributes: {
-      height: 165,
-      weight: 55,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 109,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1700,
     comments: [
       {
-        author: '사용자9',
-        text: '저녁 모임에 딱이에요.',
-        time: '2024-07-20 09:00:00',
+        nickname: 'MiaChen',
+        msg: '저녁 모임에 어울리는 룩이에요.',
+        createdAt: '2024-07-15 19:00:00',
+        children: [],
       },
     ],
   },
   {
     id: 10,
-    name: 'Festival Fun',
-    image: lookbookimg,
-    date: '2024-07-02 14:00:00',
-    likes: 133,
-    creatorName: '이름10',
+    createdAt: '2024-07-02',
+    nickname: 'MiaChen',
+    images: [
+      {
+        clothesId: 110,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Festival Fun',
     tags: ['#페스티벌', '#즐거움'],
-    attributes: {
-      height: 180,
-      weight: 75,
-      bodyType: 'Average',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 110,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1200,
     comments: [
       {
-        author: '사용자10',
-        text: '페스티벌에 입기 좋아요!',
-        time: '2024-07-10 10:00:00',
+        nickname: 'John',
+        msg: '페스티벌에 딱 어울리는 스타일!',
+        createdAt: '2024-07-03 10:30:00',
+        children: [],
       },
     ],
   },
   {
     id: 11,
-    name: 'Cozy Winter',
-    image: lookbookimg,
-    date: '2024-07-30 10:15:00',
-    likes: 210,
-    creatorName: '이름11',
+    createdAt: '2024-07-30',
+    nickname: 'John',
+    images: [
+      {
+        clothesId: 111,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Cozy Winter',
     tags: ['#겨울', '#코지'],
-    attributes: {
-      height: 170,
-      weight: 70,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 111,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 2100,
     comments: [
       {
-        author: '사용자11',
-        text: '따뜻하고 아늑해요.',
-        time: '2024-07-30 12:00:00',
+        nickname: 'kimssafy',
+        msg: '정말 따뜻해 보여요!',
+        createdAt: '2024-07-31 10:20:00',
+        children: [],
       },
     ],
   },
   {
     id: 12,
-    name: 'Street Style',
-    image: lookbookimg,
-    date: '2024-07-12 12:00:00',
-    likes: 145,
-    creatorName: '이름12',
+    createdAt: '2024-07-12',
+    nickname: 'JaneDoe',
+    images: [
+      {
+        clothesId: 112,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Street Style',
     tags: ['#거리', '#스트릿'],
-    attributes: {
-      height: 178,
-      weight: 74,
-      bodyType: 'Athletic',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 112,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1450,
     comments: [
       {
-        author: '사용자12',
-        text: '도시적인 스타일!',
-        time: '2024-07-15 16:15:00',
+        nickname: 'ChrisBrown',
+        msg: '스트릿 패션 멋져요!',
+        createdAt: '2024-07-13 14:00:00',
+        children: [],
       },
     ],
   },
   {
     id: 13,
-    name: 'Retro Revival',
-    image: lookbookimg,
-    date: '2024-07-10 17:30:00',
-    likes: 190,
-    creatorName: '이름13',
+    createdAt: '2024-07-10',
+    nickname: 'MikeSmith',
+    images: [
+      {
+        clothesId: 113,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Retro Revival',
     tags: ['#레트로', '#복고'],
-    attributes: {
-      height: 165,
-      weight: 60,
-      bodyType: 'Slim',
-      style: 'Retro',
-    },
+    salesClothes: [
+      {
+        clothesId: 113,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1900,
     comments: [
       {
-        author: '사용자13',
-        text: '복고풍 멋져요!',
-        time: '2024-07-14 08:45:00',
+        nickname: 'SarahLee',
+        msg: '복고풍 멋져요!',
+        createdAt: '2024-07-11 13:45:00',
+        children: [],
       },
     ],
   },
   {
     id: 14,
-    name: 'Casual Comfort',
-    image: lookbookimg,
-    date: '2024-07-22 09:45:00',
-    likes: 165,
-    creatorName: '이름14',
+    createdAt: '2024-07-22',
+    nickname: 'SarahLee',
+    images: [
+      {
+        clothesId: 114,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Casual Comfort',
     tags: ['#캐주얼', '#편안함'],
-    attributes: {
-      height: 172,
-      weight: 68,
-      bodyType: 'Average',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 114,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1650,
     comments: [
       {
-        author: '사용자14',
-        text: '편안하게 입기 좋아요.',
-        time: '2024-07-28 12:00:00',
+        nickname: 'EmilyClark',
+        msg: '편안해 보이는 스타일이에요.',
+        createdAt: '2024-07-23 09:15:00',
+        children: [],
       },
     ],
   },
   {
     id: 15,
-    name: 'Bohemian Dream',
-    image: lookbookimg,
-    date: '2024-07-15 11:30:00',
-    likes: 230,
-    creatorName: '이름15',
+    createdAt: '2024-07-15',
+    nickname: 'ChrisBrown',
+    images: [
+      {
+        clothesId: 115,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Bohemian Dream',
     tags: ['#보헤미안', '#드림'],
-    attributes: {
-      height: 160,
-      weight: 55,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 115,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 2300,
     comments: [
       {
-        author: '사용자15',
-        text: '보헤미안 느낌 좋아요.',
-        time: '2024-07-20 09:00:00',
+        nickname: 'SophiaWong',
+        msg: '보헤미안 룩 너무 예뻐요!',
+        createdAt: '2024-07-16 10:00:00',
+        children: [],
       },
     ],
   },
   {
     id: 16,
-    name: 'Summer Breeze',
-    image: lookbookimg,
-    date: '2024-07-20 15:00:00',
-    likes: 105,
-    creatorName: '이름1',
+    createdAt: '2024-07-20',
+    nickname: 'EmilyClark',
+    images: [
+      {
+        clothesId: 116,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Summer Breeze',
     tags: ['#여름', '#바캉스'],
-    attributes: {
-      height: 170,
-      weight: 65,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 116,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 2050,
     comments: [
       {
-        author: '사용자16',
-        text: '여름에 입기 좋아요!',
-        time: '2024-07-21 14:00:00',
+        nickname: 'DavidKim',
+        msg: '시원해 보이는 여름룩이에요!',
+        createdAt: '2024-07-21 13:20:00',
+        children: [],
       },
     ],
   },
   {
     id: 17,
-    name: 'Urban Chic',
-    image: lookbookimg,
-    date: '2024-07-22 19:00:00',
-    likes: 112,
-    creatorName: '이름1',
+    createdAt: '2024-07-22',
+    nickname: 'DavidKim',
+    images: [
+      {
+        clothesId: 117,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Urban Chic',
     tags: ['#도시', '#시크'],
-    attributes: {
-      height: 175,
-      weight: 70,
-      bodyType: 'Athletic',
-      style: 'Formal',
-    },
+    salesClothes: [
+      {
+        clothesId: 117,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1120,
     comments: [
       {
-        author: '사용자17',
-        text: '도시에서 입기 좋은 스타일.',
-        time: '2024-07-23 12:00:00',
+        nickname: 'MiaChen',
+        msg: '시크한 도시 스타일이네요!',
+        createdAt: '2024-07-23 12:00:00',
+        children: [],
       },
     ],
   },
   {
     id: 18,
-    name: 'Classic Winter',
-    image: lookbookimg,
-    date: '2024-07-30 11:20:00',
-    likes: 130,
-    creatorName: '이름1',
+    createdAt: '2024-07-30',
+    nickname: 'SophiaWong',
+    images: [
+      {
+        clothesId: 118,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Classic Winter',
     tags: ['#겨울', '#클래식'],
-    attributes: {
-      height: 180,
-      weight: 75,
-      bodyType: 'Average',
-      style: 'Formal',
-    },
+    salesClothes: [
+      {
+        clothesId: 118,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1300,
     comments: [
       {
-        author: '사용자18',
-        text: '겨울에 입기 좋은 클래식 룩.',
-        time: '2024-07-30 12:00:00',
+        nickname: 'John',
+        msg: '겨울에 입기 딱 좋아요!',
+        createdAt: '2024-07-31 11:30:00',
+        children: [],
       },
     ],
   },
   {
     id: 19,
-    name: 'Spring Awakening',
-    image: lookbookimg,
-    date: '2024-07-18 10:30:00',
-    likes: 95,
-    creatorName: '이름1',
+    createdAt: '2024-07-18',
+    nickname: 'AlexJones',
+    images: [
+      {
+        clothesId: 119,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Spring Awakening',
     tags: ['#봄', '#활기찬'],
-    attributes: {
-      height: 165,
-      weight: 60,
-      bodyType: 'Slim',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 119,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 950,
     comments: [
       {
-        author: '사용자19',
-        text: '봄에 딱 맞는 스타일.',
-        time: '2024-07-20 11:00:00',
+        nickname: 'EmilyClark',
+        msg: '생동감 넘치는 스타일이에요.',
+        createdAt: '2024-07-19 10:45:00',
+        children: [],
       },
     ],
   },
   {
     id: 20,
-    name: 'Urban Night',
-    image: lookbookimg,
-    date: '2024-07-25 21:00:00',
-    likes: 145,
-    creatorName: '이름1',
+    createdAt: '2024-07-25',
+    nickname: 'MiaChen',
+    images: [
+      {
+        clothesId: 120,
+        imagePath: {
+          path: lookbookimg,
+          itemStatus: 'FRONT',
+        },
+      },
+    ],
+    content: 'Urban Night',
     tags: ['#도시', '#야경'],
-    attributes: {
-      height: 172,
-      weight: 68,
-      bodyType: 'Athletic',
-      style: 'Casual',
-    },
+    salesClothes: [
+      {
+        clothesId: 120,
+        imagePath: {
+          path: clothesimg,
+          itemStatus: 'BACK',
+        },
+      },
+    ],
+    thumbnail: lookbookimg,
+    viewCount: 1450,
     comments: [
       {
-        author: '사용자20',
-        text: '야경에서 빛나는 룩.',
-        time: '2024-07-28 18:00:00',
+        nickname: 'ChrisBrown',
+        msg: '야경에서 빛나는 룩!',
+        createdAt: '2024-07-28 18:00:00',
+        children: [],
       },
     ],
   },
 ];
+
+export const dummyUsers = [
+  {
+    uid: 701,
+    nickname: 'John',
+    name: '홍길동',
+    email: 'john@naver.com',
+    gender: 'M',
+    height: 170,
+    weight: 65,
+    bodyType: 0,
+    sso: null,
+    profileImage: 'https://example.com/images/john.jpg',
+    createAt: '2024-07-16',
+    tags: ['#Formal', '#Casual'], // Preferred styles
+  },
+  {
+    uid: 702,
+    nickname: 'JaneDoe',
+    name: '이영희',
+    email: 'jane@example.com',
+    gender: 'F',
+    height: 160,
+    weight: 55,
+    bodyType: 1,
+    sso: 'Google',
+    profileImage: 'https://example.com/images/jane.jpg',
+    createAt: '2024-07-17',
+    tags: ['#Casual', '#Chic'], // Preferred styles
+  },
+  {
+    uid: 703,
+    nickname: 'MikeSmith',
+    name: '김철수',
+    email: 'mike@smith.com',
+    gender: 'M',
+    height: 180,
+    weight: 75,
+    bodyType: 2,
+    sso: 'Facebook',
+    profileImage: 'https://example.com/images/mike.jpg',
+    createAt: '2024-07-18',
+    tags: ['#Sporty', '#Casual'], // Preferred styles
+  },
+  {
+    uid: 704,
+    nickname: 'SarahLee',
+    name: '이민정',
+    email: 'sarah@lee.com',
+    gender: 'F',
+    height: 165,
+    weight: 50,
+    bodyType: 0,
+    sso: null,
+    profileImage: 'https://example.com/images/sarah.jpg',
+    createAt: '2024-07-19',
+    tags: ['#Elegant', '#Casual'], // Preferred styles
+  },
+  {
+    uid: 705,
+    nickname: 'ChrisBrown',
+    name: '박영수',
+    email: 'chris@brown.com',
+    gender: 'M',
+    height: 175,
+    weight: 68,
+    bodyType: 1,
+    sso: 'Twitter',
+    profileImage: 'https://example.com/images/chris.jpg',
+    createAt: '2024-07-20',
+    tags: ['#Street', '#Casual'], // Preferred styles
+  },
+  {
+    uid: 706,
+    nickname: 'EmilyClark',
+    name: '최수정',
+    email: 'emily@clark.com',
+    gender: 'F',
+    height: 158,
+    weight: 52,
+    bodyType: 0,
+    sso: 'LinkedIn',
+    profileImage: 'https://example.com/images/emily.jpg',
+    createAt: '2024-07-21',
+    tags: ['#Bohemian', '#Casual'], // Preferred styles
+  },
+  {
+    uid: 707,
+    nickname: 'DavidKim',
+    name: '김대위',
+    email: 'david@kim.com',
+    gender: 'M',
+    height: 182,
+    weight: 80,
+    bodyType: 2,
+    sso: 'GitHub',
+    profileImage: 'https://example.com/images/david.jpg',
+    createAt: '2024-07-22',
+    tags: ['#Formal', '#Classic'], // Preferred styles
+  },
+  {
+    uid: 708,
+    nickname: 'SophiaWong',
+    name: '황미영',
+    email: 'sophia@wong.com',
+    gender: 'F',
+    height: 162,
+    weight: 54,
+    bodyType: 1,
+    sso: null,
+    profileImage: 'https://example.com/images/sophia.jpg',
+    createAt: '2024-07-23',
+    tags: ['#Chic', '#Elegant'], // Preferred styles
+  },
+  {
+    uid: 709,
+    nickname: 'AlexJones',
+    name: '정훈',
+    email: 'alex@jones.com',
+    gender: 'M',
+    height: 178,
+    weight: 72,
+    bodyType: 1,
+    sso: 'Twitter',
+    profileImage: 'https://example.com/images/alex.jpg',
+    createAt: '2024-07-24',
+    tags: ['#Urban', '#Casual'], // Preferred styles
+  },
+  {
+    uid: 710,
+    nickname: 'MiaChen',
+    name: '진수',
+    email: 'mia@chen.com',
+    gender: 'F',
+    height: 160,
+    weight: 53,
+    bodyType: 0,
+    sso: 'Instagram',
+    profileImage: 'https://example.com/images/mia.jpg',
+    createAt: '2024-07-25',
+    tags: ['#Vintage', '#Casual'], // Preferred styles
+  },
+];
+
+export default dummyUsers;
