@@ -7,7 +7,7 @@ import camIcon from '../../assets/icons/webrtcicon.png';
 import profileIcon from '../../assets/icons/profileicon.png';
 import footerBackgroundImg from '../../assets/images/footer_background.png';
 import whiteX from '../../assets/icons/deleteicon.png';
-import AiModal from './Ai/AiModal';
+import AiModal from './ai/AiModal';
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();

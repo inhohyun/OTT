@@ -7,8 +7,8 @@ import React from 'react';
 const PrivatePosts = () => {
   // Create an array with the length of 10 for rendering multiple Lookbook components
   const lookbooks = Array.from({ length: 10 }, (_, index) => ({
-    creatorName: `Creator ${index + 1}`,
-    date: new Date().toISOString(),
+    nickname: `Creator ${index + 1}`,
+    createdAt: new Date().toISOString(),
     image: 'https://via.placeholder.com/150',
     name: `Lookbook ${index + 1}`,
     likes: Math.floor(Math.random() * 100),
@@ -65,12 +65,12 @@ const PrivatePosts = () => {
             <div className="flex flex-col">
               <div className="flex space-x-4">
                 {lookbooks.slice(0, 5).map((lookbook, index) => (
-                  <Lookbook key={index} data={lookbook} size="small" />
+                  <Lookbook key={index} data={lookbook} />
                 ))}
               </div>
               <div className="flex space-x-4">
                 {lookbooks.slice(5).map((lookbook, index) => (
-                  <Lookbook key={index + 5} data={lookbook} size="small" />
+                  <Lookbook key={index + 5} data={lookbook} />
                 ))}
               </div>
             </div>
