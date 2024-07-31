@@ -54,7 +54,7 @@ const PrivatePosts = () => {
               ref={containerRef}
               className="overflow-x-auto scrollbar-hide flex space-x-4"
             >
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col">
                 <div className="flex space-x-4">
                   {lookbooks.slice(0, 5).map((_, index) => (
                     <Lookbook key={index} size="small" />
@@ -65,7 +65,7 @@ const PrivatePosts = () => {
                     <Lookbook key={index + 5} size="small" />
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
             <button
               onClick={() => scrollRight(containerRef)}

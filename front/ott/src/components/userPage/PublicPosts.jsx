@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import Lookbook from '../lookbook/Lookbook';
+import MyLookbook from '../userPage/MyLookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
@@ -52,18 +52,18 @@ const PublicPosts = () => {
             ref={containerRef}
             className="overflow-x-auto scrollbar-hide flex space-x-4"
           >
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <div className="flex space-x-4">
                 {lookbooks.slice(0, 5).map((_, index) => (
-                  <Lookbook key={index} size="small" />
+                  <MyLookbook key={index} size="small" />
                 ))}
               </div>
               <div className="flex space-x-4">
                 {lookbooks.slice(5).map((_, index) => (
-                  <Lookbook key={index + 5} size="small" />
+                  <MyLookbook key={index + 5} size="small" />
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
           <button
             onClick={() => scrollRight(containerRef)}
