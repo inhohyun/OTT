@@ -47,8 +47,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "룩북 정보 수정을 완료했습니다."),
     })
     @PutMapping("/{lookbook_id}")
-    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDto lookbookDto) {
-        boolean isUpdateSuccess = lookbookService.updateLookbook(lookbookId, lookbookDto);
+    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDto lookbookDto, @RequestParam MultipartFile file) {
+        boolean isUpdateSuccess = lookbookService.updateLookbook(lookbookId, lookbookDto, file);
         if (isUpdateSuccess) {
             return new ResponseEntity<String>("룩북 정보 수정을 완료했습니다.", HttpStatus.OK);
         } else {

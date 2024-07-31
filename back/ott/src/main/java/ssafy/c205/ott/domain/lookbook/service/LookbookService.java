@@ -16,7 +16,7 @@ public interface LookbookService {
 
     boolean deleteLookbook(String lookbookId);
 
-    boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto);
+    boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto, MultipartFile file);
 
     boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto);
 

@@ -141,7 +141,6 @@ public class LookbookServiceImpl implements LookbookService {
             .build());
     }
 
-    //Todo : Item에서 옷 사진들 가져와서 responseDto에 저장해서 넘기는거 추가
     @Override
     public LookbookDetailDto detailLookbook(String lookbookId) {
         Optional<Lookbook> odl = lookbookRepository.findById(Long.parseLong(lookbookId));
@@ -213,7 +212,6 @@ public class LookbookServiceImpl implements LookbookService {
         }
     }
 
-    //Todo : 룩북 삭제시 LookbookItem 삭제로직 추가
     @Override
     public boolean deleteLookbook(String lookbookId) {
         //룩북 불러오기
@@ -233,8 +231,10 @@ public class LookbookServiceImpl implements LookbookService {
                         .count(tag.getCount() - 1)
                         .build());
                 }
-                lookbookTagRepository.deleteById(lookbookTag.getId());
+                lookbookItemRepository.deleteAll(lookbookItemRepository.findByLookbook(lookbook));
+//                lookbookTagRepository.deleteById(lookbookTag.getId());
             }
+            lookbookTagRepository.deleteAll(lookbook.getLookbookTags());
             //룩북 삭제
             lookbookRepository.save(Lookbook
                 .builder()
@@ -249,9 +249,9 @@ public class LookbookServiceImpl implements LookbookService {
         }
     }
 
-    //Todo : LookbookItem 수정 로직 추가
     @Override
-    public boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto) {
+    public boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto,
+        MultipartFile file) {
         Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(lookbookId));
         List<LookbookTag> lookbookTags = new ArrayList<>();
         if (ol.isPresent()) {
@@ -297,15 +297,48 @@ public class LookbookServiceImpl implements LookbookService {
             }
 
             //옷 정보 수정
-            //Todo : 옷 부분 끝나고 옷 정보 수정 구현
+            lookbookItemRepository.deleteAll(lookbookItemRepository.findByLookbook(lookbook));
+            List<LookbookItem> lookbookItems = new ArrayList<>();
+            for (String clothId : lookbookUpdateDto.getClothes()) {
+                Optional<Item> oi = itemRepository.findById(Long.parseLong(clothId));
+                if (oi.isPresent()) {
+                    Item item = oi.get();
+                    LookbookItem lookbookItem = LookbookItem
+                        .builder()
+                        .item(item)
+                        .lookbook(lookbook)
+                        .build();
+                    lookbookItemRepository.save(lookbookItem);
+                    lookbookItems.add(lookbookItem);
+                }
+            }
 
-            //Todo : 옷 사진이랑 옷정보 수정정보 넣읅것
+            //이전 썸네일 삭제
+            lookbookImageRepository.delete(lookbook.getLookbookImages().get(0));
+            amazonS3Util.deleteFile(lookbook.getLookbookImages().get(0).getImageUrl());
+
+            //새로운 썸네일 생성
+            String s3URL = amazonS3Util.saveFile(file);
+
+            //데이터베이스에 저장
+            LookbookImage saveImage = lookbookImageRepository.save(LookbookImage
+                .builder()
+                .lookbook(lookbook)
+                .lookbookImageStatus(LookbookImageStatus.THUMBNAIL)
+                .imageUrl(s3URL)
+                .build());
+
+            List<LookbookImage> lookbookImages = new ArrayList<>();
+            lookbookImages.add(saveImage);
+
             lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
                 .publicStatus(lookbookUpdateDto.getPublicStatus())
                 .content(lookbookUpdateDto.getContent())
                 .lookbookTags(lookbookTags)
+                .lookbookItemList(lookbookItems)
+                .lookbookImages(lookbookImages)
                 .build());
             return true;
         } else {
