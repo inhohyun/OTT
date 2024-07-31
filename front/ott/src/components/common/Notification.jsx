@@ -1,7 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Notification = ({ show, onClose, notifications }) => {
+const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [visibleNotifications, setVisibleNotifications] = useState(4);
+  const [startX, setStartX] = useState(null);
+  const [moveX, setMoveX] = useState(null);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const [swipedIndex, setSwipedIndex] = useState(null);
 
   useEffect(() => {
     if (!show) {
@@ -19,6 +23,32 @@ const Notification = ({ show, onClose, notifications }) => {
     if (e.target.id === 'modal-overlay') {
       onClose();
     }
+  };
+
+  const handleTouchStart = (index, e) => {
+    setStartX(e.touches[0].clientX);
+    setSwipedIndex(index);
+    setIsSwiping(true);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isSwiping) return;
+    setMoveX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isSwiping) return;
+    const diffX = moveX - startX;
+    if (diffX > 100) {
+      // Adjust the threshold for swipe detection
+      handleDeleteNotification(swipedIndex);
+    }
+    setIsSwiping(false);
+    setSwipedIndex(null);
+  };
+
+  const handleDeleteNotification = (index) => {
+    setNotifications(notifications.filter((_, i) => i !== index));
   };
 
   return (
@@ -47,6 +77,19 @@ const Notification = ({ show, onClose, notifications }) => {
               <div
                 key={index}
                 className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative"
+                onTouchStart={(e) => handleTouchStart(index, e)}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                style={{
+                  transform:
+                    swipedIndex === index && isSwiping
+                      ? `translateX(${moveX - startX}px)`
+                      : 'translateX(0)',
+                  transition:
+                    swipedIndex === index && isSwiping
+                      ? 'none'
+                      : 'transform 0.2s ease',
+                }}
               >
                 <p className="text-base mb-4" style={{ fontSize: '14px' }}>
                   {notification.who}님이 {notification.what}
