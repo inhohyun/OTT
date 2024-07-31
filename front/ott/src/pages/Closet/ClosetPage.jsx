@@ -3,6 +3,7 @@ import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
+import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
 import clothesData from './clothesData.js';
 
 const ClosetPage = () => {
@@ -16,7 +17,9 @@ const ClosetPage = () => {
     '한벌옷',
     '즐겨찾기',
   ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedClothing, setSelectedClothing] = useState(null);
 
   const handleCategoryChange = (newCategory) => {
     setSelectedCategory(newCategory);
@@ -37,6 +40,11 @@ const ClosetPage = () => {
     );
   };
 
+  const handleClothesClick = (clothingItem) => {
+    setSelectedClothing(clothingItem);
+    setIsDetailModalOpen(true);
+  };
+
   const filteredClothes =
     selectedCategory === '전체'
       ? clothes
@@ -54,10 +62,14 @@ const ClosetPage = () => {
         onCategoryChange={handleCategoryChange}
         categories={categories}
       />
-      <ClothesGrid clothes={filteredClothes} onToggleLike={handleToggleLike} />
+      <ClothesGrid
+        clothes={filteredClothes}
+        onToggleLike={handleToggleLike}
+        onClothesClick={handleClothesClick}
+      />
       <div className="flex justify-center mt-5">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsAddModalOpen(true)}
           className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
           style={{ width: '200px' }}
         >
@@ -65,11 +77,18 @@ const ClosetPage = () => {
         </button>
       </div>
       <AddClothesModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
         onAddClothes={handleAddClothes}
         categories={categories.filter((cat) => cat !== '즐겨찾기')}
       />
+      {selectedClothing && (
+        <ClothesDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={() => setIsDetailModalOpen(false)}
+          clothingItem={selectedClothing}
+        />
+      )}
     </div>
   );
 };

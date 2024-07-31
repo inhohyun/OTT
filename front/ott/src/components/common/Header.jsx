@@ -7,9 +7,7 @@ import Notification from './Notification';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
-
-  const notifications = [
+  const [notifications, setNotifications] = useState([
     { who: '이정준', what: '화상 채팅을 요청하셨습니다.', when: '방금 전' },
     { who: '박지민', what: '새로운 메시지가 도착했습니다.', when: '5분 전' },
     { who: '박지응', what: '친구 요청을 수락하셨습니다.', when: '10분 전' },
@@ -17,7 +15,9 @@ const Header = () => {
     { who: '최철수', what: '게시물을 좋아합니다.', when: '20분 전' },
     { who: '이민수', what: '새로운 팔로워가 있습니다.', when: '25분 전' },
     { who: '김영수', what: '게시물을 공유했습니다.', when: '30분 전' },
-  ];
+  ]);
+
+  const navigate = useNavigate();
 
   const handleNotificationClick = () => {
     setShowModal(true);
@@ -63,6 +63,7 @@ const Header = () => {
         show={showModal}
         onClose={handleCloseModal}
         notifications={notifications}
+        setNotifications={setNotifications} // Pass the state setter function
       />
     </>
   );

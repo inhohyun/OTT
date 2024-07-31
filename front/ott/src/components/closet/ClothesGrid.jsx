@@ -8,7 +8,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGrid = ({ clothes, onToggleLike }) => {
+const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12);
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
@@ -92,8 +92,9 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
             return (
               <div
                 key={item.id}
-                className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center"
+                className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center cursor-pointer"
                 style={{ minWidth: '100px', height: '190px' }}
+                onClick={() => onClothesClick(item)}
               >
                 <img
                   src={isFrontVisible ? item.frontImage : item.backImage}
@@ -102,14 +103,20 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
                 />
                 {item.backImage && (
                   <div
-                    onClick={() => handleToggleImage(item.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleImage(item.id);
+                    }}
                     className="absolute top-3 right-4 p-1 cursor-pointer"
                   >
-                    <img src={bingleicon} alt="bingle" className="w-4 h-4" />
+                    <img src={bingleicon} alt="Toggle" className="w-4 h-4" />
                   </div>
                 )}
                 <div
-                  onClick={() => onToggleLike(item.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleLike(item.id);
+                  }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
                   <FontAwesomeIcon
