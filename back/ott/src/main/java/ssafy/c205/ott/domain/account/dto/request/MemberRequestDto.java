@@ -7,4 +7,5 @@ import lombok.Getter;
 @Builder
 public class MemberRequestDto {
     private Long id;
+    private Long currentId;
 }
