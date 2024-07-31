@@ -36,7 +36,7 @@ public class LookbookController {
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     //Todo : 이미지 잘 저장되는지와 이미지를 선택 했는지 예외처리
     @PostMapping("/")
-    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto, @RequestParam MultipartFile file) {
+    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto, @RequestParam("file") MultipartFile file) {
         lookbookService.createLookbook(lookbookCreateDto, file);
         return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
     }
@@ -47,7 +47,7 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "룩북 정보 수정을 완료했습니다."),
     })
     @PutMapping("/{lookbook_id}")
-    public ResponseEntity<?> updateLookbook(@PathVariable String lookbookId, @ModelAttribute LookbookDto lookbookDto, @RequestParam MultipartFile file) {
+    public ResponseEntity<?> updateLookbook(@PathVariable("lookbookId") String lookbookId, @ModelAttribute LookbookDto lookbookDto, @RequestParam("file") MultipartFile file) {
         boolean isUpdateSuccess = lookbookService.updateLookbook(lookbookId, lookbookDto, file);
         if (isUpdateSuccess) {
             return new ResponseEntity<String>("룩북 정보 수정을 완료했습니다.", HttpStatus.OK);

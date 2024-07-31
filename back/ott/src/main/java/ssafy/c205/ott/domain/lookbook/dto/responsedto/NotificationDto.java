@@ -2,11 +2,12 @@ package ssafy.c205.ott.domain.lookbook.dto.responsedto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ssafy.c205.ott.domain.lookbook.entity.NotificationStatus;
 
-@Getter
-@ToString
+@Getter @Setter
+@ToString @Builder
 public class NotificationDto {
 
     private Long id;

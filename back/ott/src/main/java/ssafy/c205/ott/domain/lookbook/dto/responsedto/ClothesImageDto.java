@@ -2,8 +2,11 @@ package ssafy.c205.ott.domain.lookbook.dto.responsedto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Getter
+@Getter @Setter
+@ToString
 @Builder
 public class ClothesImageDto {
 

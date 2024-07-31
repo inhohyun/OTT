@@ -25,10 +25,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    // 500 - Internal Server Error
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e) {
-        ApiResponse<Void> response = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 오류가 발생했습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
+//    // 500 - Internal Server Error
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e) {
+//        ApiResponse<Void> response = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 오류가 발생했습니다.");
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//    }
 }

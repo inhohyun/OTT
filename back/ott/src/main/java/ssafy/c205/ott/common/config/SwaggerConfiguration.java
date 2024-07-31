@@ -41,4 +41,9 @@ public class SwaggerConfiguration {
     public GroupedOpenApi commentApi() {
         return GroupedOpenApi.builder().group("OTT-Comment").pathsToMatch("/api/comment/**").build();
     }
+
+    @Bean
+    public GroupedOpenApi memberApi(){
+        return GroupedOpenApi.builder().group("OTT-Member").pathsToMatch("/members/**").build();
+    }
 }

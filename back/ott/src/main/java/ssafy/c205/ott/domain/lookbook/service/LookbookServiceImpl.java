@@ -72,7 +72,7 @@ public class LookbookServiceImpl implements LookbookService {
             .builder()
             .content(lookbookCreateDto.getContent())
             .member(member)
-            .publicStatus(lookbookCreateDto.getPublicStatus())
+            .publicStatus(lookbookCreateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC : PublicStatus.PRIVATE)
             .build());
 
         for (String tag : lookbookCreateDto.getTags()) {
@@ -334,7 +334,7 @@ public class LookbookServiceImpl implements LookbookService {
             lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
-                .publicStatus(lookbookUpdateDto.getPublicStatus())
+                .publicStatus(lookbookUpdateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC : PublicStatus.PRIVATE)
                 .content(lookbookUpdateDto.getContent())
                 .lookbookTags(lookbookTags)
                 .lookbookItemList(lookbookItems)

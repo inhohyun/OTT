@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@ToString
-@Builder
+@Getter @Setter
+@ToString @Builder
 public class CommentSelectResponseDto {
 
     private String nickname;

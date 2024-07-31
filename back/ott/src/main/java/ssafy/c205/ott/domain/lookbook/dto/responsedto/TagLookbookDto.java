@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
@@ -13,7 +14,8 @@ import ssafy.c205.ott.domain.lookbook.entity.ActiveStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
 
-@Getter @ToString @Builder
+@Getter @Setter
+@ToString @Builder
 public class TagLookbookDto {
     private Long id;
     private Long hitCount;

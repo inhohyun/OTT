@@ -13,7 +13,8 @@ import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter @ToString @Builder
+@Getter @Setter
+@ToString @Builder
 public class LookbookDetailDto {
     private long viewCount;
     private String content;
