@@ -7,11 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 import ssafy.c205.ott.domain.account.exception.MemberNicknameDuplicateException;
-import ssafy.c205.ott.domain.account.repository.MemberRepository;
 
 @SpringBootTest
 @Transactional
@@ -32,7 +30,7 @@ class MemberValidatorTest {
                 .role(MemberRole.USER)
                 .build();
         em.persist(member);
-        member.updateMember("JiEung2", null, null, null, 0L, 0L, null, null, null);
+        member.updateMember("JiEung2", null, null, null, 0L, 0L, null, null, null, null);
 
         em.flush();
         em.clear();
