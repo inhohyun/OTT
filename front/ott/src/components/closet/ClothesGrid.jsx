@@ -105,7 +105,7 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
                     onClick={() => handleToggleImage(item.id)}
                     className="absolute top-3 right-4 p-1 cursor-pointer"
                   >
-                    <img src={bingleicon} alt="bingle" className="w-4 h-4" />
+                    <img src={bingleicon} alt="Toggle" className="w-4 h-4" />
                   </div>
                 )}
                 <div

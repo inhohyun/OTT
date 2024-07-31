@@ -10,6 +10,8 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [purchaseLocation, setPurchaseLocation] = useState('');
   const [size, setSize] = useState('');
   const [color, setColor] = useState('');
+  const [publicStatus, setPublicStatus] = useState(false); // New field
+  const [gender, setGender] = useState(''); // New field
   const [errors, setErrors] = useState({});
   const [showPhotoOptions, setShowPhotoOptions] = useState({
     front: false,
@@ -39,6 +41,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       newErrors.purchaseLocation = '구매처를 입력하세요.';
     if (!size.trim()) newErrors.size = '사이즈를 입력하세요.';
     if (!color.trim()) newErrors.color = '색상을 입력하세요.';
+    if (!gender.trim()) newErrors.gender = '성별을 선택하세요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -52,10 +55,12 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         frontImage,
         backImage,
         brand,
-        purchaseLocation,
+        purchase: purchaseLocation,
         size,
         color,
-        isLiked: false, // Initial state for the like status
+        public_status: publicStatus ? 'y' : 'n', // Convert boolean to 'y'/'n'
+        gender,
+        user_id: 1, // Placeholder, replace with actual user ID management logic
       };
 
       // Log the input data to the console
@@ -78,6 +83,8 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     setPurchaseLocation('');
     setSize('');
     setColor('');
+    setPublicStatus(false);
+    setGender('');
     setErrors({});
   };
 
@@ -288,6 +295,31 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           />
           {errors.color && (
             <p className="text-red-500 text-sm mt-1">{errors.color}</p>
+          )}
+        </div>
+        <div className="mb-4 flex items-center">
+          <label className="text-gray-700 mr-2">공개 여부</label>
+          <input
+            type="checkbox"
+            checked={publicStatus}
+            onChange={(e) => setPublicStatus(e.target.checked)}
+            className="form-checkbox h-5 w-5 text-violet-400"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">성별</label>
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="w-full p-2 border rounded-lg"
+          >
+            <option value="">성별을 선택하세요</option>
+            <option value="m">남성</option>
+            <option value="f">여성</option>
+          </select>
+          {errors.gender && (
+            <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
           )}
         </div>
         <div className="flex justify-center">
