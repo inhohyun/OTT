@@ -1,5 +1,6 @@
 package ssafy.c205.ott.common.oauth.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -8,6 +9,7 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class SocialClientRegistration {
     @Value("${oauth.naver.client.id}")
     private String naverClientId;
@@ -23,7 +25,7 @@ public class SocialClientRegistration {
     private String kakaoClientSecret;
 
     public ClientRegistration naverClientRegistration() {
-
+        log.info("naverClientRegistration");
         return ClientRegistration.withRegistrationId("naver")
                 .clientId(naverClientId)
                 .clientSecret(naverClientSecret)
