@@ -53,7 +53,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(cookieService.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
-        response.sendRedirect("https://i11c205.p.ssafy.io/");
+        response.sendRedirect("https://i11c205.p.ssafy.io/mainpage");
 
     }
 
