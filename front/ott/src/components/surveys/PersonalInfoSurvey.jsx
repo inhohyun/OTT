@@ -29,23 +29,28 @@ export default function PersonalInfoSurvey({
         setPhoneError('숫자만 입력 가능합니다.');
       }
     } else if (id === 'nickname') {
-      if (/^[a-zA-Z0-9_]*$/.test(value) || value === '') {
+      if (/^[a-zA-Z0-9_]+$/.test(value) && value.length <= 25) {
         setNicknameError('');
-        setFormData({ ...formData, [id]: value });
+        setIsNicknameValidated(true);
       } else {
-        setNicknameError('영어, 숫자, _만 입력 가능합니다.');
+        setNicknameError(
+          '영어, 숫자, _만 입력 가능하며, 최대 길이는 25자입니다.'
+        );
+        setIsNicknameValidated(false);
       }
+      setFormData({ ...formData, [id]: value });
     } else {
       setFormData({ ...formData, [id]: value });
     }
-    setIsNicknameValidated(false); // Reset validation status on input change
   };
 
   const handleValidateNickname = () => {
-    // Future validation logic will go here
     console.log(formData.nickname);
-    // For now, assume validation is always successful
-    setIsNicknameValidated(true);
+    // Nickname validation is already handled in handleChange, this function is kept for demonstration or additional future checks.
+  };
+
+  const handleCardClick = (type) => {
+    setFormData({ ...formData, gender: type });
   };
 
   return (
@@ -66,7 +71,9 @@ export default function PersonalInfoSurvey({
             onChange={handleChange}
             required
             maxLength="8"
-            className={`w-4/5 max-w-md p-3 rounded-full border ${nameError ? 'border-red-500' : 'border-violet-300'} mx-auto block box-border focus:border-violet-400`}
+            className={`w-4/5 max-w-md p-3 rounded-full border ${
+              nameError ? 'border-red-500' : 'border-violet-300'
+            } mx-auto block box-border focus:border-violet-400`}
           />
           {nameError && (
             <p className="text-red-500 text-sm mt-1">{nameError}</p>
@@ -84,11 +91,29 @@ export default function PersonalInfoSurvey({
             onChange={handleChange}
             required
             maxLength="11"
-            className={`w-4/5 max-w-md p-3 rounded-full border ${phoneError ? 'border-red-500' : 'border-violet-300'} mx-auto block box-border focus:border-violet-400`}
+            className={`w-4/5 max-w-md p-3 rounded-full border ${
+              phoneError ? 'border-red-500' : 'border-violet-300'
+            } mx-auto block box-border focus:border-violet-400`}
           />
           {phoneError && (
             <p className="text-red-500 text-sm mt-1">{phoneError}</p>
           )}
+        </div>
+        <div className="relative mb-10">
+          <label className="block ml-1 mb-5 font-thin text-lg">성별</label>
+          <div className="grid grid-cols-2 gap-4">
+            {['남성', '여성'].map((type) => (
+              <div
+                key={type}
+                onClick={() => handleCardClick(type)}
+                className={`cursor-pointer p-4 rounded-lg border text-center text-stone-400 ${
+                  formData.gender === type ? 'bg-violet-200' : ''
+                }`}
+              >
+                {type}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="relative mb-5 ">
           <label
@@ -106,13 +131,18 @@ export default function PersonalInfoSurvey({
               onChange={handleChange}
               required
               maxLength="25"
-              className={`w-full p-3 rounded-full border ${nicknameError ? 'border-red-500' : 'border-violet-300'} box-border focus:border-violet-400 pr-10`}
+              className={`w-full p-3 rounded-full border ${
+                nicknameError ? 'border-red-500' : 'border-violet-300'
+              } box-border focus:border-violet-400 pr-10`}
             />
             <span
               onClick={handleValidateNickname}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-violet-400 cursor-pointer"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
             >
-              <FontAwesomeIcon icon={faCheckCircle} />
+              <FontAwesomeIcon
+                icon={faCheckCircle}
+                style={{ color: isNicknameValidated ? '#7c3aed' : '#d1d5db' }} // Violet color when validated, gray otherwise
+              />
             </span>
           </div>
           {nicknameError && (
@@ -123,7 +153,11 @@ export default function PersonalInfoSurvey({
           <button
             type="submit"
             disabled={!isNicknameValidated}
-            className={`py-2 px-5 rounded-full mt-5 cursor-pointer text-lg ${isNicknameValidated ? 'bg-violet-400 text-white hover:bg-violet-300' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+            className={`py-2 px-5 rounded-full mt-5 cursor-pointer text-lg ${
+              isNicknameValidated
+                ? 'bg-violet-400 text-white hover:bg-violet-300'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
           >
             다음
           </button>

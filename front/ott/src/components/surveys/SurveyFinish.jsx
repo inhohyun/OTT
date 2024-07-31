@@ -1,12 +1,56 @@
 import { useNavigate } from 'react-router-dom';
+// import axios from 'axios';
 import finishIcon from '../../assets/images/survey/survey_finish.png';
 
 export default function SurveyFinish({ formData }) {
   const navigate = useNavigate();
+  console.log(formData);
 
-  const handleComplete = function () {
-    navigate('/mainpage');
-    console.log(formData);
+  // Mapping objects for gender and bodyType
+  const genderMap = {
+    남성: 'MAN',
+    여성: 'WOMAN',
+  };
+
+  const bodyTypeMap = {
+    '슬림': 'SLIM',
+    '슬림 탄탄': 'MUSCULAR',
+    '보통': 'AVERAGE',
+    '통통': 'CHUBBY',
+  };
+
+  const handleComplete = async () => {
+    try {
+      // Translate Korean gender and bodyType to English uppercase
+      const translatedGender = genderMap[formData.gender];
+      const translatedBodyType = bodyTypeMap[formData.bodyType];
+
+      // Define the data to send, ensure it's formatted as needed by the backend
+      const dataToSend = {
+        nickname: formData.nickname,
+        phoneNumber: formData.phone,
+        introduction: formData.introduction,
+        profileImageUrl: formData.profileImageUrl,
+        height: parseFloat(formData.height), // Convert to float if necessary
+        weight: parseFloat(formData.weight), // Convert to float if necessary
+        gender: translatedGender, // Mapped from Korean to English
+        bodyType: translatedBodyType, // Mapped from Korean to English
+        publicStatus: formData.publicStatus, // Assuming it's already in the correct format
+        memberTags: formData.tags.map((tag) => ({ name: tag })), // Assuming tags need to be objects
+      };
+
+      // Send the PUT request to the backend
+      // await axios.put('http://your-backend-endpoint/api/member', dataToSend);
+
+      // Log the formData for debugging purposes
+      console.log('Data sent to backend:', dataToSend);
+
+      // Navigate to the main page
+      navigate('/mainpage');
+    } catch (error) {
+      console.error('Error sending data:', error);
+      // Handle the error accordingly, e.g., show a message to the user
+    }
   };
 
   return (

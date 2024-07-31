@@ -45,8 +45,9 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const handleAddClothes = () => {
     if (validateInputs()) {
-      onAddClothes({
-        id: Date.now(),
+      // Define newClothes object with all the necessary data
+      const newClothes = {
+        id: Date.now(), // Unique identifier
         category,
         frontImage,
         backImage,
@@ -54,8 +55,16 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         purchaseLocation,
         size,
         color,
-        isLiked: false,
-      });
+        isLiked: false, // Initial state for the like status
+      };
+
+      // Log the input data to the console
+      console.log('New clothes data:', newClothes);
+
+      // Call the onAddClothes function with the new clothes data
+      onAddClothes(newClothes);
+
+      // Clear the input fields and close the modal
       clearInputs();
       onClose();
     }
@@ -80,6 +89,17 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       alert('Camera capture is not implemented yet.');
     }
     setShowPhotoOptions({ front: false, back: false });
+  };
+
+  const handleFileChange = (e, type) => {
+    if (e.target.files && e.target.files[0]) {
+      const imageUrl = URL.createObjectURL(e.target.files[0]);
+      if (type === 'front') {
+        setFrontImage(imageUrl);
+      } else if (type === 'back') {
+        setBackImage(imageUrl);
+      }
+    }
   };
 
   if (!isOpen) return null;
@@ -144,9 +164,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
               type="file"
               accept="image/*"
               id="front-file-input"
-              onChange={(e) =>
-                setFrontImage(URL.createObjectURL(e.target.files[0]))
-              }
+              onChange={(e) => handleFileChange(e, 'front')}
               className="hidden"
             />
             {errors.frontImage && (
@@ -199,9 +217,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
               type="file"
               accept="image/*"
               id="back-file-input"
-              onChange={(e) =>
-                setBackImage(URL.createObjectURL(e.target.files[0]))
-              }
+              onChange={(e) => handleFileChange(e, 'back')}
               className="hidden"
             />
           </div>
