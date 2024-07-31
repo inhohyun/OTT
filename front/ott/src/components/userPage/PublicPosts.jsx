@@ -1,12 +1,22 @@
 import { useRef } from 'react';
-import MyLookbook from '../userPage/MyLookbook';
+import Lookbook from '../lookbook/Lookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
 
 const PublicPosts = () => {
   // Create an array with the length of 10 for rendering multiple Lookbook components
-  const lookbooks = Array.from({ length: 10 });
+  const lookbooks = Array.from({ length: 10 }, (_, index) => ({
+    creatorName: `Creator ${index + 1}`,
+    date: new Date().toISOString(),
+    image: 'https://via.placeholder.com/150',
+    name: `Lookbook ${index + 1}`,
+    likes: Math.floor(Math.random() * 100),
+    comments: Array.from(
+      { length: Math.floor(Math.random() * 10) },
+      (_, i) => ({ id: i, text: 'Comment' })
+    ),
+  }));
 
   // Reference for scroll container
   const containerRef = useRef(null);
@@ -52,18 +62,18 @@ const PublicPosts = () => {
             ref={containerRef}
             className="overflow-x-auto scrollbar-hide flex space-x-4"
           >
-            {/* <div className="flex flex-col">
+            <div className="flex flex-col">
               <div className="flex space-x-4">
-                {lookbooks.slice(0, 5).map((_, index) => (
-                  <MyLookbook key={index} size="small" />
+                {lookbooks.slice(0, 5).map((lookbook, index) => (
+                  <Lookbook key={index} data={lookbook} size="small" />
                 ))}
               </div>
               <div className="flex space-x-4">
-                {lookbooks.slice(5).map((_, index) => (
-                  <MyLookbook key={index + 5} size="small" />
+                {lookbooks.slice(5).map((lookbook, index) => (
+                  <Lookbook key={index + 5} data={lookbook} size="small" />
                 ))}
               </div>
-            </div> */}
+            </div>
           </div>
           <button
             onClick={() => scrollRight(containerRef)}

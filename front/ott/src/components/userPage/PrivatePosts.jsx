@@ -6,7 +6,17 @@ import React from 'react';
 
 const PrivatePosts = () => {
   // Create an array with the length of 10 for rendering multiple Lookbook components
-  const lookbooks = Array.from({ length: 10 });
+  const lookbooks = Array.from({ length: 10 }, (_, index) => ({
+    creatorName: `Creator ${index + 1}`,
+    date: new Date().toISOString(),
+    image: 'https://via.placeholder.com/150',
+    name: `Lookbook ${index + 1}`,
+    likes: Math.floor(Math.random() * 100),
+    comments: Array.from(
+      { length: Math.floor(Math.random() * 10) },
+      (_, i) => ({ id: i, text: 'Comment' })
+    ),
+  }));
 
   // Reference for scroll container
   const containerRef = useRef(null);
@@ -25,62 +35,59 @@ const PrivatePosts = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-col items-center w-full space-y-5">
-        <p>비공개 게시물입니다.</p>
-        <style>{`
-        .scrollbar-hide {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
-        }
+    <div className="flex flex-col items-center w-full space-y-5">
+      <style>{`
+                .scrollbar-hide {
+                    -ms-overflow-style: none; /* IE and Edge */
+                    scrollbar-width: none; /* Firefox */
+                }
 
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-        }
-    `}</style>
-        <div className="w-full">
-          <div className="relative flex items-center">
-            <button
-              onClick={() => scrollLeft(containerRef)}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-              style={{
-                backgroundImage: `url(${leftArrow})`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-              }}
-            ></button>
-            <div
-              ref={containerRef}
-              className="overflow-x-auto scrollbar-hide flex space-x-4"
-            >
-              {/* <div className="flex flex-col">
-                <div className="flex space-x-4">
-                  {lookbooks.slice(0, 5).map((_, index) => (
-                    <Lookbook key={index} size="small" />
-                  ))}
-                </div>
-                <div className="flex space-x-4">
-                  {lookbooks.slice(5).map((_, index) => (
-                    <Lookbook key={index + 5} size="small" />
-                  ))}
-                </div>
-              </div> */}
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none; /* Chrome, Safari, Opera */
+                }
+            `}</style>
+      <div className="w-full">
+        <div className="relative flex items-center">
+          <button
+            onClick={() => scrollLeft(containerRef)}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+            style={{
+              backgroundImage: `url(${leftArrow})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}
+          ></button>
+          <div
+            ref={containerRef}
+            className="overflow-x-auto scrollbar-hide flex space-x-4"
+          >
+            <div className="flex flex-col">
+              <div className="flex space-x-4">
+                {lookbooks.slice(0, 5).map((lookbook, index) => (
+                  <Lookbook key={index} data={lookbook} size="small" />
+                ))}
+              </div>
+              <div className="flex space-x-4">
+                {lookbooks.slice(5).map((lookbook, index) => (
+                  <Lookbook key={index + 5} data={lookbook} size="small" />
+                ))}
+              </div>
             </div>
-            <button
-              onClick={() => scrollRight(containerRef)}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
-              style={{
-                backgroundImage: `url(${rightArrow})`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-              }}
-            ></button>
           </div>
+          <button
+            onClick={() => scrollRight(containerRef)}
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-lg p-1 rounded-full z-10 w-8 h-8"
+            style={{
+              backgroundImage: `url(${rightArrow})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}
+          ></button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

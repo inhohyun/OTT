@@ -153,6 +153,7 @@ const Modal = ({ isOpen, onClose }) => {
       setCurrentStep('AiProceeding');
     } else {
       console.log('No clothing selected');
+      alert('옷을 선택해주세요.');
     }
   };
 
