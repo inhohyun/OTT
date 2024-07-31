@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
@@ -28,9 +28,11 @@ import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
 import ssafy.c205.ott.domain.lookbook.entity.LookbookImageStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 import ssafy.c205.ott.domain.lookbook.repository.FavoriteRepository;
+import ssafy.c205.ott.domain.lookbook.repository.LookbookItemRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
+import ssafy.c205.ott.util.AmazonS3Util;
 
 @Slf4j
 @Service
@@ -43,9 +45,11 @@ public class LookbookServiceImpl implements LookbookService {
     private final FavoriteRepository favoriteRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
+    private final LookbookItemRepository lookbookItemRepository;
+    private final AmazonS3Util amazonS3Util;
 
     @Override
-    public void createLookbook(LookbookDto lookbookCreateDto) {
+    public void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file) {
         //태그 유무 확인 및 태그 추가
         List<LookbookTag> lookbookTags = new ArrayList<>();
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
@@ -57,6 +61,14 @@ public class LookbookServiceImpl implements LookbookService {
         } else {
             log.error("멤버를 찾을 수 없음");
         }
+
+        Lookbook saveLookbook = lookbookRepository.save(Lookbook
+            .builder()
+            .content(lookbookCreateDto.getContent())
+            .member(member)
+            .publicStatus(lookbookCreateDto.getPublicStatus())
+            .build());
+
         for (String tag : lookbookCreateDto.getTags()) {
             Tag tagEntity = tagRepository.findByName(tag);
             if (tagEntity == null) {
@@ -73,41 +85,49 @@ public class LookbookServiceImpl implements LookbookService {
                     .count(tagEntity.getCount() + 1)
                     .build());
             }
-            //Todo : lookbook 어떻게 넣을지 생각
             lookbookTags.add(LookbookTag
                 .builder()
-//                .lookbook(lookbook)
+                .lookbook(saveLookbook)
                 .tag(tagRepository.findByName(tag))
                 .build());
         }
         //옷 사진 추가하기
-        List<LookbookImage> lookbookImages = new ArrayList<>();
-        //Todo : 옷 끝나면 옷 정보 및 사진 넣기
-
         //옷 정보 넣기
+        String s3URL = amazonS3Util.saveFile(file);
+
         List<LookbookItem> lookbookItems = new ArrayList<>();
         for (String clothId : lookbookCreateDto.getClothes()) {
             Optional<Item> oi = itemRepository.findById(Long.parseLong(clothId));
             if (oi.isPresent()) {
                 Item item = oi.get();
-
+                LookbookItem lookbookItem = LookbookItem
+                    .builder()
+                    .item(item)
+                    .lookbook(saveLookbook)
+                    .build();
+                lookbookItemRepository.save(lookbookItem);
+                lookbookItems.add(lookbookItem);
             }
         }
+        List<LookbookImage> lookbookImages = new ArrayList<>();
+        lookbookImages.add(LookbookImage
+            .builder()
+            .imageUrl(s3URL)
+            .lookbookImageStatus(LookbookImageStatus.THUMBNAIL)
+            .lookbook(saveLookbook)
+            .build());
 
         //룩북 추가하기
-        //Todo : 옷 내용들, 옷 사진
-        Lookbook saveLookbook = Lookbook
+        lookbookRepository.save(Lookbook
             .builder()
-            .content(lookbookCreateDto.getContent())
-            .member(member)
-            .publicStatus(lookbookCreateDto.getPublicStatus())
+            .id(saveLookbook.getId())
             .lookbookItemList(lookbookItems)
             .lookbookImages(lookbookImages)
             .lookbookTags(lookbookTags)
-            .build();
-        lookbookRepository.save(saveLookbook);
+            .build());
     }
 
+    //Todo : Item에서 옷 사진들 가져와서 responseDto에 저장해서 넘기는거 추가
     @Override
     public LookbookDetailDto detailLookbook(String lookbookId) {
         Optional<Lookbook> odl = lookbookRepository.findById(Long.parseLong(lookbookId));
@@ -122,7 +142,6 @@ public class LookbookServiceImpl implements LookbookService {
             return LookbookDetailDto
                 .builder()
                 .content(lookbook.getContent())
-                .id(lookbook.getId())
                 .lookbookItems(lookbook.getLookbookItemList())
                 .lookbookImages(lookbook.getLookbookImages())
                 .lookbookTags(lookbook.getLookbookTags())
@@ -136,6 +155,7 @@ public class LookbookServiceImpl implements LookbookService {
         }
     }
 
+    //Todo : 룩북 삭제시 LookbookItem 삭제로직 추가
     @Override
     public boolean deleteLookbook(String lookbookId) {
         //룩북 불러오기
@@ -171,6 +191,7 @@ public class LookbookServiceImpl implements LookbookService {
         }
     }
 
+    //Todo : LookbookItem 수정 로직 추가
     @Override
     public boolean updateLookbook(String lookbookId, LookbookDto lookbookUpdateDto) {
         Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(lookbookId));

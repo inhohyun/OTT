@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
@@ -35,8 +36,8 @@ public class LookbookController {
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     //Todo : 이미지 잘 저장되는지와 이미지를 선택 했는지 예외처리
     @PostMapping("/")
-    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto) {
-        lookbookService.createLookbook(lookbookCreateDto);
+    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto, @RequestParam MultipartFile file) {
+        lookbookService.createLookbook(lookbookCreateDto, file);
         return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
     }
 

@@ -15,7 +15,6 @@ import java.util.List;
 
 @Getter @Setter @ToString @Builder
 public class LookbookDetailDto {
-    private long id;
     private long hitCount;
     private String content;
     private Member member;
@@ -24,5 +23,4 @@ public class LookbookDetailDto {
     private List<Comment> comments;
     private List<LookbookImage> lookbookImages;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

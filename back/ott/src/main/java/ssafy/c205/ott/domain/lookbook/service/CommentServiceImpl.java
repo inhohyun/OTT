@@ -47,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
             member = om.get();
         }
 
-        commentRepository.save(Comment
+        Comment c = commentRepository.save(Comment
             .builder()
             .message(commentMessageDto.getMsg())
             .member(member)
@@ -56,10 +56,9 @@ public class CommentServiceImpl implements CommentService {
                 : CommentStatus.NOT_DELETED)
             .build());
 
-        //Todo : 댓글 추가 예외 처리, 알림 추가(댓글 ID를 어떻게 넣을지 고민)
         notificationService.createNotification(NotificationCreateDto
             .builder()
-            .commentId("1")
+            .commentId(String.valueOf(c.getId()))
             .build());
     }
 
@@ -131,24 +130,26 @@ public class CommentServiceImpl implements CommentService {
             commentSelectDto.getStatus().equals("DM") ? CommentStatus.DM
                 : CommentStatus.NOT_DELETED);
         for (Comment comment : comments) {
-            //객체 생성
-            CommentSelectResponseDto commentSelectResponseDto = CommentSelectResponseDto
-                .builder()
-                .nickname(lookbook.getMember().getNickname())
-                .msg(comment.getMessage())
-                .createdAt(comment.getCreatedAt())
-                .children(new ArrayList<>())
-                .build();
+            List<CommentChildrenDto> childrenDtos = new ArrayList<>();
 
             //대댓글 내용 추가
             for (Comment child : comment.getChildren()) {
-                commentSelectResponseDto.getChildren().add(CommentChildrenDto
+                childrenDtos.add(CommentChildrenDto
                     .builder()
                     .createdAt(child.getCreatedAt())
                     .msg(child.getMessage())
                     .nickname(child.getMember().getNickname())
                     .build());
             }
+
+            //객체 생성
+            CommentSelectResponseDto commentSelectResponseDto = CommentSelectResponseDto
+                .builder()
+                .nickname(lookbook.getMember().getNickname())
+                .msg(comment.getMessage())
+                .createdAt(comment.getCreatedAt())
+                .children(childrenDtos)
+                .build();
 
             //responseDto에 추가
             responseDtos.add(commentSelectResponseDto);
