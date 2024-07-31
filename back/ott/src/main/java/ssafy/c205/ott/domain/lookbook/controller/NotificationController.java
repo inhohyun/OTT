@@ -38,7 +38,7 @@ public class NotificationController {
         return ResponseEntity.ok().body("아림 삭제처리를 완료했습니다.");
     }
 
-    @PostMapping("/create}")
+    @PostMapping("/create")
     public ResponseEntity<?> createNotification(@ModelAttribute
     NotificationCreateDto notificationCreateDto) {
         notificationService.createNotification(notificationCreateDto);

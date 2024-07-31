@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
@@ -30,18 +32,15 @@ import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LookbookServiceImpl implements LookbookService {
 
-    @Autowired
-    private LookbookRepository lookbookRepository;
-    @Autowired
-    private TagRepository tagRepository;
-    @Autowired
-    private LookbookTagRepository lookbookTagRepository;
-    @Autowired
-    private FavoriteRepository favoriteRepository;
-    @Autowired
-    private MemberRepository memberRepository;
+    private final LookbookRepository lookbookRepository;
+    private final TagRepository tagRepository;
+    private final LookbookTagRepository lookbookTagRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final MemberRepository memberRepository;
+//    private f
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto) {
@@ -80,7 +79,11 @@ public class LookbookServiceImpl implements LookbookService {
                 .build());
         }
         //옷 사진 추가하기
+        List<LookbookImage> lookbookImages = new ArrayList<>();
         //Todo : 옷 끝나면 옷 정보 및 사진 넣기
+
+        //옷 정보 넣기
+        List<LookbookItem> lookbookItems = new ArrayList<>();
 
         //룩북 추가하기
         //Todo : 옷 내용들, 옷 사진
@@ -89,6 +92,8 @@ public class LookbookServiceImpl implements LookbookService {
             .content(lookbookCreateDto.getContent())
             .member(member)
             .publicStatus(lookbookCreateDto.getPublicStatus())
+            .lookbookItemList(lookbookItems)
+            .lookbookImages(lookbookImages)
             .lookbookTags(lookbookTags)
             .build());
     }
