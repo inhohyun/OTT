@@ -5,8 +5,8 @@ import {
   removeAccessToken,
   getLocalRefreshToken,
   removeLocalRefreshToken,
-} from './localUtils';
-import { setCookie, removeCookie } from './cookieUtils';
+} from '../utils/localUtils';
+import { setCookie, removeCookie } from '../utils/cookieUtils';
 
 //TODO : React-query로 리펙토링 예정
 

@@ -21,7 +21,7 @@ import VideoChat from './pages/WebRTC/VideoChatPage';
 import AiPage from './pages/Ai/AiPage';
 import LookbookCreate from './pages/Create/LookbookCreate';
 import UserPage from './pages/UserPage/UserPage';
-
+import OAuthCallback from './pages/OAuth/OAuthCallback';
 function App() {
   return (
     <>
@@ -30,6 +30,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
             <Route element={<CommonLayout />}>
