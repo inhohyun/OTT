@@ -44,7 +44,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); //프론트단 주소
+                        configuration.setAllowedOrigins(Collections.singletonList("https://i11c205.p.ssafy.io/")); //프론트단 주소
                         configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
                         configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
                         configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
@@ -82,10 +82,10 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler));
 
         //경로별 인가 작업
-//        http
-//                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/login","/", "/reissue", "/unlink","/delete").permitAll()
-//                        .anyRequest().authenticated());
+        http
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/login","/", "/reissue").permitAll()
+                        .anyRequest().authenticated());
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
@@ -98,10 +98,5 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public OAuth2AuthorizedClientService authorizedClientService(ClientRegistrationRepository clientRegistrationRepository) {
-//        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
-//    }
 
 }
