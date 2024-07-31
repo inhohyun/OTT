@@ -41,23 +41,25 @@ public class SecurityConfig {
 
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        // 특정 도메인을 명시적으로 설정
-                        configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io"));
-                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        configuration.setAllowCredentials(true); // credential을 허용하도록 설정
-                        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization")); // 쿠키와 authorization 헤더를 노출
+//                        configuration.setAllowedOrigins(Arrays.asList("https://i11c205.p.ssafy.io/", "http://localhost:3000/")); //프론트단 주소
+                        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+                        configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
+                        configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
+                        configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
+                        configuration.setMaxAge(3600L);
 
-                        configuration.setMaxAge(3600L); // 설정된 헤더 캐시 시간
+                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정해라
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                         return configuration;
                     }
                 }));
-
 
         //csrf disable
         http
