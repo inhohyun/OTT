@@ -3,11 +3,13 @@ package ssafy.c205.ott.domain.account.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.common.security.CustomMemberDetails;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.UploadProfileImageRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
@@ -92,5 +94,14 @@ public class MemberController {
                 .targetMemberId(memberDetails.getMemberId())
                 .build();
         return ApiResponse.success(memberWriteService.rejectFollow(followRequestDto));
+    }
+
+    @PostMapping("/profile-image/upload")
+    public ApiResponse<ProfileImageSuccessDto> uploadProfile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        UploadProfileImageRequestDto uploadProfileImageRequestDto = UploadProfileImageRequestDto.builder()
+                .file(file)
+                .memberId(memberDetails.getMemberId())
+                .build();
+        return ApiResponse.success(memberWriteService.uploadProfileImage(uploadProfileImageRequestDto));
     }
 }
