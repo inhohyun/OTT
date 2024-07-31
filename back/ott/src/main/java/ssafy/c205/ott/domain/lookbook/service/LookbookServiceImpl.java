@@ -14,6 +14,8 @@ import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
+import ssafy.c205.ott.domain.item.Repository.ItemRepository;
+import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
@@ -40,7 +42,7 @@ public class LookbookServiceImpl implements LookbookService {
     private final LookbookTagRepository lookbookTagRepository;
     private final FavoriteRepository favoriteRepository;
     private final MemberRepository memberRepository;
-//    private f
+    private final ItemRepository itemRepository;
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto) {
@@ -84,10 +86,17 @@ public class LookbookServiceImpl implements LookbookService {
 
         //옷 정보 넣기
         List<LookbookItem> lookbookItems = new ArrayList<>();
+        for (String clothId : lookbookCreateDto.getClothes()) {
+            Optional<Item> oi = itemRepository.findById(Long.parseLong(clothId));
+            if (oi.isPresent()) {
+                Item item = oi.get();
+
+            }
+        }
 
         //룩북 추가하기
         //Todo : 옷 내용들, 옷 사진
-        lookbookRepository.save(Lookbook
+        Lookbook saveLookbook = Lookbook
             .builder()
             .content(lookbookCreateDto.getContent())
             .member(member)
@@ -95,7 +104,8 @@ public class LookbookServiceImpl implements LookbookService {
             .lookbookItemList(lookbookItems)
             .lookbookImages(lookbookImages)
             .lookbookTags(lookbookTags)
-            .build());
+            .build();
+        lookbookRepository.save(saveLookbook);
     }
 
     @Override
