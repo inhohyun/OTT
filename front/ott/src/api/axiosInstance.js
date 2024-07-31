@@ -3,9 +3,9 @@ import {
   getAccessToken,
   setAccessToken,
   removeAccessToken,
-  getRefreshToken,
-  removeRefreshToken,
-} from './tokenUtils';
+  getLocalRefreshToken,
+  removeLocalRefreshToken,
+} from './localUtils';
 import { setCookie, removeCookie } from './cookieUtils';
 
 //TODO : React-query로 리펙토링 예정
@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const refreshToken = getRefreshToken();
+        const refreshToken = getLocalRefreshToken();
         setCookie('refreshToken', refreshToken); // 쿠키에 Refresh Token 설정
         const response = await axiosInstance.get('/refresh-token'); // Refresh Token 요청
         setAccessToken(response.data.accessToken); // 새로운 Access Token 저장
@@ -51,7 +51,7 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         console.error('토큰 갱신 실패:', err);
         removeAccessToken(); // 실패 시 토큰 제거
-        removeRefreshToken();
+        removeLocalRefreshToken();
         window.location.href = '/'; // 로그인 페이지로 리디렉션
       }
     }
