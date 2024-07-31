@@ -16,6 +16,7 @@ import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import static ssafy.c205.ott.domain.account.util.FollowMessage.*;
+import ssafy.c205.ott.domain.closet.service.ClosetService;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class MemberWriteService {
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
     private final MemberValidator memberValidator;
+    private final ClosetService closetService;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
         Member member = Member.builder()
@@ -35,6 +37,7 @@ public class MemberWriteService {
                 .build();
 
         memberRepository.save(member);
+        closetService.createClosetForMember(member);
         return new RegisterMemberSuccessDto(member.getId());
     }
 
