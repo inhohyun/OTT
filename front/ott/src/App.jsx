@@ -17,6 +17,7 @@ import Footer from './components/common/Footer';
 import UpdatePage from './pages/UserPage/UpdatePage';
 import SearchPage from './pages/Search/SearchPage';
 import WebRTCPage from './pages/WebRTC/WebRTCPage';
+import VideoChat from './pages/WebRTC/VideoChatPage';
 import AiPage from './pages/Ai/AiPage';
 import LookbookCreate from './pages/Create/LookbookCreate';
 import UserPage from './pages/UserPage/UserPage';
@@ -38,6 +39,7 @@ function App() {
               <Route path="/UpdatePage" element={<UpdatePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
+              <Route path="/video-chat/:username" element={<VideoChat />} />
               <Route path="/ai" element={<AiPage />} />
               <Route path="/lookbookcreate" element={<LookbookCreate />} />
             </Route>

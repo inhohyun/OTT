@@ -7,7 +7,7 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 
 const FeedFollow = () => {
-  const followers = ['이름1', '이름2', '이름3', '이름4', '이름6'];
+  const followers = ['이름1', '이름2', '이름3'];
 
   const allLookbooks = followers.reduce((acc, follower) => {
     acc[follower] = dummyLookbooks.filter(

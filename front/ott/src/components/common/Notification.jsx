@@ -41,22 +41,24 @@ const Notification = ({ show, onClose, notifications }) => {
           </p>
         </div>
         <div>
-          {notifications.slice(0, visibleNotifications).map((notification, index) => (
-            <div
-              key={index}
-              className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative"
-            >
-              <p className="text-base mb-4" style={{ fontSize: '14px' }}>
-                {notification.who}님이 {notification.what}
-              </p>
-              <p
-                className="text-xs text-stone-500 absolute right-2 bottom-2"
-                style={{ fontSize: '12px' }}
+          {notifications
+            .slice(0, visibleNotifications)
+            .map((notification, index) => (
+              <div
+                key={index}
+                className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative"
               >
-                {notification.when}
-              </p>
-            </div>
-          ))}
+                <p className="text-base mb-4" style={{ fontSize: '14px' }}>
+                  {notification.who}님이 {notification.what}
+                </p>
+                <p
+                  className="text-xs text-stone-500 absolute right-2 bottom-2"
+                  style={{ fontSize: '12px' }}
+                >
+                  {notification.when}
+                </p>
+              </div>
+            ))}
         </div>
         {visibleNotifications < notifications.length && (
           <p

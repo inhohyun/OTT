@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Recommend from '../../components/recommend/Recommend.jsx';
-import Feed from '../../components/feed/Feed';
 import MyLookbook from '../../components/mylookbook/MyLookbook';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import FeedFollow from '../../components/feed/FeedFollow.jsx';
@@ -61,9 +60,6 @@ const MainPage = () => {
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundAttachment: 'fixed', // Fix the background image position
-        backgroundSize: 'cover', // Ensure it covers the viewport
-        minHeight: '100vh', // Minimum height to cover the viewport
       }}
     >
       <NavBar

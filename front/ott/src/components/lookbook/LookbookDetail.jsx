@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import cancel from '../../assets/icons/blackdeleteicon.png';
 import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
+import hearticon from '../../assets/icons/hearticon.png';
+import fillhearticon from '../../assets/icons/fillhearticon.png'; // 새로 추가된 빨간색 하트 아이콘
 
 const LookbookDetail = ({ lookbook, onClose }) => {
   const [showSellComments, setShowSellComments] = useState(false);
+  const [liked, setLiked] = useState(false); // 하트 아이콘 클릭 상태 관리
+  const [followed, setFollowed] = useState(false); // 팔로우 상태 관리
 
   if (!lookbook) return null;
 
@@ -13,6 +17,14 @@ const LookbookDetail = ({ lookbook, onClose }) => {
     ? lookbook.itemsForSale
     : [];
   const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
+
+  const toggleLike = () => {
+    setLiked(!liked);
+  };
+
+  const toggleFollow = () => {
+    setFollowed(!followed);
+  };
 
   return (
     <div
@@ -53,10 +65,11 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             </p>
           </div>
           <button
-            className="bg-purple-300 text-white text-sm px-3 py-3 rounded-lg me-3"
+            className={`text-sm px-3 py-3 rounded-lg me-3 ${followed ? 'bg-transparent border-2 border-solid border-violet-300 text-black' : 'bg-violet-300 text-white'}`}
             style={{ fontFamily: 'dohyeon' }}
+            onClick={toggleFollow}
           >
-            팔로우
+            {followed ? '팔로잉' : '팔로우'}
           </button>
         </div>
         <div className="w-full border-solid border-t-2 border-slate-500 mt-4"></div>
@@ -95,22 +108,31 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             ))}
           </div>
         </div>
-        <div className="flex items-center space-x-4 mb-4">
-          <div className="flex items-center space-x-4">
-            <span>❤ {lookbook.likes}</span>
+        <div className="flex items-center space-x-1 mb-4">
+          <img
+            src={liked ? fillhearticon : hearticon}
+            className="w-4 h-4 cursor-pointer"
+            onClick={toggleLike}
+          />
+          <div className="flex items-center space-x-4 text-[13px]">
+            <span>{lookbook.likes + (liked ? 1 : 0)}</span>
             <span>Views {lookbook.views}</span>
           </div>
         </div>
         <div className="mb-4">
           <div className="flex items-center space-x-2 mb-3">
             <p
-              className={`text-lg cursor-pointer ${!showSellComments ? 'text-black font-bold' : 'text-slate-500'}`}
+              className={`text-lg cursor-pointer ${
+                !showSellComments ? 'text-black font-bold' : 'text-slate-500'
+              }`}
               onClick={() => setShowSellComments(false)}
             >
               댓글
             </p>
             <p
-              className={`text-lg cursor-pointer ${showSellComments ? 'text-black font-bold' : 'text-slate-500'}`}
+              className={`text-lg cursor-pointer ${
+                showSellComments ? 'text-black font-bold' : 'text-slate-500'
+              }`}
               onClick={() => setShowSellComments(true)}
             >
               판매용 댓글

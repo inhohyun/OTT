@@ -8,12 +8,28 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGrid = ({ clothes, onToggleLike }) => {
+const CustomClothesGrid = ({ clothes, onToggleLike }) => {
   const [visibleItems, setVisibleItems] = useState(12);
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
     clothes.map((item) => ({ id: item.id, isFront: true }))
   );
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    setVisibleImages(clothes.map((item) => ({ id: item.id, isFront: true })));
+  }, [clothes]);
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -35,18 +51,6 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
       containerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
 
   const handleToggleImage = (id) => {
     setVisibleImages((prev) =>
@@ -75,14 +79,14 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
           WebkitOverflowScrolling: 'touch',
           overflowX: 'auto',
           position: 'relative',
-          scrollbarWidth: 'none' /* Firefox */,
+          scrollbarWidth: 'none',
         }}
       >
         <div
-          className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1"
+          className="flex space-x-4"
           style={{
-            msOverflowStyle: 'none' /* Internet Explorer 10+ */,
-            scrollbarWidth: 'none' /* Firefox */,
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
           }}
         >
           {clothes.slice(0, visibleItems).map((item) => {
@@ -124,11 +128,11 @@ const ClothesGrid = ({ clothes, onToggleLike }) => {
       </div>
       <style>{`
         .w-full::-webkit-scrollbar {
-          display: none; /* Safari and Chrome */
+          display: none;
         }
       `}</style>
     </div>
   );
 };
 
-export default ClothesGrid;
+export default CustomClothesGrid;
