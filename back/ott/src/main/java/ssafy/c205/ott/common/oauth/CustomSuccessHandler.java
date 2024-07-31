@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.common.oauth.jwt.JWTUtil;
-import ssafy.c205.ott.common.oauth.repository.RefreshRepository;
 import ssafy.c205.ott.common.oauth.service.CookieService;
 import ssafy.c205.ott.common.oauth.service.RefreshService;
 
@@ -26,7 +25,6 @@ import ssafy.c205.ott.domain.account.entity.MemberRole;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
     private final RefreshService refreshService;
     private final CookieService cookieService;
 
@@ -55,8 +53,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(cookieService.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
-//        response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("https://i11c205.p.ssafy.io/");
+
     }
 
 }
