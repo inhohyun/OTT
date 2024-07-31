@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class SocialClientRegistration {
+    @Value("${base.url}")
+    private String baseURL;
     @Value("${oauth.naver.client.id}")
     private String naverClientId;
     @Value(("${oauth.naver.client.secret}"))
@@ -29,7 +31,7 @@ public class SocialClientRegistration {
         return ClientRegistration.withRegistrationId("naver")
                 .clientId(naverClientId)
                 .clientSecret(naverClientSecret)
-                .redirectUri("http://localhost:8081/login/oauth2/code/naver")
+                .redirectUri("https://"+baseURL+"/login/oauth2/code/naver")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .scope("name", "email")
                 .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
