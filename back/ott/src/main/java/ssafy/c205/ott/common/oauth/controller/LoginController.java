@@ -23,14 +23,16 @@ public class LoginController {
     }
 
     @GetMapping("/login/kakao")
-    public String kakaoLogin() {
-        log.info("kakaoLogin");
-        return "redirect:/oauth2/authorization/kakao";
+    public ResponseEntity<?> kakaoLogin() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/oauth2/authorization/kakao"));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping("/login/google")
-    public String googleLogin() {
-        log.info("googleLogin");
-        return "redirect:/oauth2/authorization/google";
+    public ResponseEntity<?> googleLogin() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/oauth2/authorization/google"));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 }
