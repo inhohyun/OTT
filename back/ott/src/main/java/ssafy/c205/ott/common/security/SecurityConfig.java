@@ -84,8 +84,7 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService))
                         .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
                         .successHandler(customSuccessHandler)
-                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*"))
-                        .defaultSuccessUrl("https://i11c205.p.ssafy.io/mainpage"));
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
 
         //oauth2
         log.debug("oauth 들어가기 후");
