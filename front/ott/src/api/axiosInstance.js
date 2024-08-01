@@ -3,16 +3,14 @@ import {
   getAccessToken,
   setAccessToken,
   removeAccessToken,
-  getRefreshToken,
-  removeRefreshToken,
-} from './tokenUtils';
-import { setCookie, removeCookie } from './cookieUtils';
-
-//TODO : React-query로 리펙토링 예정
+  getLocalRefreshToken,
+  removeLocalRefreshToken,
+} from '@/utils/localUtils';
+import { setCookie, removeCookie } from '@/utils/cookieUtils';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: 'https://api.example.com', // 서버의 URL로 변경
+  baseURL: process.env.REACT_APP_API_BASE_URL, // 서버의 URL로 변경
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -33,6 +31,7 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+//TODO : 에러 핸들링 추가 예정
 // 응답 인터셉터 설정
 axiosInstance.interceptors.response.use(
   (response) => response.data, // 정상 응답 중 data만 꺼내주기
@@ -41,7 +40,7 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const refreshToken = getRefreshToken();
+        const refreshToken = getLocalRefreshToken();
         setCookie('refreshToken', refreshToken); // 쿠키에 Refresh Token 설정
         const response = await axiosInstance.get('/refresh-token'); // Refresh Token 요청
         setAccessToken(response.data.accessToken); // 새로운 Access Token 저장
@@ -51,7 +50,7 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         console.error('토큰 갱신 실패:', err);
         removeAccessToken(); // 실패 시 토큰 제거
-        removeRefreshToken();
+        removeLocalRefreshToken();
         window.location.href = '/'; // 로그인 페이지로 리디렉션
       }
     }
