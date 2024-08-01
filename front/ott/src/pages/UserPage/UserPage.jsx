@@ -13,6 +13,7 @@ import rtcIcon from '@/assets/icons/webrtcicon.png';
 
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
+  const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태를 관리하는 상태 변수 추가
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다
   const tags = [
     '한여름의 도시남',
@@ -47,6 +48,11 @@ const UserPage = () => {
 
   const handleRtcIconClick = () => {}; //TODO : rtc 메일 전송 예정
 
+  // 팔로우 버튼 클릭 이벤트 핸들러 추가
+  const handleFollowButtonClick = () => {
+    setIsFollowing(!isFollowing); // 현재 팔로우 상태를 토글합니다
+  };
+
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon">
       <div
@@ -65,15 +71,18 @@ const UserPage = () => {
             {!isPublic && isMe && (
               <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
             )}
-            <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
+            <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mr-2">
               {username}
             </p>
+            {!isMe && (
+              <button
+                className="px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent"
+                onClick={handleFollowButtonClick} // 버튼 클릭 이벤트 핸들러 연결
+              >
+                {isFollowing ? '팔로잉' : '팔로우'}
+              </button>
+            )}
           </div>
-          {!isMe && (
-            <button className="mt-2 px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent">
-              팔로우
-            </button>
-          )}
         </div>
         <div className="w-full flex items-center justify-center mt-2">
           {!isMe ? (
