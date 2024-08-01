@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import leftarrow from '../../assets/icons/left_arrow_icon.png';
@@ -6,6 +6,7 @@ import rightarrow from '../../assets/icons/right_arrow_icon.png';
 import shirt1 from '../../assets/images/clothes/shirt1.jpg';
 import pants1 from '../../assets/images/clothes/pants1.jpg';
 import Select from 'react-select';
+import axios from 'axios';
 
 const clothesData = {
   상의: [
@@ -23,12 +24,12 @@ const clothesData = {
   ],
   하의: [
     {
-      id: 1,
+      id: 3,
       name: 'Jeans',
       image: pants1,
     },
     {
-      id: 2,
+      id: 4,
       name: 'Shorts',
       image:
         'https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg',
@@ -37,7 +38,7 @@ const clothesData = {
   // Add other categories as needed
 };
 
-const LookbookCreate = () => {
+const UpdateLookbook = ({ lookbook }) => {
   const [isPublic, setIsPublic] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [canvasItems, setCanvasItems] = useState([]);
@@ -51,6 +52,16 @@ const LookbookCreate = () => {
   const [showDeleteButton, setShowDeleteButton] = useState(true);
 
   const categoryRef = useRef(null);
+
+  useEffect(() => {
+    if (lookbook) {
+      setIsPublic(lookbook.publicStatus === 'Y');
+      setDescription(lookbook.content);
+      setTags(lookbook.tags || []);
+      // Assuming lookbook.clothes contains items with x, y coordinates
+      setCanvasItems(lookbook.clothes || []);
+    }
+  }, [lookbook]);
 
   const handleCategoryChange = (selectedOption) => {
     setSelectedCategory(selectedOption ? selectedOption.value : null);
@@ -165,11 +176,38 @@ const LookbookCreate = () => {
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');
       html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
-        const imageData = canvas.toDataURL('image/png');
-        console.log(imageData);
-      });
+        canvas.toBlob((imageBlob) => {
+          if (!imageBlob) {
+            console.error('Failed to convert canvas to blob.');
+            return;
+          }
 
-      setShowDeleteButton(true);
+          const selectedImages = canvasItems.map((item) => item.id);
+
+          const lookbookData = {
+            uid: 1, // Replace with actual user ID
+            content: description,
+            clothes: selectedImages,
+            tags: tags,
+            publicStatus: isPublic ? 'Y' : 'N',
+          };
+
+          const formData = new FormData();
+          formData.append('uid', 1);
+          formData.append('content', description);
+          formData.append('clothes', selectedImages);
+          formData.append('tags', tags);
+          formData.append('publicStatus', isPublic ? 'Y' : 'N');
+          formData.append('img', imageBlob, 'lookbookimage.png');
+
+          for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+          }
+
+          console.log(lookbookData);
+          console.log(imageBlob);
+        }, 'image/png');
+      });
     }, 100);
   };
 
@@ -260,7 +298,7 @@ const LookbookCreate = () => {
             onClick={handleSave}
             style={{ fontFamily: 'dohyeon' }}
           >
-            저장
+            수정
           </button>
         </div>
         <div className="border-2 border-dashed w-full h-72 mb-4">
@@ -413,4 +451,4 @@ const LookbookCreate = () => {
   );
 };
 
-export default LookbookCreate;
+export default UpdateLookbook;

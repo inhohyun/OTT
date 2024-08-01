@@ -2,14 +2,36 @@ import React, { useState } from 'react';
 import LookbookDetail from './LookbookDetail';
 import hearticon from '../../assets/icons/hearticon.png';
 import commenticon from '../../assets/icons/commenticon.png';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Lookbook = ({ data }) => {
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [selectedLookbook, setSelectedLookbook] = useState(null);
+  const nav = useNavigate();
 
   const handleShowDetail = () => {
-    setSelectedLookbook(data);
-    setIsDetailVisible(true);
+    // setSelectedLookbook(data);
+    // setIsDetailVisible(true);
+    axios
+      .get(`http://192.168.100.89:8080/api/lookbook/${data.id}`)
+      .then((response) => {
+        console.log(response.data);
+        setSelectedLookbook(response.data);
+        setIsDetailVisible(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+          console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+          console.error('Request data:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+      });
   };
 
   const handleCloseDetail = () => {
@@ -42,6 +64,11 @@ const Lookbook = ({ data }) => {
       return `${Math.floor(diffInYears)}년 전`;
     }
   };
+
+  const handleEditLookbook = () => {
+    setIsDetailVisible(false); // Close the modal
+    nav(`/update-lookbook/${selectedLookbook.id}`); // Navigate with ID in the URL
+  };
   return (
     <>
       <div
@@ -59,7 +86,7 @@ const Lookbook = ({ data }) => {
         <div className="px-3 py-1 mb-1">
           <img
             className="w-full h-20 object-cover"
-            src={data.thumbnail}
+            src={data.thumnail}
             alt={data.name}
           />
         </div>
@@ -89,6 +116,7 @@ const Lookbook = ({ data }) => {
         <LookbookDetail
           lookbook={selectedLookbook}
           onClose={handleCloseDetail}
+          onEdit={handleEditLookbook}
         />
       )}
     </>
