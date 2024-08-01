@@ -98,16 +98,15 @@ const UpdatePage = () => {
               alt="User Icon"
               src={profileImage}
             />
-            <label
-              htmlFor="profileImageInput"
-              className="absolute bottom-0 right-4 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer"
+            <div
+              className="absolute bottom-0 right-4 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ zIndex: 1 }}
             >
               <FontAwesomeIcon
                 icon={faCamera}
                 className="text-purple-600 text-xs"
               />
-            </label>
+            </div>
             <input
               type="file"
               id="profileImageInput"
