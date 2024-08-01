@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class SocialClientRegistration {
-    @Value("${base.url}")
+    @Value("${domain.url}")
     private String baseURL;
     @Value("${oauth.naver.client.id}")
     private String naverClientId;
