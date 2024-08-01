@@ -1,9 +1,13 @@
 import React, { useMemo } from 'react';
-import OpenViduVideoComponent from './OpenViduVideoComponent';
+import OpenViduVideoComponent from './OvVideo';
 
 const UserVideoComponent = ({ streamManager }) => {
-  const getNicknameTag = useMemo(() => {
-    return JSON.parse(streamManager.stream.connection.data).clientData;
+  // Memoize the nickname tag to avoid unnecessary recalculations
+  const nicknameTag = useMemo(() => {
+    if (streamManager) {
+      return JSON.parse(streamManager.stream.connection.data).clientData;
+    }
+    return '';
   }, [streamManager]);
 
   // Inline styles
@@ -11,39 +15,30 @@ const UserVideoComponent = ({ streamManager }) => {
     tagWrapper: {
       position: 'absolute',
       background: '#f8f8f8',
-      paddingLeft: '5px',
-      paddingRight: '5px',
+      padding: '5px',
       color: '#777777',
       fontWeight: 'bold',
       borderBottomRightRadius: '4px',
-    },
-    userHighlight: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      border: '3px solid neonGreen',
     },
     nameTag: {
       margin: 0,
     },
     streamComponentWrapper: {
-      marginRight: '20px',
+      position: 'relative',
+      marginBottom: '20px',
     },
-    streamComponent: {},
   };
 
   return (
     <div style={styles.streamComponentWrapper}>
-      {streamManager !== undefined ? (
-        <div style={styles.streamComponent}>
+      {streamManager && (
+        <>
           <div style={styles.tagWrapper}>
-            <div style={styles.nameTag}>{getNicknameTag}</div>
+            <p style={styles.nameTag}>{nicknameTag}</p>
           </div>
           <OpenViduVideoComponent streamManager={streamManager} />
-        </div>
-      ) : null}
+        </>
+      )}
     </div>
   );
 };

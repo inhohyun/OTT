@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import VideoChatModal from '../../components/webRTC/VideoChatModal';
+import VideoSpace from '../../components/webRTC/VideoSpace';
 import CustomClothesGrid from '../../components/webRTC/CustomClothesGrid';
 import CustomCategoryDropdown from '../../components/webRTC/CustomCategoryDropdown';
 import backgroundImage from '../../assets/images/background_image_main.png';
@@ -46,7 +46,7 @@ const VideoChatPage = () => {
       }}
     >
       <div className="flex-grow flex items-center justify-center h-1/3">
-        <VideoChatModal />
+        <VideoSpace />
       </div>
       <div className="flex-grow h-2/3">
         <div className="text-center my-2">

@@ -1,10 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 
 const OpenViduVideoComponent = ({ streamManager }) => {
-  const videoRef = useRef();
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    streamManager.addVideoElement(videoRef.current);
+    if (streamManager && videoRef.current) {
+      streamManager.addVideoElement(videoRef.current);
+    }
   }, [streamManager]);
 
   const videoStyles = {
@@ -15,7 +17,7 @@ const OpenViduVideoComponent = ({ streamManager }) => {
     display: 'inline-block',
   };
 
-  return <video style={videoStyles} autoPlay={true} ref={videoRef} />;
+  return <video style={videoStyles} autoPlay ref={videoRef} />;
 };
 
 export default OpenViduVideoComponent;
