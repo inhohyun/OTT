@@ -13,39 +13,39 @@ const LoginPage = () => {
 
   const onKakaoLoginClick = useCallback(() => {
     // navigate('./');
-    // window.location.href =
-    //   'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
+    window.location.href =
+      'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
     axios
       .get('https://i11c205.p.ssafy.io/api/login/kakao', {})
       .then((res) => {
-        alert(JSON.stringify(res.data));
+        // alert(JSON.stringify(res.data));
       })
       .catch((error) => alert(error));
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
     // navigate('/survey_start');
-    // window.location.href =
-    //   'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
+    window.location.href =
+      'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
 
-    axios
-      .get('https://i11c205.p.ssafy.io/api/login/naver', {})
-      .then((res) => {
-        alert(JSON.stringify(res.data));
-      })
-      .catch((error) => alert(error));
+    // axios
+    //   .get('https://i11c205.p.ssafy.io/api/login/naver', {})
+    //   .then((res) => {
+    //     // alert(JSON.stringify(res.data));
+    //   })
+    //   .catch((error) => alert(error));
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
     // navigate('./survey_start');
-    // window.location.href =
-    //   'https://i11c205.p.ssafy.io/oauth2/authorization/google';
-    axios
-      .get('https://i11c205.p.ssafy.io/api/login/google', {})
-      .then((res) => {
-        alert(JSON.stringify(res.data));
-      })
-      .catch((error) => alert(error));
+    window.location.href =
+      'https://i11c205.p.ssafy.io/oauth2/authorization/google';
+    // axios
+    //   .get('https://i11c205.p.ssafy.io/api/login/google', {})
+    //   .then((res) => {
+    //     // alert(JSON.stringify(res.data));
+    //   })
+    //   .catch((error) => alert(error));
   }, [navigate]);
 
   return (

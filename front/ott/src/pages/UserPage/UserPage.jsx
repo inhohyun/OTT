@@ -10,44 +10,39 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-import { getUserInfo } from '../../api/user/user';
+// import { getUserInfo } from '../../api/user/user';
 
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
+  const userId = 1; // 사용자의 ID를 여기에 설정합니다.
 
-  // 유저 정보를 가져오는 메서드 (주석 해제 및 사용)
-  /*
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const data = await getUserInfo(1);
-        setUserInfo(data);
+        // const data = await getUserInfo(userId);
+        const dummyData = {
+          username: '홍길동',
+          isMe: false,
+          isPublic: true,
+          tags: ['패션', '여행', '음악'],
+        };
+        setUserInfo(dummyData);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
 
     fetchUserInfo();
-  }, []);
+  }, [userId]);
+
   if (!userInfo) {
     return <div>Loading...</div>;
   }
-  // const { username, isMe, isPublic, tags } = userInfo;
-  */
 
-  const username = '닉네임';
-  const isMe = true; // 본인 여부
-  const isPublic = false; // 계정 공개 여부
-  const tags = [
-    '한여름의 도시남',
-    '댄디남',
-    '훈남',
-    '여자들이 좋아하는',
-    '소개팅',
-  ];
+  const { username, isMe, isPublic, tags } = userInfo;
 
   let renderComponent;
 
@@ -75,6 +70,10 @@ const UserPage = () => {
     setIsFollowing(!isFollowing);
   };
 
+  const handleSettingsClick = () => {
+    navigate(`/updatePage`, { state: { userId } });
+  };
+
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon">
       <div
@@ -91,7 +90,7 @@ const UserPage = () => {
         <div className="w-full flex flex-col items-center justify-center mt-6">
           <div className="flex items-center justify-center w-full relative">
             <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
-              {!isPublic && isMe && (
+              {isPublic && isMe && (
                 <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
               )}
               <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
@@ -102,7 +101,7 @@ const UserPage = () => {
                   src={settingIcon}
                   alt="수정"
                   className="w-6 h-6 ml-2 cursor-pointer"
-                  onClick={() => navigate('/UpdatePage')}
+                  onClick={handleSettingsClick}
                 />
               )}
             </div>
