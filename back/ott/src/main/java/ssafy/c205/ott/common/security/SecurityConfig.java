@@ -83,7 +83,8 @@ public class SecurityConfig {
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
-                        .successHandler(customSuccessHandler));
+                        .successHandler(customSuccessHandler)
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/oauth2/code/*")));
         //oauth2
         log.debug("oauth 들어가기 후");
         //경로별 인가 작업
