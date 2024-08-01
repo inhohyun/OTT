@@ -78,13 +78,13 @@ public class SecurityConfig {
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         log.debug("oauth 들어가기 전");
-        //oauth2
         http
                 .oauth2Login((oauth2) -> oauth2
-                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
+//                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
                         .successHandler(customSuccessHandler));
+        //oauth2
         log.debug("oauth 들어가기 후");
         //경로별 인가 작업
 //        http
