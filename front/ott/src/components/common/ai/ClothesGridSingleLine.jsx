@@ -43,7 +43,9 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   };
 
   const handleItemClick = (item) => {
-    setSelectedItemId(item.id);
+    setSelectedItemId((prevSelectedItemId) =>
+      prevSelectedItemId === item.id ? null : item.id
+    );
     onClothingClick(item);
   };
 
