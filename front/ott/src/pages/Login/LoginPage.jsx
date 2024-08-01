@@ -16,7 +16,7 @@ const LoginPage = () => {
     // window.location.href =
     //   'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
     axios
-      .get('https://i11c205.p.ssafy.io/login/kakao', {})
+      .get('https://i11c205.p.ssafy.io/api/login/kakao', {})
       .then((res) => {
         alert(JSON.stringify(res.data));
       })
@@ -29,7 +29,7 @@ const LoginPage = () => {
     //   'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
 
     axios
-      .get('https://i11c205.p.ssafy.io/login/naver', {})
+      .get('https://i11c205.p.ssafy.io/api/login/naver', {})
       .then((res) => {
         alert(JSON.stringify(res.data));
       })
@@ -41,7 +41,7 @@ const LoginPage = () => {
     // window.location.href =
     //   'https://i11c205.p.ssafy.io/oauth2/authorization/google';
     axios
-      .get('https://i11c205.p.ssafy.io/login/google', {})
+      .get('https://i11c205.p.ssafy.io/api/login/google', {})
       .then((res) => {
         alert(JSON.stringify(res.data));
       })

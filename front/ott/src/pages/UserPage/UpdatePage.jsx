@@ -3,9 +3,14 @@ import Modal from 'react-modal';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheckCircle,
+  faSearch,
+  faCamera,
+} from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
+
 const UpdatePage = () => {
   const navigate = useNavigate();
 
@@ -16,6 +21,7 @@ const UpdatePage = () => {
   const [bodyType, setBodyType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [profileImage, setProfileImage] = useState(mainIcon);
 
   const openModal = () => setIsModalOpen(true);
   const onClose = () => setIsModalOpen(false);
@@ -26,11 +32,9 @@ const UpdatePage = () => {
   };
 
   const handleCheckboxChange = () => {
-    // 체크박스 변경 후 처리
     setIsChecked(!isChecked);
   };
 
-  // 태그 추가 기능
   const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -62,18 +66,56 @@ const UpdatePage = () => {
     setTags(newTags);
   };
 
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    document.getElementById('profileImageInput').click();
+  };
+
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon mb-40">
       <div
         className="w-full h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="w-full flex justify-center mt-8">
-          <img
-            className="w-[70px] h-[70px] rounded-full"
-            alt="User Icon"
-            src={mainIcon}
-          />
+        <div className="w-full flex justify-center mt-8 relative">
+          <div
+            className="relative"
+            onClick={triggerFileInput}
+            style={{ cursor: 'pointer' }}
+          >
+            <img
+              className="w-[70px] h-[70px] rounded-full"
+              alt="User Icon"
+              src={profileImage}
+            />
+            <label
+              htmlFor="profileImageInput"
+              className="absolute bottom-0 right-4 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer"
+              style={{ zIndex: 1 }}
+            >
+              <FontAwesomeIcon
+                icon={faCamera}
+                className="text-purple-600 text-xs"
+              />
+            </label>
+            <input
+              type="file"
+              id="profileImageInput"
+              className="hidden"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+            />
+          </div>
         </div>
 
         <div className="flex mr-[40px] mt-[16px]">
@@ -190,7 +232,6 @@ const UpdatePage = () => {
               />
             </div>
 
-            {/* 태그 추가 */}
             <div className="space-y-6">
               <h4 className="text-2xl mb-5 text-gray-800 font-thin">
                 선호하는 스타일{' '}
@@ -253,7 +294,7 @@ const UpdatePage = () => {
           contentLabel="체형 선택"
           ariaHideApp={false}
           className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
-          overlayClassName="modal-overlay" // 오버레이에 클래스 추가
+          overlayClassName="modal-overlay"
         >
           <div id="modal-overlay" onClick={onClose}>
             <div className="relative bg-white p-8 rounded-lg shadow-md">
