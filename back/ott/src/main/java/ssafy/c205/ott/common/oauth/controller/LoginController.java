@@ -13,18 +13,18 @@ public class LoginController {
     @GetMapping("/login/naver")
     public String naverLogin() {
         log.info("naverLogin");
-        return "redirect:/oauth2/authorization/naver";
+        return "redirect:/api/oauth2/authorization/naver";
     }
 
     @GetMapping("/login/kakao")
     public String kakaoLogin() {
         log.info("kakaoLogin");
-        return "redirect:/oauth2/authorization/kakao";
+        return "redirect:/api/oauth2/authorization/kakao";
     }
 
     @GetMapping("/login/google")
     public String googleLogin() {
         log.info("googleLogin");
-        return "redirect:/oauth2/authorization/google";
+        return "redirect:/api/oauth2/authorization/google";
     }
 }
