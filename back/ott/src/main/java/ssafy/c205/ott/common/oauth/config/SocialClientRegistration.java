@@ -1,5 +1,6 @@
 package ssafy.c205.ott.common.oauth.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -8,7 +9,10 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class SocialClientRegistration {
+    @Value("${domain.url}")
+    private String baseURL;
     @Value("${oauth.naver.client.id}")
     private String naverClientId;
     @Value(("${oauth.naver.client.secret}"))
@@ -23,11 +27,11 @@ public class SocialClientRegistration {
     private String kakaoClientSecret;
 
     public ClientRegistration naverClientRegistration() {
-
+        log.info("naverClientRegistration");
         return ClientRegistration.withRegistrationId("naver")
                 .clientId(naverClientId)
                 .clientSecret(naverClientSecret)
-                .redirectUri("https://i11c205.p.ssafy.io/login/oauth2/code/naver")
+                .redirectUri("https://"+baseURL+"/login/oauth2/code/naver")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .scope("name", "email")
                 .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
