@@ -1,6 +1,7 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,7 @@ public class LookbookServiceImpl implements LookbookService {
     private final LookbookItemRepository lookbookItemRepository;
     private final AmazonS3Util amazonS3Util;
     private final LookbookImageRepository lookbookImageRepository;
+    private final CommentService commentService;
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file) {
@@ -238,9 +240,11 @@ public class LookbookServiceImpl implements LookbookService {
         Lookbook lookbook = null;
         if (ol.isPresent()) {
             lookbook = ol.get();
+            lookbookItemRepository.deleteAll(lookbookItemRepository.findByLookbook(lookbook));
             //태그 카운트 줄이기
             for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
                 Tag tag = lookbookTag.getTag();
+                lookbookTagRepository.deleteById(lookbookTag.getId());
                 if (tag.getCount() == 1) {
                     tagRepository.delete(tag);
                 } else {
@@ -250,14 +254,13 @@ public class LookbookServiceImpl implements LookbookService {
                         .count(tag.getCount() - 1)
                         .build());
                 }
-                lookbookItemRepository.deleteAll(lookbookItemRepository.findByLookbook(lookbook));
-//                lookbookTagRepository.deleteById(lookbookTag.getId());
             }
-            lookbookTagRepository.deleteAll(lookbook.getLookbookTags());
+//            lookbookTagRepository.deleteAll(lookbook.getLookbookTags());
             //룩북 삭제
             lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
+                .member(lookbook.getMember())
                 .activeStatus(ActiveStatus.INACTIVE)
                 .build());
             log.info("룩북 제거 성공");
@@ -279,6 +282,7 @@ public class LookbookServiceImpl implements LookbookService {
             //기존 태그 삭제
             for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
                 Tag tag = lookbookTag.getTag();
+                lookbookTagRepository.delete(lookbookTag);
                 if (tag.getCount() == 1) {
                     tagRepository.delete(tag);
                 } else {
@@ -287,7 +291,6 @@ public class LookbookServiceImpl implements LookbookService {
                         .count(tag.getCount() - 1)
                         .build());
                 }
-                lookbookTagRepository.delete(lookbookTag);
             }
 
             //신규 태그 등록
@@ -353,6 +356,9 @@ public class LookbookServiceImpl implements LookbookService {
             lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
+                .member(lookbook.getMember())
+                .hitCount(lookbook.getHitCount())
+                .activeStatus(lookbook.getActiveStatus())
                 .publicStatus(
                     lookbookUpdateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC
                         : PublicStatus.PRIVATE)
@@ -383,6 +389,11 @@ public class LookbookServiceImpl implements LookbookService {
             Long.valueOf(lookbookFavoriteDto.getLookbookId()));
         if (ol.isPresent()) {
             Lookbook lookbook = ol.get();
+            Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(
+                lookbook.getId(), member.getId());
+            if (favorite != null) {
+                return false;
+            }
             favoriteRepository.save(Favorite
                 .builder()
                 .member(member)
@@ -427,6 +438,8 @@ public class LookbookServiceImpl implements LookbookService {
                         .uid(lookbook.getMember().getId())
                         .createdAt(lookbook.getCreatedAt())
                         .imageURL(lookbookImage.getImageUrl())
+                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .build());
                 }
             }
@@ -448,6 +461,8 @@ public class LookbookServiceImpl implements LookbookService {
                         .uid(lookbook.getMember().getId())
                         .createdAt(lookbook.getCreatedAt())
                         .imageURL(lookbookImage.getImageUrl())
+                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .build());
                 }
             }
@@ -458,6 +473,7 @@ public class LookbookServiceImpl implements LookbookService {
     @Override
     public List<TagLookbookDto> findByTag(String[] tags) {
         HashMap<Long, Integer> map = new HashMap<>();
+        log.info("태그들 : {}", Arrays.toString(tags));
         for (String tag : tags) {
             Tag tagEntity = tagRepository.findByName(tag);
             //태그가 존재하지 않으면 다음 태그로 넘어감

@@ -37,13 +37,16 @@ public class LookbookController {
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     //Todo : 이미지 잘 저장되는지와 이미지를 선택 했는지 예외처리
     @PostMapping("/")
-    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto, @RequestParam(value = "img", required = false) MultipartFile file) {
+    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto, @RequestParam(value = "img") MultipartFile file) {
         log.info("Dto : {}", lookbookCreateDto.toString());
         log.info("File : {}", file.getOriginalFilename());
-        lookbookService.createLookbook(lookbookCreateDto, file);
-        log.info("Dto : {}", lookbookCreateDto.getUid());
-        log.info("File : {}", file.getOriginalFilename());
-        return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
+        if (!file.isEmpty()) {
+            lookbookService.createLookbook(lookbookCreateDto, file);
+            return new ResponseEntity<String>("룩북 저장을 완료하였습니다.", HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일을 찾지 못했습니다.");
+        }
+
     }
 
     //룩북 수정
@@ -143,7 +146,7 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "나의 공개된 룩북을 리스트로 반환"),
     })
     @GetMapping("/public")
-    public ResponseEntity<?> publicLookbook(@RequestParam String uid) {
+    public ResponseEntity<?> publicLookbook(@RequestParam("uid") String uid) {
         List<FindLookbookDto> publicLookbooks = lookbookService.findPublicLookbooks(uid);
         if (publicLookbooks == null) {
             log.error("{}의 공개된 룩북을 조회하지 못함", uid);
@@ -158,7 +161,7 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "나의 비공개된 룩북 조회"),
     })
     @GetMapping("/private")
-    public ResponseEntity<?> privateLookbook(@RequestParam String uid) {
+    public ResponseEntity<?> privateLookbook(@RequestParam("uid") String uid) {
         List<FindLookbookDto> privateLookbooks = lookbookService.findPrivateLookbooks(uid);
         if (privateLookbooks == null) {
             return new ResponseEntity<String>("비공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
@@ -182,7 +185,7 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "해당 태그의 룩북을 리스트로 반환"),
     })
     @GetMapping("/search")
-    public ResponseEntity<?> searchLookbook(@RequestBody LookbookSearchDto lookbookSearchDto) {
+    public ResponseEntity<?> searchLookbook(@ModelAttribute LookbookSearchDto lookbookSearchDto) {
         List<TagLookbookDto> findByTags = lookbookService.findByTag(lookbookSearchDto.getTags());
         if (findByTags == null) {
             return new ResponseEntity<String>("태그가 포함된 게시물을 찾지 못했습니다.", HttpStatus.NOT_FOUND);

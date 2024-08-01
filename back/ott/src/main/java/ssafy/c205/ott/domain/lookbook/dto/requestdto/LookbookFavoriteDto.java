@@ -10,4 +10,12 @@ import lombok.ToString;
 public class LookbookFavoriteDto {
     private String uid;
     private String lookbookId;
+
+    public LookbookFavoriteDto(String uid, String lookbookId) {
+        this.uid = uid;
+        this.lookbookId = lookbookId;
+    }
+
+    public LookbookFavoriteDto() {
+    }
 }
