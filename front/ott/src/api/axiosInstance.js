@@ -8,8 +8,6 @@ import {
 } from '@/utils/localUtils';
 import { setCookie, removeCookie } from '@/utils/cookieUtils';
 
-//TODO : React-query로 리펙토링 예정
-
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL, // 서버의 URL로 변경
@@ -33,7 +31,7 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-//TODO : 에러 핸들링 리펙토링 예정
+//TODO : 에러 핸들링 추가 예정
 // 응답 인터셉터 설정
 axiosInstance.interceptors.response.use(
   (response) => response.data, // 정상 응답 중 data만 꺼내주기
