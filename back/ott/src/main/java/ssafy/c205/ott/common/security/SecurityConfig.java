@@ -82,7 +82,7 @@ public class SecurityConfig {
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
-//                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
+                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
                         .successHandler(customSuccessHandler));
         //oauth2
         log.debug("oauth 들어가기 후");
