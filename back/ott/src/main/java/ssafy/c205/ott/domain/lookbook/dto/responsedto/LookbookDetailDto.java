@@ -24,4 +24,5 @@ public class LookbookDetailDto {
     private List<ClothesImageDto> salesClothes;
     private LocalDateTime createdAt;
     private String thumnail;
+    private int cntLike;
 }

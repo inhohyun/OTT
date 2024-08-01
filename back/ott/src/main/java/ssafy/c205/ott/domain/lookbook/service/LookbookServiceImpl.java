@@ -216,6 +216,10 @@ public class LookbookServiceImpl implements LookbookService {
             for (LookbookTag lookbookTag : lookbook.getLookbookTags()) {
                 tags.add(lookbookTag.getTag().getName());
             }
+
+            //좋아요 수
+            int cnt = favoriteRepository.findByLookbookId(Long.parseLong(lookbookId)).size();
+
             return LookbookDetailDto
                 .builder()
                 .content(saveLookbook.getContent())
@@ -226,6 +230,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .createdAt(saveLookbook.getCreatedAt())
                 .tags(tags)
                 .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
+                .cntLike(cnt)
                 .build();
         } else {
             log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
