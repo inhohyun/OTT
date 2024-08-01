@@ -87,10 +87,10 @@ public class SecurityConfig {
         //oauth2
         log.debug("oauth 들어가기 후");
         //경로별 인가 작업
-//        http
-//                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/login","/", "/reissue", "/oauth2/authorization/**").permitAll()
-//                        .anyRequest().authenticated());
+        http
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/login","/", "/reissue", "/oauth2/authorization/**", "**/**").permitAll()
+                        .anyRequest().authenticated());
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
