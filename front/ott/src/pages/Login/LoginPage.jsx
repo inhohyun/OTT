@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'; // Import framer-motion
 import mainIcon from '../../assets/icons/mini_main.logo.png';
-import FaceComponent from '../../components/login/3DFace'; // 3D 얼굴 컴포넌트 import
+// import FaceComponent from '../../components/login/3DFace'; // 3D 얼굴 컴포넌트 import
 import kakao from '../../assets/images/login/kakao_login.png';
 import naver from '../../assets/images/login/naver_login.png';
 import google from '../../assets/images/login/google_login.png';
@@ -12,13 +12,15 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const onKakaoLoginClick = useCallback(() => {
-    navigate('./');
+    // navigate('./');
+    window.location.href =
+      'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
-    navigate('/survey_start');
-    // window.location.href =
-    //   'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
+    // navigate('/survey_start');
+    window.location.href =
+      'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
 
     // axios
     //   .get('https://i11c205.p.ssafy.io/oauth2/authorization/naver', {
@@ -32,7 +34,9 @@ const LoginPage = () => {
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
-    navigate('./survey_start');
+    // navigate('./survey_start');
+    window.location.href =
+      'https://i11c205.p.ssafy.io/oauth2/authorization/google';
   }, [navigate]);
 
   return (

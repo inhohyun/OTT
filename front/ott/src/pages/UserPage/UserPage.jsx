@@ -10,6 +10,7 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
+
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다
@@ -22,7 +23,7 @@ const UserPage = () => {
   ];
 
   const username = '닉네임';
-  const isMe = true; // 본인 여부
+  const isMe = false; // 본인 여부
   const isPublic = false; // 계정 공개 여부
   let renderComponent;
 
@@ -39,10 +40,13 @@ const UserPage = () => {
     default:
       renderComponent = null;
   }
+
   const handleClosetIconClick = () => {
     navigate('/closet'); // closet 페이지로 이동
   };
+
   const handleRtcIconClick = () => {}; //TODO : rtc 메일 전송 예정
+
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon">
       <div
@@ -56,37 +60,44 @@ const UserPage = () => {
             src={mainIcon}
           />
         </div>
-        <div
-          className={`w-full flex items-center justify-center mt-6 ${!isMe ? 'ml-8' : ''}`}
-        >
-          {!isPublic && isMe && (
-            <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
+        <div className="w-full flex flex-col items-center justify-center mt-6">
+          <div className="flex items-center">
+            {!isPublic && isMe && (
+              <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
+            )}
+            <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
+              {username}
+            </p>
+          </div>
+          {!isMe && (
+            <button className="mt-2 px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent">
+              팔로우
+            </button>
           )}
-          <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
-            {username}
-          </p>
-          {isMe ? (
-            <img
-              src={settingIcon}
-              alt="수정"
-              className="w-6 h-6 ml-2 cursor-pointer"
-              onClick={() => navigate('/UpdatePage')}
-            />
-          ) : (
-            <div className="flex ml-2">
+        </div>
+        <div className="w-full flex items-center justify-center mt-2">
+          {!isMe ? (
+            <div className="flex">
               <img
                 src={closetIcon}
                 alt="Colset Icon"
-                className="w-6 h-6 cursor-pointer"
+                className="w-6 h-6 cursor-pointer mr-2"
                 onClick={handleClosetIconClick}
               />
               <img
                 src={rtcIcon}
                 alt="RTC Icon"
-                className="w-6 h-6 ml-2 cursor-pointer"
+                className="w-6 h-6 cursor-pointer"
                 onClick={handleRtcIconClick}
               />
             </div>
+          ) : (
+            <img
+              src={settingIcon}
+              alt="수정"
+              className="w-6 h-6 cursor-pointer"
+              onClick={() => navigate('/UpdatePage')}
+            />
           )}
         </div>
         <div
