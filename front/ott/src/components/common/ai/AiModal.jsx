@@ -238,6 +238,16 @@ const Modal = ({ isOpen, onClose }) => {
                 accept="image/*"
               />
             </div>
+            <h4 className="mt-4">생성할 사진 개수</h4>
+            <div className="mb-4 dropdown-wrapper">
+              <Select
+                options={imageOptions}
+                value={numImages}
+                onChange={handleNumImagesChange}
+                styles={customStyles}
+                className="flex-grow"
+              />
+            </div>
             <h4>저장된 옷</h4>
             <div className="mb-4 dropdown-wrapper">
               <Select
@@ -258,16 +268,6 @@ const Modal = ({ isOpen, onClose }) => {
               onToggleLike={handleToggleLike}
               onClothingClick={handleClothingClick}
             />
-            <h4 className="mt-4">생성할 사진 개수</h4>
-            <div className="mb-4 dropdown-wrapper">
-              <Select
-                options={imageOptions}
-                value={numImages}
-                onChange={handleNumImagesChange}
-                styles={customStyles}
-                className="flex-grow"
-              />
-            </div>
 
             <div className="mt-4">
               <button className="try-on-button" onClick={handlePutOn}>
