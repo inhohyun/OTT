@@ -7,36 +7,45 @@ import kakao from '../../assets/images/login/kakao_login.png';
 import naver from '../../assets/images/login/naver_login.png';
 import google from '../../assets/images/login/google_login.png';
 import backgroundImage from '../../assets/images/background_image_survey.png';
-
+import axios from 'axios';
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const onKakaoLoginClick = useCallback(() => {
     // navigate('./');
-    window.location.href =
-      'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
+    // window.location.href =
+    //   'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
+    axios
+      .get('https://i11c205.p.ssafy.io/login/kakao', {})
+      .then((res) => {
+        alert(JSON.stringify(res.data));
+      })
+      .catch((error) => alert(error));
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
     // navigate('/survey_start');
-    window.location.href =
-      'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
+    // window.location.href =
+    //   'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
 
-    // axios
-    //   .get('https://i11c205.p.ssafy.io/oauth2/authorization/naver', {
-    //     withCredentials: true,
-    //   })
-    //   .then((res) => {
-    //     alert(JSON.stringify(res.data));
-    //   })
-    //   .catch((error) => alert(error));
-    //여기에 추가
+    axios
+      .get('https://i11c205.p.ssafy.io/login/naver', {})
+      .then((res) => {
+        alert(JSON.stringify(res.data));
+      })
+      .catch((error) => alert(error));
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
     // navigate('./survey_start');
-    window.location.href =
-      'https://i11c205.p.ssafy.io/oauth2/authorization/google';
+    // window.location.href =
+    //   'https://i11c205.p.ssafy.io/oauth2/authorization/google';
+    axios
+      .get('https://i11c205.p.ssafy.io/login/google', {})
+      .then((res) => {
+        alert(JSON.stringify(res.data));
+      })
+      .catch((error) => alert(error));
   }, [navigate]);
 
   return (
