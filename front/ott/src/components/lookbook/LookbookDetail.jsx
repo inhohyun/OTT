@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import cancel from '../../assets/icons/blackdeleteicon.png';
 import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
@@ -6,6 +6,7 @@ import DetailViewer from './DetailViewer';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import lookicon from '../../assets/icons/lookicon.png';
+import axios from 'axios';
 
 const LookbookDetail = ({ lookbook, onClose, onEdit }) => {
   const [showSellComments, setShowSellComments] = useState(false);
@@ -13,8 +14,23 @@ const LookbookDetail = ({ lookbook, onClose, onEdit }) => {
   const [followed, setFollowed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
+  // const [comments, setComments] = useState([]);
+  const [commentStatus, setCommentStatus] = useState('');
 
   if (!lookbook) return null;
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`/api/comments/${lookbook.id}`)
+  //     .then((response) => {
+  //       console.log(response);
+  //       setComments(response.data);
+  // setCommentStatus(response.data.status); // API 응답에 status 포함
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [lookbook]);
 
   const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
   const salesClothes = Array.isArray(lookbook.salesClothes)
@@ -196,6 +212,11 @@ const LookbookDetail = ({ lookbook, onClose, onEdit }) => {
             ) : (
               <Comment comments={comments} />
             )}
+            {/* {commentStatus === 'DM' ? (
+              <SellComment comments={comments} />
+            ) : (
+              <Comment comments={comments} />
+            )} */}
           </div>
         </div>
       </div>
