@@ -54,8 +54,8 @@ public class SecurityConfig {
                         configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
                         configuration.setMaxAge(3600L);
 
-                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정해라
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정해라
+//                        configuration.setExposedHeaders(Collections.singletonList());
 
                         return configuration;
                     }
