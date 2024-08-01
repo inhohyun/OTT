@@ -11,8 +11,8 @@ const Lookbook = ({ data }) => {
   const nav = useNavigate();
 
   const handleShowDetail = () => {
-    // setSelectedLookbook(data);
-    // setIsDetailVisible(true);
+    setSelectedLookbook(data);
+    setIsDetailVisible(true);
     axios
       .get(`http://192.168.100.89:8080/api/lookbook/${data.id}`)
       .then((response) => {
@@ -66,8 +66,11 @@ const Lookbook = ({ data }) => {
   };
 
   const handleEditLookbook = () => {
+    console.log(selectedLookbook);
     setIsDetailVisible(false); // Close the modal
-    nav(`/update-lookbook/${selectedLookbook.id}`); // Navigate with ID in the URL
+    nav(`/update-lookbook/${selectedLookbook.id}`, {
+      state: { lookbook: selectedLookbook },
+    }); // Navigate with ID in the URL
   };
   return (
     <>

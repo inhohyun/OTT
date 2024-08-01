@@ -27,7 +27,7 @@ const LookbookDetail = ({ lookbook, onClose, onEdit }) => {
     ...lookbook.images.map((item) => item.imagePath.path),
   ];
 
-  const currentUser = 'Kimssafy';
+  const currentUser = 'John';
 
   const toggleLike = () => setLiked(!liked);
   const toggleFollow = () => setFollowed(!followed);
@@ -110,7 +110,7 @@ const LookbookDetail = ({ lookbook, onClose, onEdit }) => {
               style={{ fontFamily: 'dohyeon' }}
               onClick={onEdit}
             >
-              룩북 삭제
+              룩북 수정
             </button>
           )}
         </div>
