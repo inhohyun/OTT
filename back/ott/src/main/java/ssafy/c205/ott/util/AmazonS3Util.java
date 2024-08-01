@@ -79,6 +79,7 @@ public class AmazonS3Util {
 
     // 단일 파일 저장
     public String saveFile(MultipartFile file) {
+        log.info("Saving file : " + file.getOriginalFilename());
         String randomFilename = generateRandomFilename(file);
 
         log.info("File upload started: " + randomFilename);

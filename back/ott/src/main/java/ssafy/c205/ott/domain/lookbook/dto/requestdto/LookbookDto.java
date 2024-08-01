@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ssafy.c205.ott.common.entity.PublicStatus;
 
 @Getter
 @Setter
@@ -27,6 +26,6 @@ public class LookbookDto {
         this.publicStatus = publicStatus;
     }
 
-    public LookbookDto(String uid) {
+    public LookbookDto() {
     }
 }

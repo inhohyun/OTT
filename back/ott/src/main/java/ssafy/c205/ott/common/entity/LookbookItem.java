@@ -30,4 +30,8 @@ public class LookbookItem {
         this.lookbook = lookbook;
         this.item = item;
     }
+
+    public LookbookItem() {
+
+    }
 }

@@ -56,6 +56,7 @@ public class LookbookServiceImpl implements LookbookService {
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file) {
+        log.info("createLookbook 들어옴");
         //태그 유무 확인 및 태그 추가
         List<LookbookTag> lookbookTags = new ArrayList<>();
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
@@ -70,11 +71,10 @@ public class LookbookServiceImpl implements LookbookService {
 
         Lookbook saveLookbook = lookbookRepository.save(Lookbook
             .builder()
-            .content(lookbookCreateDto.getContent())
             .member(member)
-            .publicStatus(lookbookCreateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC : PublicStatus.PRIVATE)
             .build());
 
+        log.info("savelookbook : {}", saveLookbook.toString());
         for (String tag : lookbookCreateDto.getTags()) {
             Tag tagEntity = tagRepository.findByName(tag);
             if (tagEntity == null) {
@@ -91,15 +91,19 @@ public class LookbookServiceImpl implements LookbookService {
                     .count(tagEntity.getCount() + 1)
                     .build());
             }
-            lookbookTags.add(LookbookTag
+            LookbookTag lookbookTag = LookbookTag
                 .builder()
                 .lookbook(saveLookbook)
                 .tag(tagRepository.findByName(tag))
-                .build());
+                .build();
+            lookbookTags.add(lookbookTag);
+            lookbookTagRepository.save(lookbookTag);
         }
+        log.info("s3전");
         //옷 사진 추가하기
         //옷 정보 넣기
         String s3URL = amazonS3Util.saveFile(file);
+        log.info("s3URL : {}", s3URL);
 
         List<LookbookItem> lookbookItems = new ArrayList<>();
         for (String clothId : lookbookCreateDto.getClothes()) {
@@ -128,7 +132,13 @@ public class LookbookServiceImpl implements LookbookService {
             .builder()
             .id(saveLookbook.getId())
             .lookbookItemList(lookbookItems)
+            .content(lookbookCreateDto.getContent())
+            .member(member)
+            .publicStatus(lookbookCreateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC
+                : PublicStatus.PRIVATE)
             .lookbookImages(lookbookImages)
+            .activeStatus(ActiveStatus.ACTIVE)
+            .hitCount(0L)
             .lookbookTags(lookbookTags)
             .build());
 
@@ -151,10 +161,19 @@ public class LookbookServiceImpl implements LookbookService {
             Lookbook saveLookbook = lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
+                .member(lookbook.getMember())
                 .hitCount(lookbook.getHitCount() + 1)
+                .content(lookbook.getContent())
+                .publicStatus(lookbook.getPublicStatus())
+                .lookbookItemList(lookbook.getLookbookItemList())
+                .activeStatus(lookbook.getActiveStatus())
+                .lookbookImages(lookbook.getLookbookImages())
+                .lookbookTags(lookbook.getLookbookTags())
+                .comments(lookbook.getComments())
                 .build());
 
             // 옷 사진들을 넣어줌
+            log.info("lookbook : {}", lookbook.toString());
             List<ClothesImageDto> clothesImagePathDtos = new ArrayList<>();
             List<LookbookItem> lookbookItemList = lookbook.getLookbookItemList();
             List<ClothesImageDto> salesClothesDtos = new ArrayList<>();
@@ -334,7 +353,9 @@ public class LookbookServiceImpl implements LookbookService {
             lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
-                .publicStatus(lookbookUpdateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC : PublicStatus.PRIVATE)
+                .publicStatus(
+                    lookbookUpdateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC
+                        : PublicStatus.PRIVATE)
                 .content(lookbookUpdateDto.getContent())
                 .lookbookTags(lookbookTags)
                 .lookbookItemList(lookbookItems)
