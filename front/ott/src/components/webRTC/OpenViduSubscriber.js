@@ -1,15 +1,15 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const OpenViduSubscriber = ({ streamManager }) => {
-  const videoRef = useRef(null);
+  const videoRef = useRef();
 
   useEffect(() => {
-    if (streamManager && videoRef.current) {
+    if (streamManager) {
       streamManager.addVideoElement(videoRef.current);
     }
   }, [streamManager]);
 
-  return <div ref={videoRef} className="video-container"></div>;
+  return <video ref={videoRef} autoPlay={true} />;
 };
 
 export default OpenViduSubscriber;
