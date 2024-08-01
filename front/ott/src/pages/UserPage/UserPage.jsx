@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate를 import 합니다
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
@@ -10,11 +10,37 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
+import { getUserInfo } from '../../api/user/user';
 
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
-  const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태를 관리하는 상태 변수 추가
-  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate();
+
+  // 유저 정보를 가져오는 메서드 (주석 해제 및 사용)
+  /*
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getUserInfo(1);
+        setUserInfo(data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+  if (!userInfo) {
+    return <div>Loading...</div>;
+  }
+  // const { username, isMe, isPublic, tags } = userInfo;
+  */
+
+  const username = '닉네임';
+  const isMe = true; // 본인 여부
+  const isPublic = false; // 계정 공개 여부
   const tags = [
     '한여름의 도시남',
     '댄디남',
@@ -23,9 +49,6 @@ const UserPage = () => {
     '소개팅',
   ];
 
-  const username = '닉네임';
-  const isMe = false; // 본인 여부
-  const isPublic = false; // 계정 공개 여부
   let renderComponent;
 
   switch (activeComponent) {
@@ -43,14 +66,13 @@ const UserPage = () => {
   }
 
   const handleClosetIconClick = () => {
-    navigate('/closet'); // closet 페이지로 이동
+    navigate('/closet');
   };
 
-  const handleRtcIconClick = () => {}; //TODO : rtc 메일 전송 예정
+  const handleRtcIconClick = () => {};
 
-  // 팔로우 버튼 클릭 이벤트 핸들러 추가
   const handleFollowButtonClick = () => {
-    setIsFollowing(!isFollowing); // 현재 팔로우 상태를 토글합니다
+    setIsFollowing(!isFollowing);
   };
 
   return (
@@ -67,50 +89,59 @@ const UserPage = () => {
           />
         </div>
         <div className="w-full flex flex-col items-center justify-center mt-6">
-          <div className="flex items-center">
-            {!isPublic && isMe && (
-              <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
-            )}
-            <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mr-2">
-              {username}
-            </p>
-            {!isMe && (
-              <button
-                className="px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent"
-                onClick={handleFollowButtonClick} // 버튼 클릭 이벤트 핸들러 연결
-              >
-                {isFollowing ? '팔로잉' : '팔로우'}
-              </button>
-            )}
+          <div className="flex items-center justify-center w-full relative">
+            <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
+              {!isPublic && isMe && (
+                <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
+              )}
+              <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
+                {username}
+              </p>
+              {isMe && (
+                <img
+                  src={settingIcon}
+                  alt="수정"
+                  className="w-6 h-6 ml-2 cursor-pointer"
+                  onClick={() => navigate('/UpdatePage')}
+                />
+              )}
+            </div>
           </div>
         </div>
         <div className="w-full flex items-center justify-center mt-2">
-          {!isMe ? (
-            <div className="flex">
-              <img
-                src={closetIcon}
-                alt="Colset Icon"
-                className="w-6 h-6 cursor-pointer mr-2"
-                onClick={handleClosetIconClick}
-              />
-              <img
-                src={rtcIcon}
-                alt="RTC Icon"
-                className="w-6 h-6 cursor-pointer"
-                onClick={handleRtcIconClick}
-              />
+          <div className="w-[80%] flex justify-between border border-black p-2">
+            {!isMe && (
+              <div className="flex justify-center items-center w-[40%]">
+                <button
+                  className="px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent"
+                  onClick={handleFollowButtonClick}
+                >
+                  {isFollowing ? '팔로잉' : '팔로우'}
+                </button>
+              </div>
+            )}
+            <div className="flex justify-center items-center w-[40%]">
+              {!isMe ? (
+                <div className="flex">
+                  <img
+                    src={closetIcon}
+                    alt="Colset Icon"
+                    className="w-6 h-6 cursor-pointer mr-2"
+                    onClick={handleClosetIconClick}
+                  />
+                  <img
+                    src={rtcIcon}
+                    alt="RTC Icon"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={handleRtcIconClick}
+                  />
+                </div>
+              ) : null}
             </div>
-          ) : (
-            <img
-              src={settingIcon}
-              alt="수정"
-              className="w-6 h-6 cursor-pointer"
-              onClick={() => navigate('/UpdatePage')}
-            />
-          )}
+          </div>
         </div>
         <div
-          className={`flex justify-center mt-5 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}
+          className={`flex justify-center mt-1 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}
         >
           {tags.map((tag) => (
             <span
