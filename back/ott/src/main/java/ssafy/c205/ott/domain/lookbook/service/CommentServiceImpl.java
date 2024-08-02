@@ -105,7 +105,11 @@ public class CommentServiceImpl implements CommentService {
         children.add(replyComment);
         commentRepository.save(Comment
             .builder()
+            .lookbook(lookbook)
             .id(parent.getId())
+            .member(member)
+            .message(parent.getMessage())
+            .commentStatus(parent.getCommentStatus())
             .children(children)
             .build());
 
@@ -172,6 +176,11 @@ public class CommentServiceImpl implements CommentService {
             .builder()
             .id(comment.getId())
             .message(commentMessageDto.getMsg())
+            .commentStatus(comment.getCommentStatus())
+            .children(comment.getChildren())
+            .member(comment.getMember())
+            .parent(comment.getParent())
+            .lookbook(comment.getLookbook())
             .build());
         //Todo : 수정 실패 예외처리
     }

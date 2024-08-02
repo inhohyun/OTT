@@ -4,11 +4,21 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
@@ -16,10 +26,7 @@ import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookSearchDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
-import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,7 +44,8 @@ public class LookbookController {
     //룩북 생성 -> 이미지가 잘 저장되나? 이미지를 선택 안했는지?
     //Todo : 이미지 잘 저장되는지와 이미지를 선택 했는지 예외처리
     @PostMapping("/")
-    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto, @RequestParam(value = "img") MultipartFile file) {
+    public ResponseEntity<?> createLookbook(@ModelAttribute LookbookDto lookbookCreateDto,
+        @RequestParam(value = "img") MultipartFile file) {
         log.info("Dto : {}", lookbookCreateDto.toString());
         log.info("File : {}", file.getOriginalFilename());
         if (!file.isEmpty()) {
@@ -55,7 +63,9 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "룩북 정보 수정을 완료했습니다."),
     })
     @PutMapping("/{lookbook_id}")
-    public ResponseEntity<?> updateLookbook(@PathVariable("lookbook_id") String lookbookId, @ModelAttribute LookbookDto lookbookDto, @RequestParam(value = "img") MultipartFile file) {
+    public ResponseEntity<?> updateLookbook(@PathVariable("lookbook_id") String lookbookId,
+        @ModelAttribute LookbookDto lookbookDto, @RequestParam(value = "img") MultipartFile file) {
+        log.info("Lookbook ID : {}", lookbookId);
         boolean isUpdateSuccess = lookbookService.updateLookbook(lookbookId, lookbookDto, file);
         if (isUpdateSuccess) {
             return new ResponseEntity<String>("룩북 정보 수정을 완료했습니다.", HttpStatus.OK);
@@ -102,7 +112,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "룩북 좋아요를 성공했습니다."),
     })
     @PostMapping("/{lookbook_id}/like")
-    public ResponseEntity<?> likeLookbook(@PathVariable("lookbook_id") String lookbookId, @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
+    public ResponseEntity<?> likeLookbook(@PathVariable("lookbook_id") String lookbookId,
+        @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
         boolean isFavoriteSuccess = lookbookService.likeLookbook(lookbookFavoriteDto);
         if (isFavoriteSuccess) {
             return new ResponseEntity<String>("룩북 좋아요를 성공했습니다.", HttpStatus.OK);
@@ -116,7 +127,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "룩북 좋아요 삭제를 성공했습니다."),
     })
     @PostMapping("/{lookbook_id}/dislike")
-    public ResponseEntity<?> dislikeLookbook(@PathVariable("lookbook_id") String lookbookId, @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
+    public ResponseEntity<?> dislikeLookbook(@PathVariable("lookbook_id") String lookbookId,
+        @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
         boolean isFavoriteSuccess = lookbookService.dislikeLookbook(lookbookFavoriteDto);
         if (isFavoriteSuccess) {
             return new ResponseEntity<String>("룩북 좋아요 삭제를 성공했습니다.", HttpStatus.OK);
