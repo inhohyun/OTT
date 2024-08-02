@@ -113,4 +113,11 @@ public class MemberController {
         return ApiResponse.success(memberReadService.followingsSearch(followRequestDto));
     }
 
+    @GetMapping("/follow/{memberId}/followers")
+    public ApiResponse<List<FollowsResponseDto>> getFollowers(@PathVariable Long memberId) {
+        FollowRequestDto followRequestDto = FollowRequestDto.builder()
+                .targetMemberId(memberId)
+                .build();
+        return ApiResponse.success(memberReadService.followersSearch(followRequestDto));
+    }
 }
