@@ -19,9 +19,11 @@ import SearchPage from './pages/Search/SearchPage';
 import WebRTCPage from './pages/WebRTC/WebRTCPage';
 import VideoChat from './pages/WebRTC/VideoChatPage';
 import AiPage from './pages/Ai/AiPage';
-import LookbookCreate from './pages/Create/LookbookCreate';
+import LookbookCreate from './pages/Create/LookbookCreatePage';
 import UserPage from './pages/UserPage/UserPage';
 import OAuthCallback from './pages/OAuth/OAuthCallback';
+import UpdateLookbookPage from './pages/Create/UpdateLookbookPage';
+
 function App() {
   return (
     <>
@@ -43,6 +45,10 @@ function App() {
               <Route path="/video-chat/:username" element={<VideoChat />} />
               <Route path="/ai" element={<AiPage />} />
               <Route path="/lookbookcreate" element={<LookbookCreate />} />
+              <Route
+                path="/update-lookbook/:id"
+                element={<UpdateLookbookPage />}
+              />
             </Route>
           </Routes>
         </Router>

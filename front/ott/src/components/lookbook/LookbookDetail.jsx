@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import cancel from '../../assets/icons/blackdeleteicon.png';
 import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
@@ -6,28 +6,47 @@ import DetailViewer from './DetailViewer';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import lookicon from '../../assets/icons/lookicon.png';
+import axios from 'axios';
 
-const LookbookDetail = ({ lookbook, onClose }) => {
+const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
   const [showSellComments, setShowSellComments] = useState(false);
   const [liked, setLiked] = useState(false);
   const [followed, setFollowed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
+  const [comments, setComments] = useState([]);
+  const [commentStatus, setCommentStatus] = useState('');
 
   if (!lookbook) return null;
+
+  useEffect(() => {
+    const status = showSellComments ? 'DM' : 'comment';
+    axios
+      .get(`http://192.168.100.89:8080/api/comment/${lookbookId}`, {
+        params: { status: status },
+      })
+      .then((response) => {
+        console.log(response);
+        setComments(response.data);
+        setCommentStatus(response.data.status); // API 응답에 status 포함
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [lookbook]);
 
   const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
   const salesClothes = Array.isArray(lookbook.salesClothes)
     ? lookbook.salesClothes
     : [];
-  const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
+  // const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
 
   const allImages = [
-    lookbook.thumbnail,
+    lookbook.thumnail,
     ...lookbook.images.map((item) => item.imagePath.path),
   ];
 
-  const currentUser = 'John';
+  const currentUser = 'kimssafy';
 
   const toggleLike = () => setLiked(!liked);
   const toggleFollow = () => setFollowed(!followed);
@@ -108,8 +127,9 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             <button
               className="text-sm px-3 py-3 rounded-lg me-3 bg-violet-300 text-white"
               style={{ fontFamily: 'dohyeon' }}
+              onClick={onEdit}
             >
-              룩북 삭제
+              룩북 수정
             </button>
           )}
         </div>
@@ -134,7 +154,7 @@ const LookbookDetail = ({ lookbook, onClose }) => {
                 className="bg-black text-white text-xs rounded-md px-2 py-1 inline-block"
                 style={{ fontSize: '10px', margin: '2px' }}
               >
-                {tag}
+                # {tag}
               </span>
             ))}
           </div>
@@ -162,8 +182,8 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             onClick={toggleLike}
           />
           <div className="flex items-center space-x-4 text-[13px]">
-            {/* <span>{lookbook.likes + (liked ? 1 : 0)}</span> */}
-            <span>좋아요 수</span>
+            <span>{lookbook.cntLike}</span>
+            {/* <span>좋아요 수</span> */}
             <img className="w-[20px] h-[20px]" src={lookicon} alt="" />
           </div>
           <span className="text-[13px]">{lookbook.viewCount}</span>
@@ -195,6 +215,11 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             ) : (
               <Comment comments={comments} />
             )}
+            {/* {commentStatus === 'DM' ? (
+              <SellComment comments={comments} />
+            ) : (
+              <Comment comments={comments} />
+            )} */}
           </div>
         </div>
       </div>
