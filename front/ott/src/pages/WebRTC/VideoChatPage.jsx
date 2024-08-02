@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import VideoSpace from '../../components/webRTC/VideoSpace';
+import VideoSpace from '../../components/webRTC/video/VideoSpace';
 import CustomClothesGrid from '../../components/webRTC/CustomClothesGrid';
 import CustomCategoryDropdown from '../../components/webRTC/CustomCategoryDropdown';
 import backgroundImage from '../../assets/images/background_image_main.png';
