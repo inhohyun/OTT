@@ -5,7 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.domain.category.dto.CategoryDto;
-import ssafy.c205.ott.domain.category.entity.Category;
+import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
+import ssafy.c205.ott.domain.category.dto.RegisterCategorySuccessDto;
 import ssafy.c205.ott.domain.category.service.CategoryService;
 
 @Controller
@@ -15,8 +16,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/{closetId}")
-    public ApiResponse<Void> registerCategory(@PathVariable long closetId, @RequestBody CategoryDto categoryDto) {
-        categoryService.registerCategory(closetId, categoryDto.getName());
+    public ApiResponse<RegisterCategorySuccessDto> registerCategory(@PathVariable long closetId, @RequestBody CategoryDto categoryDto) {
+        return ApiResponse.success(categoryService.registerCategory(CategoryRequestDto.builder().id(closetId).name(categoryDto.getName()).build()));
     }
 
 //    @PutMapping("/{closetId}/")
