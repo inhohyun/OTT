@@ -39,7 +39,7 @@ const clothesData = {
   // Add other categories as needed
 };
 
-const UpdateLookbook = ({ lookbook }) => {
+const UpdateLookbook = ({ lookbook, lookbookid }) => {
   const [isPublic, setIsPublic] = useState(lookbook.publicStatus === 'Y');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [canvasItems, setCanvasItems] = useState(lookbook.images || []);
@@ -55,6 +55,7 @@ const UpdateLookbook = ({ lookbook }) => {
   const categoryRef = useRef(null);
 
   useEffect(() => {
+    console.log('룩북아이디', lookbookid);
     if (lookbook) {
       setIsPublic(lookbook.publicStatus === 'Y');
       setDescription(lookbook.content);
@@ -180,48 +181,52 @@ const UpdateLookbook = ({ lookbook }) => {
   const handleSave = () => {
     setShowDeleteButton(false);
 
-    // setTimeout(() => {
-    //   const canvasArea = document.getElementById('canvasArea');
-    //   html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
-    //     canvas.toBlob((imageBlob) => {
-    //       if (!imageBlob) {
-    //         console.error('Failed to convert canvas to blob.');
-    //         return;
-    //       }
+    setTimeout(() => {
+      const canvasArea = document.getElementById('canvasArea');
+      html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
+        canvas.toBlob((imageBlob) => {
+          if (!imageBlob) {
+            console.error('Failed to convert canvas to blob.');
+            return;
+          }
 
-    //       const selectedImages = canvasItems.map((item) => item.id);
+          const selectedImages = canvasItems.map((item) => item.id);
 
-    //       const lookbookData = {
-    //         id: lookbook.id,
-    //         content: description,
-    //         clothes: selectedImages,
-    //         tags: tags,
-    //         publicStatus: isPublic ? 'Y' : 'N',
-    //       };
+          const lookbookData = {
+            id: lookbook.id,
+            content: description,
+            clothes: selectedImages,
+            tags: tags,
+            publicStatus: isPublic ? 'Y' : 'N',
+          };
 
-    //       const formData = new FormData();
-    //       formData.append('id', lookbook.id);
-    //       formData.append('content', description);
-    //       formData.append('clothes', JSON.stringify(selectedImages));
-    //       formData.append('tags', JSON.stringify(tags));
-    //       formData.append('publicStatus', isPublic ? 'Y' : 'N');
-    //       formData.append('img', imageBlob, 'lookbookimage.png');
+          const formData = new FormData();
+          formData.append('uid', 1);
+          formData.append('content', description);
+          formData.append('clothes', selectedImages);
+          formData.append('tags', tags);
+          formData.append('publicStatus', isPublic ? 'Y' : 'N');
+          formData.append('img', imageBlob, 'lookbookimage.png');
 
-    //       axios
-    //         .put(
-    //           `http://192.168.100.89:8080/api/lookbook/${lookbook.id}`,
-    //           formData
-    //         )
-    //         .then((response) => {
-    //           console.log('Lookbook updated:', response.data);
-    //           // Handle post-update actions, such as navigating away or giving feedback
-    //         })
-    //         .catch((error) => {
-    //           console.error('Error updating Lookbook:', error);
-    //         });
-    //     }, 'image/png');
-    //   });
-    // }, 100);
+          for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+          }
+
+          axios
+            .put(
+              `http://192.168.100.89:8080/api/lookbook/${lookbookid.id}`,
+              formData
+            )
+            .then((response) => {
+              console.log('룩북 업데이트 성공');
+              console.log(response.data);
+            })
+            .catch((error) => {
+              console.error('Error updating Lookbook:', error);
+            });
+        }, 'image/png');
+      });
+    }, 100);
   };
 
   const handleKeyDown = (event) => {
@@ -336,7 +341,7 @@ const UpdateLookbook = ({ lookbook }) => {
                 }}
               >
                 <img
-                  src={item.imagePath.path}
+                  src={item.image}
                   alt={`item ${item.clothesId}`}
                   className="w-full h-full cursor-move"
                   onMouseDown={() => handleMouseDown(index)}

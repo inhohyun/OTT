@@ -8,42 +8,45 @@ import fillhearticon from '../../assets/icons/fillhearticon.png';
 import lookicon from '../../assets/icons/lookicon.png';
 import axios from 'axios';
 
-const LookbookDetail = ({ lookbook, onClose, onEdit }) => {
+const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
   const [showSellComments, setShowSellComments] = useState(false);
   const [liked, setLiked] = useState(false);
   const [followed, setFollowed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
-  // const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]);
   const [commentStatus, setCommentStatus] = useState('');
 
   if (!lookbook) return null;
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`/api/comments/${lookbook.id}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setComments(response.data);
-  // setCommentStatus(response.data.status); // API 응답에 status 포함
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, [lookbook]);
+  useEffect(() => {
+    const status = showSellComments ? 'DM' : 'comment';
+    axios
+      .get(`http://192.168.100.89:8080/api/comment/${lookbookId}`, {
+        params: { status: status },
+      })
+      .then((response) => {
+        console.log(response);
+        setComments(response.data);
+        setCommentStatus(response.data.status); // API 응답에 status 포함
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [lookbook]);
 
   const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
   const salesClothes = Array.isArray(lookbook.salesClothes)
     ? lookbook.salesClothes
     : [];
-  const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
+  // const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
 
   const allImages = [
     lookbook.thumnail,
     ...lookbook.images.map((item) => item.imagePath.path),
   ];
 
-  const currentUser = 'John';
+  const currentUser = 'kimssafy';
 
   const toggleLike = () => setLiked(!liked);
   const toggleFollow = () => setFollowed(!followed);

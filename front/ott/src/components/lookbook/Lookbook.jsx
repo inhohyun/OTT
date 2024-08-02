@@ -16,8 +16,9 @@ const Lookbook = ({ data }) => {
     axios
       .get(`http://192.168.100.89:8080/api/lookbook/${data.id}`)
       .then((response) => {
-        console.log(response.data);
-        setSelectedLookbook(response.data);
+        console.log('룩북 상세보기', response.data);
+        console.log('룩북아이디', data.id);
+        setSelectedLookbook({ ...response.data, id: data.id });
         setIsDetailVisible(true);
       })
       .catch((error) => {
@@ -66,9 +67,9 @@ const Lookbook = ({ data }) => {
   };
 
   const handleEditLookbook = () => {
-    console.log(selectedLookbook);
+    console.log('선택된룩북', selectedLookbook);
     setIsDetailVisible(false); // Close the modal
-    nav(`/update-lookbook/${selectedLookbook.id}`, {
+    nav(`/update-lookbook/${data.id}`, {
       state: { lookbook: selectedLookbook },
     }); // Navigate with ID in the URL
   };
@@ -120,6 +121,7 @@ const Lookbook = ({ data }) => {
           lookbook={selectedLookbook}
           onClose={handleCloseDetail}
           onEdit={handleEditLookbook}
+          lookbookId={data.id}
         />
       )}
     </>
