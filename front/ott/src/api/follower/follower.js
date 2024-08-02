@@ -1,4 +1,4 @@
-import { get, post, put, del } from '../axiosInstance';
+import { get } from '../axiosInstance';
 
 // TODO : 팔로워 수를 받아올지 팔로우 목록을 통해 수를 추출할지 결정
 
