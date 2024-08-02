@@ -31,6 +31,12 @@ public class CategoryService {
         return buildRegisterCategorySuccessDto(category);
     }
 
+    public DeleteCategorySuccessDto deleteCategory(CategoryRequestDto categoryRequestDto) {
+        Category category = categoryRepository.findByName(categoryRequestDto.getName()).orElseThrow(CategoryNotFoundException::new);
+        categoryRepository.deleteById(category.getId());
+        return new DeleteCategorySuccessDto();
+    }
+
     private Category findOrCreateCategoryByName(String name) {
         return categoryRepository.findByName(name)
                 .orElseGet(() -> createAndSaveCategory(name));
