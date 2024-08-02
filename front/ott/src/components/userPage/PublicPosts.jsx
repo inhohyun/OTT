@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import UserLookbook from '../userPage/UserLookbook';
+import Lookbook from '../lookbook/Lookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
@@ -62,12 +62,12 @@ const PublicPosts = () => {
             <div className="flex flex-col">
               <div className="flex space-x-4">
                 {lookbooks.slice(0, 5).map((lookbook, index) => (
-                  <UserLookbook key={index} data={lookbook} />
+                  <Lookbook key={index} data={lookbook} />
                 ))}
               </div>
               <div className="flex space-x-4">
                 {lookbooks.slice(5).map((lookbook, index) => (
-                  <UserLookbook key={index + 5} data={lookbook} />
+                  <Lookbook key={index + 5} data={lookbook} />
                 ))}
               </div>
             </div>

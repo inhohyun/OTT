@@ -9,7 +9,7 @@ const PrivatePosts = () => {
   const lookbooks = Array.from({ length: 10 }, (_, index) => ({
     nickname: `Creator ${index + 1}`,
     createdAt: new Date().toISOString(),
-    image: 'https://via.placeholder.com/150',
+    images: [{ imagePath: { path: 'https://via.placeholder.com/150' } }],
     name: `Lookbook ${index + 1}`,
     likes: Math.floor(Math.random() * 100),
     comments: Array.from(
