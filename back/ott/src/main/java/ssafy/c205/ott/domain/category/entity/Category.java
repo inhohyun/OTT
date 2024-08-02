@@ -2,15 +2,14 @@ package ssafy.c205.ott.domain.category.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
-import ssafy.c205.ott.common.entity.ItemCategory;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Category extends BaseEntity {
     //Todo: clothesList 변수명 고민
     @Id
@@ -20,8 +19,6 @@ public class Category extends BaseEntity {
     @NotNull
     @Column(nullable = false, unique = true)
     private String name;
-
-    public Category() {}
 
     public Category(String name) {
         this.name = name;
