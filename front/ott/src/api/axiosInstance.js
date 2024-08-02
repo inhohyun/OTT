@@ -6,11 +6,16 @@ import {
   getLocalRefreshToken,
   removeLocalRefreshToken,
 } from '@/utils/localUtils';
-import { setCookie, removeCookie } from '@/utils/cookieUtils';
+import {
+  setCookie,
+  removeCookie as removeRefreshToken,
+} from '@/utils/cookieUtils';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL, // 서버의 URL로 변경
+  // TODO : 서버의 URL로 변경
+  // baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: `localhost:3000`,
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -45,7 +50,7 @@ axiosInstance.interceptors.response.use(
         const response = await axiosInstance.get('/refresh-token'); // Refresh Token 요청
         setAccessToken(response.data.accessToken); // 새로운 Access Token 저장
         originalRequest.headers.access = `${response.data.accessToken}`; // 요청에 새로운 Access Token 포함
-        removeCookie('refreshToken'); // 응답 후 쿠키에서 Refresh Token 제거
+        removeRefreshToken('refreshToken'); // 응답 후 쿠키에서 Refresh Token 제거
         return axiosInstance(originalRequest); // 원래 요청 재시도
       } catch (err) {
         console.error('토큰 갱신 실패:', err);
@@ -54,7 +59,7 @@ axiosInstance.interceptors.response.use(
         window.location.href = '/'; // 로그인 페이지로 리디렉션
       }
     }
-    console.error('API 호출 실패:', error);
+    console.error('인스턴스에서 API 호출 실패:', error);
     return Promise.reject(error); // 그 외의 오류는 그대로 반환
   }
 );

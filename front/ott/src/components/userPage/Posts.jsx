@@ -48,12 +48,10 @@ const Posts = ({ isMe, isPublic }) => {
       </div>
       <div className="mt-[-2]">
         {' '}
-        {/* 간격을 줄이기 위해 margin-top을 2로 설정 */}
         {activePostType === 'public' ? <PublicPosts /> : <PrivatePosts />}
       </div>
       <div className="flex justify-center mt-4">
         {' '}
-        {/* 간격을 줄이기 위해 margin-top을 4로 설정 */}
         <button
           className="w-[220px] py-2 px-5 cursor-pointer rounded-full bg-violet-200 text-white flex items-center justify-center mb-20 relative mt-5"
           style={{ fontFamily: 'dohyeon' }}

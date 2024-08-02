@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const Comment = ({ comments }) => {
   const [commentList, setCommentList] = useState(
@@ -11,7 +11,9 @@ const Comment = ({ comments }) => {
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
   const inputRef = useRef(null); // Ref for the input field
-
+  useEffect(() => {
+    console.log(comments);
+  });
   const handleAddComment = (e) => {
     e.preventDefault();
     if (newComment.trim() !== '') {

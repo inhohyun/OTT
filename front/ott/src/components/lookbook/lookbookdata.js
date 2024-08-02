@@ -34,7 +34,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1000,
     comments: [
       {
@@ -80,7 +80,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1500,
     comments: [
       {
@@ -121,7 +121,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1100,
     comments: [
       {
@@ -156,7 +156,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 950,
     comments: [
       {
@@ -191,7 +191,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1300,
     comments: [
       {
@@ -226,7 +226,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1400,
     comments: [
       {
@@ -261,7 +261,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1600,
     comments: [
       {
@@ -296,7 +296,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1800,
     comments: [
       {
@@ -331,7 +331,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1700,
     comments: [
       {
@@ -366,7 +366,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1200,
     comments: [
       {
@@ -401,7 +401,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 2100,
     comments: [
       {
@@ -436,7 +436,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1450,
     comments: [
       {
@@ -471,7 +471,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1900,
     comments: [
       {
@@ -506,7 +506,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1650,
     comments: [
       {
@@ -541,7 +541,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 2300,
     comments: [
       {
@@ -576,7 +576,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 2050,
     comments: [
       {
@@ -611,7 +611,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1120,
     comments: [
       {
@@ -646,7 +646,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1300,
     comments: [
       {
@@ -681,7 +681,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 950,
     comments: [
       {
@@ -716,7 +716,7 @@ export const dummyLookbooks = [
         },
       },
     ],
-    thumbnail: lookbookimg,
+    thumnail: lookbookimg,
     viewCount: 1450,
     comments: [
       {

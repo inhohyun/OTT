@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import backgroundImage from '../../assets/images/background_image_main.png';
-import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheckCircle,
+  faSearch,
+  faCamera,
+} from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
+// import { getUserInfo, updateUserInfo } from '../../api/user/user';
+
 const UpdatePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { userId } = location.state;
 
   const redirectProfile = () => {
     navigate('/userPage');
@@ -16,6 +24,40 @@ const UpdatePage = () => {
   const [bodyType, setBodyType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [profileImage, setProfileImage] = useState(mainIcon);
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    phone: '',
+    nickname: '',
+    height: '',
+    weight: '',
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        // const response = await getUserInfo(userId);
+        // setUserInfo(response.data);
+        // setProfileImage(response.data.profileImage || mainIcon);
+
+        // 더미 데이터 설정
+        const dummyData = {
+          name: '홍길동',
+          phone: '01012345678',
+          nickname: '길동이',
+          height: '180 cm',
+          weight: '70 kg',
+          profileImage: mainIcon,
+        };
+        setUserInfo(dummyData);
+        setProfileImage(dummyData.profileImage || mainIcon);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [userId]);
 
   const openModal = () => setIsModalOpen(true);
   const onClose = () => setIsModalOpen(false);
@@ -26,11 +68,9 @@ const UpdatePage = () => {
   };
 
   const handleCheckboxChange = () => {
-    // 체크박스 변경 후 처리
     setIsChecked(!isChecked);
   };
 
-  // 태그 추가 기능
   const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -62,18 +102,77 @@ const UpdatePage = () => {
     setTags(newTags);
   };
 
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    document.getElementById('profileImageInput').click();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updateData = {
+      memberId: userId,
+      nickname: userInfo.nickname,
+      phoneNumber: userInfo.phone,
+      profileImageUrl: profileImage,
+      height: parseFloat(userInfo.height),
+      weight: parseFloat(userInfo.weight),
+      bodyType,
+      publicStatus: isChecked ? 'PUBLIC' : 'PRIVATE',
+      memberTags: tags,
+    };
+    try {
+      // await updateUserInfo(userId, updateData);
+      console.log('Update data:', updateData); // 더미 데이터 출력
+      redirectProfile();
+    } catch (error) {
+      console.error('Error updating user info:', error);
+    }
+  };
+
   return (
     <div className="w-full h-full flex items-center justify-center font-dohyeon mb-40">
       <div
         className="w-full h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="w-full flex justify-center mt-8">
-          <img
-            className="w-[70px] h-[70px] rounded-full"
-            alt="User Icon"
-            src={mainIcon}
-          />
+        <div className="w-full flex justify-center mt-8 relative">
+          <div
+            className="relative"
+            onClick={triggerFileInput}
+            style={{ cursor: 'pointer' }}
+          >
+            <img
+              className="w-[70px] h-[70px] rounded-full"
+              alt="User Icon"
+              src={profileImage}
+            />
+            <div
+              className="absolute bottom-2 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
+              style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
+            >
+              <FontAwesomeIcon
+                icon={faCamera}
+                className="text-purple-600 text-xs"
+              />
+            </div>
+            <input
+              type="file"
+              id="profileImageInput"
+              className="hidden"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+            />
+          </div>
         </div>
 
         <div className="flex mr-[40px] mt-[16px]">
@@ -86,13 +185,7 @@ const UpdatePage = () => {
           </p>
         </div>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
-          <form
-            className="space-y-6 mb-"
-            onSubmit={(e) => {
-              e.preventDefault();
-              redirectProfile();
-            }}
-          >
+          <form className="space-y-6 mb-" onSubmit={handleSubmit}>
             <div className="flex items-center mb-5">
               <label
                 htmlFor="name"
@@ -106,6 +199,10 @@ const UpdatePage = () => {
                 placeholder="이름을 입력하세요"
                 maxLength="8"
                 className="w-3/4 p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400 text-center"
+                value={userInfo.name}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, name: e.target.value })
+                }
               />
             </div>
             <div className="flex items-center mb-5">
@@ -121,6 +218,10 @@ const UpdatePage = () => {
                 placeholder="01012345678"
                 maxLength="11"
                 className="w-3/4 p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400 text-center"
+                value={userInfo.phone}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, phone: e.target.value })
+                }
               />
             </div>
             <div className="flex items-center mb-5">
@@ -137,6 +238,10 @@ const UpdatePage = () => {
                   placeholder="차정준"
                   maxLength="25"
                   className="w-full p-3 rounded-full border border-violet-300 box-border focus:border-violet-400 pr-10 text-center"
+                  value={userInfo.nickname}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, nickname: e.target.value })
+                  }
                 />
                 <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-violet-400 cursor-pointer">
                   <FontAwesomeIcon icon={faCheckCircle} />
@@ -156,6 +261,10 @@ const UpdatePage = () => {
                 placeholder="190 cm"
                 maxLength="11"
                 className="w-3/4 p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400 text-center"
+                value={userInfo.height}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, height: e.target.value })
+                }
               />
             </div>
             <div className="flex items-center mb-5">
@@ -171,6 +280,10 @@ const UpdatePage = () => {
                 placeholder="90 kg"
                 maxLength="11"
                 className="w-3/4 p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400 text-center"
+                value={userInfo.weight}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, weight: e.target.value })
+                }
               />
             </div>
             <div className="flex items-center mb-5">
@@ -190,7 +303,6 @@ const UpdatePage = () => {
               />
             </div>
 
-            {/* 태그 추가 */}
             <div className="space-y-6">
               <h4 className="text-2xl mb-5 text-gray-800 font-thin">
                 선호하는 스타일{' '}
@@ -253,7 +365,7 @@ const UpdatePage = () => {
           contentLabel="체형 선택"
           ariaHideApp={false}
           className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50"
-          overlayClassName="modal-overlay" // 오버레이에 클래스 추가
+          overlayClassName="modal-overlay"
         >
           <div id="modal-overlay" onClick={onClose}>
             <div className="relative bg-white p-8 rounded-lg shadow-md">

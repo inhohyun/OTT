@@ -25,7 +25,7 @@ const LookbookList = ({ tag, lookbooks, onClose }) => {
                 }
             `}</style>
       <div
-        className="bg-white p-2 rounded-2xl shadow-lg w-full max-w-xs overflow-hidden"
+        className="bg-white p-2 rounded-2xl shadow-lg w-full max-w-xs overflow-hidden mb-5"
         style={{ maxHeight: '75vh' }}
         onClick={(e) => e.stopPropagation()}
       >

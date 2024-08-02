@@ -1,4 +1,3 @@
-// cookieUtils.js
 import { Cookies } from 'react-cookie';
 
 const cookies = new Cookies();
@@ -13,17 +12,22 @@ const cookies = new Cookies();
  * httpOnly: true로 설정하면 클라이언트 측 자바스크립트에서 쿠키에 접근할 수 없습니다.
  */
 
+// Cookie 설정
+export const setCookie = (name, value, options = {}) => {
+  cookies.set(name, value, { path: '/', ...options });
+};
+
 // Refresh Token 설정
-export const setRefreshToken = (token, options = {}) => {
-  cookies.set('refreshToken', token, { path: '/', ...options });
+export const setCookieRefreshToken = (token, options = {}) => {
+  setCookie('refreshToken', token, options);
 };
 
 // Refresh Token 가져오기
-export const getRefreshToken = () => {
+export const getCookieRefreshToken = () => {
   return cookies.get('refreshToken');
 };
 
 // Refresh Token 삭제
-export const removeRefreshToken = () => {
-  cookies.remove('refreshToken', { path: '/' });
+export const removeCookie = (name) => {
+  cookies.remove(name, { path: '/' });
 };

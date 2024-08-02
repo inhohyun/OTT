@@ -8,7 +8,7 @@ export default defineConfig({
 
     VitePWA({
       manifest: {
-        name: 'My React App',
+        name: 'ㅇㅗㅅ',
         short_name: 'ReactApp',
         description: 'My React application with PWA support',
         theme_color: '#ffffff',

@@ -7,7 +7,7 @@ import kakao from '../../assets/images/login/kakao_login.png';
 import naver from '../../assets/images/login/naver_login.png';
 import google from '../../assets/images/login/google_login.png';
 import backgroundImage from '../../assets/images/background_image_survey.png';
-
+import axios from 'axios';
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -15,6 +15,12 @@ const LoginPage = () => {
     // navigate('./');
     window.location.href =
       'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
+    axios
+      .get('https://i11c205.p.ssafy.io/api/login/kakao', {})
+      .then((res) => {
+        // alert(JSON.stringify(res.data));
+      })
+      .catch((error) => alert(error));
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
@@ -23,20 +29,23 @@ const LoginPage = () => {
       'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
 
     // axios
-    //   .get('https://i11c205.p.ssafy.io/oauth2/authorization/naver', {
-    //     withCredentials: true,
-    //   })
+    //   .get('https://i11c205.p.ssafy.io/api/login/naver', {})
     //   .then((res) => {
-    //     alert(JSON.stringify(res.data));
+    //     // alert(JSON.stringify(res.data));
     //   })
     //   .catch((error) => alert(error));
-    //여기에 추가
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
     // navigate('./survey_start');
     window.location.href =
       'https://i11c205.p.ssafy.io/oauth2/authorization/google';
+    // axios
+    //   .get('https://i11c205.p.ssafy.io/api/login/google', {})
+    //   .then((res) => {
+    //     // alert(JSON.stringify(res.data));
+    //   })
+    //   .catch((error) => alert(error));
   }, [navigate]);
 
   return (
