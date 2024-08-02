@@ -23,7 +23,7 @@ const OAuthCallback = () => {
 
   useEffect(() => {
     // 현재 URL의 쿼리 파라미터를 추출합니다.
-    const queryParams = getQueryParams(window.location.search);
+    const queryParams = getQueryParams(window.location.search); //TODO : 로그인 성공 후 토큰들이 어디로 들어오는지 확인하기
 
     // 쿼리 파라미터에서 access_token과 refresh_token을 추출합니다.
     const accessToken = queryParams['access_token'];
