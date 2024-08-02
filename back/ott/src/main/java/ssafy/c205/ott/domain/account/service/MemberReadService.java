@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.MemberTag;
+import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
+import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
@@ -17,6 +19,7 @@ import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,19 @@ public class MemberReadService {
         List<Tag> tags = getTags(member);
 
         return buildMemberInfoDto(member, followStatus, followingCount, followerCount, tags);
+    }
+
+    public List<FollowsResponseDto> followingsSearch(FollowRequestDto followRequestDto) {
+        List<Follow> followings = followRepository.findByToMemberId(followRequestDto.getTargetMemberId());
+
+        return followings.stream()
+                .map(follow -> FollowsResponseDto.builder()
+                        .memberId(follow.getToMember().getId())
+                        .name(follow.getToMember().getName())
+                        .nickname(follow.getToMember().getNickname())
+                        .profileImageUrl(follow.getToMember().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private Member findActiveMemberById(Long memberId) {
