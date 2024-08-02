@@ -192,7 +192,7 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
           <p>{lookbook.content}</p>
         </div>
         <div className="mb-4">
-          <div className="flex items-center space-x-2 mb-3">
+          <div className="flex items-center space-x-2 mb-2">
             <p
               className={`text-lg cursor-pointer ${!showSellComments ? 'text-black font-bold' : 'text-slate-500'}`}
               onClick={() => setShowSellComments(false)}
@@ -211,9 +211,9 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
             style={{ maxHeight: '200px' }}
           >
             {showSellComments ? (
-              <SellComment comments={comments} />
+              <SellComment comments={comments} lookbookId={lookbookId} />
             ) : (
-              <Comment comments={comments} />
+              <Comment comments={comments} lookbookId={lookbookId} />
             )}
             {/* {commentStatus === 'DM' ? (
               <SellComment comments={comments} />

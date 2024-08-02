@@ -1,56 +1,244 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 
-const Comment = ({ comments }) => {
-  const [commentList, setCommentList] = useState(
-    comments.map((comment) => ({
-      ...comment,
-      replies: comment.children || [], // Initialize with children if available
-      showReplies: false, // Control the visibility of replies
-    }))
-  );
+const Comment = ({ comments = [], lookbookId }) => {
+  const currentUser = 'kimssafy'; // Replace with the actual current user nickname
+  const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
+  const [editingComment, setEditingComment] = useState(''); // Track the editing comment content
+  const [editingReply, setEditingReply] = useState(''); // Track the editing reply content
   const inputRef = useRef(null); // Ref for the input field
+
   useEffect(() => {
-    console.log(comments);
-  });
+    setCommentList(
+      comments.map((comment) => ({
+        ...comment,
+        id: comment.commentId,
+        replies: (comment.children || []).map((reply) => ({
+          ...reply,
+          isEditing: false, // Track if the reply is being edited
+        })),
+        showReplies: false, // Control the visibility of replies
+        isEditing: false, // Track if the comment is being edited
+      }))
+    );
+  }, [comments]);
+
+  const fetchComments = () => {
+    const status = 'comment';
+    console.log('fetch');
+    axios
+      .get(`http://192.168.100.89:8080/api/comment/${lookbookId}`, {
+        params: { status: status },
+      })
+      .then((response) => {
+        setCommentList(
+          response.data.map((comment) => ({
+            ...comment,
+            id: comment.commentId,
+            replies: (comment.children || []).map((reply) => ({
+              ...reply,
+              isEditing: false, // Track if the reply is being edited
+            })),
+            showReplies: false, // Control the visibility of replies
+            isEditing: false, // Track if the comment is being edited
+          }))
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleAddComment = (e) => {
     e.preventDefault();
     if (newComment.trim() !== '') {
-      const now = new Date().toISOString(); // Get current time in ISO format
-      const newCommentObject = {
-        nickname: '사용자', // Replace with the actual user nickname
-        msg: newComment,
-        createdAt: now,
-        replies: [], // Array to store replies
-      };
+      const formData = new FormData();
+      formData.append('uid', 1); // UID를 1로 설정
+      const message =
+        replyTo !== null
+          ? newComment.split(' ').slice(1).join(' ')
+          : newComment;
+      formData.append('msg', message);
+      formData.append('status', 'comment');
 
       if (replyTo !== null) {
-        // Adding a reply to an existing comment
-        const updatedComments = [...commentList];
-        updatedComments[replyTo].replies.push(newCommentObject);
-        setCommentList(updatedComments);
-        setReplyTo(null); // Reset the replyTo state
+        // 기존 댓글에 답글 추가
+        axios
+          .post(
+            `http://192.168.100.89:8080/api/comment/${lookbookId}/${replyTo}`,
+            formData
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              setNewComment('');
+              setReplyTo(null); // Reset the replyTo state
+              fetchComments(); // Fetch the latest comments after adding a reply
+            }
+          })
+          .catch((error) => {
+            console.error('Error creating reply:', error);
+          });
       } else {
-        // Adding a new comment
-        setCommentList([...commentList, newCommentObject]);
+        // 새로운 댓글 추가
+        axios
+          .post(
+            `http://192.168.100.89:8080/api/comment/${lookbookId}`,
+            formData
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              setNewComment('');
+              fetchComments(); // Fetch the latest comments after adding a new one
+            }
+          })
+          .catch((error) => {
+            console.error('댓글 생성 실패:', error);
+          });
       }
-
-      setNewComment('');
     }
   };
 
-  const handleReply = (index, author) => {
-    setReplyTo(index);
+  const handleReply = (commentId, author) => {
+    setReplyTo(commentId);
     setNewComment(`@${author} `);
     inputRef.current?.focus();
     inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
-  const toggleReplies = (index) => {
-    const updatedComments = [...commentList];
-    updatedComments[index].showReplies = !updatedComments[index].showReplies;
+  const toggleReplies = (commentId) => {
+    const updatedComments = commentList.map((comment) => {
+      if (comment.id === commentId) {
+        return { ...comment, showReplies: !comment.showReplies };
+      }
+      return comment;
+    });
     setCommentList(updatedComments);
+  };
+
+  const handleEditComment = (commentId) => {
+    const updatedComments = commentList.map((comment) => {
+      if (comment.id === commentId) {
+        return { ...comment, isEditing: true };
+      }
+      return comment;
+    });
+    setEditingComment(
+      commentList.find((comment) => comment.id === commentId).msg
+    );
+    setCommentList(updatedComments);
+  };
+
+  const handleSaveEdit = (commentId) => {
+    const formData = new FormData();
+    formData.append('uid', 1);
+    formData.append('msg', editingComment);
+    formData.append('status', 'comment');
+
+    axios
+      .put(
+        `http://192.168.100.89:8080/api/comment/${lookbookId}/${commentId}`,
+        formData
+      )
+      .then((response) => {
+        console.log('댓글 수정');
+        if (response.status === 200) {
+          setNewComment('');
+          fetchComments(); // Fetch the latest comments after adding a new one
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating comment:', error);
+      });
+  };
+
+  const handleDeleteComment = (commentId) => {
+    axios
+      .delete(
+        `http://192.168.100.89:8080/api/comment/${lookbookId}/${commentId}`
+      )
+      .then((response) => {
+        console.log('댓글삭제');
+        if (response.status == 200) {
+          fetchComments();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleKeyDown = (e, commentId) => {
+    if (e.key === 'Enter') {
+      handleSaveEdit(commentId);
+    }
+  };
+
+  const handleEditReply = (commentId, replyId) => {
+    const updatedComments = commentList.map((comment) => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          replies: comment.replies.map((reply) => {
+            if (reply.commentId === replyId) {
+              return { ...reply, isEditing: true };
+            }
+            return reply;
+          }),
+        };
+      }
+      return comment;
+    });
+    setEditingReply(
+      commentList
+        .find((comment) => comment.id === commentId)
+        .replies.find((reply) => reply.commentId === replyId).msg
+    );
+    setCommentList(updatedComments);
+  };
+
+  const handleSaveEditReply = (commentId, replyId) => {
+    const formData = new FormData();
+    formData.append('uid', 1);
+    formData.append('msg', editingComment);
+    formData.append('status', 'comment');
+
+    axios
+      .put(
+        `http://192.168.100.89:8080/api/comment/${lookbookId}/${replyId}`,
+        formData
+      )
+      .then((response) => {
+        console.log('답글 수정');
+        if (response.status === 200) {
+          setNewComment('');
+          fetchComments(); // Fetch the latest comments after adding a new one
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating reply:', error);
+      });
+  };
+
+  const handleDeleteReply = (commentId, replyId) => {
+    axios
+      .delete(`http://192.168.100.89:8080/api/comment/${lookbookId}/${replyId}`)
+      .then((response) => {
+        console.log('답글삭제');
+        if (response.status == 200) {
+          fetchComments();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleKeyDownReply = (e, commentId, replyId) => {
+    if (e.key === 'Enter') {
+      handleSaveEditReply(commentId, replyId);
+    }
   };
 
   const timeAgo = (time) => {
@@ -68,53 +256,135 @@ const Comment = ({ comments }) => {
   };
 
   return (
-    <div className="py-4">
-      {commentList.map((comment, index) => (
-        <div key={index} className="mb-4">
-          <div className="flex justify-between items-center">
-            <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
-              {comment.msg}
+    <div className="py-2">
+      {commentList.length === 0 ? (
+        <div className="text-center text-gray-500">댓글이 없습니다</div>
+      ) : (
+        commentList.map((comment) => (
+          <div key={comment.id} className="mb-4">
+            <div className="flex justify-between items-center">
+              {comment.isEditing ? (
+                <input
+                  id="updateInput"
+                  type="text"
+                  value={editingComment}
+                  onChange={(e) => setEditingComment(e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, comment.id)}
+                  className="text-[14px] bg-gray-100 rounded-md flex-grow"
+                />
+              ) : (
+                <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
+                  {comment.msg}
+                </div>
+              )}
+              {comment.nickname === currentUser && (
+                <div className="flex space-x-2">
+                  {!comment.isEditing && (
+                    <>
+                      <button
+                        onClick={() => handleEditComment(comment.id)}
+                        className="text-[10px] text-blue-500 ml-2"
+                        style={{ background: 'none', fontFamily: 'dohyeon' }}
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="text-[10px] text-red-500"
+                        style={{ background: 'none', fontFamily: 'dohyeon' }}
+                      >
+                        삭제
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+              <div className="text-[11px] text-slate-500 ml-2 mr-2">
+                {timeAgo(comment.createdAt)}
+              </div>
             </div>
-            <div className="text-[11px] text-slate-500 ml-2 mr-2">
-              {timeAgo(comment.createdAt)}
-            </div>
-          </div>
-          <div className="flex items-center mt-1">
-            {comment.replies.length > 0 && (
+            <div className="flex items-center mt-1">
+              {comment.replies.length > 0 && (
+                <button
+                  onClick={() => toggleReplies(comment.id)}
+                  className="text-[10px] mr-2"
+                  style={{ fontFamily: 'dohyeon', background: 'none' }}
+                >
+                  답글 {comment.replies.length}개
+                </button>
+              )}
               <button
-                onClick={() => toggleReplies(index)}
-                className="text-[10px] mr-2"
-                style={{ fontFamily: 'dohyeon', background: 'none' }}
+                onClick={() => handleReply(comment.id, comment.nickname)}
+                className="text-[10px] text-stone-500"
+                style={{ background: 'none', fontFamily: 'dohyeon' }}
               >
-                답글 {comment.replies.length}개
+                답글 달기
               </button>
-            )}
-            <button
-              onClick={() => handleReply(index, comment.nickname)}
-              className="text-[10px] text-stone-500"
-              style={{ background: 'none', fontFamily: 'dohyeon' }}
-            >
-              답글 달기
-            </button>
-          </div>
-          {comment.showReplies && (
-            <div className="ml-4 mt-2">
-              {comment.replies.map((reply, replyIndex) => (
-                <div key={replyIndex} className="mb-2">
-                  <div className="flex justify-between items-center">
-                    <div className="text-[13px] bg-gray-50 rounded-md p-2 flex-grow">
-                      ➥{reply.msg}
-                    </div>
-                    <div className="text-[10px] text-slate-500 ml-2 mr-2">
-                      {timeAgo(reply.createdAt)}
+            </div>
+            {comment.showReplies && (
+              <div className="ml-4 mt-2">
+                {comment.replies.map((reply) => (
+                  <div key={reply.commentId} className="mb-2">
+                    <div className="flex justify-between items-center">
+                      {reply.isEditing ? (
+                        <input
+                          id="updateReplyInput"
+                          type="text"
+                          value={editingReply}
+                          onChange={(e) => setEditingReply(e.target.value)}
+                          onKeyDown={(e) =>
+                            handleKeyDownReply(e, comment.id, reply.commentId)
+                          }
+                          className="text-[13px] bg-gray-50 rounded-md flex-grow"
+                        />
+                      ) : (
+                        <div className="text-[13px] bg-gray-50 rounded-md flex-grow">
+                          ➥{reply.msg}
+                        </div>
+                      )}
+                      {reply.nickname === currentUser && (
+                        <div className="flex space-x-2">
+                          {!reply.isEditing && (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handleEditReply(comment.id, reply.commentId)
+                                }
+                                className="text-[10px] text-blue-500 ml-2"
+                                style={{
+                                  background: 'none',
+                                  fontFamily: 'dohyeon',
+                                }}
+                              >
+                                수정
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleDeleteReply(comment.id, reply.commentId)
+                                }
+                                className="text-[10px] text-red-500"
+                                style={{
+                                  background: 'none',
+                                  fontFamily: 'dohyeon',
+                                }}
+                              >
+                                삭제
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                      <div className="text-[10px] text-slate-500 ml-2 mr-2">
+                        {timeAgo(reply.createdAt)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+                ))}
+              </div>
+            )}
+          </div>
+        ))
+      )}
       <form onSubmit={handleAddComment} className="flex items-center mt-4 mr-4">
         <input
           ref={inputRef}

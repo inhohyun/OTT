@@ -1,12 +1,25 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { dummyLookbooks } from '../lookbook/lookbookdata'; // Import the dummy data
 import Lookbook from '../lookbook/Lookbook';
 import LookbookList from '../lookbook/LookbookList';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
+import axios from 'axios';
 
 const MyLookbook = () => {
+  useEffect(() => {
+    axios
+      .get('http://192.168.100.89:8080/api/lookbook/mylookbook', {
+        params: { uid: 1 },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
   const currentUser = 'John'; // Replace with dynamic user data in a real application
 
   // Filter lookbooks based on the current user
