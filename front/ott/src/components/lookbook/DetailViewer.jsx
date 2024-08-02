@@ -67,7 +67,7 @@ const DetailViewer = ({
       <img
         src={displayedImagePath || allImages[0]}
         alt={`Lookbook image ${currentImageIndex}`}
-        className="w-full h-auto object-cover rounded-lg"
+        className="w-full h-full object-cover rounded-lg"
         onClick={toggleSide}
       />
       {images.some(

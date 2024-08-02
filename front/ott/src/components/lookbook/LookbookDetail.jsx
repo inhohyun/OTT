@@ -77,7 +77,7 @@ const LookbookDetail = ({ lookbook, onClose }) => {
         }
       `}</style>
       <div
-        className="bg-white p-6 rounded-2xl shadow-lg max-w-xs w-full relative h-[75vh] overflow-y-auto custom-scrollbar"
+        className="bg-white p-6 rounded-2xl shadow-lg max-w-xs w-full relative h-[75vh] mb-5 overflow-y-auto custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -131,7 +131,7 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             {tags.map((tag, index) => (
               <span
                 key={index}
-                className="bg-black text-white text-xs rounded-lg px-2 py-1 inline-block"
+                className="bg-black text-white text-xs rounded-md px-2 py-1 inline-block"
                 style={{ fontSize: '10px', margin: '2px' }}
               >
                 {tag}
@@ -162,7 +162,8 @@ const LookbookDetail = ({ lookbook, onClose }) => {
             onClick={toggleLike}
           />
           <div className="flex items-center space-x-4 text-[13px]">
-            <span>{lookbook.likes + (liked ? 1 : 0)}</span>
+            {/* <span>{lookbook.likes + (liked ? 1 : 0)}</span> */}
+            <span>좋아요 수</span>
             <img className="w-[20px] h-[20px]" src={lookicon} alt="" />
           </div>
           <span className="text-[13px]">{lookbook.viewCount}</span>
