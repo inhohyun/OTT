@@ -52,6 +52,19 @@ public class MemberReadService {
                 .collect(Collectors.toList());
     }
 
+    public List<FollowsResponseDto> followersSearch(FollowRequestDto followRequestDto) {
+        List<Follow> followings = followRepository.findByFromMemberId(followRequestDto.getTargetMemberId());
+
+        return followings.stream()
+                .map(follow -> FollowsResponseDto.builder()
+                        .memberId(follow.getFromMember().getId())
+                        .name(follow.getFromMember().getName())
+                        .nickname(follow.getFromMember().getNickname())
+                        .profileImageUrl(follow.getFromMember().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     private Member findActiveMemberById(Long memberId) {
         return memberRepository.findByIdAndActiveStatus(memberId, ActiveStatus.ACTIVE)
                 .orElseThrow(MemberNotFoundException::new);
