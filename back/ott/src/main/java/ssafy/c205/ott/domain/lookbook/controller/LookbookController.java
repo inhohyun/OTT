@@ -24,6 +24,7 @@ import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookSearchDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookResponseDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
@@ -188,8 +189,10 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "팔로잉 룩북 리스트를 반환"),
     })
     @GetMapping("/followings")
-    public ResponseEntity<?> followingLookbook(@RequestBody String uid) {
-        return null;
+    public ResponseEntity<?> followingLookbook(@RequestParam("uid") String uid) {
+        List<FollowLookbookResponseDto> followingLookbooks = lookbookService.findFollowingLookbooks(
+            uid);
+        return ResponseEntity.ok().body(followingLookbooks);
     }
 
     //태그를 통해 룩북 검색 -> UserId 부분 태그들로 변경할것

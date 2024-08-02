@@ -15,4 +15,7 @@ public interface LookbookRepository extends JpaRepository<Lookbook, Long> {
     Lookbook findByActiveStatus(ActiveStatus activeStatus);
 
     List<Lookbook> findByMemberIdAndActiveStatus(Long memberId, ActiveStatus activeStatus);
+
+    List<Lookbook> findByMemberIdAndPublicStatusAndActiveStatusOrderByCreatedAtDesc(Long memberId,
+        PublicStatus publicStatus, ActiveStatus activeStatus);
 }

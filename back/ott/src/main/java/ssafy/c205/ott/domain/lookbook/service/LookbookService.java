@@ -4,6 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookResponseDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
@@ -34,4 +36,6 @@ public interface LookbookService {
     int countLookbook(String uid);
 
     List<LookbookMineDto> findMineLookbooks(String uid);
+
+    List<FollowLookbookResponseDto> findFollowingLookbooks(String uid);
 }

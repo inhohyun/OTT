@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
+import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.item.Repository.ItemRepository;
@@ -24,6 +25,8 @@ import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImageDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImagePathDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookResponseDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
@@ -71,7 +74,7 @@ public class LookbookServiceImpl implements LookbookService {
         } else {
             log.error("멤버를 찾을 수 없음");
         }
-
+        log.info("member : {}", member.toString());
         Lookbook saveLookbook = lookbookRepository.save(Lookbook
             .builder()
             .member(member)
@@ -571,5 +574,43 @@ public class LookbookServiceImpl implements LookbookService {
             return null;
         }
         return findMineDtos;
+    }
+
+    @Override
+    public List<FollowLookbookResponseDto> findFollowingLookbooks(String uid) {
+        List<FollowLookbookResponseDto> findFollowingLookbookDtos = new ArrayList<>();
+
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(Long.parseLong(uid),
+            ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
+        if (om.isPresent()) {
+            Member member = om.get();
+            List<Follow> followings = member.getFollowings();
+            log.info("Following 수 : 1 / 내 값 : {}", followings.size());
+            //팔로잉 사람들의 룩북을 최신순으로 가져와 리스트에 추가
+            for (Follow follow : followings) {
+                log.info(follow.toString());
+                List<FollowLookbookDto> followingLooks = new ArrayList<>();
+                List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatusOrderByCreatedAtDesc(
+                    follow.getToMember().getId(),
+                    PublicStatus.PUBLIC, ActiveStatus.ACTIVE);
+
+                for (Lookbook lookbook : lookbooks) {
+                    followingLooks.add(FollowLookbookDto
+                        .builder()
+                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                        .imgThumbnail(lookbook.getLookbookImages().get(0).getImageUrl())
+                        .createdAt(lookbook.getCreatedAt())
+                        .build());
+                }
+                findFollowingLookbookDtos.add(FollowLookbookResponseDto
+                    .builder()
+                    .nickname(member.getNickname())
+                    .imgProfile(member.getProfileImageUrl())
+                    .followLookbookDtoList(followingLooks)
+                    .build());
+            }
+        }
+        return findFollowingLookbookDtos;
     }
 }
