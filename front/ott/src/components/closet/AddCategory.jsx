@@ -6,7 +6,7 @@ const AddCategory = ({
   isOpen,
   onClose,
   onAddCategory,
-  existingCategories,
+  existingCategories = [],
 }) => {
   const [newCategory, setNewCategory] = useState('');
   const [error, setError] = useState('');

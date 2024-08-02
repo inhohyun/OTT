@@ -25,6 +25,12 @@ const ClosetPage = () => {
     setSelectedCategory(newCategory);
   };
 
+  const handleAddCategory = (newCategory) => {
+    if (!categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+    }
+  };
+
   const handleAddClothes = (newClothes) => {
     setClothes([...clothes, newClothes]);
     if (!categories.includes(newClothes.category)) {
@@ -61,6 +67,7 @@ const ClosetPage = () => {
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
         categories={categories}
+        onAddCategory={handleAddCategory} // Pass the onAddCategory function
       />
       <ClothesGrid
         clothes={filteredClothes}
