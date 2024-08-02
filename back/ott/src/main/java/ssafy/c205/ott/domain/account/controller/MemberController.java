@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -103,5 +103,21 @@ public class MemberController {
                 .memberId(memberDetails.getMemberId())
                 .build();
         return ApiResponse.success(memberWriteService.uploadProfileImage(uploadProfileImageRequestDto));
+    }
+
+    @GetMapping("/follow/{memberId}/followings")
+    public ApiResponse<List<FollowsResponseDto>> getFollowings(@PathVariable Long memberId) {
+        FollowRequestDto followRequestDto = FollowRequestDto.builder()
+                .targetMemberId(memberId)
+                .build();
+        return ApiResponse.success(memberReadService.followingsSearch(followRequestDto));
+    }
+
+    @GetMapping("/follow/{memberId}/followers")
+    public ApiResponse<List<FollowsResponseDto>> getFollowers(@PathVariable Long memberId) {
+        FollowRequestDto followRequestDto = FollowRequestDto.builder()
+                .targetMemberId(memberId)
+                .build();
+        return ApiResponse.success(memberReadService.followersSearch(followRequestDto));
     }
 }

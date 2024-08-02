@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -51,11 +50,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //응답 설정
         response.setHeader("access", accessToken);
-        ResponseCookie responseCookie = cookieService.createResponseCookie("refresh", refreshToken);
-        response.addHeader("Set-Cookie", responseCookie.toString());
+        response.addCookie(cookieService.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
         response.sendRedirect("https://i11c205.p.ssafy.io/mainpage");
+
     }
 
 }

@@ -16,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIdAndActiveStatus(Long id, ActiveStatus activeStatus);
     Boolean existsByNickname(String nickname);
 
-    @Query(value = "SELECT * FROM Member m WHERE (:nickname IS NULL OR m.nickname LIKE %:nickname%) LIMIT :limit OFFSET :offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM Member m WHERE (m.nickname LIKE %:nickname%) LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<Member> findByNicknameContaining(@Param("nickname") String nickname, @Param("offset") int offset, @Param("limit") int limit);
 
 }

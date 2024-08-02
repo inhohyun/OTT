@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.MemberTag;
+import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
+import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
@@ -17,12 +19,14 @@ import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberReadService {
 
+    private final MemberValidator memberValidator;
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
 
@@ -33,7 +37,37 @@ public class MemberReadService {
         int followerCount = member.getFollowers().size();
         List<Tag> tags = getTags(member);
 
-        return buildMemberInfoDto(member, followStatus, followingCount, followerCount, tags);
+        if (memberValidator.isCurrentUser(memberRequestDto)) {
+            return buildMyInfoDto(member, followStatus, followingCount, followerCount, tags);
+        } else {
+            return buildOtherInfoDto(member, followStatus, followingCount, followerCount, tags);
+        }
+    }
+
+    public List<FollowsResponseDto> followingsSearch(FollowRequestDto followRequestDto) {
+        List<Follow> followings = followRepository.findByToMemberId(followRequestDto.getTargetMemberId());
+
+        return followings.stream()
+                .map(follow -> FollowsResponseDto.builder()
+                        .memberId(follow.getToMember().getId())
+                        .name(follow.getToMember().getName())
+                        .nickname(follow.getToMember().getNickname())
+                        .profileImageUrl(follow.getToMember().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<FollowsResponseDto> followersSearch(FollowRequestDto followRequestDto) {
+        List<Follow> followings = followRepository.findByFromMemberId(followRequestDto.getTargetMemberId());
+
+        return followings.stream()
+                .map(follow -> FollowsResponseDto.builder()
+                        .memberId(follow.getFromMember().getId())
+                        .name(follow.getFromMember().getName())
+                        .nickname(follow.getFromMember().getNickname())
+                        .profileImageUrl(follow.getFromMember().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private Member findActiveMemberById(Long memberId) {
@@ -72,13 +106,12 @@ public class MemberReadService {
                 .toList();
     }
 
-    private MemberInfoDto buildMemberInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<Tag> tags) {
+    private MemberInfoDto buildMyInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<Tag> tags) {
         return MemberInfoDto.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
-                .phoneNumber(member.getPhoneNumber())
                 .introduction(member.getIntroduction())
                 .profileImageUrl(member.getProfileImageUrl())
                 .height(member.getHeight())
@@ -87,6 +120,23 @@ public class MemberReadService {
                 .closets(member.getClosets())
                 .tags(tags)
                 .bodyType(member.getBodyType())
+                .publicStatus(member.getPublicStatus())
+                .followingCount(followingCount)
+                .followerCount(followerCount)
+                .followStatus(followStatus)
+                .build();
+    }
+
+    private MemberInfoDto buildOtherInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<Tag> tags) {
+        return MemberInfoDto.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .introduction(member.getIntroduction())
+                .profileImageUrl(member.getProfileImageUrl())
+                .closets(member.getClosets())
+                .tags(tags)
                 .publicStatus(member.getPublicStatus())
                 .followingCount(followingCount)
                 .followerCount(followerCount)
