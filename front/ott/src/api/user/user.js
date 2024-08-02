@@ -1,4 +1,4 @@
-import { get, post, put, del } from '../axiosInstance';
+import { get, put } from '../axiosInstance';
 
 // 유저 페이지에서 사용자 정보를 불러옴
 export const getUserInfo = async (userId) => {
