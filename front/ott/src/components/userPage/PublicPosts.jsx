@@ -1,15 +1,14 @@
 import { useRef } from 'react';
-import Lookbook from '../../components/lookbook/Lookbook';
+import UserLookbook from '../userPage/UserLookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
 
 const PublicPosts = () => {
-  // Create an array with the length of 10 for rendering multiple Lookbook components
   const lookbooks = Array.from({ length: 10 }, (_, index) => ({
     nickname: `Creator ${index + 1}`,
     createdAt: new Date().toISOString(),
-    images: 'https://via.placeholder.com/150',
+    images: [{ imagePath: { path: 'https://via.placeholder.com/150' } }],
     name: `Lookbook ${index + 1}`,
     likes: Math.floor(Math.random() * 100),
     comments: Array.from(
@@ -18,10 +17,8 @@ const PublicPosts = () => {
     ),
   }));
 
-  // Reference for scroll container
   const containerRef = useRef(null);
 
-  // Scroll functions
   const scrollLeft = (ref) => {
     if (ref.current) {
       ref.current.scrollBy({ left: -200, behavior: 'smooth' });
@@ -65,12 +62,12 @@ const PublicPosts = () => {
             <div className="flex flex-col">
               <div className="flex space-x-4">
                 {lookbooks.slice(0, 5).map((lookbook, index) => (
-                  <Lookbook key={index} data={lookbook} />
+                  <UserLookbook key={index} data={lookbook} />
                 ))}
               </div>
               <div className="flex space-x-4">
                 {lookbooks.slice(5).map((lookbook, index) => (
-                  <Lookbook key={index + 5} data={lookbook} />
+                  <UserLookbook key={index + 5} data={lookbook} />
                 ))}
               </div>
             </div>

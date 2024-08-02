@@ -12,7 +12,7 @@ import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
 // import { getUserInfo } from '../../api/user/user';
 
-// 룩북 상세보기 및 사용자 검색에서 프로필로 넘어올 때 uid 값을 받음
+// 룩북 상세보기 및 사용자 검색에서 프로필로 넘어올 때 uid 값을 받음 근데 마이페이지를 눌렀을 때는 어떻게
 const UserPage = ({ uid }) => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
