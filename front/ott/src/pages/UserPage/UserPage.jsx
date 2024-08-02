@@ -12,7 +12,6 @@ import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
 // import { getUserInfo } from '../../api/user/user';
 
-// 룩북 상세보기 및 사용자 검색에서 프로필로 넘어올 때 uid 값을 받음 근데 마이페이지를 눌렀을 때는 어떻게
 const UserPage = ({ uid }) => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
@@ -110,16 +109,21 @@ const UserPage = ({ uid }) => {
         <div className="w-full flex items-center justify-center mt-2">
           <div className="w-[80%] flex justify-between border border-black p-2">
             {!isMe && (
-              <div className="flex justify-center items-center w-[40%]">
+              <div className="flex justify-center items-center w-full">
                 <button
-                  className="px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent"
+                  className={`w-full px-4 py-2 border rounded ${
+                    isFollowing
+                      ? 'bg-violet-200 text-black-500 border-violet-300'
+                      : 'bg-transparent text-[rgba(0,0,0,0.5)]'
+                  }`}
                   onClick={handleFollowButtonClick}
+                  style={{ fontFamily: 'dohyeon' }}
                 >
                   {isFollowing ? '팔로잉' : '팔로우'}
                 </button>
               </div>
             )}
-            <div className="flex justify-center items-center w-[40%]">
+            <div className="flex justify-center items-center w-full">
               {!isMe ? (
                 <div className="flex">
                   <img
