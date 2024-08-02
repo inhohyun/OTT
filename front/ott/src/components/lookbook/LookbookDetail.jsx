@@ -28,22 +28,21 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
       .then((response) => {
         console.log(response);
         setComments(response.data);
-        setCommentStatus(response.data.status); // API 응답에 status 포함
+        setCommentStatus(status); // Set the comment status based on the selected tab
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [lookbook]);
+  }, [lookbookId, showSellComments]);
 
   const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
   const salesClothes = Array.isArray(lookbook.salesClothes)
     ? lookbook.salesClothes
     : [];
-  // const comments = Array.isArray(lookbook.comments) ? lookbook.comments : [];
-
+  const images = Array.isArray(lookbook.images) ? lookbook.images : [];
   const allImages = [
     lookbook.thumnail,
-    ...lookbook.images.map((item) => item.imagePath.path),
+    ...images.map((item) => item.imagePath.path),
   ];
 
   const currentUser = 'kimssafy';
@@ -64,7 +63,7 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
   };
 
   const toggleSide = () => {
-    const currentImage = lookbook.images[currentImageIndex];
+    const currentImage = images[currentImageIndex];
     if (currentImage) {
       setCurrentSides((prevSides) => ({
         ...prevSides,
@@ -136,11 +135,10 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
         <div className="w-full border-solid border-t-2 border-slate-500 mt-4"></div>
         <div className="mb-4 flex mt-2 relative">
           <DetailViewer
-            images={lookbook.images}
+            images={images}
             toggleSide={toggleSide}
             currentSide={
-              currentSides[lookbook.images[currentImageIndex]?.clothesId] ||
-              'FRONT'
+              currentSides[images[currentImageIndex]?.clothesId] || 'FRONT'
             }
             allImages={allImages}
             currentImageIndex={currentImageIndex}
@@ -162,8 +160,8 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
         <div className="mb-4">
           <h4 className="text-lg font-semibold">판매중인 옷</h4>
           <div className="flex flex-wrap gap-4">
-            {salesClothes.map((item, index) => (
-              <div key={index} className="flex items-center space-x-2">
+            {salesClothes.map((item) => (
+              <div key={item.clothesId} className="flex items-center space-x-2">
                 <img
                   src={item.imagePath.path}
                   alt={item.clothesId}
@@ -183,7 +181,6 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
           />
           <div className="flex items-center space-x-4 text-[13px]">
             <span>{lookbook.cntLike}</span>
-            {/* <span>좋아요 수</span> */}
             <img className="w-[20px] h-[20px]" src={lookicon} alt="" />
           </div>
           <span className="text-[13px]">{lookbook.viewCount}</span>
@@ -215,11 +212,6 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
             ) : (
               <Comment comments={comments} lookbookId={lookbookId} />
             )}
-            {/* {commentStatus === 'DM' ? (
-              <SellComment comments={comments} />
-            ) : (
-              <Comment comments={comments} />
-            )} */}
           </div>
         </div>
       </div>

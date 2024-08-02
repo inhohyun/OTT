@@ -14,11 +14,11 @@ const Lookbook = ({ data }) => {
     setSelectedLookbook(data);
     setIsDetailVisible(true);
     axios
-      .get(`http://192.168.100.89:8080/api/lookbook/${data.id}`)
+      .get(`http://192.168.100.89:8080/api/lookbook/${data.lookbookId}`)
       .then((response) => {
         console.log('룩북 상세보기', response.data);
-        console.log('룩북아이디', data.id);
-        setSelectedLookbook({ ...response.data, id: data.id });
+        console.log('룩북아이디', data.lookbookId);
+        setSelectedLookbook({ ...response.data, id: data.lookbookId });
         setIsDetailVisible(true);
       })
       .catch((error) => {
@@ -41,6 +41,7 @@ const Lookbook = ({ data }) => {
   };
 
   const calcTimeAgo = (createdAt) => {
+    if (!createdAt) return 'Invalid date';
     const now = new Date();
     const createdDate = new Date(createdAt.replace(' ', 'T'));
     const diffInSeconds = (now - createdDate) / 1000; // Difference in seconds
@@ -69,7 +70,7 @@ const Lookbook = ({ data }) => {
   const handleEditLookbook = () => {
     console.log('선택된룩북', selectedLookbook);
     setIsDetailVisible(false); // Close the modal
-    nav(`/update-lookbook/${data.id}`, {
+    nav(`/update-lookbook/${selectedLookbook.id}`, {
       state: { lookbook: selectedLookbook },
     }); // Navigate with ID in the URL
   };
@@ -90,7 +91,7 @@ const Lookbook = ({ data }) => {
         <div className="px-3 py-1 mb-1">
           <img
             className="w-full h-20 object-cover"
-            src={data.thumnail}
+            src={data.img}
             alt={data.name}
           />
         </div>
@@ -99,8 +100,8 @@ const Lookbook = ({ data }) => {
             <div className="flex items-center">
               <img src={hearticon} alt="hearticon" className="w-4 mr-1 mt-1" />
               <span className="text-gray-600 text-[10px] mt-1">
-                {/* {data.likes} */}
-                좋아요 수
+                {data.cntLike}
+                {/* 좋아요 수 */}
               </span>
             </div>
             <div className="flex items-center">
@@ -110,7 +111,8 @@ const Lookbook = ({ data }) => {
                 className="w-4 mr-1 mt-1"
               />
               <span className="text-gray-600 text-[10px] mt-1">
-                {data.comments.length}
+                {/* {data.comments.length} */}
+                {data.cntComment}
               </span>
             </div>
           </div>
@@ -121,7 +123,7 @@ const Lookbook = ({ data }) => {
           lookbook={selectedLookbook}
           onClose={handleCloseDetail}
           onEdit={handleEditLookbook}
-          lookbookId={data.id}
+          lookbookId={data.lookbookId}
         />
       )}
     </>
