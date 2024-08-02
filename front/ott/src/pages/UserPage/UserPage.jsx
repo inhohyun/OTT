@@ -12,17 +12,17 @@ import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
 // import { getUserInfo } from '../../api/user/user';
 
-const UserPage = () => {
+// 룩북 상세보기 및 사용자 검색에서 프로필로 넘어올 때 uid 값을 받음
+const UserPage = ({ uid }) => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-  const userId = 1; // 사용자의 ID를 여기에 설정합니다.
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        // const data = await getUserInfo(userId);
+        // const data = await getUserInfo(uid);
         const dummyData = {
           username: '홍길동',
           isMe: false,
@@ -36,7 +36,7 @@ const UserPage = () => {
     };
 
     fetchUserInfo();
-  }, [userId]);
+  }, [uid]);
 
   if (!userInfo) {
     return <div>Loading...</div>;
@@ -71,7 +71,7 @@ const UserPage = () => {
   };
 
   const handleSettingsClick = () => {
-    navigate(`/updatePage`, { state: { userId } });
+    navigate(`/updatePage`, { state: { userId: uid } });
   };
 
   return (
