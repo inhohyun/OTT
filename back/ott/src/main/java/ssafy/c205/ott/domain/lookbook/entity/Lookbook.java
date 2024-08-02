@@ -24,7 +24,6 @@ import ssafy.c205.ott.domain.account.entity.Member;
 
 @Entity
 @Getter
-@ToString
 public class Lookbook extends BaseEntity {
     //Todo: 좋아요 수 추가
 

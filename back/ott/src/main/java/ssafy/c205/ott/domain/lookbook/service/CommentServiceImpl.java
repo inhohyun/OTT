@@ -138,8 +138,10 @@ public class CommentServiceImpl implements CommentService {
 
             //대댓글 내용 추가
             for (Comment child : comment.getChildren()) {
+                if (child.getCommentStatus() == CommentStatus.DELETED) continue;
                 childrenDtos.add(CommentChildrenDto
                     .builder()
+                    .commentId(child.getId())
                     .createdAt(child.getCreatedAt())
                     .msg(child.getMessage())
                     .nickname(child.getMember().getNickname())
@@ -153,6 +155,7 @@ public class CommentServiceImpl implements CommentService {
                 .msg(comment.getMessage())
                 .createdAt(comment.getCreatedAt())
                 .children(childrenDtos)
+                .commentId(comment.getId())
                 .build();
 
             //responseDto에 추가
@@ -200,6 +203,11 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(Comment
             .builder()
             .id(comment.getId())
+            .lookbook(comment.getLookbook())
+            .member(comment.getMember())
+            .parent(comment.getParent())
+            .message(comment.getMessage())
+            .children(comment.getChildren())
             .commentStatus(CommentStatus.DELETED)
             .build());
         //Todo : 삭제 처리 완료 잘되었는지 예외처리

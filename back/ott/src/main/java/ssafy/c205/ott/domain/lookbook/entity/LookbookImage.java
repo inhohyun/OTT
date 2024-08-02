@@ -3,6 +3,7 @@ package ssafy.c205.ott.domain.lookbook.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
 

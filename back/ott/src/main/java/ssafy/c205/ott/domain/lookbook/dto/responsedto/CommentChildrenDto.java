@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString @Builder
 public class CommentChildrenDto {
 
+    private Long commentId;
     private String msg;
     private String nickname;
     private LocalDateTime createdAt;

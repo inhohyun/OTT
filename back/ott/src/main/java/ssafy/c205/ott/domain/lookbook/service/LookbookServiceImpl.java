@@ -25,6 +25,7 @@ import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImageDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImagePathDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.ActiveStatus;
 import ssafy.c205.ott.domain.lookbook.entity.Favorite;
@@ -480,6 +481,7 @@ public class LookbookServiceImpl implements LookbookService {
         HashMap<Long, Integer> map = new HashMap<>();
         log.info("태그들 : {}", Arrays.toString(tags));
         for (String tag : tags) {
+            log.info("현재 태그 : {}", tag);
             Tag tagEntity = tagRepository.findByName(tag);
             //태그가 존재하지 않으면 다음 태그로 넘어감
             if (tagEntity == null) {
@@ -506,30 +508,68 @@ public class LookbookServiceImpl implements LookbookService {
         }
         // Hashmap value값을 기반으로 sort
         List<Long> keys = new ArrayList<>(map.keySet());
+        log.info("keys : {}", keys.toString());
         Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
+        log.info("sort 완료");
 
         // sort된 key값(lookbookid)로 룩북 정보를 가져와 리스트에 저장
         List<TagLookbookDto> lookbooks = new ArrayList<>();
         for (Long key : keys) {
+            log.info("Key : {}", key);
             Optional<Lookbook> ol = lookbookRepository.findById(key);
             if (ol.isPresent()) {
                 Lookbook lookbook = ol.get();
+                log.info("Lookbook : {}", lookbook.toString());
                 lookbooks.add(TagLookbookDto
                     .builder()
-                    .id(lookbook.getId())
-                    .hitCount(lookbook.getHitCount())
-                    .content(lookbook.getContent())
-                    .publicStatus(lookbook.getPublicStatus())
-                    .activeStatus(lookbook.getActiveStatus())
-                    .member(lookbook.getMember())
-                    .lookbookItemList(lookbook.getLookbookItemList())
-                    .lookbookTags(lookbook.getLookbookTags())
-                    .comments(lookbook.getComments())
-                    .lookbookImages(lookbook.getLookbookImages())
+                    .lookbookId(lookbook.getId())
+                    .nickname(lookbook.getMember().getNickname())
+                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                    .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .createdAt(lookbook.getCreatedAt())
+                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
                     .build()
                 );
+
             }
         }
+        for (TagLookbookDto lookbook : lookbooks) {
+            log.info("Lookbook : {}", lookbook.toString());
+        }
+        log.info("Return 전");
         return lookbooks;
+    }
+
+    @Override
+    public int countLookbook(String uid) {
+        List<Lookbook> myLookbooks = lookbookRepository.findByMemberIdAndActiveStatus(
+            Long.parseLong(uid), ActiveStatus.ACTIVE);
+        if (myLookbooks == null) {
+            return -1;
+        }
+        return myLookbooks.size();
+    }
+
+    @Override
+    public List<LookbookMineDto> findMineLookbooks(String uid) {
+        List<Lookbook> findMine = lookbookRepository.findByMemberIdAndActiveStatus(
+            Long.parseLong(uid), ActiveStatus.ACTIVE);
+        List<LookbookMineDto> findMineDtos = new ArrayList<>();
+        for (Lookbook lookbook : findMine) {
+            findMineDtos.add(LookbookMineDto
+                .builder()
+                .lookbookId(lookbook.getId())
+                .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                .cntComment(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                .cntLike(commentService.countComment(String.valueOf(lookbook.getId())))
+                .tags(lookbook.getLookbookTags().stream()
+                    .map(lookbookTag -> lookbookTag.getTag().getName()).toArray(String[]::new))
+                .build());
+        }
+
+        if (findMine == null) {
+            return null;
+        }
+        return findMineDtos;
     }
 }

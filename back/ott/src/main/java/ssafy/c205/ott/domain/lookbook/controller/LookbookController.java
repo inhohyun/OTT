@@ -25,6 +25,7 @@ import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookSearchDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 
@@ -199,9 +200,41 @@ public class LookbookController {
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@ModelAttribute LookbookSearchDto lookbookSearchDto) {
         List<TagLookbookDto> findByTags = lookbookService.findByTag(lookbookSearchDto.getTags());
+        log.info("Return 후 컨트롤러");
+        for (TagLookbookDto findByTag : findByTags) {
+            log.info(findByTag.toString());
+        }
         if (findByTags == null) {
             return new ResponseEntity<String>("태그가 포함된 게시물을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
+        } else {
+            log.info("Controller Return Before");
+            return ResponseEntity.ok().body(findByTags);
         }
-        return new ResponseEntity<List<TagLookbookDto>>(findByTags, HttpStatus.OK);
+    }
+
+    @Operation(summary = "사용자의 룩북 수 조회", description = "<big>사용자의 룩북의 개수를</big> 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "해당 사용자의 룩북의 개수를 반환"),
+    })
+    @GetMapping("/count")
+    public ResponseEntity<?> countLookbook(@RequestParam("uid") String uid) {
+        int cntLookbook = lookbookService.countLookbook(uid);
+        if (cntLookbook == -1) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 사용자의 룩북을 찾지 못했습니다.");
+        }
+        return ResponseEntity.ok().body(cntLookbook);
+    }
+
+    @Operation(summary = "나의 룩북 조회", description = "<big>나의 룩북을</big> 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "나의 룩북을 반환"),
+    })
+    @GetMapping("/mylookbook")
+    public ResponseEntity<?> myLookbook(@RequestParam("uid") String uid) {
+        List<LookbookMineDto> mineLookbooks = lookbookService.findMineLookbooks(uid);
+        if (mineLookbooks == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자의 룩북을 찿지 못했습니다.");
+        }
+        return ResponseEntity.ok().body(mineLookbooks);
     }
 }

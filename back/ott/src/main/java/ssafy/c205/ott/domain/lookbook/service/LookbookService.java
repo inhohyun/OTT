@@ -5,6 +5,7 @@ import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 
 import java.util.List;
@@ -29,4 +30,8 @@ public interface LookbookService {
     List<FindLookbookDto> findPrivateLookbooks(String uid);
 
     List<TagLookbookDto> findByTag(String[] tags);
+
+    int countLookbook(String uid);
+
+    List<LookbookMineDto> findMineLookbooks(String uid);
 }
