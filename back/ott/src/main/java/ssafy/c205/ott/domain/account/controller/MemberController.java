@@ -11,14 +11,12 @@ import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.UploadProfileImageRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
-import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.account.service.MemberReadService;
 import ssafy.c205.ott.domain.account.service.MemberValidator;
 import ssafy.c205.ott.domain.account.service.MemberWriteService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -54,10 +52,7 @@ public class MemberController {
     public ApiResponse<List<MemberSearchResponseDto>> getMoreMembers(@RequestParam(name = "nickname", required = false) String nickname,
                                                                         @RequestParam(name = "offset", defaultValue = "0") int offset,
                                                                         @RequestParam(name = "limit", defaultValue = "10") int limit) {
-        List<Member> members = memberRepository.findByNicknameContaining(nickname, offset, limit);
-        return ApiResponse.success(members.stream()
-                .map(MemberSearchResponseDto::new)
-                .collect(Collectors.toList()));
+        return ApiResponse.success(memberReadService.findActiveMembersByNickname(nickname, offset, limit));
     }
 
     @PostMapping("/follow/{targetId}")
