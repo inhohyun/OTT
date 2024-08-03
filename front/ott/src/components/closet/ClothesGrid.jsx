@@ -48,6 +48,10 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log(clothes.map(item => item.id));
+  }, [clothes]);
+
   const handleToggleImage = (id) => {
     setVisibleImages((prev) =>
       prev.map((item) =>
@@ -89,6 +93,7 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
             const isFrontVisible = visibleImages.find(
               (image) => image.id === item.id
             )?.isFront;
+            
             return (
               <div
                 key={item.id}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [category, setCategory] = useState('');
@@ -48,28 +49,43 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const handleAddClothes = () => {
     if (validateInputs()) {
-      // Define newClothes object with all the necessary data
+      // 일단 unique한 값으로 추가
+      const id = Date.now()
+  
+      // api 명세서대로 데이터 가공해서 추가... 근데 clothes_id도 같이 추가되어야 할 것 같음
       const newClothes = {
-        id: Date.now(), // Unique identifier
-        category,
-        frontImage,
-        backImage,
+        id, // id는 어떤 기준으로 생성되는지?
+        size,
         brand,
         purchase: purchaseLocation,
-        size,
+        public_status: publicStatus ? 'y' : 'n',
+        image_path: backImage ? [frontImage, backImage] : [frontImage],
         color,
-        public_status: publicStatus ? 'y' : 'n', // Convert boolean to 'y'/'n'
         gender,
-        user_id: 1, // Placeholder, replace with actual user ID management logic
+        user_id: 1, // 실제 user_id 들어가야함
       };
-
+  
       // Log the input data to the console
       console.log('New clothes data:', newClothes);
-
-      // Call the onAddClothes function with the new clothes data
+  
+      /*
+      axios.post('/clothes', newClothes)
+        .then(response => {
+          console.log('Successfully added clothes:', response.data);
+  
+          // Use the key for the local list management
+          onAddClothes({ ...newClothes, key });
+  
+          // Clear the input fields and close the modal
+          clearInputs();
+          onClose();
+        })
+        .catch(error => {
+          console.error('There was an error adding the clothes:', error);
+        });
+      */
+  
       onAddClothes(newClothes);
-
-      // Clear the input fields and close the modal
       clearInputs();
       onClose();
     }
