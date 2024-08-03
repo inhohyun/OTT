@@ -330,7 +330,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                className="bg-stone-400 text-white px-4 py-2 rounded-lg hover:bg-red-700"
               >
                 삭제
               </button>

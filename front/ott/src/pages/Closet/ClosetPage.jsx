@@ -105,7 +105,7 @@ const ClosetPage = () => {
           onClose={() => setIsDetailModalOpen(false)}
           clothingItem={selectedClothing}
           onEdit={handleEditClothes}
-          onDelete={handleDeleteClothes} // Pass the delete handler
+          onDelete={handleDeleteClothes}
         />
       )}
     </div>
