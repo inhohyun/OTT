@@ -56,12 +56,17 @@ const ClosetPage = () => {
     setIsDetailModalOpen(false); // Close the modal after editing
   };
 
+  const handleDeleteClothes = (id) => {
+    setClothes(clothes.filter(item => item.id !== id));
+    setIsDetailModalOpen(false); // Close the modal after deletion
+  };
+
   const filteredClothes =
     selectedCategory === '전체'
       ? clothes
       : selectedCategory === '즐겨찾기'
-        ? clothes.filter((item) => item.isLiked)
-        : clothes.filter((item) => item.category === selectedCategory);
+      ? clothes.filter((item) => item.isLiked)
+      : clothes.filter((item) => item.category === selectedCategory);
 
   return (
     <div
@@ -100,6 +105,7 @@ const ClosetPage = () => {
           onClose={() => setIsDetailModalOpen(false)}
           clothingItem={selectedClothing}
           onEdit={handleEditClothes}
+          onDelete={handleDeleteClothes} // Pass the delete handler
         />
       )}
     </div>

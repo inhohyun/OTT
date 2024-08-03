@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit }) => {
+const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableItem, setEditableItem] = useState(clothingItem);
   const [frontImage, setFrontImage] = useState(clothingItem.frontImage);
@@ -64,6 +64,29 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit }) => {
     // Simulate a successful request by directly calling onEdit with the updated item
     onEdit({ ...editableItem, frontImage, backImage });
     setIsEditing(false); // Exit edit mode
+    onClose(); // Close the modal
+  };
+
+  const handleDeleteClick = () => {
+    // Log the deletion
+    console.log('Deleting item with ID:', editableItem.id);
+
+    // Commented out axios request for deletion
+    /*
+    try {
+      const response = await axios.delete(`/clothes/${editableItem.id}`);
+      
+      if (response.status === 200) {
+        onDelete(editableItem.id); // Notify the parent component of the deletion
+        onClose(); // Close the modal
+      }
+    } catch (error) {
+      console.error("Failed to delete clothing item:", error);
+    }
+    */
+
+    // Simulate a successful delete by directly calling onDelete with the item ID
+    onDelete(editableItem.id);
     onClose(); // Close the modal
   };
 
@@ -298,12 +321,18 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit }) => {
             )}
           </div>
           {isEditing && (
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-4 space-x-4">
               <button
                 onClick={handleSaveClick}
                 className="bg-violet-300 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
               >
                 저장
+              </button>
+              <button
+                onClick={handleDeleteClick}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+              >
+                삭제
               </button>
             </div>
           )}
