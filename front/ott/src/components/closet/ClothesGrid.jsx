@@ -48,10 +48,6 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(clothes.map(item => item.id));
-  }, [clothes]);
-
   const handleToggleImage = (id) => {
     setVisibleImages((prev) =>
       prev.map((item) =>

@@ -51,6 +51,11 @@ const ClosetPage = () => {
     setIsDetailModalOpen(true);
   };
 
+  const handleEditClothes = (updatedClothing) => {
+    setClothes(clothes.map(item => item.id === updatedClothing.id ? updatedClothing : item));
+    setIsDetailModalOpen(false); // Close the modal after editing
+  };
+
   const filteredClothes =
     selectedCategory === '전체'
       ? clothes
@@ -94,6 +99,7 @@ const ClosetPage = () => {
           isOpen={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
           clothingItem={selectedClothing}
+          onEdit={handleEditClothes}
         />
       )}
     </div>
