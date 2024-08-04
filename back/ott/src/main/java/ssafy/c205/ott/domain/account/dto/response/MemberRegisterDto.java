@@ -8,6 +8,7 @@ import ssafy.c205.ott.domain.account.entity.MemberRole;
 @Getter
 public class MemberRegisterDto {
 
+    private Long id;
     private MemberRole role;
     private String name;
     private String email;
