@@ -58,12 +58,12 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
 
   return (
     <div className="relative w-full p-1">
-      <div className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10">
+      <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
         <div onClick={scrollLeft} className="bg-gray-200 p-2 rounded-full">
           <FontAwesomeIcon icon={faChevronLeft} />
         </div>
       </div>
-      <div className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10">
+      <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
         <div onClick={scrollRight} className="bg-gray-200 p-2 rounded-full">
           <FontAwesomeIcon icon={faChevronRight} />
         </div>

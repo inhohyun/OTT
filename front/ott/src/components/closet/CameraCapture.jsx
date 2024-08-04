@@ -1,4 +1,6 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const CameraCapture = ({ onCapture, onCancel }) => {
   const videoRef = useRef(null);
@@ -8,29 +10,36 @@ const CameraCapture = ({ onCapture, onCancel }) => {
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      videoRef.current.srcObject = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
     } catch (err) {
       console.error("Error accessing the camera: ", err);
     }
   };
 
   const capturePhoto = () => {
-    const context = canvasRef.current.getContext('2d');
-    context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-    const imageUrl = canvasRef.current.toDataURL('image/png');
-    setIsCaptured(true);
-    onCapture(imageUrl);
+    if (canvasRef.current && videoRef.current) {
+      const context = canvasRef.current.getContext('2d');
+      context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+      const imageUrl = canvasRef.current.toDataURL('image/png');
+      setIsCaptured(true);
+      onCapture(imageUrl);
+      stopCamera(); // Stop the camera after capturing the photo
+    }
   };
 
   const stopCamera = () => {
-    const stream = videoRef.current.srcObject;
-    const tracks = stream.getTracks();
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject;
+      const tracks = stream.getTracks();
 
-    tracks.forEach(track => {
-      track.stop();
-    });
+      tracks.forEach(track => {
+        track.stop();
+      });
 
-    videoRef.current.srcObject = null;
+      videoRef.current.srcObject = null;
+    }
   };
 
   const handleCancel = () => {
@@ -38,7 +47,7 @@ const CameraCapture = ({ onCapture, onCancel }) => {
     onCancel();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     startCamera();
     return () => stopCamera();
   }, []);

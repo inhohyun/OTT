@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import CameraCapture from './CameraCapture';
 
 const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -9,6 +10,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
   const [frontImage, setFrontImage] = useState(clothingItem.frontImage);
   const [backImage, setBackImage] = useState(clothingItem.backImage);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showCameraCapture, setShowCameraCapture] = useState(false);
 
   useEffect(() => {
     if (clothingItem) {
@@ -32,7 +34,6 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
   };
 
   const handleSaveClick = () => {
-    // Data to be sent to the backend
     const updatedData = {
       size: editableItem.size,
       brand: editableItem.brand,
@@ -43,51 +44,17 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
       gender: editableItem.gender,
     };
 
-    // Log the data that would be sent to the backend
     console.log('Sending updated data to the backend:', updatedData);
 
-    // Commented out axios request
-    /*
-    try {
-      const response = await axios.put(`/clothes/${editableItem.id}`, updatedData);
-
-      if (response.status === 200) {
-        onEdit(editableItem); // Notify the parent component of the update
-        setIsEditing(false); // Exit edit mode
-        onClose(); // Close the modal
-      }
-    } catch (error) {
-      console.error("Failed to update clothing item:", error);
-    }
-    */
-
-    // Simulate a successful request by directly calling onEdit with the updated item
     onEdit({ ...editableItem, frontImage, backImage });
-    setIsEditing(false); // Exit edit mode
-    onClose(); // Close the modal
+    setIsEditing(false);
+    onClose();
   };
 
   const handleDeleteClick = () => {
-    // Log the deletion
     console.log('Deleting item with ID:', editableItem.id);
-
-    // Commented out axios request for deletion
-    /*
-    try {
-      const response = await axios.delete(`/clothes/${editableItem.id}`);
-      
-      if (response.status === 200) {
-        onDelete(editableItem.id); // Notify the parent component of the deletion
-        onClose(); // Close the modal
-      }
-    } catch (error) {
-      console.error("Failed to delete clothing item:", error);
-    }
-    */
-
-    // Simulate a successful delete by directly calling onDelete with the item ID
     onDelete(editableItem.id);
-    onClose(); // Close the modal
+    onClose();
   };
 
   const handleChange = (e) => {
@@ -112,11 +79,23 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
   };
 
   const getCurrentImage = () => {
-    return currentImageIndex === 0 ? frontImage : backImage;
+    if (currentImageIndex === 0) {
+      return frontImage || null;
+    }
+    return backImage || null;
+  };
+
+  const triggerFileInput = () => {
+    const input = document.getElementById(`file-input-${currentImageIndex}`);
+    if (input) {
+      input.click();
+    } else {
+      console.error(`File input with ID 'file-input-${currentImageIndex}' not found`);
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
         <div className="absolute top-3 right-3 flex space-x-2">
           {!isEditing && (
@@ -138,81 +117,85 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
           </div>
         </div>
         <div className="overflow-y-auto max-h-[75vh] p-4">
-          <div className="relative flex justify-center mb-4 mt-6">
-            {(frontImage || backImage) && (
-              <>
-                {backImage && frontImage && (
-                  <>
-                    <button
-                      className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-200 rounded-full"
-                      onClick={handlePreviousImage}
-                    >
-                      <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button
-                      className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-200 rounded-full"
-                      onClick={handleNextImage}
-                    >
-                      <FontAwesomeIcon icon={faChevronRight} />
-                    </button>
-                  </>
-                )}
-                <div className="w-40 h-50 rounded-lg overflow-hidden relative">
-                  {isEditing ? (
-                    <>
-                      <img
-                        src={getCurrentImage()}
-                        alt="Clothing"
-                        className="object-cover w-full h-full"
-                      />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                        onChange={(e) =>
-                          currentImageIndex === 0
-                            ? handleImageChange(e, setFrontImage)
-                            : handleImageChange(e, setBackImage)
-                        }
-                      />
-                    </>
-                  ) : (
-                    <img
-                      src={getCurrentImage()}
-                      alt="Clothing"
-                      className="object-cover w-full h-full"
-                    />
-                  )}
+          <div className="relative flex justify-center mb-4">
+            <div className="w-40 h-60 rounded-lg overflow-hidden relative">
+              {getCurrentImage() ? (
+                <img src={getCurrentImage()} alt="Clothing" className="object-cover w-full h-full" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
+                  <label className="text-gray-700">{currentImageIndex === 0 ? 'Add Front Image' : 'Add Back Image'}</label>
                 </div>
+              )}
+            </div>
+            {(isEditing || (frontImage && backImage)) && (
+              <>
+                <button
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-200 rounded-full"
+                  onClick={handlePreviousImage}
+                >
+                  <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
+                <button
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-200 rounded-full"
+                  onClick={handleNextImage}
+                >
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </button>
               </>
             )}
-            {isEditing && !frontImage && (
-              <div className="w-40 h-50 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center cursor-pointer">
-                <label className="text-gray-700">Add Front Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e) => handleImageChange(e, setFrontImage)}
-                />
-              </div>
-            )}
-            {isEditing && !backImage && (
-              <div className="w-40 h-50 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center cursor-pointer mt-4">
-                <label className="text-gray-700">Add Back Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e) => handleImageChange(e, setBackImage)}
-                />
-              </div>
-            )}
           </div>
+
+          {/* Hidden file inputs */}
+          <input
+            type="file"
+            accept="image/*"
+            id="file-input-0"
+            className="hidden"
+            onChange={(e) => handleImageChange(e, setFrontImage)}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            id="file-input-1"
+            className="hidden"
+            onChange={(e) => handleImageChange(e, setBackImage)}
+          />
+
+          {isEditing && (
+            <div className="flex justify-center mb-4 space-x-4">
+              <button
+                className="bg-white bg-opacity-75 text-gray-700 px-2 py-1 rounded-lg"
+                onClick={triggerFileInput}
+              >
+                앨범에서 선택
+              </button>
+              <button
+                className="bg-white bg-opacity-75 text-gray-700 px-2 py-1 rounded-lg"
+                onClick={() => setShowCameraCapture(true)}
+              >
+                촬영하기
+              </button>
+            </div>
+          )}
+
+          {showCameraCapture && (
+            <CameraCapture
+              onCapture={(img) => {
+                if (currentImageIndex === 0) {
+                  setFrontImage(img);
+                } else {
+                  setBackImage(img);
+                }
+                setShowCameraCapture(false);
+              }}
+              onCancel={() => setShowCameraCapture(false)}
+            />
+          )}
+
           <div className="mb-4">
             {isEditing ? (
               <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">Brand</label>
+                <label className="text-gray-700 mr-2 w-24">브랜드</label>
                 <input
                   type="text"
                   name="brand"
@@ -223,12 +206,12 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
               </div>
             ) : (
               <p>
-                <strong>Brand:</strong> {editableItem.brand}
+                <strong>브랜드:</strong> {editableItem.brand}
               </p>
             )}
             {isEditing ? (
               <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">Size</label>
+                <label className="text-gray-700 mr-2 w-24">사이즈</label>
                 <input
                   type="text"
                   name="size"
@@ -239,12 +222,12 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
               </div>
             ) : (
               <p>
-                <strong>Size:</strong> {editableItem.size}
+                <strong>사이즈:</strong> {editableItem.size}
               </p>
             )}
             {isEditing ? (
               <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">Color</label>
+                <label className="text-gray-700 mr-2 w-24">색상</label>
                 <input
                   type="text"
                   name="color"
@@ -255,12 +238,12 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
               </div>
             ) : (
               <p>
-                <strong>Color:</strong> {editableItem.color}
+                <strong>색상:</strong> {editableItem.color}
               </p>
             )}
             {isEditing ? (
               <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">Purchase Location</label>
+                <label className="text-gray-700 mr-2 w-24">구매처</label>
                 <input
                   type="text"
                   name="purchase"
@@ -271,7 +254,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
               </div>
             ) : (
               <p>
-                <strong>Purchase Location:</strong>{' '}
+                <strong>구매처:</strong>{' '}
                 <a
                   href={editableItem.purchase}
                   target="_blank"
@@ -283,40 +266,40 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
             )}
             {isEditing ? (
               <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">Public Status</label>
+                <label className="text-gray-700 mr-2 w-24">공개 여부</label>
                 <select
                   name="public_status"
                   value={editableItem.public_status}
                   onChange={handleChange}
                   className="flex-grow p-2 border rounded-lg"
                 >
-                  <option value="y">Public</option>
-                  <option value="n">Private</option>
+                  <option value="y">공개</option>
+                  <option value="n">비공개</option>
                 </select>
               </div>
             ) : (
               <p>
-                <strong>Public Status:</strong>{' '}
+                <strong>공개 여부:</strong>{' '}
                 {editableItem.public_status === 'y' ? 'Public' : 'Private'}
               </p>
             )}
             {isEditing ? (
               <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">Gender</label>
+                <label className="text-gray-700 mr-2 w-24">성별</label>
                 <select
                   name="gender"
                   value={editableItem.gender}
                   onChange={handleChange}
                   className="flex-grow p-2 border rounded-lg"
                 >
-                  <option value="m">Male</option>
-                  <option value="f">Female</option>
+                  <option value="m">남성</option>
+                  <option value="f">여성</option>
                 </select>
               </div>
             ) : (
               <p>
-                <strong>Gender:</strong>{' '}
-                {editableItem.gender === 'm' ? 'Male' : 'Female'}
+                <strong>성별:</strong>{' '}
+                {editableItem.gender === 'm' ? '남성' : '여성'}
               </p>
             )}
           </div>
