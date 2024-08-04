@@ -24,7 +24,7 @@ const UserPage = ({ uid }) => {
         // const data = await getUserInfo(uid);
         const dummyData = {
           username: '홍길동',
-          isMe: true,
+          isMe: false,
           isPublic: true,
           tags: ['패션', '여행', '음악'],
         };
@@ -77,7 +77,7 @@ const UserPage = ({ uid }) => {
     <div className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
          style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="w-[390px] h-full flex flex-col items-center justify-start">
+      <div className="w-full h-full flex flex-col items-center justify-start">
         <div className="w-full flex justify-center mt-8">
           <img
             className="w-[70px] h-[70px] rounded-full"
