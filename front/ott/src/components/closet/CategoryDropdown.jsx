@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
-import AddCategory from './AddCategory'; // Adjust the import path as needed
+import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import AddCategory from './AddCategory';
+import EditCategoryModal from './EditCategoryModal';
 
 const CategoryDropdown = ({
   selectedCategory,
@@ -13,15 +14,8 @@ const CategoryDropdown = ({
   onDeleteCategory,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (editingCategory !== null && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [editingCategory]);
 
   const customStyles = {
     control: (provided, state) => ({
@@ -46,27 +40,28 @@ const CategoryDropdown = ({
     onAddCategory(newCategory);
   };
 
-  const startEditingCategory = (category) => {
-    setEditingCategory(category);
-    setNewCategoryName(category);
-  };
-
-  const handleCategoryNameChange = (e) => {
-    setNewCategoryName(e.target.value);
-  };
-
-  const saveCategoryName = () => {
-    if (newCategoryName.trim()) {
-      onEditCategory(editingCategory, newCategoryName.trim());
-      setEditingCategory(null);
-      setNewCategoryName('');
-    }
-  };
-
-  const handleDeleteCategory = (category) => {
-    if (window.confirm(`Are you sure you want to delete the category "${category}"?`)) {
+  const handleDeleteCategory = (category, e) => {
+    e.stopPropagation(); // Prevent the dropdown from closing
+    if (window.confirm(`정말 "${category}" 카테고리를 삭제하시겠습니까?`)) {
       onDeleteCategory(category);
     }
+  };
+
+  const handleEditCategoryClick = (category, e) => {
+    e.stopPropagation(); // Prevent the dropdown from closing
+    setEditingCategory(category);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditCategorySave = (newCategoryName) => {
+    onEditCategory(editingCategory, newCategoryName);
+    setEditingCategory(null); // Reset after save
+    setIsEditModalOpen(false);
+  };
+
+  const handleEditCategoryCancel = () => {
+    setEditingCategory(null); // Reset when modal is closed without saving
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -76,50 +71,19 @@ const CategoryDropdown = ({
           value: category,
           label: (
             <div className="flex justify-between items-center w-full">
-              {editingCategory === category ? (
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={newCategoryName}
-                  onChange={handleCategoryNameChange}
-                  onClick={(e) => e.stopPropagation()} // Prevent dropdown from closing
-                  className="flex-grow border border-gray-300 rounded px-1 py-1 mr-2"
-                  style={{ marginRight: '8px' }}
-                />
-              ) : (
-                <span className="flex-grow">{category}</span>
-              )}
+              <span className="flex-grow">{category}</span>
               {(category !== '전체' && category !== '즐겨찾기') && (
                 <div className="flex space-x-2 ml-auto">
-                  {editingCategory === category ? (
-                    <FontAwesomeIcon
-                      icon={faSave}
-                      className="cursor-pointer text-gray-500 hover:text-gray-700"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        saveCategoryName();
-                      }}
-                    />
-                  ) : (
-                    <>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        className="cursor-pointer text-gray-500 hover:text-gray-700"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startEditingCategory(category);
-                        }}
-                      />
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        className="cursor-pointer text-gray-500 hover:text-gray-700"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteCategory(category);
-                        }}
-                      />
-                    </>
-                  )}
+                  <FontAwesomeIcon
+                    icon={faEdit}
+                    className="cursor-pointer text-gray-500 hover:text-gray-700"
+                    onClick={(e) => handleEditCategoryClick(category, e)}
+                  />
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="cursor-pointer text-gray-500 hover:text-gray-700"
+                    onClick={(e) => handleDeleteCategory(category, e)}
+                  />
                 </div>
               )}
             </div>
@@ -141,6 +105,14 @@ const CategoryDropdown = ({
         onClose={() => setIsModalOpen(false)}
         onAddCategory={handleAddCategory}
       />
+      {editingCategory && (
+        <EditCategoryModal
+          isOpen={isEditModalOpen}
+          onClose={handleEditCategoryCancel}
+          category={editingCategory}
+          onSave={handleEditCategorySave}
+        />
+      )}
     </div>
   );
 };
