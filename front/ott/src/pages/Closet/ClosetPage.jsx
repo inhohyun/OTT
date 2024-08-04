@@ -32,6 +32,7 @@ const ClosetPage = () => {
   };
 
   const handleAddClothes = (newClothes) => {
+    console.log('Adding new clothes:', newClothes);
     setClothes([...clothes, newClothes]);
     if (!categories.includes(newClothes.category)) {
       setCategories([...categories, newClothes.category]);

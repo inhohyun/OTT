@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import CameraCapture from './CameraCapture';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [category, setCategory] = useState('');
@@ -15,8 +14,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [publicStatus, setPublicStatus] = useState(false);
   const [gender, setGender] = useState('');
   const [errors, setErrors] = useState({});
-  const [cameraType, setCameraType] = useState(null); // State to track which image (front or back) the camera is capturing
-  const [isCameraOpen, setIsCameraOpen] = useState(false); // State to control camera visibility
 
   useEffect(() => {
     if (isOpen) {
@@ -54,6 +51,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         size,
         brand,
         purchase: purchaseLocation,
+        category,
         public_status: publicStatus ? 'y' : 'n',
         image_path: backImage ? [frontImage, backImage] : [frontImage],
         color,
@@ -94,7 +92,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     setPublicStatus(false);
     setGender('');
     setErrors({});
-    setIsCameraOpen(false);
   };
 
   const handleImageSelection = (type) => {
@@ -110,19 +107,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         setBackImage(imageUrl);
       }
     }
-  };
-
-  const handleCapture = (imageUrl) => {
-    if (cameraType === 'front') {
-      setFrontImage(imageUrl);
-    } else if (cameraType === 'back') {
-      setBackImage(imageUrl);
-    }
-    setIsCameraOpen(false);
-  };
-
-  const handleCancelCamera = () => {
-    setIsCameraOpen(false);
   };
 
   if (!isOpen) return null;
@@ -295,9 +279,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           </button>
         </div>
       </div>
-      {isCameraOpen && (
-        <CameraCapture onCapture={handleCapture} onCancel={handleCancelCamera} />
-      )}
     </div>
   );
 };

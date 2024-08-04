@@ -26,8 +26,7 @@ const clothesData = [
   {
     id: 1,
     category: '한벌옷',
-    frontImage: dress1,
-    backImage: dress1Back,
+    image_path: [dress1, dress1Back],
     size: 100,
     brand: 'Brand A',
     purchase: 'https://example.com/purchase1',
@@ -40,7 +39,7 @@ const clothesData = [
   {
     id: 2,
     category: '한벌옷',
-    frontImage: dress2,
+    image_path: [dress2],
     size: 100,
     brand: 'Brand B',
     purchase: 'https://example.com/purchase2',
@@ -53,7 +52,7 @@ const clothesData = [
   {
     id: 3,
     category: '한벌옷',
-    frontImage: dress3,
+    image_path: [dress3],
     size: 100,
     brand: 'Brand C',
     purchase: 'https://example.com/purchase3',
@@ -66,8 +65,7 @@ const clothesData = [
   {
     id: 4,
     category: '아우터',
-    frontImage: outer1,
-    backImage: outer1Back,
+    image_path: [outer1, outer1Back],
     size: 100,
     brand: 'Brand D',
     purchase: 'https://example.com/purchase4',
@@ -80,8 +78,7 @@ const clothesData = [
   {
     id: 5,
     category: '아우터',
-    frontImage: outer2,
-    backImage: outer2Back,
+    image_path: [outer2, outer2Back],
     size: 100,
     brand: 'Brand E',
     purchase: 'https://example.com/purchase5',
@@ -94,8 +91,7 @@ const clothesData = [
   {
     id: 6,
     category: '아우터',
-    frontImage: outer3,
-    backImage: outer3Back,
+    image_path: [outer3, outer3Back],
     size: 100,
     brand: 'Brand F',
     purchase: 'https://example.com/purchase6',
@@ -108,8 +104,7 @@ const clothesData = [
   {
     id: 7,
     category: '하의',
-    frontImage: pants1,
-    backImage: pants1Back,
+    image_path: [pants1, pants1Back],
     size: 100,
     brand: 'Brand G',
     purchase: 'https://example.com/purchase7',
@@ -122,8 +117,7 @@ const clothesData = [
   {
     id: 8,
     category: '하의',
-    frontImage: pants2,
-    backImage: pants2Back,
+    image_path: [pants2, pants2Back],
     size: 100,
     brand: 'Brand H',
     purchase: 'https://example.com/purchase8',
@@ -136,8 +130,7 @@ const clothesData = [
   {
     id: 9,
     category: '하의',
-    frontImage: pants3,
-    backImage: pants3Back,
+    image_path: [pants3, pants3Back],
     size: 100,
     brand: 'Brand I',
     purchase: 'https://example.com/purchase9',
@@ -150,8 +143,7 @@ const clothesData = [
   {
     id: 10,
     category: '상의',
-    frontImage: shirt1,
-    backImage: shirt1Back,
+    image_path: [shirt1, shirt1Back],
     size: 100,
     brand: 'Brand J',
     purchase: 'https://example.com/purchase10',
@@ -164,8 +156,7 @@ const clothesData = [
   {
     id: 11,
     category: '상의',
-    frontImage: shirt2,
-    backImage: shirt2Back,
+    image_path: [shirt2, shirt2Back],
     size: 100,
     brand: 'Brand K',
     purchase: 'https://example.com/purchase11',
@@ -178,8 +169,7 @@ const clothesData = [
   {
     id: 12,
     category: '상의',
-    frontImage: shirt3,
-    backImage: shirt3Back,
+    image_path: [shirt3, shirt3Back],
     size: 100,
     brand: 'Brand L',
     purchase: 'https://example.com/purchase12',

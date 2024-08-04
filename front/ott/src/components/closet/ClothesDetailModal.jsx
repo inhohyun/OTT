@@ -6,8 +6,8 @@ import { faTimes, faEdit, faChevronLeft, faChevronRight } from '@fortawesome/fre
 const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, categories = [] }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableItem, setEditableItem] = useState(clothingItem);
-  const [frontImage, setFrontImage] = useState(clothingItem.frontImage);
-  const [backImage, setBackImage] = useState(clothingItem.backImage);
+  const [frontImage, setFrontImage] = useState(clothingItem.image_path[0]);
+  const [backImage, setBackImage] = useState(clothingItem.image_path[1]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [category, setCategory] = useState(clothingItem.category || '');
 
@@ -15,8 +15,8 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
     if (clothingItem) {
       console.log('Setting editable item and images:', clothingItem);
       setEditableItem(clothingItem);
-      setFrontImage(clothingItem.frontImage);
-      setBackImage(clothingItem.backImage);
+      setFrontImage(clothingItem.image_path[0]);
+      setBackImage(clothingItem.image_path[1]);
       setCategory(clothingItem.category);
     }
   }, [clothingItem]);
@@ -173,8 +173,8 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
                     onChange={(e) => setCategory(e.target.value)}
                     className="flex-grow p-2 border rounded-lg"
                   >
-                    {categories.length > 0 ? categories.map((cat) => (
-                      <option key={cat} value={cat}>
+                    {categories.length > 0 ? categories.map((cat, index) => (
+                      <option key={index} value={cat}>
                         {cat}
                       </option>
                     )) : (

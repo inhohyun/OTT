@@ -3,17 +3,19 @@ import bingleicon from '../../assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
-import {
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12);
   const containerRef = useRef(null);
-  const [visibleImages, setVisibleImages] = useState(
-    clothes.map((item) => ({ id: item.id, isFront: true }))
-  );
+  const [visibleImages, setVisibleImages] = useState([]);
+
+  useEffect(() => {
+    // Initialize visibleImages when clothes prop changes
+    setVisibleImages(
+      clothes.map((item) => ({ id: item.id, isFront: true }))
+    );
+  }, [clothes]);
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -98,11 +100,11 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
                 onClick={() => onClothesClick(item)}
               >
                 <img
-                  src={isFrontVisible ? item.frontImage : item.backImage}
+                  src={isFrontVisible ? item.image_path[0] : item.image_path[1]}
                   alt={`${item.category}`}
                   className="w-full h-full rounded-lg shadow-lg"
                 />
-                {item.backImage && (
+                {item.image_path[1] && (
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
