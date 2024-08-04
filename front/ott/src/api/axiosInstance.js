@@ -64,7 +64,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// API 메서드 예시
+  //TODO : 변수명 문제 발생관련 문제시 config.js에 매핑 함수를 만들든지, 아니면 아래 메서드들을 삭제
 export const get = ({ endPoint, id }) => {
   if (id) {
     return axiosInstance.get(endPoint, { params: { id } });
