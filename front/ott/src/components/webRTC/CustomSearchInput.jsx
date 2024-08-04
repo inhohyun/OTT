@@ -1,12 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
+// 검색어 입력 필드와 검색 아이콘 포함
 const CustomSearchInput = ({
   searchQuery,
   handleInputChange,
   handleSearch,
 }) => {
   const handleKeyPress = (e) => {
+    // enter 키로도 검색 이루어지도록
     if (e.key === 'Enter') {
       handleSearch();
     }

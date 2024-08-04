@@ -19,33 +19,33 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
   const [isMicOn, setIsMicOn] = useState(true);
 
   useEffect(() => {
-    const initOV = new OpenVidu();
+    const initOV = new OpenVidu(); // OpenVidu 객체 생성
     setOV(initOV);
-    const tempSession = initOV.initSession();
+    const tempSession = initOV.initSession(); // 세션 초기화
     setSession(tempSession);
 
-    window.addEventListener('beforeunload', onbeforeunload);
+    window.addEventListener('beforeunload', onbeforeunload); // 창이 닫히기 전에 leaveSession 호출
 
     return () => {
       window.removeEventListener('beforeunload', onbeforeunload);
-      leaveSession(tempSession);
+      leaveSession(tempSession); // 컴포넌트 언마운트 시 세션 떠나기
     };
   }, []);
 
   useEffect(() => {
     if (session && OV) {
-      joinSession(session);
+      joinSession(session); // 세션 참여
     }
   }, [session, OV]);
 
   const onbeforeunload = () => {
-    leaveSession();
+    leaveSession(); // 창이 닫히기 전에 세션을 떠나기 위한 함수
   };
 
   const joinSession = async (session) => {
     if (!session || !OV) return;
 
-    connect(session);
+    connect(session); // 세션에 연결
 
     try {
       const token = await getToken();
@@ -63,7 +63,8 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
         mirror: false,
       });
 
-      session.publish(newPublisher);
+      session.publish(newPublisher); // 퍼블리셔가 세션에 자신의 화면을 게시
+
       const devices = await OV.getDevices();
       const videoDevices = devices.filter(
         (device) => device.kind === 'videoinput'
@@ -103,7 +104,7 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
 
   const leaveSession = () => {
     if (session) {
-      session.disconnect();
+      session.disconnect(); // 세션에서 나가기
     }
     setOV(null);
     setSession(undefined);
@@ -115,7 +116,7 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
   const toggleCamera = () => {
     if (publisher) {
       const isVideoActive = publisher.stream.videoActive;
-      publisher.publishVideo(!isVideoActive);
+      publisher.publishVideo(!isVideoActive); // 카메라 온/오프 전환
       setIsCameraOn(!isVideoActive);
     }
   };
@@ -123,7 +124,7 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
   const toggleMicrophone = () => {
     if (publisher) {
       const isAudioActive = publisher.stream.audioActive;
-      publisher.publishAudio(!isAudioActive);
+      publisher.publishAudio(!isAudioActive); // 마이크 온/오프 전환
       setIsMicOn(!isAudioActive);
     }
   };
@@ -169,7 +170,7 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
       return response.data.token;
     } catch (error) {
       console.error(
-        'Error creating token:',
+        '토큰 생성에 오류 발생:',
         error.response?.data || error.message
       );
       throw error;
@@ -202,7 +203,7 @@ const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
 const styles = {
   openViduWrapper: {
     padding: '5px',
-    background: 'rgba(211, 211, 240, 0.3)', // Example background color
+    background: 'rgba(211, 211, 240, 0.3)',
     position: 'relative',
     borderRadius: '20px',
   },
