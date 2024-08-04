@@ -74,7 +74,7 @@ const UserPage = ({ uid }) => {
   };
 
   return (
-    <div className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon"
+    <div className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
          style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="w-[390px] h-full flex flex-col items-center justify-start">

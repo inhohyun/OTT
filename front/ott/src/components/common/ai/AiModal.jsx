@@ -194,7 +194,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay custom-scrollbar" onClick={onClose}>
+    <div className="modal-overlay custom-scrollbar mb-[65px]" onClick={onClose}>
       <div
         className="modal-container custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
