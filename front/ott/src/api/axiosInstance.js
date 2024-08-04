@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
   // TODO : 서버의 URL로 변경
   // baseURL: process.env.REACT_APP_API_BASE_URL,
   baseURL: `localhost:3000`,
-  timeout: 1000,
+  timeout: 1000000, // FIXME : 타임아웃 시간 수정 필요
   headers: { 'Content-Type': 'application/json' },
 });
 
