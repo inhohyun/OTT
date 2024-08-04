@@ -4,8 +4,9 @@ import axios from 'axios';
 import VideoControlPanel from './VideoControlPanel';
 import VideoGrid from './VideoGrid';
 
-const APPLICATION_SERVER_URL = 'http://localhost:4443/';
+// const APPLICATION_SERVER_URL = 'http://localhost:4443/';
 // const APPLICATION_SERVER_URL = 'https://i11c205.p.ssafy.io/';
+const APPLICATION_SERVER_URL = 'https://i11c205.p.ssafy.io/openvidu/';
 
 const VideoSpace = ({ mySessionId, myUserName = '이정준' }) => {
   const [session, setSession] = useState(undefined);

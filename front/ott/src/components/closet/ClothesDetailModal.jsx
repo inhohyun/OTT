@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import CameraCapture from './CameraCapture';
 
-const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete }) => {
+
+const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, categories = [] }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableItem, setEditableItem] = useState(clothingItem);
   const [frontImage, setFrontImage] = useState(clothingItem.frontImage);
   const [backImage, setBackImage] = useState(clothingItem.backImage);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showCameraCapture, setShowCameraCapture] = useState(false);
+  const [category, setCategory] = useState(clothingItem.category || '');
 
   useEffect(() => {
     if (clothingItem) {
+      console.log('Setting editable item and images:', clothingItem);
       setEditableItem(clothingItem);
       setFrontImage(clothingItem.frontImage);
       setBackImage(clothingItem.backImage);
+      setCategory(clothingItem.category);
     }
   }, [clothingItem]);
 
@@ -42,17 +43,17 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
       image_path: [frontImage, backImage],
       color: editableItem.color,
       gender: editableItem.gender,
+      category: category,
     };
 
-    console.log('Sending updated data to the backend:', updatedData);
+    console.log('백엔드로 전송:', updatedData);
 
-    onEdit({ ...editableItem, frontImage, backImage });
+    onEdit({ ...editableItem, frontImage, backImage, category });
     setIsEditing(false);
     onClose();
   };
 
   const handleDeleteClick = () => {
-    console.log('Deleting item with ID:', editableItem.id);
     onDelete(editableItem.id);
     onClose();
   };
@@ -70,11 +71,13 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
     }
   };
 
-  const handleNextImage = () => {
+  const handleNextImage = (e) => {
+    e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % 2);
   };
 
-  const handlePreviousImage = () => {
+  const handlePreviousImage = (e) => {
+    e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + 2) % 2);
   };
 
@@ -89,8 +92,6 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
     const input = document.getElementById(`file-input-${currentImageIndex}`);
     if (input) {
       input.click();
-    } else {
-      console.error(`File input with ID 'file-input-${currentImageIndex}' not found`);
     }
   };
 
@@ -117,8 +118,8 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
           </div>
         </div>
         <div className="overflow-y-auto max-h-[75vh] p-4">
-          <div className="relative flex justify-center mb-4">
-            <div className="w-40 h-60 rounded-lg overflow-hidden relative">
+          <div className="relative flex justify-center mb-4" onClick={isEditing ? triggerFileInput : undefined}>
+            <div className="w-40 h-60 rounded-lg overflow-hidden relative cursor-pointer">
               {getCurrentImage() ? (
                 <img src={getCurrentImage()} alt="Clothing" className="object-cover w-full h-full" />
               ) : (
@@ -161,146 +162,122 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete })
             onChange={(e) => handleImageChange(e, setBackImage)}
           />
 
-          {isEditing && (
-            <div className="flex justify-center mb-4 space-x-4">
-              <button
-                className="bg-white bg-opacity-75 text-gray-700 px-2 py-1 rounded-lg"
-                onClick={triggerFileInput}
-              >
-                앨범에서 선택
-              </button>
-              <button
-                className="bg-white bg-opacity-75 text-gray-700 px-2 py-1 rounded-lg"
-                onClick={() => setShowCameraCapture(true)}
-              >
-                촬영하기
-              </button>
-            </div>
-          )}
-
-          {showCameraCapture && (
-            <CameraCapture
-              onCapture={(img) => {
-                if (currentImageIndex === 0) {
-                  setFrontImage(img);
-                } else {
-                  setBackImage(img);
-                }
-                setShowCameraCapture(false);
-              }}
-              onCancel={() => setShowCameraCapture(false)}
-            />
-          )}
-
           <div className="mb-4">
             {isEditing ? (
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">브랜드</label>
-                <input
-                  type="text"
-                  name="brand"
-                  value={editableItem.brand}
-                  onChange={handleChange}
-                  className="flex-grow p-2 border rounded-lg"
-                />
-              </div>
+              <>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">카테고리</label>
+                  <select
+                    name="category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="flex-grow p-2 border rounded-lg"
+                  >
+                    {categories.length > 0 ? categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    )) : (
+                      <option value="">카테고리 없음</option>
+                    )}
+                  </select>
+                </div>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">브랜드</label>
+                  <input
+                    type="text"
+                    name="brand"
+                    value={editableItem.brand}
+                    onChange={handleChange}
+                    className="flex-grow p-2 border rounded-lg"
+                  />
+                </div>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">사이즈</label>
+                  <input
+                    type="text"
+                    name="size"
+                    value={editableItem.size}
+                    onChange={handleChange}
+                    className="flex-grow p-2 border rounded-lg"
+                  />
+                </div>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">색상</label>
+                  <input
+                    type="text"
+                    name="color"
+                    value={editableItem.color}
+                    onChange={handleChange}
+                    className="flex-grow p-2 border rounded-lg"
+                  />
+                </div>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">구매처</label>
+                  <input
+                    type="text"
+                    name="purchase"
+                    value={editableItem.purchase}
+                    onChange={handleChange}
+                    className="flex-grow p-2 border rounded-lg"
+                  />
+                </div>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">공개 여부</label>
+                  <select
+                    name="public_status"
+                    value={editableItem.public_status}
+                    onChange={handleChange}
+                    className="flex-grow p-2 border rounded-lg"
+                  >
+                    <option value="y">공개</option>
+                    <option value="n">비공개</option>
+                  </select>
+                </div>
+                <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">성별</label>
+                  <select
+                    name="gender"
+                    value={editableItem.gender}
+                    onChange={handleChange}
+                    className="flex-grow p-2 border rounded-lg"
+                  >
+                    <option value="m">남성</option>
+                    <option value="f">여성</option>
+                  </select>
+                </div>
+              </>
             ) : (
-              <p>
-                <strong>브랜드:</strong> {editableItem.brand}
-              </p>
-            )}
-            {isEditing ? (
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">사이즈</label>
-                <input
-                  type="text"
-                  name="size"
-                  value={editableItem.size}
-                  onChange={handleChange}
-                  className="flex-grow p-2 border rounded-lg"
-                />
-              </div>
-            ) : (
-              <p>
-                <strong>사이즈:</strong> {editableItem.size}
-              </p>
-            )}
-            {isEditing ? (
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">색상</label>
-                <input
-                  type="text"
-                  name="color"
-                  value={editableItem.color}
-                  onChange={handleChange}
-                  className="flex-grow p-2 border rounded-lg"
-                />
-              </div>
-            ) : (
-              <p>
-                <strong>색상:</strong> {editableItem.color}
-              </p>
-            )}
-            {isEditing ? (
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">구매처</label>
-                <input
-                  type="text"
-                  name="purchase"
-                  value={editableItem.purchase}
-                  onChange={handleChange}
-                  className="flex-grow p-2 border rounded-lg"
-                />
-              </div>
-            ) : (
-              <p>
-                <strong>구매처:</strong>{' '}
-                <a
-                  href={editableItem.purchase}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {editableItem.purchase}
-                </a>
-              </p>
-            )}
-            {isEditing ? (
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">공개 여부</label>
-                <select
-                  name="public_status"
-                  value={editableItem.public_status}
-                  onChange={handleChange}
-                  className="flex-grow p-2 border rounded-lg"
-                >
-                  <option value="y">공개</option>
-                  <option value="n">비공개</option>
-                </select>
-              </div>
-            ) : (
-              <p>
-                <strong>공개 여부:</strong>{' '}
-                {editableItem.public_status === 'y' ? 'Public' : 'Private'}
-              </p>
-            )}
-            {isEditing ? (
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2 w-24">성별</label>
-                <select
-                  name="gender"
-                  value={editableItem.gender}
-                  onChange={handleChange}
-                  className="flex-grow p-2 border rounded-lg"
-                >
-                  <option value="m">남성</option>
-                  <option value="f">여성</option>
-                </select>
-              </div>
-            ) : (
-              <p>
-                <strong>성별:</strong>{' '}
-                {editableItem.gender === 'm' ? '남성' : '여성'}
-              </p>
+              <>
+                <p>
+                  <strong>카테고리:</strong> {editableItem.category}
+                </p>
+                <p>
+                  <strong>브랜드:</strong> {editableItem.brand}
+                </p>
+                <p>
+                  <strong>사이즈:</strong> {editableItem.size}
+                </p>
+                <p>
+                  <strong>색상:</strong> {editableItem.color}
+                </p>
+                <p>
+                  <strong>구매처:</strong> 
+                  <a
+                    href={editableItem.purchase}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {editableItem.purchase}
+                  </a>
+                </p>
+                <p>
+                  <strong>공개 여부:</strong> {editableItem.public_status === 'y' ? '공개' : '비공개'}
+                </p>
+                <p>
+                  <strong>성별:</strong> {editableItem.gender === 'm' ? '남성' : '여성'}
+                </p>
+              </>
             )}
           </div>
           {isEditing && (

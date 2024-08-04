@@ -68,6 +68,10 @@ const ClosetPage = () => {
       ? clothes.filter((item) => item.isLiked)
       : clothes.filter((item) => item.category === selectedCategory);
 
+  const filteredCategories = categories.filter(
+    (category) => category !== '전체' && category !== '즐겨찾기'
+  );
+
   return (
     <div
       className="relative flex flex-col items-center w-full h-full min-h-screen bg-cover pb-10"
@@ -97,7 +101,7 @@ const ClosetPage = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAddClothes={handleAddClothes}
-        categories={categories.filter((cat) => cat !== '즐겨찾기')}
+        categories={categories.filter((cat) => cat !== ('즐겨찾기', '전체'))}
       />
       {selectedClothing && (
         <ClothesDetailModal
@@ -106,6 +110,7 @@ const ClosetPage = () => {
           clothingItem={selectedClothing}
           onEdit={handleEditClothes}
           onDelete={handleDeleteClothes}
+          categories={filteredCategories}
         />
       )}
     </div>

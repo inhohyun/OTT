@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import CameraCapture from './CameraCapture';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [category, setCategory] = useState('');
@@ -11,13 +12,11 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [purchaseLocation, setPurchaseLocation] = useState('');
   const [size, setSize] = useState('');
   const [color, setColor] = useState('');
-  const [publicStatus, setPublicStatus] = useState(false); // New field
-  const [gender, setGender] = useState(''); // New field
+  const [publicStatus, setPublicStatus] = useState(false);
+  const [gender, setGender] = useState('');
   const [errors, setErrors] = useState({});
-  const [showPhotoOptions, setShowPhotoOptions] = useState({
-    front: false,
-    back: false,
-  });
+  const [cameraType, setCameraType] = useState(null); // State to track which image (front or back) the camera is capturing
+  const [isCameraOpen, setIsCameraOpen] = useState(false); // State to control camera visibility
 
   useEffect(() => {
     if (isOpen) {
@@ -49,12 +48,9 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const handleAddClothes = () => {
     if (validateInputs()) {
-      // 일단 unique한 값으로 추가
-      const id = Date.now()
-  
-      // api 명세서대로 데이터 가공해서 추가... 근데 clothes_id도 같이 추가되어야 할 것 같음
+      const id = Date.now();
       const newClothes = {
-        id, // id는 어떤 기준으로 생성되는지?
+        id,
         size,
         brand,
         purchase: purchaseLocation,
@@ -62,21 +58,17 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         image_path: backImage ? [frontImage, backImage] : [frontImage],
         color,
         gender,
-        user_id: 1, // 실제 user_id 들어가야함
+        user_id: 1,
       };
-  
-      // Log the input data to the console
+
       console.log('New clothes data:', newClothes);
-  
+
+      // Example of an API call to add clothes
       /*
       axios.post('/clothes', newClothes)
         .then(response => {
           console.log('Successfully added clothes:', response.data);
-  
-          // Use the key for the local list management
-          onAddClothes({ ...newClothes, key });
-  
-          // Clear the input fields and close the modal
+          onAddClothes({ ...newClothes, key: response.data.key });
           clearInputs();
           onClose();
         })
@@ -84,7 +76,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           console.error('There was an error adding the clothes:', error);
         });
       */
-  
+
       onAddClothes(newClothes);
       clearInputs();
       onClose();
@@ -102,16 +94,11 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     setPublicStatus(false);
     setGender('');
     setErrors({});
+    setIsCameraOpen(false);
   };
 
-  const handleImageSelection = (type, method) => {
-    if (method === 'album') {
-      document.getElementById(`${type}-file-input`).click();
-    } else if (method === 'camera') {
-      // Implement camera capture logic here
-      alert('Camera capture is not implemented yet.');
-    }
-    setShowPhotoOptions({ front: false, back: false });
+  const handleImageSelection = (type) => {
+    document.getElementById(`${type}-file-input`).click();
   };
 
   const handleFileChange = (e, type) => {
@@ -123,6 +110,19 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         setBackImage(imageUrl);
       }
     }
+  };
+
+  const handleCapture = (imageUrl) => {
+    if (cameraType === 'front') {
+      setFrontImage(imageUrl);
+    } else if (cameraType === 'back') {
+      setBackImage(imageUrl);
+    }
+    setIsCameraOpen(false);
+  };
+
+  const handleCancelCamera = () => {
+    setIsCameraOpen(false);
   };
 
   if (!isOpen) return null;
@@ -143,7 +143,10 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-gray-700 mb-2 text-center">앞면</label>
-            <div className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center">
+            <div
+              className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
+              onClick={() => handleImageSelection('front')}
+            >
               {frontImage ? (
                 <img
                   src={frontImage}
@@ -151,36 +154,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
                   className="object-cover h-full w-full rounded-lg"
                 />
               ) : (
-                <span className="text-gray-400">이미지 없음</span>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                className="w-full mt-2 p-2 bg-violet-400 text-white rounded-lg"
-                onClick={() =>
-                  setShowPhotoOptions({
-                    ...showPhotoOptions,
-                    front: !showPhotoOptions.front,
-                  })
-                }
-              >
-                사진 선택
-              </button>
-              {showPhotoOptions.front && (
-                <div className="absolute left-0 right-0 bg-white border rounded-lg shadow-lg z-10">
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('front', 'album')}
-                  >
-                    앨범에서 선택
-                  </button>
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('front', 'camera')}
-                  >
-                    사진 촬영
-                  </button>
-                </div>
+                <span className="text-gray-400">이미지 추가</span>
               )}
             </div>
             <input
@@ -196,7 +170,10 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           </div>
           <div>
             <label className="block text-gray-700 mb-2 text-center">뒷면</label>
-            <div className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center">
+            <div
+              className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
+              onClick={() => handleImageSelection('back')}
+            >
               {backImage ? (
                 <img
                   src={backImage}
@@ -204,36 +181,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
                   className="object-cover h-full w-full rounded-lg"
                 />
               ) : (
-                <span className="text-gray-400">이미지 없음</span>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                className="w-full mt-2 p-2 bg-violet-400 text-white rounded-lg"
-                onClick={() =>
-                  setShowPhotoOptions({
-                    ...showPhotoOptions,
-                    back: !showPhotoOptions.back,
-                  })
-                }
-              >
-                사진 선택
-              </button>
-              {showPhotoOptions.back && (
-                <div className="absolute left-0 right-0 bg-white border rounded-lg shadow-lg z-10">
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('back', 'album')}
-                  >
-                    앨범에서 선택
-                  </button>
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('back', 'camera')}
-                  >
-                    사진 촬영
-                  </button>
-                </div>
+                <span className="text-gray-400">이미지 추가</span>
               )}
             </div>
             <input
@@ -347,6 +295,9 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           </button>
         </div>
       </div>
+      {isCameraOpen && (
+        <CameraCapture onCapture={handleCapture} onCancel={handleCancelCamera} />
+      )}
     </div>
   );
 };
