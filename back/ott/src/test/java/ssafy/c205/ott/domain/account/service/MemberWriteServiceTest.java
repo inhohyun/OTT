@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.dto.request.MemberRegisterRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.RegisterMemberSuccessDto;
 import ssafy.c205.ott.domain.account.dto.response.UpdateMemberSuccessDto;
@@ -34,6 +35,9 @@ class MemberWriteServiceTest {
 
     @Mock
     private ClosetService closetService;
+
+    @Mock
+    private MemberValidator memberValidator;
 
     @InjectMocks
     private MemberWriteService memberWriteService;
@@ -123,5 +127,38 @@ class MemberWriteServiceTest {
         assertThat(updatedMember.getMemberTags()).isEqualTo(memberUpdateRequestDto.getMemberTags());
     }
 
+    @Test
+    void 멤버삭제테스트(){
+        //given
+        Member member = Member.builder()
+                .name(memberRegisterRequestDto.getName())
+                .email(memberRegisterRequestDto.getEmail())
+                .sso(memberRegisterRequestDto.getSso())
+                .role(memberRegisterRequestDto.getRole())
+                .build();
+
+        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> {
+            Member savedMember = invocation.getArgument(0);
+            ReflectionTestUtils.setField(savedMember, "id", 1L);
+            return savedMember;
+        });
+
+        when(memberRepository.findByIdAndActiveStatus(1L, ActiveStatus.ACTIVE)).thenReturn(Optional.of(member));
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+
+        memberRepository.save(member);
+        ReflectionTestUtils.setField(member, "id", 1L);
+
+        MemberRequestDto memberRequestDto = MemberRequestDto.builder()
+                .id(1L)
+                .currentId(1L)
+                .build();
+
+        // when
+        memberWriteService.deleteMember(memberRequestDto);
+        Member findMember = memberRepository.findById(member.getId()).get();
+        // then
+        assertThat(findMember.getActiveStatus()).isEqualTo(ActiveStatus.INACTIVE);
+    }
 
 }
