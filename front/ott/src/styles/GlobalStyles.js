@@ -1,5 +1,7 @@
+// styles/GlobalStyles.js
 import { createGlobalStyle } from 'styled-components';
 import './Fonts.css'; // 폰트 CSS 파일을 가져옵니다
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -22,10 +24,20 @@ const GlobalStyle = createGlobalStyle`
   }
 
   nav {
-  font-family : 'dohyeon'
+    font-family : 'dohyeon';
   }
   #root {
     width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    html, body, #root {
+      max-width: 100%;
+    }
+
+    body {
+      padding: 10px;
+    }
   }
 `;
 
