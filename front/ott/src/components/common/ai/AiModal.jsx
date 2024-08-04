@@ -148,6 +148,7 @@ const Modal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  //입어보기를 눌렀을 때
   const handlePutOn = () => {
     if (selectedClothing) {
       setCurrentStep('AiProceeding');
@@ -155,6 +156,12 @@ const Modal = ({ isOpen, onClose }) => {
       console.log('No clothing selected');
       alert('옷을 선택해주세요.');
     }
+
+    // TODO: 본인 사진을 formData로 감싸기
+    // const formData = new FormData();
+    // formData.append('image', selectedFile);
+
+    // TODO: 본인사진, 드롭 다운 정보, 선택한 옷 이미지(s3 url)을 서버로 보냄
   };
 
   const handleClothingClick = (clothing) => {
@@ -185,7 +192,7 @@ const Modal = ({ isOpen, onClose }) => {
       ? clothes
       : clothes.filter((clothing) => clothing.category === filter);
 
-  const handleToggleLike = (id) => {
+  const handleToggleLike = (id) => {ㅁ
     setClothes((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, isLiked: !item.isLiked } : item
