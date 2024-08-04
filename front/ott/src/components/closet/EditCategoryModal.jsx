@@ -1,10 +1,27 @@
 import React, { useState } from 'react';
 
-const EditCategoryModal = ({ isOpen, onClose, category, onSave }) => {
+const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategories }) => {
   const [newCategoryName, setNewCategoryName] = useState(category);
+  const [error, setError] = useState('');
 
   const handleSave = () => {
-    onSave(newCategoryName);
+    // Trim the new category name
+    const trimmedName = newCategoryName.trim();
+
+    // Check for duplicate category names, excluding the current one being edited
+    if (
+      existingCategories.some(
+        (existingCategory) =>
+          existingCategory.toLowerCase() === trimmedName.toLowerCase() &&
+          existingCategory !== category
+      )
+    ) {
+      setError('같은 이름의 카테고리가 이미 존재합니다.');
+      return;
+    }
+
+    // If no duplicate, proceed with saving
+    onSave(trimmedName);
     onClose();
   };
 
@@ -17,9 +34,13 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave }) => {
         <input
           type="text"
           value={newCategoryName}
-          onChange={(e) => setNewCategoryName(e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1 w-full mb-4"
+          onChange={(e) => {
+            setNewCategoryName(e.target.value);
+            setError(''); // Reset error message on change
+          }}
+          className={`border rounded px-2 py-1 w-full mb-4 ${error ? 'border-red-500' : 'border-gray-300'}`}
         />
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="flex justify-end space-x-2">
           <button
             onClick={handleSave}

@@ -104,6 +104,7 @@ const CategoryDropdown = ({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAddCategory={handleAddCategory}
+        existingCategories={categories}
       />
       {editingCategory && (
         <EditCategoryModal
@@ -111,6 +112,7 @@ const CategoryDropdown = ({
           onClose={handleEditCategoryCancel}
           category={editingCategory}
           onSave={handleEditCategorySave}
+          existingCategories={categories}
         />
       )}
     </div>

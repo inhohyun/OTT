@@ -12,21 +12,23 @@ const AddCategory = ({
   const [error, setError] = useState('');
 
   const handleAddCategory = () => {
-    if (!newCategory.trim()) {
+    const trimmedCategory = newCategory.trim();
+
+    if (!trimmedCategory) {
       setError('카테고리 이름을 입력하세요');
       return;
     }
 
-    if (
-      existingCategories.some(
-        (category) => category.value === newCategory.trim()
-      )
-    ) {
+    const categoryExists = existingCategories.some(
+      (category) => category.toLowerCase() === trimmedCategory.toLowerCase()
+    );
+
+    if (categoryExists) {
       setError('같은 이름의 카테고리가 존재합니다');
       return;
     }
 
-    onAddCategory(newCategory.trim());
+    onAddCategory(trimmedCategory);
     setNewCategory('');
     onClose();
   };
@@ -42,17 +44,17 @@ const AddCategory = ({
         >
           <FontAwesomeIcon icon={faTimes} />
         </div>
-        <h2 className="text-xl font-bold mb-4 text-center">
-          카테고리 추가하기
-        </h2>
+        <h2 className="text-xl font-bold mb-4 text-center">카테고리 추가하기</h2>
         <input
           type="text"
-          className={`w-full p-2 border rounded-lg mb-4 ${error ? 'border-red-500' : ''}`}
+          className={`w-full p-2 border rounded-lg mb-4 ${
+            error ? 'border-red-500' : ''
+          }`}
           placeholder="추가할 카테고리를 입력하세요"
           value={newCategory}
           onChange={(e) => {
             setNewCategory(e.target.value);
-            setError('');
+            setError(''); // Clear error when typing
           }}
         />
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
