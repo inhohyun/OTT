@@ -36,19 +36,14 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
 
   const handleSaveClick = () => {
     const updatedData = {
-      size: editableItem.size,
-      brand: editableItem.brand,
-      purchase: editableItem.purchase,
-      public_status: editableItem.public_status,
+      ...editableItem,
+      category,
       image_path: [frontImage, backImage],
-      color: editableItem.color,
-      gender: editableItem.gender,
-      category: category,
     };
 
-    console.log('백엔드로 전송:', updatedData);
+    console.log('Sending updated data to backend:', updatedData);
 
-    onEdit({ ...editableItem, frontImage, backImage, category });
+    onEdit(updatedData);
     setIsEditing(false);
     onClose();
   };
