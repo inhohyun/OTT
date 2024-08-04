@@ -5,8 +5,10 @@ import lombok.Getter;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.BodyType;
 import ssafy.c205.ott.domain.account.entity.Follow;
+import ssafy.c205.ott.domain.account.entity.FollowStatus;
 import ssafy.c205.ott.domain.account.entity.Gender;
 import ssafy.c205.ott.domain.closet.entity.Closet;
+import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ public class MemberInfoDto {
     private List<Closet> closets;
     private List<Follow> followings;
     private List<Follow> followers;
+    private List<Tag> tags;
     private int followingCount;
     private int followerCount;
+    private FollowStatus followStatus;
 }
