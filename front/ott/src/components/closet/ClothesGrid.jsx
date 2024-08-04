@@ -6,17 +6,19 @@ import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
+  // 한번에 보여주는 옷 개수
   const [visibleItems, setVisibleItems] = useState(12);
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState([]);
 
   useEffect(() => {
-    // Initialize visibleImages when clothes prop changes
+    // 처음으로 보여지는 이미지(앞면)를 이미지 상태 변경될 때마다 갱신
     setVisibleImages(
       clothes.map((item) => ({ id: item.id, isFront: true }))
     );
   }, [clothes]);
 
+  // 가로 무한 스크롤
   const handleScroll = () => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
@@ -26,18 +28,21 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
     }
   };
 
+  // 좌로 스크롤
   const scrollLeft = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
 
+  // 우로 스크롤
   const scrollRight = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
 
+  // 스크롤 컨테이너 상태 참조 위함
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
@@ -50,6 +55,7 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
     };
   }, []);
 
+  // 이미지 앞/뒷면 토글 함수
   const handleToggleImage = (id) => {
     setVisibleImages((prev) =>
       prev.map((item) =>
@@ -132,6 +138,7 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
           })}
         </div>
       </div>
+      {/* 하단 스크롤바 제거 */}
       <style>{`
         .w-full::-webkit-scrollbar {
           display: none; /* Safari and Chrome */

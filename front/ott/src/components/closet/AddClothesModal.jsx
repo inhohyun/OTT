@@ -20,16 +20,18 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
-      clearInputs(); // Clear inputs when the modal is closed
+      clearInputs(); // input값 초기화
     }
   }, [isOpen]);
 
+  // 최초 카테고리를 가장 상단에 위치한 카테고리로 기본값 설정
   useEffect(() => {
     if (categories.length > 0) {
       setCategory(categories[0]);
     }
   }, [categories]);
 
+  // 추가하고자 하는 옷의 input들
   const validateInputs = () => {
     const newErrors = {};
     if (!frontImage.trim()) newErrors.frontImage = '앞면 이미지를 선택하세요.';
@@ -43,9 +45,13 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // 옷 추가 함수
   const handleAddClothes = () => {
+    // 유효성 검사 통과했으면
     if (validateInputs()) {
+      // 옷의 고유 id 생성(서버 시간으로) -> 백엔드와 논의 후 변경
       const id = Date.now();
+      // 새로운 옷에 대한 정보
       const newClothes = {
         id,
         size,
@@ -53,15 +59,17 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         purchase: purchaseLocation,
         category,
         public_status: publicStatus ? 'y' : 'n',
+        // 이미지는 2장까지... 앞면 필수, 뒷면은 선택이라 list의 0번 idx 항목 === 앞면 사진
         image_path: backImage ? [frontImage, backImage] : [frontImage],
         color,
         gender,
         user_id: 1,
       };
 
-      console.log('New clothes data:', newClothes);
+      // 벡엔드로 보내지는 값 확인
+      console.log('새로운 옷 정보:', newClothes);
 
-      // Example of an API call to add clothes
+      // axios 요청 예시
       /*
       axios.post('/clothes', newClothes)
         .then(response => {
@@ -71,7 +79,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           onClose();
         })
         .catch(error => {
-          console.error('There was an error adding the clothes:', error);
+          console.error('옷 추가 과정에서 오류 발생:', error);
         });
       */
 
@@ -81,6 +89,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     }
   };
 
+  // d옷 추가 input들 초기화
   const clearInputs = () => {
     setCategory(categories[0]);
     setFrontImage('');
@@ -94,12 +103,15 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     setErrors({});
   };
 
+  // 이미지 추가 과정 함수... 빈 공백 클릭 시 실행
   const handleImageSelection = (type) => {
     document.getElementById(`${type}-file-input`).click();
   };
 
+  // 기존에 추가했던 파일 변경
   const handleFileChange = (e, type) => {
     if (e.target.files && e.target.files[0]) {
+      // 임의의 이미지 url 생성
       const imageUrl = URL.createObjectURL(e.target.files[0]);
       if (type === 'front') {
         setFrontImage(imageUrl);

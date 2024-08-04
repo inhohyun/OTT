@@ -13,8 +13,11 @@ const CategoryDropdown = ({
   onEditCategory,
   onDeleteCategory,
 }) => {
+  // 카테고리 추가 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // 카테고리 수정 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
 
   const customStyles = {
@@ -22,9 +25,9 @@ const CategoryDropdown = ({
       ...provided,
       borderColor: state.isFocused ? 'black' : provided.borderColor,
       '&:hover': {
-        borderColor: 'black', // Border color when hovering
+        borderColor: 'black',
       },
-      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow, // Remove blue shadow
+      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
     }),
     option: (provided, state) => ({
       ...provided,
@@ -36,31 +39,36 @@ const CategoryDropdown = ({
     }),
   };
 
+  // 카테고리 추가 함수
   const handleAddCategory = (newCategory) => {
     onAddCategory(newCategory);
   };
 
+  // 카테고리 삭제 함수
   const handleDeleteCategory = (category, e) => {
-    e.stopPropagation(); // Prevent the dropdown from closing
+    e.stopPropagation(); // 드롭다운 닫힘 방지
     if (window.confirm(`정말 "${category}" 카테고리를 삭제하시겠습니까?`)) {
       onDeleteCategory(category);
     }
   };
 
+  // 수정하고자 하는 카테고리 클릭
   const handleEditCategoryClick = (category, e) => {
-    e.stopPropagation(); // Prevent the dropdown from closing
+    e.stopPropagation(); 
     setEditingCategory(category);
     setIsEditModalOpen(true);
   };
 
+  // 수정한 카테고리 저장
   const handleEditCategorySave = (newCategoryName) => {
     onEditCategory(editingCategory, newCategoryName);
-    setEditingCategory(null); // Reset after save
+    setEditingCategory(null); // 수정하는 카테고리 선택 초기화
     setIsEditModalOpen(false);
   };
 
+  // 카테고리 수정 취소
   const handleEditCategoryCancel = () => {
-    setEditingCategory(null); // Reset when modal is closed without saving
+    setEditingCategory(null); // 수정 중 모달 껐을 경우 수정되는 카테고리 선택 초기화
     setIsEditModalOpen(false);
   };
 

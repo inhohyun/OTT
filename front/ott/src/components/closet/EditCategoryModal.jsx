@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 
 const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategories }) => {
+  // 새로운 카테고리 이름을 저장할 상태와 오류 메시지 상태
   const [newCategoryName, setNewCategoryName] = useState(category);
   const [error, setError] = useState('');
 
+  // 저장 버튼 클릭 시 호출되는 함수
   const handleSave = () => {
-    // Trim the new category name
+    // 새로운 카테고리 이름의 앞뒤 공백 제거
     const trimmedName = newCategoryName.trim();
 
-    // Check for duplicate category names, excluding the current one being edited
+    // 중복 카테고리 이름 검사, 현재 편집 중인 카테고리는 제외
     if (
       existingCategories.some(
         (existingCategory) =>
@@ -20,7 +22,7 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategori
       return;
     }
 
-    // If no duplicate, proceed with saving
+    // 중복이 없다면 저장 진행
     onSave(trimmedName);
     onClose();
   };
@@ -36,7 +38,7 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategori
           value={newCategoryName}
           onChange={(e) => {
             setNewCategoryName(e.target.value);
-            setError(''); // Reset error message on change
+            setError(''); // 입력 변경 시 오류 메시지 초기화
           }}
           className={`border rounded px-2 py-1 w-full mb-4 ${error ? 'border-red-500' : 'border-gray-300'}`}
         />

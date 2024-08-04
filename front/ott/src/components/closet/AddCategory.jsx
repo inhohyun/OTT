@@ -8,28 +8,36 @@ const AddCategory = ({
   onAddCategory,
   existingCategories = [],
 }) => {
+  // 새로 추가되는 카테고리 초기값 공백으로 정의
   const [newCategory, setNewCategory] = useState('');
+  // 관련된 에러 정의
   const [error, setError] = useState('');
 
+  // 카테고리 추가 함수
   const handleAddCategory = () => {
+    // 공백 제외한 카테고리 이름
     const trimmedCategory = newCategory.trim();
-
+    // 입력값 없을 경우
     if (!trimmedCategory) {
       setError('카테고리 이름을 입력하세요');
       return;
     }
 
+    // 카테고리 중복 검사
     const categoryExists = existingCategories.some(
       (category) => category.toLowerCase() === trimmedCategory.toLowerCase()
     );
-
+    // 같은 이름의 카테고리 존재할 경우
     if (categoryExists) {
       setError('같은 이름의 카테고리가 존재합니다');
       return;
     }
 
+    // 검사 통과한 카테고리 추가
     onAddCategory(trimmedCategory);
+    // 입력값 초기화
     setNewCategory('');
+    // 카테고리 추가 모달 닫기
     onClose();
   };
 
@@ -54,7 +62,7 @@ const AddCategory = ({
           value={newCategory}
           onChange={(e) => {
             setNewCategory(e.target.value);
-            setError(''); // Clear error when typing
+            setError(''); 
           }}
         />
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

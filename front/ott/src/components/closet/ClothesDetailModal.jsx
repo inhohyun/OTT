@@ -12,8 +12,9 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
   const [category, setCategory] = useState(clothingItem.category || '');
 
   useEffect(() => {
+    // 수정으로 넘어갈 때 기존 옷 정보들 디폴트로 설정
     if (clothingItem) {
-      console.log('Setting editable item and images:', clothingItem);
+      console.log('해당 옷 수정:', clothingItem);
       setEditableItem(clothingItem);
       setFrontImage(clothingItem.image_path[0]);
       setBackImage(clothingItem.image_path[1]);
@@ -24,16 +25,19 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
   useEffect(() => {
     if (!isOpen) {
       setIsEditing(false);
+      // 옷장 상으로 보여줄 이미지 === 옷의 앞면 이미지(첫번째)로 고정
       setCurrentImageIndex(0);
     }
   }, [isOpen]);
 
   if (!isOpen || !clothingItem) return null;
 
+  // 수정 상태 활성화
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  // 수정된 옷 정보 저장
   const handleSaveClick = () => {
     const updatedData = {
       ...editableItem,
@@ -41,23 +45,28 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
       image_path: [frontImage, backImage],
     };
 
-    console.log('Sending updated data to backend:', updatedData);
+    console.log('수정된 정보 백엔드로 보냄:', updatedData);
 
+    // 수정된 정보 갱신
     onEdit(updatedData);
+    // 수정 상태 비활성화
     setIsEditing(false);
     onClose();
   };
 
+  // 옷 삭제
   const handleDeleteClick = () => {
     onDelete(editableItem.id);
     onClose();
   };
 
+  // 수정된 옷 정보 업데이트
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditableItem({ ...editableItem, [name]: value });
   };
 
+  // 이미지 수정 시 이미지 교체 함수
   const handleImageChange = (e, setImage) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -66,16 +75,19 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
     }
   };
 
+  // 우로 넘기기
   const handleNextImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % 2);
   };
 
+  // 좌로 넘기기
   const handlePreviousImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + 2) % 2);
   };
 
+  // 상세정보에서 이미지 불러오기
   const getCurrentImage = () => {
     if (currentImageIndex === 0) {
       return frontImage || null;
@@ -83,6 +95,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
     return backImage || null;
   };
 
+  // 없는 곳에 새로 파일 첨부할 때 첨부할 파일 가져오기
   const triggerFileInput = () => {
     const input = document.getElementById(`file-input-${currentImageIndex}`);
     if (input) {
@@ -141,7 +154,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
             )}
           </div>
 
-          {/* Hidden file inputs */}
+          {/* 보이지 않는 파일 관리 - 앞, 뒤 모두 있을 경우 */}
           <input
             type="file"
             accept="image/*"
@@ -279,13 +292,13 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
             <div className="flex justify-center mt-4 space-x-4">
               <button
                 onClick={handleSaveClick}
-                className="bg-violet-300 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                className="bg-violet-300 text-white px-4 py-2 rounded-lg"
               >
                 저장
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="bg-stone-400 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                className="bg-stone-400 text-white px-4 py-2 rounded-lg"
               >
                 삭제
               </button>

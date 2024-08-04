@@ -100,7 +100,7 @@ const CustomClothesGrid = ({ clothes, onToggleLike }) => {
                 style={{ minWidth: '100px', height: '190px' }}
               >
                 <img
-                  src={isFrontVisible ? item.frontImage : item.backImage}
+                  src={isFrontVisible ? item.image_path[0] : item.image_path[1]}
                   alt={`${item.category}`}
                   className="w-full h-full rounded-lg shadow-lg"
                 />
