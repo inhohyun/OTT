@@ -24,7 +24,7 @@ const UserPage = ({ uid }) => {
         // const data = await getUserInfo(uid);
         const dummyData = {
           username: '홍길동',
-          isMe: false,
+          isMe: true,
           isPublic: true,
           tags: ['패션', '여행', '음악'],
         };
@@ -74,11 +74,10 @@ const UserPage = ({ uid }) => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center font-dohyeon">
-      <div
-        className="w-[390px] h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
+    <div className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon"
+         style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="w-[390px] h-full flex flex-col items-center justify-start">
         <div className="w-full flex justify-center mt-8">
           <img
             className="w-[70px] h-[70px] rounded-full"
@@ -155,12 +154,12 @@ const UserPage = ({ uid }) => {
             </span>
           ))}
         </div>
-        <div className="w-full mt-6">
+        <div className="w-full mt-6 h-full">
           <NavBar
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
           />
-          <div className="mt-4 text-[rgba(0,0,0,0.5)]">{renderComponent}</div>
+          <div className="mt-4 text-[rgba(0,0,0,0.5)] h-full w-full">{renderComponent}</div>
         </div>
       </div>
     </div>
