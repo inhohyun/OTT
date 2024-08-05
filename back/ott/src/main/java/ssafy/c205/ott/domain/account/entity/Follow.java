@@ -34,4 +34,8 @@ public class Follow extends BaseEntity {
     @Column(nullable = false)
     private FollowStatus followStatus;
 
+    public void updateFollowStatus() {
+        this.followStatus = FollowStatus.FOLLOWING;
+    }
+
 }

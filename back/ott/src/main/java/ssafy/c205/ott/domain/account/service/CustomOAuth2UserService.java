@@ -11,6 +11,7 @@ import ssafy.c205.ott.common.oauth.dto.*;
 import ssafy.c205.ott.domain.account.dto.request.MemberLoginUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRegisterRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberRegisterDto;
+import ssafy.c205.ott.domain.account.dto.response.RegisterMemberSuccessDto;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
@@ -62,9 +63,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(MemberRole.USER)
                     .build();
 
-            memberWriteService.registerMember(memberRegisterRequestDto);
+            RegisterMemberSuccessDto successDto = memberWriteService.registerMember(memberRegisterRequestDto);
 
             MemberRegisterDto memberRegisterDTO = MemberRegisterDto.builder()
+                    .id(successDto.getMemberId())
                     .name(memberRegisterRequestDto.getName())
                     .sso(memberRegisterRequestDto.getSso())
                     .email(memberRegisterRequestDto.getEmail())

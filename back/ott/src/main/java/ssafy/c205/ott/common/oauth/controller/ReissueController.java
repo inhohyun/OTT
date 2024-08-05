@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class ReissueController {
     private final RefreshService refreshService;
     private final CookieService cookieService;
 
-    @GetMapping("/reissue")
+    @GetMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         //get refresh token
@@ -82,7 +83,7 @@ public class ReissueController {
 
         //response
         response.setHeader("access", newAccess);
-        response.addCookie(cookieService.createCookie("refresh", newRefresh));
+        response.addHeader(HttpHeaders.SET_COOKIE, cookieService.createCookie("refresh", newRefresh).toString());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

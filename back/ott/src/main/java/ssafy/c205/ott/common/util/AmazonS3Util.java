@@ -1,4 +1,4 @@
-package ssafy.c205.ott.util;
+package ssafy.c205.ott.common.util;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
