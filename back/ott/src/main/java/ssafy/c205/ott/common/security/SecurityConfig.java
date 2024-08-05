@@ -2,6 +2,7 @@ package ssafy.c205.ott.common.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,8 +11,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 import ssafy.c205.ott.common.oauth.CustomSuccessHandler;
 import ssafy.c205.ott.common.oauth.jwt.CustomLogoutFilter;
 import ssafy.c205.ott.common.oauth.jwt.JWTFilter;
@@ -20,11 +23,13 @@ import ssafy.c205.ott.common.oauth.repository.CustomClientRegistrationRepository
 import ssafy.c205.ott.common.oauth.repository.RefreshRepository;
 import ssafy.c205.ott.domain.account.service.CustomOAuth2UserService;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -37,6 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
                     @Override
@@ -44,14 +50,15 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); //프론트단 주소
+//                        configuration.setAllowedOrigins(Arrays.asList("https://i11c205.p.ssafy.io/", "http://localhost:3000/")); //프론트단 주소
+                        configuration.setAllowedOriginPatterns(Collections.singletonList("https://i11c205.p.ssafy.io"));
                         configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
                         configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
                         configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
                         configuration.setMaxAge(3600L);
 
-                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정해라
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정해라
+//                        configuration.setExposedHeaders(Collections.singletonList());
 
                         return configuration;
                     }
@@ -73,19 +80,22 @@ public class SecurityConfig {
         http
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
-        //oauth2
+        log.debug("oauth 들어가기 전");
         http
                 .oauth2Login((oauth2) -> oauth2
-                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
-                        .successHandler(customSuccessHandler));
+                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
+                        .successHandler(customSuccessHandler)
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
 
+        //oauth2
+        log.debug("oauth 들어가기 후");
         //경로별 인가 작업
-//        http
-//                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/login","/", "/reissue", "/unlink","/delete").permitAll()
-//                        .anyRequest().authenticated());
+        http
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/login","/", "/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
+                        .anyRequest().authenticated());
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
@@ -98,10 +108,5 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public OAuth2AuthorizedClientService authorizedClientService(ClientRegistrationRepository clientRegistrationRepository) {
-//        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
-//    }
 
 }

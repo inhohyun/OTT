@@ -6,13 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.common.oauth.jwt.JWTUtil;
-import ssafy.c205.ott.common.oauth.repository.RefreshRepository;
 import ssafy.c205.ott.common.oauth.service.CookieService;
 import ssafy.c205.ott.common.oauth.service.RefreshService;
 
@@ -26,7 +26,6 @@ import ssafy.c205.ott.domain.account.entity.MemberRole;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
     private final RefreshService refreshService;
     private final CookieService cookieService;
 
@@ -52,11 +51,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //응답 설정
         response.setHeader("access", accessToken);
-        response.addCookie(cookieService.createCookie("refresh", refreshToken));
+        ResponseCookie responseCookie = cookieService.createCookie("refresh", refreshToken);
+        response.addHeader("Set-Cookie", responseCookie.toString());
         response.setStatus(HttpStatus.OK.value());
 
-//        response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("https://i11c205.p.ssafy.io/oauth/callback");
     }
 
 }

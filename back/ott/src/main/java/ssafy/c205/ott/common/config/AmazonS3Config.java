@@ -1,4 +1,4 @@
-package ssafy.c205.ott.config;
+package ssafy.c205.ott.common.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

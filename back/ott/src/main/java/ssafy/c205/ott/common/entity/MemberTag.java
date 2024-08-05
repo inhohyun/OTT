@@ -1,10 +1,12 @@
 package ssafy.c205.ott.common.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
+@Getter
 @Entity
 public class MemberTag {
     @Id

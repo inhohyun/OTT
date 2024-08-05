@@ -4,30 +4,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.PublicStatus;
+import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.dto.request.*;
-import ssafy.c205.ott.domain.account.dto.response.DeleteMemberSuccessDto;
-import ssafy.c205.ott.domain.account.dto.response.FollowResponseDto;
-import ssafy.c205.ott.domain.account.dto.response.RegisterMemberSuccessDto;
-import ssafy.c205.ott.domain.account.dto.response.UpdateMemberSuccessDto;
+import ssafy.c205.ott.domain.account.dto.response.*;
+import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
-import ssafy.c205.ott.domain.account.exception.AlreadyFollowException;
 import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
-import ssafy.c205.ott.domain.account.util.FollowMessage;
+import static ssafy.c205.ott.domain.account.util.FollowMessage.*;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class MemberWriteService {
-    //Todo: 이미지 업로드 및 url 가져오기 구현
+
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
     private final MemberValidator memberValidator;
     private final ClosetService closetService;
+    private final AmazonS3Util amazonS3Util;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
         Member member = Member.builder()
@@ -42,14 +41,10 @@ public class MemberWriteService {
         return new RegisterMemberSuccessDto(member.getId());
     }
 
-    private Member findMemberById(Long id) {
-        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
-    }
-
     public UpdateMemberSuccessDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto) {
         Member member = findMemberById(memberUpdateRequestDto.getMemberId());
         member.updateMember(memberUpdateRequestDto.getNickname(), memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getProfileImageUrl(), memberUpdateRequestDto.getHeight()
-                , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus());
+                , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus(), memberUpdateRequestDto.getMemberTags());
         return new UpdateMemberSuccessDto(member.getId());
     }
 
@@ -60,19 +55,16 @@ public class MemberWriteService {
     }
 
     public DeleteMemberSuccessDto deleteMember(MemberRequestDto memberRequestDto) {
+        memberValidator.validateSelfRequest(memberRequestDto);
         Member member = findMemberById(memberRequestDto.getId());
         member.deleteMember();
         return new DeleteMemberSuccessDto();
     }
 
     public FollowResponseDto followMember(FollowRequestDto followRequestDto) {
-        memberValidator.validateFollow(followRequestDto);
         Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
         Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
-
-        if (isAlreadyFollowing(targetMember, requestMember)) {
-            throw new AlreadyFollowException();
-        }
+        memberValidator.validateFollow(followRequestDto);
 
         if (targetMember.getPublicStatus() == PublicStatus.PRIVATE) {
             return handlePrivateFollow(targetMember, requestMember);
@@ -80,22 +72,27 @@ public class MemberWriteService {
         return handlePublicFollow(targetMember, requestMember);
     }
 
-    private boolean isAlreadyFollowing(Member targetMember, Member requestMember) {
-        return followRepository.findByToMemberAndFromMember(targetMember, requestMember).isPresent();
+    public FollowResponseDto unfollowMember(FollowRequestDto followRequestDto) {
+        Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
+        Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
+        memberValidator.validateUnfollow(followRequestDto);
+        followRepository.deleteByToMemberAndFromMember(targetMember, requestMember);
+
+        return createFollowResponseDto(null, targetMember.getFollowers().size(), UNFOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
-        Follow follow = createFollow(targetMember, requestMember, FollowStatus.ACCEPT);
+        Follow follow = createFollow(targetMember, requestMember, FollowStatus.FOLLOWING);
         followRepository.save(follow);
 
-        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FollowMessage.FOLLOW_SUCCESS_MESSAGE.getMessage());
+        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePrivateFollow(Member targetMember, Member requestMember) {
         Follow follow = createFollow(targetMember, requestMember, FollowStatus.WAIT);
         followRepository.save(follow);
 
-        return createFollowResponseDto(follow.getFollowStatus(), 0, FollowMessage.FOLLOW_REQUEST_MESSAGE.getMessage());
+        return createFollowResponseDto(follow.getFollowStatus(), 0, FOLLOW_REQUEST_MESSAGE.getMessage());
     }
 
     private FollowResponseDto createFollowResponseDto(FollowStatus followStatus, int followerCount, String message) {
@@ -112,6 +109,39 @@ public class MemberWriteService {
                 .fromMember(fromMember)
                 .followStatus(followStatus)
                 .build();
+    }
+
+    private Member findMemberById(Long id) {
+        return memberRepository.findByIdAndActiveStatus(id, ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+    }
+
+    public FollowResponseDto acceptFollow(FollowRequestDto followRequestDto) {
+        Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
+        Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
+        memberValidator.validateAcceptFollow(followRequestDto);
+
+        Follow follow = followRepository.findByToMemberAndFromMember(targetMember, requestMember).get();
+        follow.updateFollowStatus();
+
+        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_ACCEPT_MESSAGE.getMessage());
+    }
+
+    public FollowResponseDto rejectFollow(FollowRequestDto followRequestDto) {
+        Member targetMember = findMemberById(followRequestDto.getTargetMemberId());
+        Member requestMember = findMemberById(followRequestDto.getRequestMemberId());
+        memberValidator.validateRejectFollow(followRequestDto);
+
+        followRepository.deleteByToMemberAndFromMember(targetMember, requestMember);
+
+        return createFollowResponseDto(null, 0, FOLLOW_REJECT_MESSAGE.getMessage());
+    }
+
+    public ProfileImageSuccessDto uploadProfileImage(UploadProfileImageRequestDto uploadProfileImageRequestDto) {
+        String profileImageUrl = amazonS3Util.saveFile(uploadProfileImageRequestDto.getFile());
+        Member member = findMemberById(uploadProfileImageRequestDto.getMemberId());
+        member.updateProfileImage(profileImageUrl);
+
+        return new ProfileImageSuccessDto();
     }
 
 }
