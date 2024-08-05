@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faEdit, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTimes,
+  faEdit,
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 
-
-const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, categories = [] }) => {
+const ClothesDetailModal = ({
+  isOpen,
+  onClose,
+  clothingItem,
+  onEdit,
+  onDelete,
+  categories = [],
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableItem, setEditableItem] = useState(clothingItem);
   const [frontImage, setFrontImage] = useState(clothingItem.image_path[0]);
   const [backImage, setBackImage] = useState(clothingItem.image_path[1]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [category, setCategory] = useState(clothingItem.category || '');
+  const [salesStatus, setSalesStatus] = useState(
+    clothingItem.sales_status || 'n'
+  ); // 판매 상태 추가
 
   useEffect(() => {
     // 수정으로 넘어갈 때 기존 옷 정보들 디폴트로 설정
@@ -19,6 +33,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
       setFrontImage(clothingItem.image_path[0]);
       setBackImage(clothingItem.image_path[1]);
       setCategory(clothingItem.category);
+      setSalesStatus(clothingItem.sales_status || 'n'); // 판매 상태 설정
     }
   }, [clothingItem]);
 
@@ -42,6 +57,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
     const updatedData = {
       ...editableItem,
       category,
+      sales_status: salesStatus, // 수정된 판매 상태 저장
       image_path: [frontImage, backImage],
     };
 
@@ -126,13 +142,24 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
           </div>
         </div>
         <div className="overflow-y-auto max-h-[75vh] p-4">
-          <div className="relative flex justify-center mb-4" onClick={isEditing ? triggerFileInput : undefined}>
+          <div
+            className="relative flex justify-center mb-4"
+            onClick={isEditing ? triggerFileInput : undefined}
+          >
             <div className="w-40 h-60 rounded-lg overflow-hidden relative cursor-pointer">
               {getCurrentImage() ? (
-                <img src={getCurrentImage()} alt="Clothing" className="object-cover w-full h-full" />
+                <img
+                  src={getCurrentImage()}
+                  alt="Clothing"
+                  className="object-cover w-full h-full"
+                />
               ) : (
                 <div className="w-full h-full flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
-                  <label className="text-gray-700">{currentImageIndex === 0 ? 'Add Front Image' : 'Add Back Image'}</label>
+                  <label className="text-gray-700">
+                    {currentImageIndex === 0
+                      ? 'Add Front Image'
+                      : 'Add Back Image'}
+                  </label>
                 </div>
               )}
             </div>
@@ -181,11 +208,13 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
                     onChange={(e) => setCategory(e.target.value)}
                     className="flex-grow p-2 border rounded-lg"
                   >
-                    {categories.length > 0 ? categories.map((cat, index) => (
-                      <option key={index} value={cat}>
-                        {cat}
-                      </option>
-                    )) : (
+                    {categories.length > 0 ? (
+                      categories.map((cat, index) => (
+                        <option key={index} value={cat}>
+                          {cat}
+                        </option>
+                      ))
+                    ) : (
                       <option value="">카테고리 없음</option>
                     )}
                   </select>
@@ -243,6 +272,18 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
                   </select>
                 </div>
                 <div className="flex items-center mb-2">
+                  <label className="text-gray-700 mr-2 w-24">판매 여부</label>
+                  <select
+                    name="sales_status"
+                    value={salesStatus}
+                    onChange={(e) => setSalesStatus(e.target.value)} // 판매 상태 수정
+                    className="flex-grow p-2 border rounded-lg"
+                  >
+                    <option value="y">판매 중</option>
+                    <option value="n">판매 안 함</option>
+                  </select>
+                </div>
+                <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">성별</label>
                   <select
                     name="gender"
@@ -270,7 +311,7 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
                   <strong>색상:</strong> {editableItem.color}
                 </p>
                 <p>
-                  <strong>구매처:</strong> 
+                  <strong>구매처:</strong>
                   <a
                     href={editableItem.purchase}
                     target="_blank"
@@ -280,10 +321,16 @@ const ClothesDetailModal = ({ isOpen, onClose, clothingItem, onEdit, onDelete, c
                   </a>
                 </p>
                 <p>
-                  <strong>공개 여부:</strong> {editableItem.public_status === 'y' ? '공개' : '비공개'}
+                  <strong>공개 여부:</strong>{' '}
+                  {editableItem.public_status === 'y' ? '공개' : '비공개'}
                 </p>
                 <p>
-                  <strong>성별:</strong> {editableItem.gender === 'm' ? '남성' : '여성'}
+                  <strong>판매 여부:</strong>{' '}
+                  {salesStatus === 'y' ? '판매 중' : '판매 안 함'}
+                </p>
+                <p>
+                  <strong>성별:</strong>{' '}
+                  {editableItem.gender === 'm' ? '남성' : '여성'}
                 </p>
               </>
             )}

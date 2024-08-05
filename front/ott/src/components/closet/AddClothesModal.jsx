@@ -12,6 +12,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [size, setSize] = useState('');
   const [color, setColor] = useState('');
   const [publicStatus, setPublicStatus] = useState(false);
+  const [salesStatus, setSalesStatus] = useState(false); // 판매 상태를 나타내는 새로운 상태
   const [gender, setGender] = useState('');
   const [errors, setErrors] = useState({});
 
@@ -24,7 +25,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     }
   }, [isOpen]);
 
-  // 최초 카테고리를 가장 상단에 위치한 카테고리로 기본값 설정
   useEffect(() => {
     if (categories.length > 0) {
       setCategory(categories[0]);
@@ -59,6 +59,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         purchase: purchaseLocation,
         category,
         public_status: publicStatus ? 'y' : 'n',
+        sales_status: salesStatus ? 'y' : 'n', // 판매 상태 추가
         // 이미지는 2장까지... 앞면 필수, 뒷면은 선택이라 list의 0번 idx 항목 === 앞면 사진
         image_path: backImage ? [frontImage, backImage] : [frontImage],
         color,
@@ -89,7 +90,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     }
   };
 
-  // d옷 추가 input들 초기화
+  // 옷 추가 input들 초기화
   const clearInputs = () => {
     setCategory(categories[0]);
     setFrontImage('');
@@ -99,6 +100,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     setSize('');
     setColor('');
     setPublicStatus(false);
+    setSalesStatus(false); // 판매 상태 초기화
     setGender('');
     setErrors({});
   };
@@ -263,6 +265,15 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
             type="checkbox"
             checked={publicStatus}
             onChange={(e) => setPublicStatus(e.target.checked)}
+            className="form-checkbox h-5 w-5 text-violet-400"
+          />
+        </div>
+        <div className="mb-4 flex items-center">
+          <label className="text-gray-700 mr-2">판매 여부</label>
+          <input
+            type="checkbox"
+            checked={salesStatus}
+            onChange={(e) => setSalesStatus(e.target.checked)} // 판매 상태 변경 함수
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>
