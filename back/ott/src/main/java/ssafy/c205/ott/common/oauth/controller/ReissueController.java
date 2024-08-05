@@ -25,7 +25,7 @@ public class ReissueController {
     private final RefreshService refreshService;
     private final CookieService cookieService;
 
-    @GetMapping("/reissue")
+    @GetMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         //get refresh token

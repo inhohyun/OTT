@@ -3,6 +3,7 @@ package ssafy.c205.ott.domain.account.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.ValidateNicknameSuccessDto;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
@@ -18,6 +19,12 @@ public class MemberValidator {
 
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
+
+    public void validateSelfRequest(MemberRequestDto memberRequestDto) {
+        if (!(memberRequestDto.getId().longValue() == memberRequestDto.getCurrentId().longValue())) {
+            throw new NotSelfRequestException();
+        }
+    }
 
     public ValidateNicknameSuccessDto validateMemberNickname(final String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
@@ -53,6 +60,10 @@ public class MemberValidator {
         long requestMemberId = followRequestDto.getRequestMemberId();
         validateSelfFollow(targetMemberId, requestMemberId);
         isPresentFollowRequest(targetMemberId, requestMemberId);
+    }
+
+    public boolean isCurrentUser(MemberRequestDto memberRequestDto) {
+        return memberRequestDto.getId().longValue() == memberRequestDto.getCurrentId().longValue();
     }
 
     private void validateSelfFollow(long targetMemberId, long requestMemberId) {

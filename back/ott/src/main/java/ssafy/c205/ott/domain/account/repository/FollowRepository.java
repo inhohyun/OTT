@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.Member;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
@@ -11,4 +12,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     void deleteByToMemberAndFromMember(Member toMember, Member fromMember);
     boolean existsByToMemberIdAndFromMemberId(Long toMemberId, Long fromMemberId);
     Optional<Follow> findByToMemberAndFromMember(Member toMember, Member fromMember);
+    List<Follow> findByToMemberId(Long toMemberId);
+    List<Follow> findByFromMemberId(Long toMemberId);
 }
