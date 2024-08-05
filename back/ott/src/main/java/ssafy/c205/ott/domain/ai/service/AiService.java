@@ -22,7 +22,7 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class AiService {
-    @Value("gpu.server.url")
+    @Value("${gpu.server.url}")
     private String GPU_SERVER_BASE_URL;
 
     private final RestTemplate restTemplate;
