@@ -18,37 +18,41 @@ const ClothesDetailModal = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableItem, setEditableItem] = useState(clothingItem);
-  const [frontImage, setFrontImage] = useState(clothingItem.image_path[0]);
-  const [backImage, setBackImage] = useState(clothingItem.image_path[1]);
+  const [frontImage, setFrontImage] = useState(clothingItem.img[0]);
+  const [backImage, setBackImage] = useState(clothingItem.img[1]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [category, setCategory] = useState(clothingItem.category || '');
+  const [publicStatus, setPublicStatus] = useState(
+    clothingItem.publicStatus || 'PRIVATE'
+  );
   const [salesStatus, setSalesStatus] = useState(
-    clothingItem.sales_status || 'n'
-  ); // 판매 상태 추가
+    clothingItem.salesStatus || 'NOT_SALE'
+  );
+  const [gender, setGender] = useState(clothingItem.gender || 'COMMON');
 
   useEffect(() => {
-    // 수정으로 넘어갈 때 기존 옷 정보들 디폴트로 설정
+    // Initialize editable state with the given clothing item data
     if (clothingItem) {
-      console.log('해당 옷 수정:', clothingItem);
+      console.log('Editing clothing item:', clothingItem);
       setEditableItem(clothingItem);
-      setFrontImage(clothingItem.image_path[0]);
-      setBackImage(clothingItem.image_path[1]);
+      setFrontImage(clothingItem.img[0]);
+      setBackImage(clothingItem.img[1]);
       setCategory(clothingItem.category);
-      setSalesStatus(clothingItem.sales_status || 'n'); // 판매 상태 설정
+      setPublicStatus(clothingItem.publicStatus || 'PRIVATE');
+      setSalesStatus(clothingItem.salesStatus || 'NOT_SALE');
+      setGender(clothingItem.gender || 'COMMON');
     }
   }, [clothingItem]);
 
   useEffect(() => {
     if (!isOpen) {
       setIsEditing(false);
-      // 옷장 상으로 보여줄 이미지 === 옷의 앞면 이미지(첫번째)로 고정
-      setCurrentImageIndex(0);
+      setCurrentImageIndex(0); // Reset to the first image when modal closes
     }
   }, [isOpen]);
 
   if (!isOpen || !clothingItem) return null;
 
-  // Custom styles for react-select
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -68,42 +72,42 @@ const ClothesDetailModal = ({
     }),
   };
 
-  // 수정 상태 활성화
+  // Toggle editing mode
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
-  // 수정된 옷 정보 저장
+  // Save the edited clothing item
   const handleSaveClick = () => {
     const updatedData = {
       ...editableItem,
       category,
-      sales_status: salesStatus, // 수정된 판매 상태 저장
-      image_path: [frontImage, backImage],
+      publicStatus,
+      salesStatus,
+      gender,
+      img: [frontImage, backImage],
     };
 
-    console.log('수정된 정보 백엔드로 보냄:', updatedData);
+    console.log('Saving edited data to backend:', updatedData);
 
-    // 수정된 정보 갱신
     onEdit(updatedData);
-    // 수정 상태 비활성화
     setIsEditing(false);
     onClose();
   };
 
-  // 옷 삭제
+  // Delete the clothing item
   const handleDeleteClick = () => {
     onDelete(editableItem.id);
     onClose();
   };
 
-  // 수정된 옷 정보 업데이트
+  // Update editable item state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditableItem({ ...editableItem, [name]: value });
   };
 
-  // 이미지 수정 시 이미지 교체 함수
+  // Change image (front/back)
   const handleImageChange = (e, setImage) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -112,19 +116,19 @@ const ClothesDetailModal = ({
     }
   };
 
-  // 우로 넘기기
+  // Navigate to the next image
   const handleNextImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % 2);
   };
 
-  // 좌로 넘기기
+  // Navigate to the previous image
   const handlePreviousImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + 2) % 2);
   };
 
-  // 상세정보에서 이미지 불러오기
+  // Get current image to display
   const getCurrentImage = () => {
     if (currentImageIndex === 0) {
       return frontImage || null;
@@ -132,7 +136,7 @@ const ClothesDetailModal = ({
     return backImage || null;
   };
 
-  // 없는 곳에 새로 파일 첨부할 때 첨부할 파일 가져오기
+  // Trigger file input
   const triggerFileInput = () => {
     const input = document.getElementById(`file-input-${currentImageIndex}`);
     if (input) {
@@ -141,13 +145,18 @@ const ClothesDetailModal = ({
   };
 
   const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
+  const publicOptions = [
+    { value: 'PUBLIC', label: '공개' },
+    { value: 'PRIVATE', label: '비공개' },
+  ];
   const salesOptions = [
-    { value: 'y', label: '판매 중' },
-    { value: 'n', label: '판매 안 함' },
+    { value: 'ON_SALE', label: '판매 중' },
+    { value: 'NOT_SALE', label: '판매 안 함' },
   ];
   const genderOptions = [
-    { value: 'm', label: '남성' },
-    { value: 'f', label: '여성' },
+    { value: 'MAN', label: '남성' },
+    { value: 'WOMAN', label: '여성' },
+    { value: 'COMMON', label: '남녀공용' },
   ];
 
   return (
@@ -212,7 +221,7 @@ const ClothesDetailModal = ({
             )}
           </div>
 
-          {/* 보이지 않는 파일 관리 - 앞, 뒤 모두 있을 경우 */}
+          {/* Hidden file inputs for image upload */}
           <input
             type="file"
             accept="image/*"
@@ -285,21 +294,11 @@ const ClothesDetailModal = ({
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">공개 여부</label>
                   <Select
-                    value={{
-                      value: editableItem.public_status,
-                      label:
-                        editableItem.public_status === 'y' ? '공개' : '비공개',
-                    }}
-                    onChange={(opt) =>
-                      setEditableItem({
-                        ...editableItem,
-                        public_status: opt.value,
-                      })
-                    }
-                    options={[
-                      { value: 'y', label: '공개' },
-                      { value: 'n', label: '비공개' },
-                    ]}
+                    value={publicOptions.find(
+                      (opt) => opt.value === publicStatus
+                    )}
+                    onChange={(opt) => setPublicStatus(opt.value)}
+                    options={publicOptions}
                     styles={customStyles}
                   />
                 </div>
@@ -309,7 +308,7 @@ const ClothesDetailModal = ({
                     value={salesOptions.find(
                       (opt) => opt.value === salesStatus
                     )}
-                    onChange={(opt) => setSalesStatus(opt.value)} // 판매 상태 수정
+                    onChange={(opt) => setSalesStatus(opt.value)}
                     options={salesOptions}
                     styles={customStyles}
                   />
@@ -317,12 +316,8 @@ const ClothesDetailModal = ({
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">성별</label>
                   <Select
-                    value={genderOptions.find(
-                      (opt) => opt.value === editableItem.gender
-                    )}
-                    onChange={(opt) =>
-                      setEditableItem({ ...editableItem, gender: opt.value })
-                    }
+                    value={genderOptions.find((opt) => opt.value === gender)}
+                    onChange={(opt) => setGender(opt.value)}
                     options={genderOptions}
                     styles={customStyles}
                   />
@@ -343,7 +338,7 @@ const ClothesDetailModal = ({
                   <strong>색상:</strong> {editableItem.color}
                 </p>
                 <p>
-                  <strong>구매처:</strong>
+                  <strong>구매처:</strong>{' '}
                   <a
                     href={editableItem.purchase}
                     target="_blank"
@@ -354,15 +349,19 @@ const ClothesDetailModal = ({
                 </p>
                 <p>
                   <strong>공개 여부:</strong>{' '}
-                  {editableItem.public_status === 'y' ? '공개' : '비공개'}
+                  {publicStatus === 'PUBLIC' ? '공개' : '비공개'}
                 </p>
                 <p>
                   <strong>판매 여부:</strong>{' '}
-                  {salesStatus === 'y' ? '판매 중' : '판매 안 함'}
+                  {salesStatus === 'ON_SALE' ? '판매 중' : '판매 안 함'}
                 </p>
                 <p>
                   <strong>성별:</strong>{' '}
-                  {editableItem.gender === 'm' ? '남성' : '여성'}
+                  {gender === 'MAN'
+                    ? '남성'
+                    : gender === 'WOMAN'
+                      ? '여성'
+                      : '남녀공용'}
                 </p>
               </>
             )}

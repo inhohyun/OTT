@@ -64,7 +64,9 @@ const ClosetPage = () => {
     // 삭제된 카테고리의 옷들 -> 카테고리 전체로 변경
     setClothes((prevClothes) =>
       prevClothes.map((item) =>
-        item.category === categoryToDelete ? { ...item, category: '전체' } : item
+        item.category === categoryToDelete
+          ? { ...item, category: '전체' }
+          : item
       )
     );
   };
@@ -113,8 +115,8 @@ const ClosetPage = () => {
     selectedCategory === '전체'
       ? clothes
       : selectedCategory === '즐겨찾기'
-      ? clothes.filter((item) => item.isLiked)
-      : clothes.filter((item) => item.category === selectedCategory);
+        ? clothes.filter((item) => item.isLiked)
+        : clothes.filter((item) => item.category === selectedCategory);
 
   // '전체', '즐겨찾기' 제외한 나머지 카테고리들
   const filteredCategories = categories.filter(

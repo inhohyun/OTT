@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import Select from 'react-select'; // Import react-select
+import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [category, setCategory] = useState('');
@@ -12,7 +13,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [size, setSize] = useState('');
   const [color, setColor] = useState('');
   const [publicStatus, setPublicStatus] = useState(false);
-  const [salesStatus, setSalesStatus] = useState(false); // 판매 상태를 나타내는 새로운 상태
+  const [salesStatus, setSalesStatus] = useState(false);
   const [gender, setGender] = useState('');
   const [errors, setErrors] = useState({});
 
@@ -45,7 +46,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Custom styles for react-select
+  // 드롭다운 커스터마이징
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -69,47 +70,56 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const handleAddClothes = () => {
     // 유효성 검사 통과했으면
     if (validateInputs()) {
-      // 옷의 고유 id 생성(서버 시간으로) -> 백엔드와 논의 후 변경
-      const id = Date.now();
-      // 새로운 옷에 대한 정보
-      const newClothes = {
-        id,
-        size,
-        brand,
-        purchase: purchaseLocation,
-        category,
-        public_status: publicStatus ? 'y' : 'n',
-        sales_status: salesStatus ? 'y' : 'n', // 판매 상태 추가
-        // 이미지는 2장까지... 앞면 필수, 뒷면은 선택이라 list의 0번 idx 항목 === 앞면 사진
-        image_path: backImage ? [frontImage, backImage] : [frontImage],
-        color,
-        gender,
-        user_id: 1,
-      };
+      const formData = new FormData();
+      formData.append('id', Date.now());
+      formData.append('size', size);
+      formData.append('brand', brand);
+      formData.append('purchase', purchaseLocation);
+      formData.append('category', category);
+      formData.append('publicStatus', publicStatus ? 'PUBLIC' : 'PRIVATE');
+      formData.append('salesStatus', salesStatus ? 'ON_SALE' : 'NOT_SALE');
+      formData.append('color', color);
+      formData.append('gender', gender);
+      formData.append('uid', 1);
+
+      // 이미지 파일 첨부
+      if (frontImage) {
+        formData.append(
+          'img',
+          document.getElementById('front-file-input').files[0]
+        );
+      }
+      if (backImage) {
+        formData.append(
+          'img',
+          document.getElementById('back-file-input').files[0]
+        );
+      }
+
+      console.log('test');
+      // console 확인
+      for (let [key, value] of formData.entries()) {
+        console.log(key + '|' + value);
+      }
 
       // 벡엔드로 보내지는 값 확인
-      console.log('새로운 옷 정보:', newClothes);
-
-      // axios 요청 예시
-      /*
-      axios.post('/clothes', newClothes)
-        .then(response => {
+      axios
+        .post('http://192.168.100.89:8080/api/clothes/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
           console.log('Successfully added clothes:', response.data);
-          onAddClothes({ ...newClothes, key: response.data.key });
+          onAddClothes({ key: response.data.key });
           clearInputs();
           onClose();
         })
-        .catch(error => {
-          console.error('옷 추가 과정에서 오류 발생:', error);
+        .catch((error) => {
+          console.error('Error adding clothes:', error);
         });
-      */
-
-      onAddClothes(newClothes);
-      clearInputs();
-      onClose();
     }
   };
-
   // 옷 추가 input들 초기화
   const clearInputs = () => {
     setCategory(categories[0]);
@@ -145,8 +155,9 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
   const genderOptions = [
-    { value: 'm', label: '남성' },
-    { value: 'f', label: '여성' },
+    { value: 'MAN', label: '남성' },
+    { value: 'WOMAN', label: '여성' },
+    { value: 'COMMON', label: '남녀공용' },
   ];
 
   if (!isOpen) return null;

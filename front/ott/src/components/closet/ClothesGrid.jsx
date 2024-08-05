@@ -3,9 +3,12 @@ import bingleicon from '../../assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
+const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
   // 한번에 보여주는 옷 개수
   const [visibleItems, setVisibleItems] = useState(12);
   const containerRef = useRef(null);
@@ -13,9 +16,7 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
 
   useEffect(() => {
     // 처음으로 보여지는 이미지(앞면)를 이미지 상태 변경될 때마다 갱신
-    setVisibleImages(
-      clothes.map((item) => ({ id: item.id, isFront: true }))
-    );
+    setVisibleImages(clothes.map((item) => ({ id: item.id, isFront: true })));
   }, [clothes]);
 
   // 가로 무한 스크롤
@@ -64,6 +65,11 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
     );
   };
 
+  // clothes 배열이 비어있을 때 빈 상태 표시
+  if (!clothes.length) {
+    return <div>옷이 없습니다.</div>;
+  }
+
   return (
     <div className="relative w-full p-1">
       <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
@@ -97,7 +103,11 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
             const isFrontVisible = visibleImages.find(
               (image) => image.id === item.id
             )?.isFront;
-            
+
+            // img 속성 안전하게 접근
+            const frontImage = item.img?.[0];
+            const backImage = item.img?.[1];
+
             return (
               <div
                 key={item.id}
@@ -106,11 +116,11 @@ const ClothesGrid = ({ clothes, onToggleLike, onClothesClick }) => {
                 onClick={() => onClothesClick(item)}
               >
                 <img
-                  src={isFrontVisible ? item.image_path[0] : item.image_path[1]}
-                  alt={`${item.category}`}
+                  src={isFrontVisible ? frontImage : backImage}
+                  alt={item.category}
                   className="w-full h-full rounded-lg shadow-lg"
                 />
-                {item.image_path[1] && (
+                {backImage && (
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
