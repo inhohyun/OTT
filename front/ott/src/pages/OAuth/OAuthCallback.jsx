@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 // 컴포넌트가 렌더링될 때 특정 작업을 수행하기 위해 react에서 useEffect를 가져옵니다.
 import { useEffect } from 'react';
 // 쿠키 처리를 위해 react-cookie를 가져옵니다.
-import { getCookieRefreshToken } from '../../utils/cookieUtils';
+// import { getCookieRefreshToken } from '../../utils/cookieUtils';
+import { useCookies } from 'resct-cookie';
 
 // 헤더에서 액세스 토큰을 추출하는 함수
 // const getAccessTokenFromHeaders = () => {
@@ -19,8 +20,8 @@ const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
 
   useEffect(() => {
-    const refreshToken = getCookieRefreshToken(); // 쿠키에서 리프레시 토큰을 가져옵니다.
-
+    const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
+    const refreshToken = cookies.refresh;
     // 헤더에서 액세스 토큰 추출
     console.log('Refresh Token:', refreshToken);
 
