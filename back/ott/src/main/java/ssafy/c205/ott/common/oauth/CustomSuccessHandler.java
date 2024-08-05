@@ -54,14 +54,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //응답 설정
         response.setHeader("access", accessToken);
         log.info("리프레시 토큰 생성");
-        Cookie cookie = cookieService.createCookie("refresh", refreshToken);
+//        Cookie cookie = cookieService.createCookie("refresh", refreshToken);
 
         log.info("Access Token: {}", accessToken);
         log.info("Refresh Token: {}", refreshToken);
-        log.info("Set-Cookie Header: {}", cookie.toString());
-
-        response.addHeader("Set-Cookie", cookie.toString());
+//        log.info("Set-Cookie Header: {}", cookie.toString());
+//
+//        response.addHeader("Set-Cookie", cookie.toString());
         response.setStatus(HttpStatus.OK.value());
+        response.addCookie(cookieService.createCookie("Authorization", refreshToken));
 
         response.sendRedirect("https://i11c205.p.ssafy.io/oauth/callback");
     }
