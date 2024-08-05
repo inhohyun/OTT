@@ -55,7 +55,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setHeader("access", accessToken);
         log.info("리프레시 토큰 생성");
         Cookie cookie = cookieService.createCookie("refresh", refreshToken);
-        log.info(cookie.toString());
+
+        log.info("Access Token: {}", accessToken);
+        log.info("Refresh Token: {}", refreshToken);
+        log.info("Set-Cookie Header: {}", cookie.toString());
+
         response.addHeader("Set-Cookie", cookie.toString());
         response.setStatus(HttpStatus.OK.value());
 
