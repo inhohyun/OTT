@@ -26,9 +26,9 @@ const OAuthCallback = () => {
     const issue_access_token = async () => {
       try {
         const response = await axios.get(
-          'https://your-backend-domain.com/api/reissue',
+          'https://i11c205.p.ssafy.io/api/reissue',
           {
-            withCredentials: true, // 자격 증명을 포함하여 요청
+            w청ithCredentials: true, // 자격 증명을 포함하여 요
             headers: {
               Accept: 'application/json',
             },
