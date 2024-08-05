@@ -2,11 +2,15 @@ package ssafy.c205.ott.common.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.domain.category.entity.Category;
 import ssafy.c205.ott.domain.closet.entity.Closet;
 
+@Getter
 @Entity
+@NoArgsConstructor
 public class ClosetCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
