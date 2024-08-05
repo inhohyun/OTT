@@ -12,6 +12,7 @@ const MyLookbook = () => {
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedTag, setSelectedTag] = useState(null);
   const scrollRefs = useRef([]);
+  const [selectedLookbook, setSelectedLookbook] = useState(null);
 
   useEffect(() => {
     axios
@@ -37,6 +38,13 @@ const MyLookbook = () => {
         console.log(error);
       });
   }, []);
+
+  const handleDelete = (deletedLookbookId) => {
+    setLookbooks(
+      lookbooks.filter((lookbook) => lookbook.id !== deletedLookbookId)
+    );
+    setSelectedLookbook(null); // Close the detail view if it was open
+  };
 
   const categorizedLookbooks = lookbooks.reduce((acc, lookbook) => {
     (lookbook.tags || []).forEach((tag) => {
@@ -112,6 +120,7 @@ const MyLookbook = () => {
             {categorizedLookbooks[tag] &&
               categorizedLookbooks[tag].length > 3 && (
                 <button
+                  key={`${tag}-left-button`} // unique key for the button
                   onClick={() => scrollLeft(scrollRefs.current[index])}
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
                   style={{
@@ -133,12 +142,16 @@ const MyLookbook = () => {
                   .slice(0, visibleLookbooks[tag])
                   .map((lookbook) => (
                     <div key={lookbook.id} className="lookbook-container">
-                      <Lookbook data={lookbook} />
+                      <Lookbook
+                        key={lookbook.id}
+                        data={lookbook}
+                        onDelete={handleDelete}
+                      />
                     </div>
                   ))}
               {visibleLookbooks[tag] <
                 (categorizedLookbooks[tag]?.length || 0) && (
-                <div className="show-more-button">
+                <div key={`${tag}-show-more`} className="show-more-button">
                   <button
                     onClick={() => showMore(tag)}
                     className="relative bg-transparent border-none p-0 mb-32 cursor-pointer"
@@ -151,8 +164,9 @@ const MyLookbook = () => {
             {categorizedLookbooks[tag] &&
               categorizedLookbooks[tag].length > 3 && (
                 <button
+                  key={`${tag}-right-button`} // unique key for the button
                   onClick={() => scrollRight(scrollRefs.current[index])}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2  p-1 mr-2 w-6 h-6"
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 mr-2 w-6 h-6"
                   style={{
                     backgroundImage: `url(${rightArrow})`,
                     backgroundSize: 'contain',
@@ -168,6 +182,7 @@ const MyLookbook = () => {
       ))}
       {selectedTag && (
         <LookbookList
+          key={`lookbook-list-${selectedTag}`} // unique key for LookbookList
           tag={selectedTag}
           lookbooks={categorizedLookbooks[selectedTag]}
           onClose={closeDetailedView}

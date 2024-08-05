@@ -5,14 +5,14 @@ import commenticon from '../../assets/icons/commenticon.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Lookbook = ({ data }) => {
+const Lookbook = ({ data, onDelete }) => {
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [selectedLookbook, setSelectedLookbook] = useState(null);
   const nav = useNavigate();
 
   const handleShowDetail = () => {
-    setSelectedLookbook(data);
-    setIsDetailVisible(true);
+    // setSelectedLookbook(data);
+    // setIsDetailVisible(true);
     axios
       .get(`http://192.168.100.89:8080/api/lookbook/${data.lookbookId}`)
       .then((response) => {
@@ -124,6 +124,7 @@ const Lookbook = ({ data }) => {
           onClose={handleCloseDetail}
           onEdit={handleEditLookbook}
           lookbookId={data.lookbookId}
+          onDelete={onDelete}
         />
       )}
     </>
