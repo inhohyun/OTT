@@ -61,4 +61,9 @@ public class ItemController {
     public ResponseEntity<?> getItemList(@PathVariable("user_id") Long userId) {
         return ResponseEntity.ok().body(itemService.selectItemList(userId));
     }
+
+    @GetMapping("/{user_id}/{category_id}")
+    public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId, @PathVariable("category_id") Long categoryId) {
+        return null;
+    }
 }
