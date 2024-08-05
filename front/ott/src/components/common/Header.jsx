@@ -63,7 +63,7 @@ const Header = () => {
         show={showModal}
         onClose={handleCloseModal}
         notifications={notifications}
-        setNotifications={setNotifications} // Pass the state setter function
+        setNotifications={setNotifications}
       />
     </>
   );
