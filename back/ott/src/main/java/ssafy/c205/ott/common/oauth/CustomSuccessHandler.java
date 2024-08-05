@@ -55,7 +55,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addHeader("Set-Cookie", responseCookie.toString());
         response.setStatus(HttpStatus.OK.value());
 
-        response.sendRedirect("https://i11c205.p.ssafy.io/mainpage");
+        response.sendRedirect("https://i11c205.p.ssafy.io/oauth/callback");
     }
 
 }
