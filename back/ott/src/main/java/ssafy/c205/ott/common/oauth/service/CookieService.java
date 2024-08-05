@@ -10,6 +10,7 @@ public class CookieService {
                 .maxAge(60 * 60 * 60)
                 .secure(true)
                 .path("/")
+                .httpOnly(false)
                 .sameSite("None")  // SameSite=None 설정
                 .build();
     }
