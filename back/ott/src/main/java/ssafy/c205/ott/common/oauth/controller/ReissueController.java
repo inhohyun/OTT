@@ -26,7 +26,6 @@ public class ReissueController {
     private final RefreshService refreshService;
     private final CookieService cookieService;
 
-    @CrossOrigin(origins = "https://i11c205.p.ssafy.io/*", allowCredentials = "true")
     @GetMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 

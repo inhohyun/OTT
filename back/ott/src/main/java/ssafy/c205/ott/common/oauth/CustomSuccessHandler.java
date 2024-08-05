@@ -2,12 +2,12 @@ package ssafy.c205.ott.common.oauth;
 
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -53,17 +53,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //응답 설정
         response.setHeader("access", accessToken);
-        log.info("리프레시 토큰 생성");
-//        Cookie cookie = cookieService.createCookie("refresh", refreshToken);
+        ResponseCookie responseCookie = cookieService.createCookie("refresh", refreshToken);
+        response.addHeader("Set-Cookie", responseCookie.toString());
+        response.setStatus(HttpStatus.OK.value());
 
         log.info("Access Token: {}", accessToken);
         log.info("Refresh Token: {}", refreshToken);
-//        log.info("Set-Cookie Header: {}", cookie.toString());
-//
-//        response.addHeader("Set-Cookie", cookie.toString());
-        response.setStatus(HttpStatus.OK.value());
-        response.addCookie(cookieService.createCookie("Authorization", refreshToken));
-
+        log.info("ResponseCookie: {}", responseCookie);
         response.sendRedirect("https://i11c205.p.ssafy.io/oauth/callback");
     }
 
