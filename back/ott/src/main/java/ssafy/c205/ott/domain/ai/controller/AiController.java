@@ -5,11 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+        import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 import ssafy.c205.ott.domain.ai.service.AiService;
+
+import java.io.File;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,15 +19,21 @@ import ssafy.c205.ott.domain.ai.service.AiService;
 public class AiController {
     private final AiService aiService;
 
-
-    @PostMapping("/ai")
-    public ResponseEntity<byte[]> processImage(@RequestParam String modelPath, @RequestParam String clothPath) {
-        log.info("Processing image");
-        byte[] result = aiService.processImage(modelPath, clothPath);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    @GetMapping
+    public ResponseEntity<String> getHealth() {
         return ResponseEntity.ok()
-                .headers(headers)
-                .body(result);
+                .body("health");
+    }
+
+    @GetMapping("/ai")
+    public ResponseEntity<String> getAiHealth() {
+        return ResponseEntity.ok().body(aiService.ping());
+    }
+
+    @PostMapping(value = "/ai", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, Object>> processImage(@ModelAttribute AiRequestDto aiRequestDto) {
+        log.info(aiRequestDto.toString());
+
+        return aiService.processImage(aiRequestDto);
     }
 }
