@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // 컴포넌트가 렌더링될 때 특정 작업을 수행하기 위해 react에서 useEffect를 가져옵니다.
 import { useEffect } from 'react';
 import { Cookies } from 'react-cookie';
-
+import axios from 'axios';
 // 헤더에서 액세스 토큰을 추출하는 함수
 // const getAccessTokenFromHeaders = () => {
 //   // 액세스 토큰이 URL의 쿼리 매개변수로 전달된다고 가정합니다.
@@ -23,6 +23,19 @@ const OAuthCallback = () => {
     // 헤더에서 액세스 토큰 추출
     console.log('쿠키에 들어있는 값 출력:', refreshToken);
 
+    const issue_access_token = async () => {
+      try {
+        const response = await axios.get(
+          'https://i11c205.p.ssafy.io/api/reissue',
+          { withCredentials: true }
+        );
+        console.log('응답 값 출력:', response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    issue_access_token();
     if (refreshToken) {
       // 각각의 토큰을 로컬 스토리지에 저장합니다.
       // setAccessToken(accessToken);
