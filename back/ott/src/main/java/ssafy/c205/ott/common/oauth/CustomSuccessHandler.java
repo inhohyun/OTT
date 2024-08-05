@@ -52,14 +52,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshService.addRefreshEntity(username, refreshToken, 86400000L);
 
         //응답 설정
-        response.setHeader("access", accessToken);
-        ResponseCookie responseCookie = cookieService.createCookie("refresh", refreshToken);
-        response.addHeader("Set-Cookie", responseCookie.toString());
+        response.addCookie(cookieService.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
         log.info("Access Token: {}", accessToken);
         log.info("Refresh Token: {}", refreshToken);
-        log.info("ResponseCookie: {}", responseCookie);
+
         response.sendRedirect("https://i11c205.p.ssafy.io/oauth/callback");
     }
 
