@@ -13,7 +13,7 @@ public class CategoryValidator {
     private final CategoryRepository categoryRepository;
 
     public void validateCategoryName(CategoryRequestDto categoryRequestDto) {
-        if (categoryRepository.existsByName(categoryRequestDto.getName())) {
+        if (categoryRepository.existsByNameAndClosetId(categoryRequestDto.getName(), categoryRequestDto.getClosetId())) {
             throw new CategoryNameDuplicationException();
         }
     }
