@@ -90,12 +90,42 @@ const ClothesGrid = ({ onClothesClick }) => {
   };
 
   // 좋아요 상태 토글 함수
-  const handleToggleLike = (key) => {
-    setClothes((prevClothes) =>
-      prevClothes.map((item) =>
-        item.key === key ? { ...item, isLiked: !item.isLiked } : item
-      )
-    );
+  const handleToggleLike = async (key) => {
+    const updatedClothes = clothes.map((item) => {
+      if (item.key === key) {
+        const newStatus =
+          item.bookmarkStatus === 'BOOKMARKING'
+            ? 'NOT_BOOKMARKING'
+            : 'BOOKMARKING';
+
+        // Update the bookmarkStatus locally for immediate UI feedback
+        return { ...item, bookmarkStatus: newStatus };
+      }
+      return item;
+    });
+    setClothes(updatedClothes);
+
+    const toggledItem = updatedClothes.find((item) => item.key === key);
+    if (toggledItem) {
+      const clothesId = toggledItem.clothesId;
+
+      try {
+        if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
+          // Unlike -> Like
+          await axios.post(
+            `http://192.168.100.89:8080/api/clothes/bookmark/${clothesId}`
+          );
+        } else {
+          // Like -> Unlike
+          await axios.post(
+            `http://192.168.100.89:8080/api/clothes/unbookmark/${clothesId}`
+          );
+        }
+      } catch (error) {
+        console.error('Error toggling like status:', error);
+        // Handle error as needed
+      }
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -169,12 +199,16 @@ const ClothesGrid = ({ onClothesClick }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleToggleLike(item.key); // Use item.key for toggling like
+                    handleToggleLike(item.key);
                   }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
                   <FontAwesomeIcon
-                    icon={item.isLiked ? faSolidStar : faRegularStar}
+                    icon={
+                      item.bookmarkStatus === 'BOOKMARKING'
+                        ? faSolidStar
+                        : faRegularStar
+                    }
                     className="w-4 h-4 text-purple-300"
                   />
                 </div>
