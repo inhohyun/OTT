@@ -224,18 +224,28 @@ public class LookbookServiceImpl implements LookbookService {
             //좋아요 수
             int cnt = favoriteRepository.findByLookbookId(Long.parseLong(lookbookId)).size();
 
+            //내 좋아요 게시물인지
+            //Todo : 사용자 UID 가져와야함
+            boolean isFavorite = false;
+            Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(saveLookbook.getId(), 1L);
+            if (myFavor != null) {
+                isFavorite = true;
+            }
+
+
             return LookbookDetailDto
-                .builder()
-                .content(saveLookbook.getContent())
-                .images(clothesImagePathDtos)
-                .nickname(saveLookbook.getMember().getNickname())
-                .viewCount(saveLookbook.getHitCount())
-                .salesClothes(salesClothesDtos)
-                .createdAt(saveLookbook.getCreatedAt())
-                .tags(tags)
-                .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
-                .cntLike(cnt)
-                .build();
+                    .builder()
+                    .content(saveLookbook.getContent())
+                    .images(clothesImagePathDtos)
+                    .nickname(saveLookbook.getMember().getNickname())
+                    .viewCount(saveLookbook.getHitCount())
+                    .salesClothes(salesClothesDtos)
+                    .createdAt(saveLookbook.getCreatedAt())
+                    .tags(tags)
+                    .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
+                    .cntLike(cnt)
+                    .isLike(isFavorite)
+                    .build();
         } else {
             log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
             return null;
@@ -466,16 +476,22 @@ public class LookbookServiceImpl implements LookbookService {
             PublicStatus.PRIVATE, ActiveStatus.ACTIVE);
         List<FindLookbookDto> findLookbookDtos = new ArrayList<>();
         for (Lookbook lookbook : lookbooks) {
+            boolean isFavorite = false;
+            Favorite favor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(), Long.parseLong(uid));
+            if (favor != null) {
+                isFavorite = true;
+            }
             for (LookbookImage lookbookImage : lookbook.getLookbookImages()) {
                 if (lookbookImage.getLookbookImageStatus() == LookbookImageStatus.THUMBNAIL) {
                     findLookbookDtos.add(FindLookbookDto
-                        .builder()
-                        .uid(lookbook.getMember().getId())
-                        .createdAt(lookbook.getCreatedAt())
-                        .imageURL(lookbookImage.getImageUrl())
-                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
-                        .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                        .build());
+                            .builder()
+                            .uid(lookbook.getMember().getId())
+                            .createdAt(lookbook.getCreatedAt())
+                            .imageURL(lookbookImage.getImageUrl())
+                            .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                            .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                            .isLike(isFavorite)
+                            .build());
                 }
             }
         }
@@ -525,6 +541,7 @@ public class LookbookServiceImpl implements LookbookService {
             Optional<Lookbook> ol = lookbookRepository.findById(key);
             if (ol.isPresent()) {
                 Lookbook lookbook = ol.get();
+                //Todo : uid로 즐겨찾기인지 확인후 isLike 추가
                 log.info("Lookbook : {}", lookbook.toString());
                 lookbooks.add(TagLookbookDto
                     .builder()
