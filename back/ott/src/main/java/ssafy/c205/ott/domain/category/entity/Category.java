@@ -29,4 +29,8 @@ public class Category extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "closet_id")
     private Closet closet;
+
+    public void updateCategory(String newName) {
+        this.name = newName;
+    }
 }
