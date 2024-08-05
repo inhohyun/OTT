@@ -16,7 +16,7 @@ import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
-import ssafy.c205.ott.domain.item.Repository.ItemRepository;
+import ssafy.c205.ott.domain.item.repository.ItemRepository;
 import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.SalesStatus;
