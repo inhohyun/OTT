@@ -20,12 +20,16 @@ const OAuthCallback = () => {
   useEffect(() => {
     axios
       .post(
-        'https://i11c205.p.ssafy.io/auth/reissue',
+        'https://i11c205.p.ssafy.io/api/reissue',
         {},
         { withCredentials: true }
       )
       .then((response) => {
-        const accessToken = response.headers['authorization'].split(' ')[1];
+        const AccessToken = response.headers['Access'].split(' ')[1];
+        const accessToken = response.headers['access'].split(' ')[1];
+        console.log('AccessToken', AccessToken);
+        console.log('accessToken', accessToken);
+
         localStorage.setItem('accessToken', accessToken);
         alert('Access token stored in local storage');
         navigate('/survey_start');
