@@ -129,7 +129,6 @@ public class MemberReadService {
                 .height(member.getHeight())
                 .weight(member.getWeight())
                 .gender(member.getGender())
-                .closets(member.getClosets())
                 .tags(tags)
                 .bodyType(member.getBodyType())
                 .publicStatus(member.getPublicStatus())
