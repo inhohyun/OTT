@@ -1,6 +1,9 @@
 package ssafy.c205.ott.domain.account.service;
 
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.MemberTag;
@@ -8,6 +11,7 @@ import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberSearchResponseDto;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
@@ -70,6 +74,14 @@ public class MemberReadService {
                 .collect(Collectors.toList());
     }
 
+    public List<MemberSearchResponseDto> findActiveMembersByNickname(String nickname, int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        return memberRepository.findByNicknameContainingAndActiveStatus(nickname, ActiveStatus.ACTIVE, pageable)
+                .stream()
+                .map(MemberSearchResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     private Member findActiveMemberById(Long memberId) {
         return memberRepository.findByIdAndActiveStatus(memberId, ActiveStatus.ACTIVE)
                 .orElseThrow(MemberNotFoundException::new);
@@ -117,7 +129,6 @@ public class MemberReadService {
                 .height(member.getHeight())
                 .weight(member.getWeight())
                 .gender(member.getGender())
-                .closets(member.getClosets())
                 .tags(tags)
                 .bodyType(member.getBodyType())
                 .publicStatus(member.getPublicStatus())

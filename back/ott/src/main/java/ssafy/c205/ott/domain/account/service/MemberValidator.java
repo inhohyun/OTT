@@ -20,6 +20,12 @@ public class MemberValidator {
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
 
+    public void validateSelfRequest(MemberRequestDto memberRequestDto) {
+        if (!(memberRequestDto.getId().longValue() == memberRequestDto.getCurrentId().longValue())) {
+            throw new NotSelfRequestException();
+        }
+    }
+
     public ValidateNicknameSuccessDto validateMemberNickname(final String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
             throw new MemberNicknameDuplicateException();

@@ -55,6 +55,7 @@ public class MemberWriteService {
     }
 
     public DeleteMemberSuccessDto deleteMember(MemberRequestDto memberRequestDto) {
+        memberValidator.validateSelfRequest(memberRequestDto);
         Member member = findMemberById(memberRequestDto.getId());
         member.deleteMember();
         return new DeleteMemberSuccessDto();
