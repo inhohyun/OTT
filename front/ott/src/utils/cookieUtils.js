@@ -19,12 +19,12 @@ export const setCookie = (name, value, options = {}) => {
 
 // Refresh Token 설정
 export const setCookieRefreshToken = (token, options = {}) => {
-  setCookie('refreshToken', token, options);
+  setCookie('refresh', token, options);
 };
 
 // Refresh Token 가져오기
 export const getCookieRefreshToken = () => {
-  return cookies.get('refreshToken');
+  return cookies.get('refresh');
 };
 
 // Refresh Token 삭제

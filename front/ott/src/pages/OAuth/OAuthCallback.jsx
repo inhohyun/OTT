@@ -4,8 +4,8 @@ import { setAccessToken, setLocalRefreshToken } from '@/utils/localUtils';
 import { useNavigate } from 'react-router-dom';
 // 컴포넌트가 렌더링될 때 특정 작업을 수행하기 위해 react에서 useEffect를 가져옵니다.
 import { useEffect } from 'react';
-// 쿠키 처리를 위해 js-cookie를 가져옵니다.
-import Cookies from 'js-cookie';
+// 쿠키 처리를 위해 react-cookie를 가져옵니다.
+import { getCookieRefreshToken } from '../../utils/cookieUtils';
 
 // 헤더에서 액세스 토큰을 추출하는 함수
 // const getAccessTokenFromHeaders = () => {
@@ -19,9 +19,11 @@ const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
 
   useEffect(() => {
-    const refreshToken = Cookies.get('refresh'); // 쿠키에서 리프레시 토큰을 가져옵니다.
+    const refreshToken = getCookieRefreshToken(); // 쿠키에서 리프레시 토큰을 가져옵니다.
+
     // 헤더에서 액세스 토큰 추출
-    console.log('token', refreshToken);
+    console.log('Refresh Token:', refreshToken);
+
     if (refreshToken) {
       // 각각의 토큰을 로컬 스토리지에 저장합니다.
       // setAccessToken(accessToken);
