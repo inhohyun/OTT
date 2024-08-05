@@ -7,7 +7,6 @@ import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.domain.category.dto.CategoryDto;
 import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
 import ssafy.c205.ott.domain.category.dto.RegisterCategorySuccessDto;
-import ssafy.c205.ott.domain.category.repository.ClosetCategoryRepository;
 import ssafy.c205.ott.domain.category.service.CategoryService;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class CategoryController {
 
     @PostMapping("/{closetId}")
     public ApiResponse<RegisterCategorySuccessDto> registerCategory(@PathVariable long closetId, @RequestBody CategoryDto categoryDto) {
-        return ApiResponse.success(categoryService.registerCategory(CategoryRequestDto.builder().id(closetId).name(categoryDto.getName()).build()));
+        return ApiResponse.success(categoryService.registerCategory(CategoryRequestDto.builder().closetId(closetId).name(categoryDto.getName()).build()));
     }
 
     @GetMapping("/{closetId}")
