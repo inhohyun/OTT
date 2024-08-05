@@ -23,9 +23,9 @@ const UserPage = ({ uid }) => {
       try {
         // const data = await getUserInfo(uid);
         const dummyData = {
-          username: '홍길동',
+          username: '인호현',
           isMe: false,
-          isPublic: true,
+          isPublic: false,
           tags: ['패션', '여행', '음악'],
         };
         setUserInfo(dummyData);
@@ -74,8 +74,9 @@ const UserPage = ({ uid }) => {
   };
 
   return (
-    <div className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
-         style={{ backgroundImage: `url(${backgroundImage})` }}
+    <div
+      className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="w-full h-full flex flex-col items-center justify-start">
         <div className="w-full flex justify-center mt-8">
@@ -159,7 +160,9 @@ const UserPage = ({ uid }) => {
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
           />
-          <div className="mt-4 text-[rgba(0,0,0,0.5)] h-full w-full">{renderComponent}</div>
+          <div className="mt-4 text-[rgba(0,0,0,0.5)] h-full w-full">
+            {renderComponent}
+          </div>
         </div>
       </div>
     </div>
