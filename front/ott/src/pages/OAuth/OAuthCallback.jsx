@@ -19,13 +19,8 @@ const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
 
   useEffect(() => {
+    const refreshToken = Cookies.get('refresh'); // 쿠키에서 리프레시 토큰을 가져옵니다.
     // 헤더에서 액세스 토큰 추출
-    const accessToken = getAccessTokenFromHeaders();
-    // 쿠키에서 리프레시 토큰 추출
-    // const refreshToken = Cookies.get('refresh');
-    console.log('Document Cookie:', document.cookie);
-    const refreshToken = document.cookie.get('refresh');
-    console.log('Refresh Token:', refreshToken);
     console.log('token', accessToken, refreshToken);
     if (accessToken && refreshToken) {
       // 각각의 토큰을 로컬 스토리지에 저장합니다.
