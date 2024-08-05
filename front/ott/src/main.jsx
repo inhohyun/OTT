@@ -1,7 +1,10 @@
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './styles/tailwind.css';
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+
 // 서비스 워커 등록 코드 추가
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -9,12 +12,12 @@ if ('serviceWorker' in navigator) {
       .register('/service-worker.js')
       .then((registration) => {
         console.log(
-          'Service Worker registered with scope:',
+          '서비스 워커가 다음과 같은 scope에서 등록되었습니다: ',
           registration.scope
         );
       })
       .catch((error) => {
-        console.log('Service Worker registration failed:', error);
+        console.log('서비스워커 등록에 실패했습니다: ', error);
       });
   });
 }

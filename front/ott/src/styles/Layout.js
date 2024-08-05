@@ -1,3 +1,4 @@
+// styles/Layout.js
 import styled from 'styled-components';
 
 const Layout = styled.div`
@@ -11,12 +12,10 @@ const Layout = styled.div`
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 390px) {
-    width: 100%;
-  }
-
-  @media (max-width: 390px) and (orientation: portrait) {
-    width: 100%;
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 10px;
+    box-shadow: none;
   }
 `;
 

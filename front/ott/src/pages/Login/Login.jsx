@@ -1,29 +1,25 @@
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Import framer-motion
-import mainIcon from '../../assets/icons/mini_main.logo.png';
-// import FaceComponent from '../../components/login/3DFace'; // 3D 얼굴 컴포넌트 import
-import kakao from '../../assets/images/login/kakao_login.png';
-import naver from '../../assets/images/login/naver_login.png';
-import google from '../../assets/images/login/google_login.png';
-import backgroundImage from '../../assets/images/background_image_survey.png';
-import axios from 'axios';
-const LoginPage = () => {
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; // Import framer-motion
+import mainIcon from "../../assets/icons/main.logo.png";
+import kakao from "../../assets/images/login/kakao_login.png";
+import naver from "../../assets/images/login/naver_login.png";
+import google from "../../assets/images/login/google_login.png";
+import backgroundImage from "../../assets/images/background_image_survey.png";
+
+const Login = () => {
   const navigate = useNavigate();
 
   const onKakaoLoginClick = useCallback(() => {
-    window.location.href =
-      'https://i11c205.p.ssafy.io/oauth2/authorization/kakao';
+    navigate("./survey_start");
   }, [navigate]);
 
   const onNaverLoginClick = useCallback(() => {
-    window.location.href =
-      'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
+    navigate("./survey_start");
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
-    window.location.href =
-      'https://i11c205.p.ssafy.io/oauth2/authorization/google';
+    navigate("./survey_start");
   }, [navigate]);
 
   return (
@@ -31,7 +27,7 @@ const LoginPage = () => {
       className="w-full h-full flex items-center justify-center min-h-screen"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
+        backgroundSize: "cover",
       }}
     >
       <motion.div
@@ -46,9 +42,6 @@ const LoginPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {/* FaceComponent 사용하여 3D 얼굴 렌더링 */}
-          {/* <FaceComponent imgUrl={mainIcon} /> */}
-
           <img
             className="w-full h-full rounded-full"
             alt="메인 아이콘"
@@ -111,4 +104,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

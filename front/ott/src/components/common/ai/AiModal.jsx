@@ -3,9 +3,9 @@ import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
 import ClothesGridSingleLine from './ClothesGridSingleLine';
-import AiProceeding from './AiProceeding'; // AiProceeding 컴포넌트를 import
-import AiResult from './AiResult'; // AiResult 컴포넌트를 import
-import useStore from '@/data/ai/aiStore'; // zustand store import
+import AiProceeding from './AiProceeding';
+import AiResult from './AiResult';
+import useStore from '@/data/ai/aiStore';
 
 // Importing images
 import dress1 from '@/assets/images/clothes/dress1.jpg';
@@ -32,13 +32,16 @@ import shirt3 from '@/assets/images/clothes/shirt3.jpg';
 import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 
 const Modal = ({ isOpen, onClose }) => {
-  const [selectedClothing, setSelectedClothing] = useState(null);
-  const [filter, setFilter] = useState('all');
-  const [numImages, setNumImages] = useState({ value: '4장', label: '4장' });
-  const [selectedImage, setSelectedImage] = useState(defaultImage);
+  const [selectedClothing, setSelectedClothingState] = useState(null);
+  const [filter, setFilterState] = useState('all');
+  const [numImages, setNumImagesState] = useState({ value: '4장', label: '4장' });
+  const [selectedImage, setSelectedImageState] = useState(defaultImage);
 
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
+  const setSelectedImageInStore = useStore((state) => state.setSelectedImage);
+  const setNumImagesInStore = useStore((state) => state.setNumImages);
+  const setSelectedClothingInStore = useStore((state) => state.setSelectedClothing);
 
   const [clothes, setClothes] = useState([
     {
@@ -150,23 +153,25 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handlePutOn = () => {
     if (selectedClothing) {
+      setSelectedImageInStore(selectedImage);
+      setNumImagesInStore(numImages);
+      setSelectedClothingInStore(selectedClothing);
       setCurrentStep('AiProceeding');
     } else {
-      console.log('No clothing selected');
       alert('옷을 선택해주세요.');
     }
   };
 
   const handleClothingClick = (clothing) => {
-    setSelectedClothing(clothing);
+    setSelectedClothingState(clothing);
   };
 
   const handleFilterChange = (option) => {
-    setFilter(option.value);
+    setFilterState(option.value);
   };
 
   const handleNumImagesChange = (option) => {
-    setNumImages(option);
+    setNumImagesState(option);
   };
 
   const handleImageChange = (event) => {
@@ -174,7 +179,7 @@ const Modal = ({ isOpen, onClose }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result);
+        setSelectedImageState(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -194,7 +199,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay custom-scrollbar" onClick={onClose}>
+    <div className="modal-overlay custom-scrollbar mb-[65px]" onClick={onClose}>
       <div
         className="modal-container custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
