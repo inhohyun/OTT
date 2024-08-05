@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select'; // Import react-select
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTimes,
@@ -46,6 +47,26 @@ const ClothesDetailModal = ({
   }, [isOpen]);
 
   if (!isOpen || !clothingItem) return null;
+
+  // Custom styles for react-select
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
+      '&:hover': {
+        borderColor: 'black',
+      },
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#a78bfa' : 'white',
+      color: state.isSelected ? 'white' : 'black',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    }),
+  };
 
   // 수정 상태 활성화
   const handleEditClick = () => {
@@ -118,6 +139,16 @@ const ClothesDetailModal = ({
       input.click();
     }
   };
+
+  const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
+  const salesOptions = [
+    { value: 'y', label: '판매 중' },
+    { value: 'n', label: '판매 안 함' },
+  ];
+  const genderOptions = [
+    { value: 'm', label: '남성' },
+    { value: 'f', label: '여성' },
+  ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -202,22 +233,14 @@ const ClothesDetailModal = ({
               <>
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">카테고리</label>
-                  <select
-                    name="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="flex-grow p-2 border rounded-lg"
-                  >
-                    {categories.length > 0 ? (
-                      categories.map((cat, index) => (
-                        <option key={index} value={cat}>
-                          {cat}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="">카테고리 없음</option>
+                  <Select
+                    value={categoryOptions.find(
+                      (opt) => opt.value === category
                     )}
-                  </select>
+                    onChange={(opt) => setCategory(opt.value)}
+                    options={categoryOptions}
+                    styles={customStyles}
+                  />
                 </div>
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">브랜드</label>
@@ -261,39 +284,48 @@ const ClothesDetailModal = ({
                 </div>
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">공개 여부</label>
-                  <select
-                    name="public_status"
-                    value={editableItem.public_status}
-                    onChange={handleChange}
-                    className="flex-grow p-2 border rounded-lg"
-                  >
-                    <option value="y">공개</option>
-                    <option value="n">비공개</option>
-                  </select>
+                  <Select
+                    value={{
+                      value: editableItem.public_status,
+                      label:
+                        editableItem.public_status === 'y' ? '공개' : '비공개',
+                    }}
+                    onChange={(opt) =>
+                      setEditableItem({
+                        ...editableItem,
+                        public_status: opt.value,
+                      })
+                    }
+                    options={[
+                      { value: 'y', label: '공개' },
+                      { value: 'n', label: '비공개' },
+                    ]}
+                    styles={customStyles}
+                  />
                 </div>
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">판매 여부</label>
-                  <select
-                    name="sales_status"
-                    value={salesStatus}
-                    onChange={(e) => setSalesStatus(e.target.value)} // 판매 상태 수정
-                    className="flex-grow p-2 border rounded-lg"
-                  >
-                    <option value="y">판매 중</option>
-                    <option value="n">판매 안 함</option>
-                  </select>
+                  <Select
+                    value={salesOptions.find(
+                      (opt) => opt.value === salesStatus
+                    )}
+                    onChange={(opt) => setSalesStatus(opt.value)} // 판매 상태 수정
+                    options={salesOptions}
+                    styles={customStyles}
+                  />
                 </div>
                 <div className="flex items-center mb-2">
                   <label className="text-gray-700 mr-2 w-24">성별</label>
-                  <select
-                    name="gender"
-                    value={editableItem.gender}
-                    onChange={handleChange}
-                    className="flex-grow p-2 border rounded-lg"
-                  >
-                    <option value="m">남성</option>
-                    <option value="f">여성</option>
-                  </select>
+                  <Select
+                    value={genderOptions.find(
+                      (opt) => opt.value === editableItem.gender
+                    )}
+                    onChange={(opt) =>
+                      setEditableItem({ ...editableItem, gender: opt.value })
+                    }
+                    options={genderOptions}
+                    styles={customStyles}
+                  />
                 </div>
               </>
             ) : (

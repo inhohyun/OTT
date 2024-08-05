@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import Select from 'react-select'; // Import react-select
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [category, setCategory] = useState('');
@@ -43,6 +43,26 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     if (!gender.trim()) newErrors.gender = '성별을 선택하세요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Custom styles for react-select
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
+      '&:hover': {
+        borderColor: 'black',
+      },
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#a78bfa' : 'white',
+      color: state.isSelected ? 'white' : 'black',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    }),
   };
 
   // 옷 추가 함수
@@ -123,6 +143,12 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     }
   };
 
+  const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
+  const genderOptions = [
+    { value: 'm', label: '남성' },
+    { value: 'f', label: '여성' },
+  ];
+
   if (!isOpen) return null;
 
   return (
@@ -193,17 +219,12 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">카테고리</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+          <Select
+            value={categoryOptions.find((opt) => opt.value === category)}
+            onChange={(opt) => setCategory(opt.value)}
+            options={categoryOptions}
+            styles={customStyles} // Apply custom styles
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">브랜드</label>
@@ -277,18 +298,15 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>
-
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">성별</label>
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-          >
-            <option value="">성별을 선택하세요</option>
-            <option value="m">남성</option>
-            <option value="f">여성</option>
-          </select>
+          <Select
+            value={genderOptions.find((opt) => opt.value === gender)}
+            onChange={(opt) => setGender(opt.value)}
+            options={genderOptions}
+            styles={customStyles}
+            placeholder="성별을 선택하세요"
+          />
           {errors.gender && (
             <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
           )}
