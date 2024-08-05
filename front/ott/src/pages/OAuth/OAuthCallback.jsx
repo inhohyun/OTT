@@ -8,11 +8,11 @@ import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 // 헤더에서 액세스 토큰을 추출하는 함수
-const getAccessTokenFromHeaders = () => {
-  // 액세스 토큰이 URL의 쿼리 매개변수로 전달된다고 가정합니다.
-  const accessToken = new URLSearchParams(window.location.search).get('Access');
-  return accessToken;
-};
+// const getAccessTokenFromHeaders = () => {
+//   // 액세스 토큰이 URL의 쿼리 매개변수로 전달된다고 가정합니다.
+//   const accessToken = new URLSearchParams(window.location.search).get('Access');
+//   return accessToken;
+// };
 
 // OAuthCallback 컴포넌트 정의
 const OAuthCallback = () => {
@@ -21,10 +21,10 @@ const OAuthCallback = () => {
   useEffect(() => {
     const refreshToken = Cookies.get('refresh'); // 쿠키에서 리프레시 토큰을 가져옵니다.
     // 헤더에서 액세스 토큰 추출
-    console.log('token', accessToken, refreshToken);
-    if (accessToken && refreshToken) {
+    console.log('token', refreshToken);
+    if (refreshToken) {
       // 각각의 토큰을 로컬 스토리지에 저장합니다.
-      setAccessToken(accessToken);
+      // setAccessToken(accessToken);
       setLocalRefreshToken(refreshToken);
 
       // 토큰을 성공적으로 저장한 후, 설문 시작 페이지로 리디렉션합니다.
