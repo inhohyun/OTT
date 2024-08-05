@@ -2,16 +2,21 @@ package ssafy.c205.ott.domain.category.entity;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
+
 import ssafy.c205.ott.common.entity.BaseEntity;
+import ssafy.c205.ott.domain.closet.entity.Closet;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category extends BaseEntity {
-    //Todo: clothesList 변수명 고민
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +25,8 @@ public class Category extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    public Category(String name) {
-        this.name = name;
-    }
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "closet_id")
+    private Closet closet;
 }
