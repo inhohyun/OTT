@@ -389,7 +389,7 @@ const Lookbook = ({ data, onDelete }) => {
           lookbook={selectedLookbook}
           onClose={handleCloseDetail}
           onEdit={handleEditLookbook}
-          lookbookId={data.lookbookId}
+          lookbookId={selectedLookbook.id}
           onDelete={onDelete} // Pass onDelete to LookbookDetail
         />
       )}

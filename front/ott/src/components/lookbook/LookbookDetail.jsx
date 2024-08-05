@@ -539,7 +539,13 @@ import lookicon from '../../assets/icons/lookicon.png';
 import axios from 'axios';
 import detailStore from '../../data/lookbook/detailStore';
 
-const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
+const LookbookDetail = ({
+  onClose,
+  onEdit,
+  onDelete,
+  lookbookId,
+  lookbook,
+}) => {
   const [showSellComments, setShowSellComments] = useState(false);
   const [liked, setLiked] = useState(false);
   const [followed, setFollowed] = useState(false);
@@ -550,36 +556,36 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteLookbook, fetchLookbooks } = detailStore(); // Use Zustand store
 
-  if (!lookbook) return null;
-
+  // Fetch comments whenever showSellComments or lookbook.id changes
   useEffect(() => {
+    // console.log('댓글아이디', lookbook.id);
     const status = showSellComments ? 'DM' : 'comment';
     axios
-      .get(`http://192.168.100.89:8080/api/comment/${lookbookId}`, {
+      .get(`http://192.168.100.89:8080/api/comment/${lookbook.id}`, {
         params: { status: status },
       })
       .then((response) => {
         console.log(response);
         setComments(response.data);
-        setCommentStatus(response.data.status); // API 응답에 status 포함
+        setCommentStatus(response.data.status); // API response includes status
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
-  }, [lookbook, showSellComments, lookbookId]);
+  }, [showSellComments, lookbook.id]);
 
-  const tags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
-  const salesClothes = Array.isArray(lookbook.salesClothes)
+  // Handling arrays and default values
+  const tags = Array.isArray(lookbook?.tags) ? lookbook.tags : [];
+  const salesClothes = Array.isArray(lookbook?.salesClothes)
     ? lookbook.salesClothes
     : [];
-  const images = Array.isArray(lookbook.images) ? lookbook.images : [];
+  const images = Array.isArray(lookbook?.images) ? lookbook.images : [];
 
   const allImages = [
-    lookbook.thumnail,
+    lookbook?.thumnail,
     ...(images ? images.map((item) => item.imagePath.path) : []),
   ];
 
-  console.log('이미지', allImages);
   const currentUser = 'kimssafy';
 
   const toggleLike = () => setLiked(!liked);
@@ -611,21 +617,21 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
   const handleDelete = () => {
     console.log('룩북 삭제');
     axios
-      .delete(`http://192.168.100.89:8080/api/lookbook/${lookbookId}`)
+      .delete(`http://192.168.100.89:8080/api/lookbook/${lookbook.id}`)
       .then((response) => {
         console.log('룩북 삭제 성공');
-        deleteLookbook(lookbookId); // Update Zustand store
+        deleteLookbook(lookbook.id); // Update Zustand store
         fetchLookbooks(); // Fetch updated lookbooks
         onClose(); // Close the detail view
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 bg-opacity-70 flex justify-center items-center z-50"
       onClick={onClose}
     >
       <style>{`
@@ -775,9 +781,9 @@ const LookbookDetail = ({ lookbook, onClose, onEdit, lookbookId }) => {
             style={{ maxHeight: '200px' }}
           >
             {showSellComments ? (
-              <SellComment comments={comments} lookbookId={lookbookId} />
+              <SellComment comments={comments} lookbookId={lookbook.id} />
             ) : (
-              <Comment comments={comments} lookbookId={lookbookId} />
+              <Comment comments={comments} lookbookId={lookbook.id} />
             )}
           </div>
         </div>

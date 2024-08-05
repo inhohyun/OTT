@@ -99,6 +99,7 @@ const FormControls = ({
           onKeyDown={handleKeyDown}
           className="border border-gray-300 rounded p-2 w-full focus:ring-2 focus:ring-violet-500 focus:outline-none"
           style={{ fontFamily: 'dohyeon' }}
+          required
         />
         <div className="flex flex-wrap mt-2">
           {tags.map((tag, index) => (

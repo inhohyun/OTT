@@ -531,6 +531,10 @@ const CreateLookbook = () => {
   };
 
   const handleSave = () => {
+    if (tags.length === 0) {
+      alert('태그를 입력하세요.');
+      return;
+    }
     setShowDeleteButton(false);
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');

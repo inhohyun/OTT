@@ -34,7 +34,7 @@ const MyLookbook = () => {
 
   const categorizedLookbooks = lookbooks.reduce((acc, lookbook) => {
     const lookbookTags =
-      lookbook.tags && lookbook.tags.length > 0 ? lookbook.tags : ['No Tag'];
+      lookbook.tags && lookbook.tags.length > 0 ? lookbook.tags : ['No tags'];
     lookbookTags.forEach((tag) => {
       if (!acc[tag]) acc[tag] = [];
       acc[tag].push(lookbook);
