@@ -35,7 +35,7 @@ public class NotificationController {
     public ResponseEntity<?> deleteNotification(
         @PathVariable("notification_id") String notificationId) {
         notificationService.deleteNotification(notificationId);
-        return ResponseEntity.ok().body("아림 삭제처리를 완료했습니다.");
+        return ResponseEntity.ok().body("알림 삭제처리를 완료했습니다.");
     }
 
     @PostMapping("/create")

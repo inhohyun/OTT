@@ -12,6 +12,7 @@ import ssafy.c205.ott.domain.item.entity.Sex;
 @Setter
 @ToString
 public class ItemCreateDto {
+
     private String size;
     private String brand;
     private String purchase;
@@ -20,10 +21,11 @@ public class ItemCreateDto {
     private Sex gender;
     private Long uid;
     private SalesStatus salesStatus;
-    private String[] categories;
+    private String category;
 
     @Builder
-    public ItemCreateDto(String size, String brand, String purchase, PublicStatus publicStatus, String color, Sex gender, Long uid, SalesStatus salesStatus, String[] categories) {
+    public ItemCreateDto(String size, String brand, String purchase, PublicStatus publicStatus,
+        String color, Sex gender, Long uid, SalesStatus salesStatus, String category) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
@@ -32,7 +34,7 @@ public class ItemCreateDto {
         this.gender = gender;
         this.uid = uid;
         this.salesStatus = salesStatus;
-        this.categories = categories;
+        this.category = category;
     }
 
     public ItemCreateDto() {

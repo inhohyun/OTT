@@ -1,5 +1,8 @@
 package ssafy.c205.ott.domain.item.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,19 +10,16 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
-import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
-import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
-import ssafy.c205.ott.domain.item.repository.ItemRepository;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
+import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
+import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
 import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.ItemStatus;
+import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
+import ssafy.c205.ott.domain.item.repository.ItemRepository;
 import ssafy.c205.ott.util.AmazonS3Util;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,8 +33,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void createItem(ItemCreateDto itemCreateDto, List<MultipartFile> files) {
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
+            ActiveStatus.ACTIVE);
+        Member member = null;
+        if (om.isPresent()) {
+            member = om.get();
+        }
         //빈 객체 생성
-        Item saveItem = itemRepository.save(Item.builder().build());
+        Item saveItem = itemRepository.save(Item.builder().member(member).build());
 
         //이미지 저장
         List<String> urls = amazonS3Util.saveFiles(files);
@@ -51,31 +57,22 @@ public class ItemServiceImpl implements ItemService {
             itemImages.add(saveImage);
         }
 
-        //카테고리 리스트 생성
-        for (String category : itemCreateDto.getCategories()) {
-            //Todo : 카테고리 추가 로직
-        }
-
         //옷 저장
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
-            ActiveStatus.ACTIVE);
-        if (om.isPresent()) {
-            Member member = om.get();
-            //Todo : Category 추가
-            itemRepository.save(Item
-                .builder()
-                .id(saveItem.getId())
-                .color(itemCreateDto.getColor())
-                .sex(itemCreateDto.getGender())
-                .brand(itemCreateDto.getBrand())
-                .member(member)
-                .itemImages(itemImages)
-                .size(itemCreateDto.getSize())
-                .purchase(itemCreateDto.getPurchase())
-                .publicStatus(itemCreateDto.getPublicStatus())
-                .salesStatus(itemCreateDto.getSalesStatus())
-                .build());
-        }
+        //Todo : Category 추가
+        itemRepository.save(Item
+            .builder()
+            .id(saveItem.getId())
+            .color(itemCreateDto.getColor())
+            .sex(itemCreateDto.getGender())
+            .brand(itemCreateDto.getBrand())
+            .member(member)
+            .itemImages(itemImages)
+            .size(itemCreateDto.getSize())
+            .purchase(itemCreateDto.getPurchase())
+            .publicStatus(itemCreateDto.getPublicStatus())
+            .salesStatus(itemCreateDto.getSalesStatus())
+            .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
+            .build());
     }
 
     @Override
@@ -200,5 +197,49 @@ public class ItemServiceImpl implements ItemService {
                 .build());
         }
         return itemListResponseDtos;
+    }
+
+    @Override
+    public void bookmarkLookbook(Long clothesId) {
+        Optional<Item> oi = itemRepository.findById(clothesId);
+        if (oi.isPresent()) {
+            Item item = oi.get();
+            itemRepository.save(item
+                .builder()
+                .id(item.getId())
+                .color(item.getColor())
+                .sex(item.getSex())
+                .brand(item.getBrand())
+                .member(item.getMember())
+                .itemImages(item.getItemImages())
+                .size(item.getSize())
+                .purchase(item.getPurchase())
+                .publicStatus(item.getPublicStatus())
+                .bookmarkStatus(BookmarkStatus.BOOKMARKING)
+                .salesStatus(item.getSalesStatus())
+                .build());
+        }
+    }
+
+    @Override
+    public void unbookmarkLookbook(Long clothesId) {
+        Optional<Item> oi = itemRepository.findById(clothesId);
+        if (oi.isPresent()) {
+            Item item = oi.get();
+            itemRepository.save(item
+                .builder()
+                .id(item.getId())
+                .color(item.getColor())
+                .sex(item.getSex())
+                .brand(item.getBrand())
+                .member(item.getMember())
+                .itemImages(item.getItemImages())
+                .size(item.getSize())
+                .purchase(item.getPurchase())
+                .publicStatus(item.getPublicStatus())
+                .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
+                .salesStatus(item.getSalesStatus())
+                .build());
+        }
     }
 }

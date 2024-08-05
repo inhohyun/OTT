@@ -260,6 +260,7 @@ public class LookbookServiceImpl implements LookbookService {
                     tagRepository.save(Tag
                         .builder()
                         .id(tag.getId())
+                        .name(tag.getName())
                         .count(tag.getCount() - 1)
                         .build());
                 }
@@ -315,6 +316,7 @@ public class LookbookServiceImpl implements LookbookService {
                     tagRepository.save(Tag
                         .builder()
                         .id(tagEntity.getId())
+                        .name(tagEntity.getName())
                         .count(tagEntity.getCount() + 1)
                         .build());
                 }
