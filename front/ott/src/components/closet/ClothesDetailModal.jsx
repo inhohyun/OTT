@@ -46,7 +46,7 @@ const ClothesDetailModal = ({
   useEffect(() => {
     if (!isOpen) {
       setIsEditing(false);
-      setCurrentImageIndex(0); // Reset to the first image when modal closes
+      setCurrentImageIndex(0);
     }
   }, [isOpen]);
 

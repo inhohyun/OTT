@@ -234,7 +234,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
             value={categoryOptions.find((opt) => opt.value === category)}
             onChange={(opt) => setCategory(opt.value)}
             options={categoryOptions}
-            styles={customStyles} // Apply custom styles
+            styles={customStyles}
           />
         </div>
         <div className="mb-4">

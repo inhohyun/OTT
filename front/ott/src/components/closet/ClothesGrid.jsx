@@ -10,41 +10,41 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const ClothesGrid = ({ onClothesClick }) => {
-  const [clothes, setClothes] = useState([]);
-  const [visibleItems, setVisibleItems] = useState(12);
-  const [visibleImages, setVisibleImages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const containerRef = useRef(null);
+  const [clothes, setClothes] = useState([]); // 옷 목록 상태
+  const [visibleItems, setVisibleItems] = useState(12); // 한 번에 보여줄 항목 수
+  const [visibleImages, setVisibleImages] = useState([]); // 보이는 이미지 상태 (앞면/뒷면)
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
+  const containerRef = useRef(null); // 스크롤 컨테이너 참조
 
   useEffect(() => {
-    // Fetch clothes data from the server
+    // 서버에서 옷 데이터를 가져오기 위한 함수
     const fetchClothes = async () => {
       try {
-        const userId = 1; // Assuming user_id is 1
+        const userId = 1; // 사용자 ID (예시로 1 사용)
         const response = await axios.get(
           `http://192.168.100.89:8080/api/clothes/${userId}/list`
         );
-        // Ensure each item has a unique key
+        // 각 항목에 고유한 키 추가
         const clothesWithKeys = response.data.map((item, index) => ({
           ...item,
-          key: item.id || index, // Preferably use a unique ID, fallback to index
+          key: item.id || index, // 고유 ID를 사용하거나, 없을 경우 인덱스를 사용
         }));
         setClothes(clothesWithKeys);
         setVisibleImages(
           clothesWithKeys.map((item) => ({ id: item.key, isFront: true }))
         );
-        setLoading(false);
+        setLoading(false); // 로딩 완료
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        setError(error); // 에러 발생 시 설정
+        setLoading(false); // 로딩 종료
       }
     };
 
-    fetchClothes();
+    fetchClothes(); // 컴포넌트 마운트 시 데이터 가져오기
   }, []);
 
-  // 가로 무한 스크롤
+  // 가로 무한 스크롤 처리 함수
   const handleScroll = () => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
@@ -98,7 +98,7 @@ const ClothesGrid = ({ onClothesClick }) => {
             ? 'NOT_BOOKMARKING'
             : 'BOOKMARKING';
 
-        // Update the bookmarkStatus locally for immediate UI feedback
+        // UI 피드백을 위한 bookmarkStatus 로컬 업데이트
         return { ...item, bookmarkStatus: newStatus };
       }
       return item;
@@ -111,25 +111,25 @@ const ClothesGrid = ({ onClothesClick }) => {
 
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
-          // Unlike -> Like
+          // 좋아요로 변경 시
           await axios.post(
             `http://192.168.100.89:8080/api/clothes/bookmark/${clothesId}`
           );
         } else {
-          // Like -> Unlike
+          // 좋아요 취소로 변경 시
           await axios.post(
             `http://192.168.100.89:8080/api/clothes/unbookmark/${clothesId}`
           );
         }
       } catch (error) {
-        console.error('Error toggling like status:', error);
-        // Handle error as needed
+        console.error('좋아요 상태 변경 중 오류:', error);
+        // 필요 시 에러 처리 추가
       }
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading clothes: {error.message}</div>;
+  if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
+  if (error) return <div>Error loading clothes: {error.message}</div>; // 에러 발생 시 표시
 
   // clothes 배열이 비어있을 때 빈 상태 표시
   if (!clothes.length) {
@@ -155,14 +155,14 @@ const ClothesGrid = ({ onClothesClick }) => {
           WebkitOverflowScrolling: 'touch',
           overflowX: 'auto',
           position: 'relative',
-          scrollbarWidth: 'none' /* Firefox */,
+          scrollbarWidth: 'none',
         }}
       >
         <div
           className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1"
           style={{
-            msOverflowStyle: 'none' /* Internet Explorer 10+ */,
-            scrollbarWidth: 'none' /* Firefox */,
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
           }}
         >
           {clothes.slice(0, visibleItems).map((item) => {
