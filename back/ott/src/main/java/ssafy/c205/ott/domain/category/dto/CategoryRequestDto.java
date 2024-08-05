@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CategoryRequestDto {
-    long id;
+    long closetId;
     String name;
 }
