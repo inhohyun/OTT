@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
+import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
 import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
 import ssafy.c205.ott.domain.item.repository.ItemRepository;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
+
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final AmazonS3Util amazonS3Util;
@@ -40,11 +42,11 @@ public class ItemServiceImpl implements ItemService {
         int idx = 0;
         for (String url : urls) {
             ItemImage saveImage = itemImageRepository.save(ItemImage
-                    .builder()
-                    .itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
-                    .itemImagePath(url)
-                    .item(saveItem)
-                    .build());
+                .builder()
+                .itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
+                .itemImagePath(url)
+                .item(saveItem)
+                .build());
 
             itemImages.add(saveImage);
         }
@@ -55,23 +57,24 @@ public class ItemServiceImpl implements ItemService {
         }
 
         //옷 저장
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(), ActiveStatus.ACTIVE);
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
+            ActiveStatus.ACTIVE);
         if (om.isPresent()) {
             Member member = om.get();
             //Todo : Category 추가
             itemRepository.save(Item
-                    .builder()
-                    .id(saveItem.getId())
-                    .color(itemCreateDto.getColor())
-                    .sex(itemCreateDto.getGender())
-                    .brand(itemCreateDto.getBrand())
-                    .member(member)
-                    .itemImages(itemImages)
-                    .size(itemCreateDto.getSize())
-                    .purchase(itemCreateDto.getPurchase())
-                    .publicStatus(itemCreateDto.getPublicStatus())
-                    .salesStatus(itemCreateDto.getSalesStatus())
-                    .build());
+                .builder()
+                .id(saveItem.getId())
+                .color(itemCreateDto.getColor())
+                .sex(itemCreateDto.getGender())
+                .brand(itemCreateDto.getBrand())
+                .member(member)
+                .itemImages(itemImages)
+                .size(itemCreateDto.getSize())
+                .purchase(itemCreateDto.getPurchase())
+                .publicStatus(itemCreateDto.getPublicStatus())
+                .salesStatus(itemCreateDto.getSalesStatus())
+                .build());
         }
     }
 
@@ -93,11 +96,11 @@ public class ItemServiceImpl implements ItemService {
             int idx = 0;
             for (String url : urls) {
                 ItemImage saveImage = itemImageRepository.save(ItemImage
-                        .builder()
-                        .itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
-                        .itemImagePath(url)
-                        .item(item)
-                        .build());
+                    .builder()
+                    .itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
+                    .itemImagePath(url)
+                    .item(item)
+                    .build());
 
                 itemImages.add(saveImage);
             }
@@ -109,23 +112,24 @@ public class ItemServiceImpl implements ItemService {
             //2. 신규 카테고리 생성
 
             // 옷 변경
-            Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(), ActiveStatus.ACTIVE);
+            Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
+                ActiveStatus.ACTIVE);
             if (om.isPresent()) {
                 Member member = om.get();
                 //Todo : Category 추가
                 itemRepository.save(Item
-                        .builder()
-                        .id(item.getId())
-                        .color(itemCreateDto.getColor())
-                        .sex(itemCreateDto.getGender())
-                        .brand(itemCreateDto.getBrand())
-                        .member(member)
-                        .itemImages(itemImages)
-                        .size(itemCreateDto.getSize())
-                        .purchase(itemCreateDto.getPurchase())
-                        .publicStatus(itemCreateDto.getPublicStatus())
-                        .salesStatus(itemCreateDto.getSalesStatus())
-                        .build());
+                    .builder()
+                    .id(item.getId())
+                    .color(itemCreateDto.getColor())
+                    .sex(itemCreateDto.getGender())
+                    .brand(itemCreateDto.getBrand())
+                    .member(member)
+                    .itemImages(itemImages)
+                    .size(itemCreateDto.getSize())
+                    .purchase(itemCreateDto.getPurchase())
+                    .publicStatus(itemCreateDto.getPublicStatus())
+                    .salesStatus(itemCreateDto.getSalesStatus())
+                    .build());
             }
         }
     }
@@ -165,17 +169,36 @@ public class ItemServiceImpl implements ItemService {
             //return
             //Todo : 카테고리 return 넣을것
             return ItemResponseDto
-                    .builder()
-                    .clothesId(item.getId())
-                    .gender(item.getSex())
-                    .size(item.getSize())
-                    .purchase(item.getPurchase())
-                    .publicStatus(item.getPublicStatus())
-                    .salesStatus(item.getSalesStatus())
-                    .brand(item.getBrand())
-                    .imageUrls(images)
-                    .build();
+                .builder()
+                .clothesId(item.getId())
+                .gender(item.getSex())
+                .size(item.getSize())
+                .purchase(item.getPurchase())
+                .publicStatus(item.getPublicStatus())
+                .salesStatus(item.getSalesStatus())
+                .brand(item.getBrand())
+                .imageUrls(images)
+                .build();
         }
         return null;
+    }
+
+    @Override
+    public List<ItemListResponseDto> selectItemList(Long uid) {
+        List<Item> itemLists = itemRepository.findByMemberId(uid);
+        List<ItemListResponseDto> itemListResponseDtos = new ArrayList<>();
+        for (Item itemList : itemLists) {
+            String[] urls = new String[itemList.getItemImages().size()];
+            for (int i = 0; i < itemList.getItemImages().size(); i++) {
+                urls[i] = itemList.getItemImages().get(i).getItemImagePath();
+            }
+            itemListResponseDtos.add(ItemListResponseDto
+                .builder()
+                .bookmarkStatus(itemList.getBookmarkStatus())
+                .clothesId(itemList.getId())
+                .imgUrls(urls)
+                .build());
+        }
+        return itemListResponseDtos;
     }
 }
