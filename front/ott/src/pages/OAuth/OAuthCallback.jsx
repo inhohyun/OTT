@@ -19,12 +19,8 @@ import { useCookies } from 'react-cookie';
 const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
   const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
-
   useEffect(() => {
     const refreshToken = cookies['refresh'];
-    setLocalRefreshToken(refreshToken);
-  }, [cookies]);
-  useEffect(() => {
     // 헤더에서 액세스 토큰 추출
     console.log('쿠키에 들어있는 값 출력:', refreshToken);
 
@@ -40,7 +36,7 @@ const OAuthCallback = () => {
       alert('토큰을 찾을 수 없습니다. 다시 로그인해주세요.');
       navigate('/');
     }
-  }, [navigate]); // navigate가 변경될 때마다 useEffect를 실행합니다.
+  }, [cookies, navigate]); // navigate가 변경될 때마다 useEffect를 실행합니다.
 
   // 이 컴포넌트는 화면에 아무것도 렌더링하지 않습니다.
   return null;
