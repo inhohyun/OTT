@@ -3,10 +3,7 @@ package ssafy.c205.ott.domain.category.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ssafy.c205.ott.domain.category.dto.CategoryDto;
-import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
-import ssafy.c205.ott.domain.category.dto.DeleteCategorySuccessDto;
-import ssafy.c205.ott.domain.category.dto.RegisterCategorySuccessDto;
+import ssafy.c205.ott.domain.category.dto.*;
 import ssafy.c205.ott.domain.category.entity.Category;
 import ssafy.c205.ott.domain.category.exception.CategoryNotFoundException;
 import ssafy.c205.ott.domain.category.repository.CategoryRepository;
@@ -44,6 +41,13 @@ public class CategoryService {
                         .build()
                 )
                 .collect(Collectors.toList());
+    }
+
+    public UpdateCategorySuccessDto updateCategory(UpdateCategoryRequestDto updateCategoryRequestDto) {
+        Category category = categoryRepository.findByIdAndClosetId(updateCategoryRequestDto.getCategoryId(), updateCategoryRequestDto.getClosetId()).orElseThrow(CategoryNotFoundException::new);
+        category.updateCategory(updateCategoryRequestDto.getNewName());
+        categoryRepository.save(category);
+        return UpdateCategorySuccessDto.builder().categoryId(category.getId()).build();
     }
 
     public DeleteCategorySuccessDto deleteCategory(CategoryRequestDto categoryRequestDto) {
