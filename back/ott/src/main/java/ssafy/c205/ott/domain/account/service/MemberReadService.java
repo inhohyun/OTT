@@ -146,7 +146,6 @@ public class MemberReadService {
                 .nickname(member.getNickname())
                 .introduction(member.getIntroduction())
                 .profileImageUrl(member.getProfileImageUrl())
-                .closets(member.getClosets())
                 .tags(tags)
                 .publicStatus(member.getPublicStatus())
                 .followingCount(followingCount)
