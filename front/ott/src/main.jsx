@@ -1,14 +1,9 @@
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './styles/tailwind.css';
-import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <CookiesProvider>
-    <App />
-  </CookiesProvider>
-);
+root.render(<App />);
 
 // 서비스 워커 등록 코드 추가
 if ('serviceWorker' in navigator) {
