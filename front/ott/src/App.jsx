@@ -1,4 +1,5 @@
 import GlobalStyle from './styles/GlobalStyles';
+import Layout from './styles/Layout';
 import {
   BrowserRouter as Router,
   Route,
@@ -22,12 +23,12 @@ import LookbookCreate from './pages/Create/LookbookCreatePage';
 import UserPage from './pages/UserPage/UserPage';
 import OAuthCallback from './pages/OAuth/OAuthCallback';
 import UpdateLookbookPage from './pages/Create/UpdateLookbookPage';
-import { CookiesProvider } from 'react-cookie';
+
 function App() {
   return (
     <>
-      <CookiesProvider>
-        <GlobalStyle /> {/* 전역 스타일 적용 */}
+      <GlobalStyle />
+      <Layout>
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
@@ -35,8 +36,6 @@ function App() {
             <Route path="/survey_start" element={<SurveyStart />} />
             <Route path="/survey_ing" element={<SurveyIng />} />
             <Route element={<CommonLayout />}>
-              {' '}
-              {/* 공통 레이아웃 적용 */}
               <Route path="/userPage" element={<UserPage />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
@@ -53,20 +52,18 @@ function App() {
             </Route>
           </Routes>
         </Router>
-      </CookiesProvider>
+      </Layout>
     </>
   );
 }
 
 // CommonLayout 컴포넌트 정의
 const CommonLayout = () => (
-  <div className="flex flex-col min-h-screen">
+  <>
     <Header />
-    <main className="flex-grow">
-      <Outlet /> {/* 자식 라우트를 렌더링 */}
-    </main>
+    <Outlet /> {/* 자식 라우트를 렌더링 */}
     <Footer />
-  </div>
+  </>
 );
 
 export default App;

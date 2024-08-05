@@ -140,10 +140,11 @@ const UpdatePage = () => {
   };
 
   return (
-    <div className="relative flex mb-20 flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon"
-         style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="w-full h-full flex flex-col items-center justify-start">
+    <div className="w-full h-full flex items-center justify-center font-dohyeon mb-40">
+      <div
+        className="w-full h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
         <div className="w-full flex justify-center mt-8 relative">
           <div
             className="relative"

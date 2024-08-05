@@ -1,17 +1,5 @@
 import { get } from '../axiosInstance';
 
-//팔로잉 수 조호 API
-export const getFollowingCount = async ({ userId }) => {
-  try {
-    const response = await get({
-      endPoint: `/users/${userId}/followings/count`,
-    });
-    return response;
-  } catch (error) {
-    console.error('팔로잉 수 조회중 에러 :', error);
-    throw error;
-  }
-};
 //팔로잉 목록을 조회하는 API
 export const getFollowingList = async ({ userId }) => {
   try {

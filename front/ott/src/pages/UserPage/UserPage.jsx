@@ -12,6 +12,7 @@ import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
 // import { getUserInfo } from '../../api/user/user';
 
+// 룩북 상세보기 및 사용자 검색에서 프로필로 넘어올 때 uid 값을 받음 근데 마이페이지를 눌렀을 때는 어떻게
 const UserPage = ({ uid }) => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
@@ -23,9 +24,9 @@ const UserPage = ({ uid }) => {
       try {
         // const data = await getUserInfo(uid);
         const dummyData = {
-          username: '인호현',
+          username: '홍길동',
           isMe: false,
-          isPublic: false,
+          isPublic: true,
           tags: ['패션', '여행', '음악'],
         };
         setUserInfo(dummyData);
@@ -74,11 +75,11 @@ const UserPage = ({ uid }) => {
   };
 
   return (
-    <div
-      className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="w-full h-full flex flex-col items-center justify-start">
+    <div className="w-full h-full flex items-center justify-center font-dohyeon">
+      <div
+        className="w-[390px] h-screen relative flex flex-col items-center justify-start bg-cover bg-no-repeat bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
         <div className="w-full flex justify-center mt-8">
           <img
             className="w-[70px] h-[70px] rounded-full"
@@ -109,21 +110,16 @@ const UserPage = ({ uid }) => {
         <div className="w-full flex items-center justify-center mt-2">
           <div className="w-[80%] flex justify-between border border-black p-2">
             {!isMe && (
-              <div className="flex justify-center items-center w-full">
+              <div className="flex justify-center items-center w-[40%]">
                 <button
-                  className={`w-full px-4 py-2 border rounded ${
-                    isFollowing
-                      ? 'bg-violet-200 text-black-500 border-violet-300'
-                      : 'bg-transparent text-[rgba(0,0,0,0.5)]'
-                  }`}
+                  className="px-4 py-2 border rounded text-[rgba(0,0,0,0.5)] border-[rgba(0,0,0,0.5)] bg-transparent"
                   onClick={handleFollowButtonClick}
-                  style={{ fontFamily: 'dohyeon' }}
                 >
                   {isFollowing ? '팔로잉' : '팔로우'}
                 </button>
               </div>
             )}
-            <div className="flex justify-center items-center w-full">
+            <div className="flex justify-center items-center w-[40%]">
               {!isMe ? (
                 <div className="flex">
                   <img
@@ -155,14 +151,12 @@ const UserPage = ({ uid }) => {
             </span>
           ))}
         </div>
-        <div className="w-full mt-6 h-full">
+        <div className="w-full mt-6">
           <NavBar
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
           />
-          <div className="mt-4 text-[rgba(0,0,0,0.5)] h-full w-full">
-            {renderComponent}
-          </div>
+          <div className="mt-4 text-[rgba(0,0,0,0.5)]">{renderComponent}</div>
         </div>
       </div>
     </div>

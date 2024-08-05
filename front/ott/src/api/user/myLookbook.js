@@ -22,7 +22,6 @@ export const getPublicLookbook = async ({ uid }) => {
   }
 };
 
-// 나의 비공개 룩북 조회 API
 export const getPrivateLookbook = async ({ uid }) => {
   try {
     const response = await get({ endPoint: `/lookbook/private`, id: uid });

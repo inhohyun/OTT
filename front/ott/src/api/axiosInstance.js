@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
   // TODO : 서버의 URL로 변경
   // baseURL: process.env.REACT_APP_API_BASE_URL,
   baseURL: `localhost:3000`,
-  timeout: 1000000, // FIXME : 타임아웃 시간 수정 필요
+  timeout: 1000,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -64,7 +64,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-  //TODO : 변수명 문제 발생관련 문제시 config.js에 매핑 함수를 만들든지, 아니면 아래 메서드들을 삭제
+// API 메서드 예시
 export const get = ({ endPoint, id }) => {
   if (id) {
     return axiosInstance.get(endPoint, { params: { id } });
