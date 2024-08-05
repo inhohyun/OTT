@@ -25,10 +25,12 @@ const OAuthCallback = () => {
         { withCredentials: true }
       )
       .then((response) => {
+        console.log('response', response);
+        console.log('response.headers', response.headers);
         const AccessToken = response.headers['Access'].split(' ')[1];
         const accessToken = response.headers['access'].split(' ')[1];
-        console.log('AccessToken', AccessToken);
         console.log('accessToken', accessToken);
+        console.log('AccessToken', AccessToken);
 
         localStorage.setItem('accessToken', accessToken);
         alert('Access token stored in local storage');
