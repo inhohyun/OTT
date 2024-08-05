@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
@@ -19,7 +20,6 @@ import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.ItemStatus;
 import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
 import ssafy.c205.ott.domain.item.repository.ItemRepository;
-import ssafy.c205.ott.util.AmazonS3Util;
 
 @Service
 @Slf4j

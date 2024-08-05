@@ -13,13 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
+import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
-import ssafy.c205.ott.domain.item.repository.ItemRepository;
 import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.SalesStatus;
+import ssafy.c205.ott.domain.item.repository.ItemRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.ClothesImageDto;
@@ -42,7 +43,6 @@ import ssafy.c205.ott.domain.lookbook.repository.LookbookItemRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
 import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
-import ssafy.c205.ott.util.AmazonS3Util;
 
 @Slf4j
 @Service
@@ -298,6 +298,7 @@ public class LookbookServiceImpl implements LookbookService {
                 } else {
                     tagRepository.save(Tag.builder()
                         .id(tag.getId())
+                        .name(tag.getName())
                         .count(tag.getCount() - 1)
                         .build());
                 }
