@@ -23,10 +23,8 @@ const OAuthCallback = () => {
     const accessToken = getAccessTokenFromHeaders();
     // 쿠키에서 리프레시 토큰 추출
     // const refreshToken = Cookies.get('refresh');
-
-    // 액세스 토큰과 리프레시 토큰이 존재하는지 확인합니다.
-    console.log('All cookies:', Cookies.get());
-    const refreshToken = Cookies.get('refresh');
+    console.log('Document Cookie:', document.cookie);
+    const refreshToken = document.cookie.get('refresh');
     console.log('Refresh Token:', refreshToken);
     console.log('token', accessToken, refreshToken);
     if (accessToken && refreshToken) {
