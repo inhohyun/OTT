@@ -26,10 +26,15 @@ const OAuthCallback = () => {
     const issue_access_token = async () => {
       try {
         const response = await axios.get(
-          'https://i11c205.p.ssafy.io/api/reissue',
-          { withCredentials: true }
+          'https://your-backend-domain.com/api/reissue',
+          {
+            withCredentials: true, // 자격 증명을 포함하여 요청
+            headers: {
+              Accept: 'application/json',
+            },
+          }
         );
-        console.log('응답 값 출력:', response);
+        console.log('응답 값 출력:', response.data);
       } catch (error) {
         console.error(error);
       }
