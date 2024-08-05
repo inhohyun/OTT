@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum CategoryExceptionMessage {
-    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", HttpStatus.NOT_FOUND.value()),;
+    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", HttpStatus.NOT_FOUND.value()),
+    CATEGORY_NAME_DUPLICATION("이미 존재하는 카테고리입니다.", HttpStatus.BAD_REQUEST.value());
 
     private final String message;
     private final int status;
