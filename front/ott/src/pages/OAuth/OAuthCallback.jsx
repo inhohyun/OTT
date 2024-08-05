@@ -18,7 +18,7 @@ import { useCookies } from 'react-cookie';
 // OAuthCallback 컴포넌트 정의
 const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
-  const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
+  const [cookies, setCookie, removeCookie] = useCookies();
   useEffect(() => {
     const refreshToken = cookies;
     // 헤더에서 액세스 토큰 추출
