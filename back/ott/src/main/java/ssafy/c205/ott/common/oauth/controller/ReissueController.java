@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ssafy.c205.ott.common.oauth.jwt.JWTUtil;
@@ -25,6 +26,7 @@ public class ReissueController {
     private final RefreshService refreshService;
     private final CookieService cookieService;
 
+    @CrossOrigin(origins = "https://i11c205.p.ssafy.io/*", allowCredentials = "true")
     @GetMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
