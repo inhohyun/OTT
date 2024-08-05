@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.ClosetCategory;
+import ssafy.c205.ott.domain.category.dto.CategoryDto;
 import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
 import ssafy.c205.ott.domain.category.dto.DeleteCategorySuccessDto;
 import ssafy.c205.ott.domain.category.dto.RegisterCategorySuccessDto;
@@ -13,6 +14,9 @@ import ssafy.c205.ott.domain.category.repository.CategoryRepository;
 import ssafy.c205.ott.domain.category.repository.ClosetCategoryRepository;
 import ssafy.c205.ott.domain.closet.entity.Closet;
 import ssafy.c205.ott.domain.closet.repository.ClosetRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,6 +33,17 @@ public class CategoryService {
         saveClosetCategory(closet, category);
 
         return buildRegisterCategorySuccessDto(category);
+    }
+
+    public List<CategoryDto> getCategories(Long closetId) {
+        List<ClosetCategory> findClosetCategory = closetCategoryRepository.findByClosetId(closetId);
+        return findClosetCategory.stream()
+                .map(closetCategory -> CategoryDto.builder()
+                        .id(closetCategory.getCategory().getId())
+                        .name(closetCategory.getCategory().getName())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 
     public DeleteCategorySuccessDto deleteCategory(CategoryRequestDto categoryRequestDto) {
