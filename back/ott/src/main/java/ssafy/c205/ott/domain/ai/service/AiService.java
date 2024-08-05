@@ -1,32 +1,74 @@
 package ssafy.c205.ott.domain.ai.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class AiService {
-    private final String GPU_SERVER_URL = "http://70.12.130.121:8000/api/process/ai";
+    @Value("gpu.server.url")
+    private String GPU_SERVER_BASE_URL;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    public byte[] processImage(String modelPath, String clothPath) {
-        Map<String, String> request = new HashMap<>();
-        request.put("model_path", modelPath);
-        request.put("cloth_path", clothPath);
+    public AiService() {
+        this.restTemplate = new RestTemplate();
+    }
 
-        ResponseEntity<byte[]> response = restTemplate.postForEntity(GPU_SERVER_URL, request, byte[].class);
+    public String ping() {
+        return restTemplate.getForObject(GPU_SERVER_BASE_URL + "/", String.class);
+    }
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response.getBody();
-        } else {
+    public ResponseEntity<Map<String, Object>> processImage(AiRequestDto aiRequestDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.set("memberId", String.valueOf(aiRequestDto.getMemberId()));
+        body.set("modelImagePath", aiRequestDto.getModelImagePath());
+        body.set("clothImagePath", aiRequestDto.getClothImagePath());
+        body.set("category", String.valueOf(aiRequestDto.getCategory()));
+
+        // 선택적 필드 추가
+        if (aiRequestDto.getModelType() != null) {
+            body.set("modelType", aiRequestDto.getModelType());
+        }
+        if (aiRequestDto.getScale() != null) {
+            body.set("scale", String.valueOf(aiRequestDto.getScale()));
+        }
+        if (aiRequestDto.getSample() != null) {
+            body.set("sample", String.valueOf(aiRequestDto.getSample()));
+        }
+        log.info(body.toString());
+
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> response = restTemplate.postForEntity(GPU_SERVER_BASE_URL + "/generate", request, Map.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("Failed to process image");
         }
+
+        // GPU 서버로부터 받은 base64 인코딩된 이미지 데이터 그대로 반환
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("images", response.getBody().get("images"));
+
+        return ResponseEntity.ok(responseBody);
     }
 
 }
