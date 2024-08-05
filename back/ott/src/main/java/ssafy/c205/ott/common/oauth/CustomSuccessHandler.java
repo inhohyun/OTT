@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -51,6 +53,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //응답 설정
         response.setHeader("access", accessToken);
+        log.info("리프레시 토큰 생성");
         ResponseCookie responseCookie = cookieService.createCookie("refresh", refreshToken);
         response.addHeader("Set-Cookie", responseCookie.toString());
         response.setStatus(HttpStatus.OK.value());
