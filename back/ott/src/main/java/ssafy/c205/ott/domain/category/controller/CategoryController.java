@@ -7,7 +7,10 @@ import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.domain.category.dto.CategoryDto;
 import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
 import ssafy.c205.ott.domain.category.dto.RegisterCategorySuccessDto;
+import ssafy.c205.ott.domain.category.repository.ClosetCategoryRepository;
 import ssafy.c205.ott.domain.category.service.CategoryService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,5 +23,8 @@ public class CategoryController {
         return ApiResponse.success(categoryService.registerCategory(CategoryRequestDto.builder().id(closetId).name(categoryDto.getName()).build()));
     }
 
-//    @PutMapping("/{closetId}/")
+    @GetMapping("/{closetId}")
+    public ApiResponse<List<CategoryDto>> getCategories(@PathVariable Long closetId) {
+        return ApiResponse.success(categoryService.getCategories(closetId));
+    }
 }
