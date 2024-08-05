@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import ssafy.c205.ott.common.oauth.service.CookieService;
 import ssafy.c205.ott.common.oauth.service.RefreshService;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ReissueController {
@@ -83,6 +85,7 @@ public class ReissueController {
         refreshService.addRefreshEntity(username, newRefresh, 86400000L);
 
         //response
+        log.info(newAccess);
         response.setHeader("access", newAccess);
         response.addHeader(HttpHeaders.SET_COOKIE, cookieService.createCookie("refresh", newRefresh).toString());
 
