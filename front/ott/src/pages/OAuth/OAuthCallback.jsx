@@ -18,42 +18,23 @@ const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
   const cookies = new Cookies(); // react-cookie의 Cookies 클래스를 사용하여 쿠키를 가져옵니다.
   useEffect(() => {
-    console.log('쿠키 값 출력:', cookies.getAll());
-    const refreshToken = cookies.get('refresh');
-    // 헤더에서 액세스 토큰 추출
-    console.log('쿠키에 들어있는 값 출력:', refreshToken);
-
-    const issue_access_token = async () => {
-      try {
-        const response = await axios.get(
-          'https://i11c205.p.ssafy.io/api/reissue',
-          {
-            w청ithCredentials: true, // 자격 증명을 포함하여 요
-            headers: {
-              Accept: 'application/json',
-            },
-          }
-        );
-        console.log('응답 값 출력:', response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    issue_access_token();
-    if (refreshToken) {
-      // 각각의 토큰을 로컬 스토리지에 저장합니다.
-      // setAccessToken(accessToken);
-      setLocalRefreshToken(refreshToken);
-
-      // 토큰을 성공적으로 저장한 후, 설문 시작 페이지로 리디렉션합니다.
-      navigate('/survey_start');
-    } else {
-      // 토큰이 없으면 경고 메시지를 표시하고 로그인 페이지로 리디렉션합니다.
-      alert('토큰을 찾을 수 없습니다. 다시 로그인해주세요.');
-      navigate('/');
-    }
-  }, [cookies, navigate]); // navigate가 변경될 때마다 useEffect를 실행합니다.
+    axios
+      .post(
+        'https://i11c205.p.ssafy.io/auth/reissue',
+        {},
+        { withCredentials: true }
+      )
+      .then((response) => {
+        const accessToken = response.headers['authorization'].split(' ')[1];
+        localStorage.setItem('accessToken', accessToken);
+        alert('Access token stored in local storage');
+        navigate('/survey_start');
+      })
+      .catch((error) => {
+        console.log(error);
+        alert('Failed to refresh access token');
+      });
+  }, [navigate]);
 
   // 이 컴포넌트는 화면에 아무것도 렌더링하지 않습니다.
   return null;
