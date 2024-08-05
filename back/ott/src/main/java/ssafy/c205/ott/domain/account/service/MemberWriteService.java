@@ -7,6 +7,7 @@ import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.dto.request.*;
 import ssafy.c205.ott.domain.account.dto.response.*;
+import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
@@ -110,7 +111,7 @@ public class MemberWriteService {
     }
 
     private Member findMemberById(Long id) {
-        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        return memberRepository.findByIdAndActiveStatus(id, ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
     }
 
     public FollowResponseDto acceptFollow(FollowRequestDto followRequestDto) {
