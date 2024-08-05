@@ -18,7 +18,8 @@ const OAuthCallback = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지를 이동합니다.
   const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
   useEffect(() => {
-    const refreshToken = cookies['refresh'];
+    console.log('쿠키 값 출력:', cookies);
+    const refreshToken = cookies.get('refresh');
     // 헤더에서 액세스 토큰 추출
     console.log('쿠키에 들어있는 값 출력:', refreshToken);
 
