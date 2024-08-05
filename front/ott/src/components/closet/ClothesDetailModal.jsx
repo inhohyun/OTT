@@ -17,26 +17,25 @@ const ClothesDetailModal = ({
   categories = [],
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editableItem, setEditableItem] = useState(clothingItem);
-  const [frontImage, setFrontImage] = useState(clothingItem.img[0]);
-  const [backImage, setBackImage] = useState(clothingItem.img[1]);
+  const [editableItem, setEditableItem] = useState(clothingItem || {});
+  const [frontImage, setFrontImage] = useState(clothingItem?.img?.[0] || '');
+  const [backImage, setBackImage] = useState(clothingItem?.img?.[1] || '');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [category, setCategory] = useState(clothingItem.category || '');
+  const [category, setCategory] = useState(clothingItem?.category || '');
   const [publicStatus, setPublicStatus] = useState(
-    clothingItem.publicStatus || 'PRIVATE'
+    clothingItem?.publicStatus || 'PRIVATE'
   );
   const [salesStatus, setSalesStatus] = useState(
-    clothingItem.salesStatus || 'NOT_SALE'
+    clothingItem?.salesStatus || 'NOT_SALE'
   );
-  const [gender, setGender] = useState(clothingItem.gender || 'COMMON');
+  const [gender, setGender] = useState(clothingItem?.gender || 'COMMON');
 
   useEffect(() => {
-    // Initialize editable state with the given clothing item data
     if (clothingItem) {
       console.log('Editing clothing item:', clothingItem);
       setEditableItem(clothingItem);
-      setFrontImage(clothingItem.img[0]);
-      setBackImage(clothingItem.img[1]);
+      setFrontImage(clothingItem.img?.[0] || '');
+      setBackImage(clothingItem.img?.[1] || '');
       setCategory(clothingItem.category);
       setPublicStatus(clothingItem.publicStatus || 'PRIVATE');
       setSalesStatus(clothingItem.salesStatus || 'NOT_SALE');
@@ -72,12 +71,10 @@ const ClothesDetailModal = ({
     }),
   };
 
-  // Toggle editing mode
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
-  // Save the edited clothing item
   const handleSaveClick = () => {
     const updatedData = {
       ...editableItem,
@@ -95,19 +92,16 @@ const ClothesDetailModal = ({
     onClose();
   };
 
-  // Delete the clothing item
   const handleDeleteClick = () => {
     onDelete(editableItem.id);
     onClose();
   };
 
-  // Update editable item state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditableItem({ ...editableItem, [name]: value });
   };
 
-  // Change image (front/back)
   const handleImageChange = (e, setImage) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -116,27 +110,20 @@ const ClothesDetailModal = ({
     }
   };
 
-  // Navigate to the next image
   const handleNextImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % 2);
   };
 
-  // Navigate to the previous image
   const handlePreviousImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + 2) % 2);
   };
 
-  // Get current image to display
   const getCurrentImage = () => {
-    if (currentImageIndex === 0) {
-      return frontImage || null;
-    }
-    return backImage || null;
+    return currentImageIndex === 0 ? frontImage : backImage;
   };
 
-  // Trigger file input
   const triggerFileInput = () => {
     const input = document.getElementById(`file-input-${currentImageIndex}`);
     if (input) {

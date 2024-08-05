@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import bingleicon from '../../assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
@@ -8,16 +9,40 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
-  // 한번에 보여주는 옷 개수
+const ClothesGrid = ({ onClothesClick }) => {
+  const [clothes, setClothes] = useState([]);
   const [visibleItems, setVisibleItems] = useState(12);
-  const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    // 처음으로 보여지는 이미지(앞면)를 이미지 상태 변경될 때마다 갱신
-    setVisibleImages(clothes.map((item) => ({ id: item.id, isFront: true })));
-  }, [clothes]);
+    // Fetch clothes data from the server
+    const fetchClothes = async () => {
+      try {
+        const userId = 1; // Assuming user_id is 1
+        const response = await axios.get(
+          `http://192.168.100.89:8080/api/clothes/${userId}/list`
+        );
+        // Ensure each item has a unique key
+        const clothesWithKeys = response.data.map((item, index) => ({
+          ...item,
+          key: item.id || index, // Preferably use a unique ID, fallback to index
+        }));
+        setClothes(clothesWithKeys);
+        setVisibleImages(
+          clothesWithKeys.map((item) => ({ id: item.key, isFront: true }))
+        );
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchClothes();
+  }, []);
 
   // 가로 무한 스크롤
   const handleScroll = () => {
@@ -43,7 +68,6 @@ const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
     }
   };
 
-  // 스크롤 컨테이너 상태 참조 위함
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
@@ -57,13 +81,25 @@ const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
   }, []);
 
   // 이미지 앞/뒷면 토글 함수
-  const handleToggleImage = (id) => {
+  const handleToggleImage = (key) => {
     setVisibleImages((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, isFront: !item.isFront } : item
+        item.id === key ? { ...item, isFront: !item.isFront } : item
       )
     );
   };
+
+  // 좋아요 상태 토글 함수
+  const handleToggleLike = (key) => {
+    setClothes((prevClothes) =>
+      prevClothes.map((item) =>
+        item.key === key ? { ...item, isLiked: !item.isLiked } : item
+      )
+    );
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading clothes: {error.message}</div>;
 
   // clothes 배열이 비어있을 때 빈 상태 표시
   if (!clothes.length) {
@@ -101,16 +137,15 @@ const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
         >
           {clothes.slice(0, visibleItems).map((item) => {
             const isFrontVisible = visibleImages.find(
-              (image) => image.id === item.id
+              (image) => image.id === item.key
             )?.isFront;
 
-            // img 속성 안전하게 접근
             const frontImage = item.img?.[0];
             const backImage = item.img?.[1];
 
             return (
               <div
-                key={item.id}
+                key={item.key}
                 className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center cursor-pointer"
                 style={{ minWidth: '100px', height: '190px' }}
                 onClick={() => onClothesClick(item)}
@@ -124,7 +159,7 @@ const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleToggleImage(item.id);
+                      handleToggleImage(item.key);
                     }}
                     className="absolute top-3 right-4 p-1 cursor-pointer"
                   >
@@ -134,7 +169,7 @@ const ClothesGrid = ({ clothes = [], onToggleLike, onClothesClick }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    onToggleLike(item.id);
+                    handleToggleLike(item.key); // Use item.key for toggling like
                   }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
