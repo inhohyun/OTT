@@ -193,7 +193,7 @@ public class ItemServiceImpl implements ItemService {
                 .builder()
                 .bookmarkStatus(itemList.getBookmarkStatus())
                 .clothesId(itemList.getId())
-                .imgUrls(urls)
+                .img(urls)
                 .build());
         }
         return itemListResponseDtos;

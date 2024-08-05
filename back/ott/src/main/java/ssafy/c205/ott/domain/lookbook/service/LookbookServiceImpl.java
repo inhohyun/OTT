@@ -587,6 +587,7 @@ public class LookbookServiceImpl implements LookbookService {
             ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
         if (om.isPresent()) {
             Member member = om.get();
+            log.info("{}", member.getId());
             List<Follow> followings = member.getFollowings();
             log.info("Following 수 : 1 / 내 값 : {}", followings.size());
             //팔로잉 사람들의 룩북을 최신순으로 가져와 리스트에 추가
@@ -596,8 +597,10 @@ public class LookbookServiceImpl implements LookbookService {
                 List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatusOrderByCreatedAtDesc(
                     follow.getToMember().getId(),
                     PublicStatus.PUBLIC, ActiveStatus.ACTIVE);
-
+                log.info("룩북 불러오기 완료");
+                log.info("lookbooks : {}", lookbooks.size());
                 for (Lookbook lookbook : lookbooks) {
+                    log.info("lookbook id : {}", lookbook.getId());
                     followingLooks.add(FollowLookbookDto
                         .builder()
                         .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))

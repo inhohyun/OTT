@@ -90,18 +90,21 @@ public class ItemController {
     }
 
     @GetMapping("/{user_id}/{category_id}")
-    public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId, @PathVariable("category_id") Long categoryId) {
+    public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId,
+        @PathVariable("category_id") Long categoryId) {
         return null;
     }
 
     @PostMapping("/bookmark/{cloth_id}")
     public ResponseEntity<?> bookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
+        log.info("룩북 아이디 : {}", clothesId);
         itemService.bookmarkLookbook(clothesId);
         return ResponseEntity.ok().body("북마크를 완료했습니다.");
     }
 
     @PostMapping("/unbookmark/{cloth_id}")
     public ResponseEntity<?> unbookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
+        log.info("룩북 아이디 : {}", clothesId);
         itemService.unbookmarkLookbook(clothesId);
         return ResponseEntity.ok().body("북마크 해제를 완료했습니다.");
     }

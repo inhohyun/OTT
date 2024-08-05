@@ -11,13 +11,13 @@ import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
 @ToString
 public class ItemListResponseDto {
 
-    private String[] imgUrls;
+    private String[] img;
     private Long clothesId;
     private BookmarkStatus bookmarkStatus;
 
     @Builder
-    public ItemListResponseDto(String[] imgUrls, Long clothesId, BookmarkStatus bookmarkStatus) {
-        this.imgUrls = imgUrls;
+    public ItemListResponseDto(String[] img, Long clothesId, BookmarkStatus bookmarkStatus) {
+        this.img = img;
         this.clothesId = clothesId;
         this.bookmarkStatus = bookmarkStatus;
     }
