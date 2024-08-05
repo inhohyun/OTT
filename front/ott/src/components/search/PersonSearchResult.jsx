@@ -12,7 +12,7 @@ const PersonSearchResult = ({ results, searchQuery }) => {
       return;
     }
 
-    // Filter and sort results based on the searchQuery resemblance
+    // 검색 쿼리에 따른 검색 결과 나열
     const filtered = results
       .filter(
         (result) =>
@@ -43,7 +43,7 @@ const PersonSearchResult = ({ results, searchQuery }) => {
   }, [results, searchQuery]);
 
   const handleShowMore = () => {
-    setVisibleResults((prev) => prev + 4); // Show 4 more results
+    setVisibleResults((prev) => prev + 4); // 검색결과 4개 더 표시
   };
 
   if (!searchQuery) {
