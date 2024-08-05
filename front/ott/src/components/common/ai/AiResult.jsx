@@ -21,21 +21,28 @@ const AiResult = ({ selectedImage, numImages }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto my-5">
+    <div className="flex flex-col items-center justify-center rounded-2xl shadow-lg w-full max-w-lg mx-auto my-5 p-4">
       <h2 className="text-center text-2xl font-semibold mb-4">AI 합성 결과</h2>
-      <Carousel showThumbs={true} infiniteLoop={true} showStatus={false}>
-        {images.map((image, index) => (
-          <div key={index}>
-            <img
-              src={image.src}
-              alt={image.alt}
-              className="rounded-lg shadow-md"
-            />
-          </div>
-        ))}
-      </Carousel>
+      <div className="w-full">
+        <Carousel 
+          showThumbs={true} 
+          infiniteLoop={true} 
+          showStatus={false} 
+          className="w-full"
+        >
+          {images.map((image, index) => (
+            <div key={index} className="flex justify-center">
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="rounded-lg shadow-md max-h-[70vh]"
+              />
+            </div>
+          ))}
+        </Carousel>
+      </div>
       <button
-        className="mt-4 px-4 py-2 bg-violet-300 text-white rounded-lg shadow-md "
+        className="mt-4 px-4 py-2 bg-violet-300 text-white rounded-lg shadow-md"
         onClick={handleHomeClick} // 상태 초기화를 처리하는 함수 호출
       >
         홈으로

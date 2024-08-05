@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // 쿠키 처리를 위해 js-cookie를 가져옵니다.
 import Cookies from 'js-cookie';
+import { ConstantColorFactor } from 'three';
 
 // 헤더에서 액세스 토큰을 추출하는 함수
 const getAccessTokenFromHeaders = () => {
   // 액세스 토큰이 URL의 쿼리 매개변수로 전달된다고 가정합니다.
-  const accessToken = new URLSearchParams(window.location.search).get(
-    'access_token'
-  );
+  const accessToken = new URLSearchParams(window.location.search).get('Access');
   return accessToken;
 };
 
@@ -24,9 +23,10 @@ const OAuthCallback = () => {
     // 헤더에서 액세스 토큰 추출
     const accessToken = getAccessTokenFromHeaders();
     // 쿠키에서 리프레시 토큰 추출
-    const refreshToken = Cookies.get('refresh_token');
+    const refreshToken = Cookies.get('refresh');
 
     // 액세스 토큰과 리프레시 토큰이 존재하는지 확인합니다.
+    console.log('token', accessToken, refreshToken);
     if (accessToken && refreshToken) {
       // 각각의 토큰을 로컬 스토리지에 저장합니다.
       setAccessToken(accessToken);

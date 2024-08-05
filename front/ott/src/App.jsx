@@ -1,5 +1,4 @@
 import GlobalStyle from './styles/GlobalStyles';
-import Layout from './styles/Layout';
 import {
   BrowserRouter as Router,
   Route,
@@ -27,43 +26,40 @@ import UpdateLookbookPage from './pages/Create/UpdateLookbookPage';
 function App() {
   return (
     <>
-      <GlobalStyle />
-      <Layout>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/oauth/callback" element={<OAuthCallback />} />
-            <Route path="/survey_start" element={<SurveyStart />} />
-            <Route path="/survey_ing" element={<SurveyIng />} />
-            <Route element={<CommonLayout />}>
-              <Route path="/userPage" element={<UserPage />} />
-              <Route path="/mainpage" element={<MainPage />} />
-              <Route path="/closet" element={<ClosetPage />} />
-              <Route path="/UpdatePage" element={<UpdatePage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/webrtc" element={<WebRTCPage />} />
-              <Route path="/video-chat/:username" element={<VideoChat />} />
-              <Route path="/ai" element={<AiPage />} />
-              <Route path="/lookbookcreate" element={<LookbookCreate />} />
-              <Route
-                path="/update-lookbook/:id"
-                element={<UpdateLookbookPage />}
-              />
-            </Route>
-          </Routes>
-        </Router>
-      </Layout>
+      <GlobalStyle /> {/* 전역 스타일 적용 */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/oauth/callback" element={<OAuthCallback />} />
+          <Route path="/survey_start" element={<SurveyStart />} />
+          <Route path="/survey_ing" element={<SurveyIng />} />
+          <Route element={<CommonLayout />}> {/* 공통 레이아웃 적용 */}
+            <Route path="/userPage" element={<UserPage />} />
+            <Route path="/mainpage" element={<MainPage />} />
+            <Route path="/closet" element={<ClosetPage />} />
+            <Route path="/UpdatePage" element={<UpdatePage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/webrtc" element={<WebRTCPage />} />
+            <Route path="/video-chat/:username" element={<VideoChat />} />
+            <Route path="/ai" element={<AiPage />} />
+            <Route path="/lookbookcreate" element={<LookbookCreate />} />
+            <Route path="/update-lookbook/:id" element={<UpdateLookbookPage />} />
+          </Route>
+        </Routes>
+      </Router>
     </>
   );
 }
 
 // CommonLayout 컴포넌트 정의
 const CommonLayout = () => (
-  <>
+  <div className="flex flex-col min-h-screen">
     <Header />
-    <Outlet /> {/* 자식 라우트를 렌더링 */}
+    <main className="flex-grow">
+      <Outlet /> {/* 자식 라우트를 렌더링 */}
+    </main>
     <Footer />
-  </>
+  </div>
 );
 
 export default App;
