@@ -13,9 +13,12 @@ export const getUserInfo = async (id) => {
 };
 
 // 사용자 정보를 업데이트함
-export const updateUserInfo = async (userId, updateData) => {
+export const updateUserInfo = async (memberId, MemberUpdateRequestDto) => {
   try {
-    const response = await axiosInstance.put(`/user/${userId}`, updateData);
+    const response = await axiosInstance.put(
+      `/api/members/${memberId}`,
+      MemberUpdateRequestDto
+    );
     return response;
   } catch (error) {
     console.error('Error updating user info:', error);

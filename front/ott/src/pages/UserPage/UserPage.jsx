@@ -17,19 +17,24 @@ const UserPage = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [uid, setUid] = useState(null);
+  const [isMe, setIsMe] = useState(false); // isMe를 상태로 관리
+  const [isPublic, setIsPublic] = useState(false); // isPublic을 상태로 관리
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const uidResponse = await getUid();
-
         const id = uidResponse.data.id;
         setUid(id);
 
         const userInfoResponse = await getUserInfo(id);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
+
+        // isMe와 isPublic 상태 업데이트
+        setIsMe(userInfoResponse.data.FollowerStatus === 'SELF');
+        setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -42,20 +47,7 @@ const UserPage = () => {
     return <div>Loading...</div>;
   }
 
-  const { name, publicStatus, FollowerStatus, tags } = userInfo;
-
-  if (FollowerStatus === 'SELF') {
-    isMe = true;
-  } else {
-    //TODO : 본인, 팔로우 대기중, 팔로우 중인 사람, 팔로우 안된 사람 분기처리
-    isMe = false;
-  }
-
-  if (publicStatus === 'PUBLIC') {
-    isPublic = true;
-  } else {
-    isPublic = false;
-  }
+  const { name, tags } = userInfo;
 
   let renderComponent;
 
@@ -84,7 +76,11 @@ const UserPage = () => {
   };
 
   const handleSettingsClick = () => {
-    navigate(`/updatePage`, { state: { userId: uid } });
+    if (uid) {
+      navigate(`/updatePage/${uid}`);
+    } else {
+      console.error('ID is not available');
+    }
   };
 
   return (
