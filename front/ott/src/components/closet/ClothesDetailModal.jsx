@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getClothesItemData, updateClothes } from '../../api/closet/clothes';
 import {
   faTimes,
   faChevronLeft,
@@ -33,7 +34,7 @@ const ClothesDetailModal = ({
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
-          const data = await fetchClothingItemDetails(clothingItem.clothesId);
+          const data = await getClothesItemData(clothingItem.clothesId);
           console.log(data);
           setItemDetails(data);
           setImageFiles(data.imageUrls || []);
@@ -100,17 +101,17 @@ const ClothesDetailModal = ({
         formData.append('color', itemDetails.color);
         formData.append('gender', itemDetails.gender);
 
-        // Include all images, whether new files or existing URLs
-        imageFiles.forEach((file, index) => {
-          if (file instanceof File) {
-            // Append new or updated file
-            formData.append('img', file);
-          } else {
-            // If it's a URL, you may need to handle it differently
-            // For example, you could include the URL as a string in the form data
-            formData.append('img', file);
-          }
-        });
+        // Handle image files
+        const frontFileInput = document.getElementById('front-file-input');
+        const backFileInput = document.getElementById('back-file-input');
+
+        if (frontFileInput && frontFileInput.files[0]) {
+          formData.append('frontImg', frontFileInput.files[0]);
+        }
+
+        if (backFileInput && backFileInput.files[0]) {
+          formData.append('backImg', backFileInput.files[0]);
+        }
 
         // Print the FormData contents to the console
         for (let [key, value] of formData.entries()) {
@@ -118,20 +119,15 @@ const ClothesDetailModal = ({
         }
 
         // Send PUT request with formData
-        await axios.put(
-          `http://192.168.100.89:8080/api/clothes/${itemDetails.clothesId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+        const updatedData = await updateClothes(
+          itemDetails.clothesId,
+          formData
         );
 
-        // Call onEdit with the updated item details
+        // Update the component state with the new details
         const updatedDetails = {
           ...itemDetails,
-          imageUrls: imageFiles,
+          ...updatedData,
         };
         onEdit(updatedDetails);
         setIsEditing(false);

@@ -68,7 +68,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   // 옷 추가 함수
   const handleAddClothes = () => {
-    // 유효성 검사 통과했으면
     if (validateInputs()) {
       const formData = new FormData();
       formData.append('id', Date.now());
@@ -82,31 +81,27 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       formData.append('gender', gender);
       formData.append('uid', 1);
 
-      // 이미지 파일 첨부
-      if (frontImage) {
-        formData.append(
-          'img',
-          document.getElementById('front-file-input').files[0]
-        );
+      const frontFileInput = document.getElementById('front-file-input');
+      const backFileInput = document.getElementById('back-file-input');
+
+      if (frontFileInput && frontFileInput.files[0]) {
+        formData.append('frontImg', frontFileInput.files[0]);
       }
-      if (backImage) {
-        formData.append(
-          'img',
-          document.getElementById('back-file-input').files[0]
-        );
+
+      if (backFileInput && backFileInput.files[0]) {
+        formData.append('backImg', backFileInput.files[0]);
       }
 
       console.log('test');
-      // console 확인
       for (let [key, value] of formData.entries()) {
         console.log(key + '|' + value);
       }
 
-      // 벡엔드로 보내지는 값 확인
+      // Corrected call to addClothes
       addClothes(formData)
         .then((response) => {
-          console.log('Successfully added clothes:', response.data);
-          onAddClothes({ key: response.data.key });
+          console.log('Successfully added clothes:', response);
+          onAddClothes({ key: response.key });
           clearInputs();
           onClose();
         })
