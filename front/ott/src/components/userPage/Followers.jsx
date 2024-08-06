@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import defaultImage from '../../assets/icons/main.logo.png';
 import { getFollowerList } from '../../api/follower/follower';
-const Followers = (uid) => {
+const Followers = ({ uid }) => {
   const [followers, setFollowers] = useState([]);
   const [visibleFollowers, setVisibleFollowers] = useState(10);
 
   useEffect(() => {
-    console.log(uid);
+    console.log('...', uid);
     const fetchFollowers = async () => {
       try {
-        const response = await getFollowerList(uid.uid); // TODO : props로 전달 받을 때 한 번 타고 들어가는거 수정
+        const response = await getFollowerList(uid); // TODO : props로 전달 받을 때 한 번 타고 들어가는거 수정
         console.log('response:', response);
         setFollowers(response.data);
       } catch (error) {
