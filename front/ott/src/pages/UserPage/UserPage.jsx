@@ -29,7 +29,7 @@ const UserPage = () => {
         setUid(id);
 
         const userInfoResponse = await getUserInfo(id);
-        console.log('userInfoResponse : ', userInfoResponse);
+        // console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
 
         // isMe와 isPublic 상태 업데이트
@@ -80,8 +80,9 @@ const UserPage = () => {
   };
 
   const handleSettingsClick = () => {
+    console.log('이동하려는 회원 id', uid);
     if (uid) {
-      navigate(`/updatePage/${uid}`);
+      navigate(`/updatePage`, { state: { uid, userInfo } });
     } else {
       console.error('ID is not available');
     }

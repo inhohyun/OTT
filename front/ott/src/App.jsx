@@ -39,7 +39,7 @@ function App() {
               <Route path="/userPage" element={<UserPage />} />
               <Route path="/mainpage" element={<MainPage />} />
               <Route path="/closet" element={<ClosetPage />} />
-              <Route path="/UpdatePage/:id" element={<UpdatePage />} />
+              <Route path="/UpdatePage" element={<UpdatePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
               <Route path="/video-chat/:username" element={<VideoChat />} />
