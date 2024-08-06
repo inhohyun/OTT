@@ -1,6 +1,7 @@
 package ssafy.c205.ott.domain.account.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,6 +17,7 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -55,7 +57,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member existData = memberRepository.findBySso(sso);
 
         if (existData == null) {
-
+            log.info("회원가입");
             MemberRegisterRequestDto memberRegisterRequestDto = MemberRegisterRequestDto.builder()
                     .name(oAuth2Response.getName())
                     .sso(sso)
@@ -73,10 +75,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(memberRegisterRequestDto.getRole())
                     .build();
 
+            log.info("id" + successDto.getMemberId());
+            log.info("name" + memberRegisterRequestDto.getName());
+            log.info("sso" + memberRegisterRequestDto.getSso());
+            log.info("email" + memberRegisterRequestDto.getEmail());
+            log.info("role" + memberRegisterRequestDto.getRole());
 
             return new CustomOAuth2User(memberRegisterDTO);
         } else {
-
+            log.info("이미 회원가입이 되어있어서 로그인");
             MemberLoginUpdateRequestDto memberLoginUpdateRequestDto = MemberLoginUpdateRequestDto.builder()
                     .memberId(existData.getId())
                     .email(oAuth2Response.getEmail())
@@ -86,11 +93,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberWriteService.updateNameAndEmail(memberLoginUpdateRequestDto);
 
             MemberRegisterDto memberRegisterDTO = MemberRegisterDto.builder()
+                    .id(existData.getId())
                     .name(existData.getName())
                     .sso(existData.getSso())
                     .email(existData.getEmail())
                     .role(existData.getRole())
                     .build();
+
+            log.info("id" + existData.getId());
+            log.info("name" + existData.getName());
+            log.info("sso" + existData.getSso());
+            log.info("email" + existData.getEmail());
+            log.info("role" + existData.getRole());
 
             return new CustomOAuth2User(memberRegisterDTO);
         }
