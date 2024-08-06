@@ -45,7 +45,7 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(currentMember.getId()).build()));
+        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(memberRepository.findBySso(currentMember.getUsername()).getId()).build()));
     }
 
     @GetMapping("/validate-nickname/{nickname}")
