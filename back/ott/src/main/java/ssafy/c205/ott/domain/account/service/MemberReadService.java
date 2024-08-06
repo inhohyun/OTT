@@ -59,7 +59,7 @@ public class MemberReadService {
     }
 
     public List<FollowsResponseDto> followingsSearch(FollowRequestDto followRequestDto) {
-        List<Follow> followings = followRepository.findByToMemberId(followRequestDto.getTargetMemberId());
+        List<Follow> followings = followRepository.findByFromMemberId(followRequestDto.getTargetMemberId());
 
         return followings.stream()
                 .map(follow -> FollowsResponseDto.builder()
@@ -72,7 +72,7 @@ public class MemberReadService {
     }
 
     public List<FollowsResponseDto> followersSearch(FollowRequestDto followRequestDto) {
-        List<Follow> followings = followRepository.findByFromMemberId(followRequestDto.getTargetMemberId());
+        List<Follow> followings = followRepository.findByToMemberId(followRequestDto.getTargetMemberId());
 
         return followings.stream()
                 .map(follow -> FollowsResponseDto.builder()
