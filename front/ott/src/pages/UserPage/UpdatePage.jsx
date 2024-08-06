@@ -10,6 +10,7 @@ import {
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
 import { updateUserInfo } from '../../api/user/user';
+
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -90,9 +91,28 @@ const UpdatePage = () => {
     document.getElementById('profileImageInput').click();
   };
 
-  //저장 클릭시 동작
-  const handleSubmit = async () => {
-    console.log('submit');
+  // 저장 클릭시 동작
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updatedUserInfo = {
+      memberId: uid,
+      nickname: userInfoState.nickname,
+      phoneNumber: userInfoState.phone,
+      introduction: userInfoState.introduction || '',
+      height: parseFloat(userInfoState.height),
+      weight: parseFloat(userInfoState.weight),
+      gender: userInfoState.gender || null,
+      bodyType: bodyType || null,
+      publicStatus: isChecked ? 'PUBLIC' : 'PRIVATE',
+      memberTags: tags.length > 0 ? tags : null,
+    };
+
+    try {
+      await updateUserInfo(uid, updatedUserInfo);
+      redirectProfile();
+    } catch (error) {
+      console.error('Error updating user info:', error);
+    }
   };
 
   return (
