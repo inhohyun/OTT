@@ -85,7 +85,7 @@ public class MemberReadService {
     }
 
     public List<FollowsResponseDto> followRequestListSearch(MemberIdDto MemberIdDto) {
-        List<Follow> followingRequestList = followRepository.findByFromMemberIdAndFollowStatus(MemberIdDto.getId(), FollowStatus.WAIT);
+        List<Follow> followingRequestList = followRepository.findByToMemberIdAndFollowStatus(MemberIdDto.getId(), FollowStatus.WAIT);
 
         return followingRequestList.stream()
                 .map(follow -> FollowsResponseDto.builder()
