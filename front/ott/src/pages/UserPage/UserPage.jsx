@@ -23,11 +23,12 @@ const UserPage = () => {
     const fetchUserData = async () => {
       try {
         const uidResponse = await getUid();
-        const uid = uidResponse.data.uid;
-        setUid(uid);
+        console.log('uidResponse:', uidResponse);
+        // const uid = uidResponse.data.uid;
+        // setUid(uid);
 
-        const userInfoResponse = await getUserInfo(uid);
-        setUserInfo(userInfoResponse.data);
+        // const userInfoResponse = await getUserInfo(uid);
+        // setUserInfo(userInfoResponse.data);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }

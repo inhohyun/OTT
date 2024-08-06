@@ -2,11 +2,9 @@ import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 
 // 유저 페이지에서 사용자 정보를 불러옴
-export const getUserInfo = async (userId) => {
+export const getUserInfo = async (uid) => {
   try {
-    const response = await axios.get(
-      `https://i11c205.p.ssafy.io/user/${userId}`
-    );
+    const response = await axios.get(`https://i11c205.p.ssafy.io/user/${uid}`);
     return response;
   } catch (error) {
     console.error('Error fetching user info:', error);
