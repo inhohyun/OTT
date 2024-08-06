@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import ssafy.c205.ott.common.exception.S3FileNotExistException;
+import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
+import ssafy.c205.ott.domain.ai.exception.AiBadRequestException;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -26,6 +27,9 @@ public class AiService {
     private String GPU_SERVER_BASE_URL;
 
     private final RestTemplate restTemplate;
+
+    @Autowired
+    private AmazonS3Util amazonS3Util;
 
     public AiService() {
         this.restTemplate = new RestTemplate();
@@ -36,6 +40,20 @@ public class AiService {
     }
 
     public ResponseEntity<Map<String, Object>> processImage(AiRequestDto aiRequestDto) {
+        // 모델 사진 업로드
+        aiRequestDto.setModelImagePath(amazonS3Util.saveFile(aiRequestDto.getModelImageFile(), aiRequestDto.getMemberId() + "/aimodel/"));
+
+        if (aiRequestDto.getModelImagePath() == null || aiRequestDto.getClothImagePath() == null) {
+            throw new S3FileNotExistException();
+        }
+
+        if (aiRequestDto.getMemberId() == null || aiRequestDto.getCategory() == null) {
+            throw new AiBadRequestException();
+        }
+
+        // 최대 4장만 가능하도록 제한
+        aiRequestDto.setCategory(Math.max(4, aiRequestDto.getCategory()));
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -67,8 +85,11 @@ public class AiService {
         // GPU 서버로부터 받은 base64 인코딩된 이미지 데이터 그대로 반환
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("images", response.getBody().get("images"));
+        log.info(responseBody.toString());
+
+        // 모델 사진 삭제
+        amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
 
         return ResponseEntity.ok(responseBody);
     }
-
 }
