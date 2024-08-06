@@ -9,7 +9,7 @@ const Followers = (uid) => {
     console.log(uid);
     const fetchFollowers = async () => {
       try {
-        const response = await getFollowerList(uid);
+        const response = await getFollowerList(uid.uid); // TODO : props로 전달 받을 때 한 번 타고 들어가는거 수정
         console.log('response:', response);
         setFollowers(response.data);
       } catch (error) {
