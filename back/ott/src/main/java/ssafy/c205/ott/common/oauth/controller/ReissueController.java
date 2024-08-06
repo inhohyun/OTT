@@ -31,6 +31,8 @@ public class ReissueController {
     @GetMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
+        
+        log.info("reissue 진입");
         //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
