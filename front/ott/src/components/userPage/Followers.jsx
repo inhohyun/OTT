@@ -9,6 +9,7 @@ const Followers = (uid) => {
     const fetchFollowers = async () => {
       try {
         const response = await getFollowerList(uid);
+        console.log('response:', response);
         setFollowers(response.data);
       } catch (error) {
         console.error('팔로워 목록을 불러오는 중 오류 발생:', error);
