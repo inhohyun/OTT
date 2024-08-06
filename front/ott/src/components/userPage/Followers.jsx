@@ -6,7 +6,6 @@ const Followers = ({ uid }) => {
   const [visibleFollowers, setVisibleFollowers] = useState(10);
 
   useEffect(() => {
-    console.log('...', uid);
     const fetchFollowers = async () => {
       try {
         const response = await getFollowerList(uid); // TODO : props로 전달 받을 때 한 번 타고 들어가는거 수정
