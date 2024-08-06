@@ -29,7 +29,7 @@ const UserPage = () => {
         setUid(id);
 
         const userInfoResponse = await getUserInfo(id);
-        // console.log('userInfoResponse : ', userInfoResponse);
+        console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
 
         // isMe와 isPublic 상태 업데이트
