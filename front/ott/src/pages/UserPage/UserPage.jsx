@@ -33,7 +33,7 @@ const UserPage = () => {
         setUserInfo(userInfoResponse.data);
 
         // isMe와 isPublic 상태 업데이트
-        setIsMe(userInfoResponse.data.FollowerStatus === 'SELF');
+        setIsMe(userInfoResponse.data.followerStatus === 'SELF');
         setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
       } catch (error) {
         console.error('Error fetching user info:', error);
