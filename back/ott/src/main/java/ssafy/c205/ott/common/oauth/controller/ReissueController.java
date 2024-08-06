@@ -85,7 +85,7 @@ public class ReissueController {
         refreshService.addRefreshEntity(username, newRefresh, 86400000L);
 
         //response
-        log.info(newAccess);
+        log.info("new accessToken" + newAccess);
         response.setHeader("access", newAccess);
         response.addHeader(HttpHeaders.SET_COOKIE, cookieService.createCookie("refresh", newRefresh).toString());
 
