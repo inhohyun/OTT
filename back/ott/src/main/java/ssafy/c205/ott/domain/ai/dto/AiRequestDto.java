@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Getter
@@ -17,4 +18,5 @@ public class AiRequestDto {
     private Integer category;
     private Float scale;
     private Integer sample;
+    private MultipartFile modelImageFile;  // 추가
 }
