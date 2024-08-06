@@ -42,10 +42,6 @@ const UserPage = () => {
 
     fetchUserData();
   }, []);
-  useEffect(() => {
-    console.log('isMe:', isMe);
-    console.log('isPublic:', isPublic);
-  }, [isMe, isPublic]);
 
   if (!userInfo) {
     return <div>Loading...</div>;
