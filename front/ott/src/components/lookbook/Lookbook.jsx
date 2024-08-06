@@ -283,7 +283,9 @@ const Lookbook = ({ data, onDelete }) => {
 
   const handleShowDetail = () => {
     axios
-      .get(`http://192.168.100.89:8080/api/lookbook/${data.lookbookId}`)
+      .get(`http://192.168.100.89:8080/api/lookbook/${data.lookbookId}`, {
+        params: { uid: 1 },
+      })
       .then((response) => {
         console.log('룩북 상세보기', response.data);
         console.log('룩북아이디', data.lookbookId);
