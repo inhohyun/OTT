@@ -23,12 +23,13 @@ const UserPage = () => {
     const fetchUserData = async () => {
       try {
         const uidResponse = await getUid();
-        console.log('uidResponse:', uidResponse);
-        // const uid = uidResponse.data.id;
-        // setUid(uid);
 
-        // const userInfoResponse = await getUserInfo(uid);
-        // setUserInfo(userInfoResponse.data);
+        const uid = uidResponse.data.id;
+        setUid(uid);
+
+        const userInfoResponse = await getUserInfo(uid);
+        console.log('userInfoResponse : ', userInfoResponse);
+        setUserInfo(userInfoResponse.data);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -41,7 +42,19 @@ const UserPage = () => {
     return <div>Loading...</div>;
   }
 
-  const { username, isMe, isPublic, tags } = userInfo;
+  const { name, publicStatus, FollowerStatus, tags } = userInfo;
+
+  if (FollowerStatus.status === 'SELF') {
+    isMe = true;
+  } else {
+    isMe = false;
+  }
+
+  if (publicStatus === 'PUBLIC') {
+    isPublic = true;
+  } else {
+    isPublic = false;
+  }
 
   let renderComponent;
 
@@ -93,7 +106,7 @@ const UserPage = () => {
                 <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
               )}
               <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
-                {username}
+                {name}
               </p>
               {isMe && (
                 <img

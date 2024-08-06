@@ -5,7 +5,7 @@ import axiosInstance from '../axiosInstance';
 export const getUserInfo = async (uid) => {
   try {
     //TODO : 엔드포인트 맞추기
-    const response = await axiosInstance.get(`/${uid}`);
+    const response = await axiosInstance.get(`/api/members/${id}`);
     return response;
   } catch (error) {
     console.error('Error fetching user info:', error);
