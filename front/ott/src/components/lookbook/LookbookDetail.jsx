@@ -537,11 +537,11 @@ import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import lookicon from '../../assets/icons/lookicon.png';
 import {
-  lookbookComment,
   lookbookDislike,
   lookbookLike,
-  lookbookDelete,
 } from '../../api/lookbook/lookbookdetail';
+import { lookbookComment } from '../../api/lookbook/comments';
+import { lookbookDelete } from '../../api/lookbook/lookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 
 const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
@@ -638,16 +638,15 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
 
   const handleDelete = () => {
     // console.log('룩북 삭제');
-    lookbookDelete(lookbook)
-      .then(() => {
-        hideDetail();
-        deleteLookbook(lookbook.id); // Update Zustand store
-        // fetchLookbooks(); // Fetch updated lookbooks
-        onClose(); // Close the detail view
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      lookbookDelete(lookbook);
+      hideDetail();
+      deleteLookbook(lookbook.id); // Update Zustand store
+      // fetchLookbooks(); // Fetch updated lookbooks
+      onClose(); // Close the detail view
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

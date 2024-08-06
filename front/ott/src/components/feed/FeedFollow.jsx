@@ -147,9 +147,10 @@
 // export default FeedFollow;
 
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import Lookbook from '../lookbook/Lookbook';
 import LookbookList from '../lookbook/LookbookList';
+import { followFeed } from '../../api/lookbook/feed';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
@@ -162,26 +163,20 @@ const FeedFollow = () => {
   const scrollRefs = useRef([]);
 
   useEffect(() => {
-    axios
-      .get('http://192.168.100.89:8080/api/lookbook/followings', {
-        params: { uid: 1 },
-      }) // API 엔드포인트 조정 필요
-      .then((response) => {
-        console.log(response);
-        const data = response.data;
-        setFollowersData(data);
-        setVisibleLookbooks(
-          data.reduce(
-            (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
-            {}
-          )
-        );
-        // 각 팔로워의 스크롤 컨테이너에 대한 참조를 생성합니다.
-        scrollRefs.current = data.map(() => React.createRef());
-      })
-      .catch((error) => {
-        console.error('Error fetching followers data', error);
-      });
+    try {
+      const data = followFeed();
+      setFollowersData(data);
+      setVisibleLookbooks(
+        data.reduce(
+          (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
+          {}
+        )
+      );
+      // 각 팔로워의 스크롤 컨테이너에 대한 참조를 생성합니다.
+      scrollRefs.current = data.map(() => React.createRef());
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   const scrollLeft = (ref) => {
@@ -256,7 +251,7 @@ const FeedFollow = () => {
             >
               {follower.followLookbookDtoList
                 .slice(0, visibleLookbooks[follower.nickname])
-                .map((lookbook, lookbookIndex) => (
+                .map((lookbook) => (
                   <div key={lookbook.lookbookId} className="lookbook-container">
                     <Lookbook data={lookbook} />
                   </div>

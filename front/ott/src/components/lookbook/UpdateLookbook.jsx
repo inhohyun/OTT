@@ -474,11 +474,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
-import axios from 'axios';
+// import axios from 'axios';
 import useCanvasItems from '../../hooks/useCanvasItems';
 import CanvasArea from './CanvasArea';
 import FormControls from './FormControls';
 import ToggleButton from './ToggleButton';
+import { lookbookUpdate } from '../../api/lookbook/lookbook';
 import shirt1 from '../../assets/images/clothes/shirt1.jpg';
 
 const clothesData = {
@@ -568,15 +569,15 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           formData.append('publicStatus', isPublic ? 'Y' : 'N');
           formData.append('img', imageBlob, 'lookbookimage.png');
 
-          axios
-            .put(
-              `http://192.168.100.89:8080/api/lookbook/${lookbookid.id}`,
-              formData
-            )
-            .then((response) =>
-              console.log('룩북 업데이트 성공', response.data)
-            )
-            .catch((error) => console.error('Error updating Lookbook:', error));
+          try {
+            const data = lookbookUpdate(formData, lookbookid.id);
+            console.log('룩북 수정 성공', data);
+            console.log('clothes', selectedImages);
+          } catch (error) {
+            console.error('Error:', error);
+          } finally {
+            setShowDeleteButton(true);
+          }
         }, 'image/png');
       });
     }, 100);

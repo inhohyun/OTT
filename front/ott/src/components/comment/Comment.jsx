@@ -1,6 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import { lookbookComment } from '../../api/lookbook/lookbookdetail';
+// import axios from 'axios';
+import {
+  lookbookComment,
+  commentCreate,
+  replyCreate,
+  commentUpdate,
+  commentDelete,
+  replyUpdate,
+  replyDelete,
+} from '../../api/lookbook/comments';
 
 const Comment = ({ comments = [], lookbookId }) => {
   const currentUser = 'kimssafy'; // Replace with the actual current user nickname
@@ -19,29 +27,29 @@ const Comment = ({ comments = [], lookbookId }) => {
           id: comment.commentId,
           replies: (comment.children || []).map((reply) => ({
             ...reply,
-            isEditing: false, // Track if the reply is being edited
+            isEditing: false,
           })),
-          showReplies: false, // Control the visibility of replies
-          isEditing: false, // Track if the comment is being edited
+          showReplies: false,
+          isEditing: false,
         }))
       );
     }
   }, [comments]);
 
-  const fetchComments = async () => {
+  const fetchComments = () => {
     try {
       const status = 'comment';
-      const commentsData = await lookbookComment(lookbookId, status);
+      const commentsData = lookbookComment(lookbookId, status);
       setCommentList(
         commentsData.map((comment) => ({
           ...comment,
           id: comment.commentId,
           replies: (comment.children || []).map((reply) => ({
             ...reply,
-            isEditing: false, // Track if the reply is being edited
+            isEditing: false, // 수정상태 false
           })),
-          showReplies: false, // Control the visibility of replies
-          isEditing: false, // Track if the comment is being edited
+          showReplies: false, // 답글 보여주는 상태 false
+          isEditing: false, // 댓글 수정 상태 false
         }))
       );
     } catch (error) {
@@ -63,37 +71,23 @@ const Comment = ({ comments = [], lookbookId }) => {
 
       if (replyTo !== null) {
         // 기존 댓글에 답글 추가
-        axios
-          .post(
-            `http://192.168.100.89:8080/api/comment/${lookbookId}/${replyTo}`,
-            formData
-          )
-          .then((response) => {
-            if (response.status === 200) {
-              setNewComment('');
-              setReplyTo(null); // Reset the replyTo state
-              fetchComments(); // Fetch the latest comments after adding a reply
-            }
-          })
-          .catch((error) => {
-            console.error('Error creating reply:', error);
-          });
+        try {
+          replyCreate(formData, lookbookId, replyTo);
+          setNewComment('');
+          setReplyTo(null);
+          fetchComments();
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         // 새로운 댓글 추가
-        axios
-          .post(
-            `http://192.168.100.89:8080/api/comment/${lookbookId}`,
-            formData
-          )
-          .then((response) => {
-            if (response.status === 200) {
-              setNewComment('');
-              fetchComments(); // Fetch the latest comments after adding a new one
-            }
-          })
-          .catch((error) => {
-            console.error('댓글 생성 실패:', error);
-          });
+        try {
+          commentCreate(formData, lookbookId);
+          setNewComment('');
+          fetchComments(); // Fetch the latest comments after adding a new one
+        } catch (error) {
+          console.error('댓글 생성 실패:', error);
+        }
       }
     }
   };
@@ -134,37 +128,22 @@ const Comment = ({ comments = [], lookbookId }) => {
     formData.append('msg', editingComment);
     formData.append('status', 'comment');
 
-    axios
-      .put(
-        `http://192.168.100.89:8080/api/comment/${lookbookId}/${commentId}`,
-        formData
-      )
-      .then((response) => {
-        console.log('댓글 수정');
-        if (response.status === 200) {
-          setNewComment('');
-          fetchComments(); // Fetch the latest comments after adding a new one
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating comment:', error);
-      });
+    try {
+      commentUpdate(formData, lookbookId, commentId);
+      setNewComment('');
+      fetchComments();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDeleteComment = (commentId) => {
-    axios
-      .delete(
-        `http://192.168.100.89:8080/api/comment/${lookbookId}/${commentId}`
-      )
-      .then((response) => {
-        console.log('댓글삭제');
-        if (response.status == 200) {
-          fetchComments();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      commentDelete(lookbookId, commentId);
+      fetchComments();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleKeyDown = (e, commentId) => {
@@ -202,35 +181,22 @@ const Comment = ({ comments = [], lookbookId }) => {
     formData.append('msg', editingComment);
     formData.append('status', 'comment');
 
-    axios
-      .put(
-        `http://192.168.100.89:8080/api/comment/${lookbookId}/${replyId}`,
-        formData
-      )
-      .then((response) => {
-        console.log('답글 수정');
-        if (response.status === 200) {
-          setNewComment('');
-          fetchComments(); // Fetch the latest comments after adding a new one
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating reply:', error);
-      });
+    try {
+      replyUpdate(formData, lookbookId, replyId);
+      setNewComment('');
+      fetchComments();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDeleteReply = (commentId, replyId) => {
-    axios
-      .delete(`http://192.168.100.89:8080/api/comment/${lookbookId}/${replyId}`)
-      .then((response) => {
-        console.log('답글삭제');
-        if (response.status == 200) {
-          fetchComments();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      replyDelete(lookbookId, replyId);
+      fetchComments();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleKeyDownReply = (e, commentId, replyId) => {

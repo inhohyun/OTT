@@ -462,11 +462,12 @@
 import React, { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
-import axios from 'axios';
+// import axios from 'axios';
 import useCanvasItems from '../../hooks/useCanvasItems';
 import CanvasArea from './CanvasArea';
 import FormControls from './FormControls';
 import ToggleButton from './ToggleButton';
+import { lookbookCreate } from '../../api/lookbook/lookbook';
 import shirt1 from '../../assets/images/clothes/shirt1.jpg';
 import shirt2 from '../../assets/images/clothes/shirt2.jpg';
 import pants1 from '../../assets/images/clothes/pants1.jpg';
@@ -552,16 +553,15 @@ const CreateLookbook = () => {
           formData.append('publicStatus', isPublic ? 'Y' : 'N');
           formData.append('img', imageBlob, 'lookbookimage.png');
 
-          axios
-            .post('http://192.168.100.89:8080/api/lookbook/', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' },
-            })
-            .then((response) => {
-              console.log('룩북 저장 성공', response.data);
-              console.log('clothes', selectedImages);
-            })
-            .catch((error) => console.error('Error:', error))
-            .finally(() => setShowDeleteButton(true));
+          try {
+            const data = lookbookCreate(formData);
+            console.log('룩북 저장 성공', data);
+            console.log('clothes', selectedImages);
+          } catch (error) {
+            console.error('Error:', error);
+          } finally {
+            setShowDeleteButton(true);
+          }
         }, 'image/png');
       });
     }, 100);

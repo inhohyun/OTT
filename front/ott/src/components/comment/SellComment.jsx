@@ -165,10 +165,20 @@ const SellComment = () => {
 export default SellComment;
 
 //  API 연결
-// import React, { useState, useRef, useEffect } from 'react';
-// import axios from 'axios';
+// import { useState, useRef, useEffect } from 'react';
+// // import axios from 'axios';
+// import {
+//   lookbookComment,
+//   commentCreate,
+//   replyCreate,
+//   commentUpdate,
+//   commentDelete,
+//   replyUpdate,
+//   replyDelete,
+// } from '../../api/lookbook/comments';
 
-// const SellComment = ({ comments = [], lookbookId, lookbookNickname }) => {
+// const SellComment = ({ comments = [], lookbookId }) => {
+//   const currentUser = 'kimssafy'; // Replace with the actual current user nickname
 //   const [commentList, setCommentList] = useState([]);
 //   const [newComment, setNewComment] = useState('');
 //   const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
@@ -176,46 +186,42 @@ export default SellComment;
 //   const [editingReply, setEditingReply] = useState(''); // Track the editing reply content
 //   const inputRef = useRef(null); // Ref for the input field
 
-//   const currentUser = 'kimssafy';
-
 //   useEffect(() => {
-//     setCommentList(
-//       comments.map((comment) => ({
-//         ...comment,
-//         id: comment.commentId,
-//         replies: (comment.children || []).map((reply) => ({
-//           ...reply,
-//           isEditing: false, // Track if the reply is being edited
-//         })),
-//         showReplies: false, // Control the visibility of replies
-//         isEditing: false, // Track if the comment is being edited
-//       }))
-//     );
+//     if (comments.length > 0) {
+//       setCommentList(
+//         comments.map((comment) => ({
+//           ...comment,
+//           id: comment.commentId,
+//           replies: (comment.children || []).map((reply) => ({
+//             ...reply,
+//             isEditing: false,
+//           })),
+//           showReplies: false,
+//           isEditing: false,
+//         }))
+//       );
+//     }
 //   }, [comments]);
 
 //   const fetchComments = () => {
-//     const status = 'DM';
-//     axios
-//       .get(`http://192.168.100.89:8080/api/comment/${lookbookId}`, {
-//         params: { status: status },
-//       })
-//       .then((response) => {
-//         setCommentList(
-//           response.data.map((comment) => ({
-//             ...comment,
-//             id: comment.commentId,
-//             replies: (comment.children || []).map((reply) => ({
-//               ...reply,
-//               isEditing: false, // Track if the reply is being edited
-//             })),
-//             showReplies: false, // Control the visibility of replies
-//             isEditing: false, // Track if the comment is being edited
-//           }))
-//         );
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
+//     try {
+//       const status = 'comment';
+//       const commentsData = lookbookComment(lookbookId, status);
+//       setCommentList(
+//         commentsData.map((comment) => ({
+//           ...comment,
+//           id: comment.commentId,
+//           replies: (comment.children || []).map((reply) => ({
+//             ...reply,
+//             isEditing: false, // 수정상태 false
+//           })),
+//           showReplies: false, // 답글 보여주는 상태 false
+//           isEditing: false, // 댓글 수정 상태 false
+//         }))
+//       );
+//     } catch (error) {
+//       console.error(error);
+//     }
 //   };
 
 //   const handleAddComment = (e) => {
@@ -232,37 +238,23 @@ export default SellComment;
 
 //       if (replyTo !== null) {
 //         // 기존 댓글에 답글 추가
-//         axios
-//           .post(
-//             `http://192.168.100.89:8080/api/comment/${lookbookId}/${replyTo}`,
-//             formData
-//           )
-//           .then((response) => {
-//             if (response.status === 200) {
-//               setNewComment('');
-//               setReplyTo(null); // Reset the replyTo state
-//               fetchComments(); // Fetch the latest comments after adding a reply
-//             }
-//           })
-//           .catch((error) => {
-//             console.error('Error creating reply:', error);
-//           });
+//         try {
+//           replyCreate(formData, lookbookId, replyTo);
+//           setNewComment('');
+//           setReplyTo(null);
+//           fetchComments();
+//         } catch (error) {
+//           console.error(error);
+//         }
 //       } else {
 //         // 새로운 댓글 추가
-//         axios
-//           .post(
-//             `http://192.168.100.89:8080/api/comment/${lookbookId}`,
-//             formData
-//           )
-//           .then((response) => {
-//             if (response.status === 200) {
-//               setNewComment('');
-//               fetchComments(); // Fetch the latest comments after adding a new one
-//             }
-//           })
-//           .catch((error) => {
-//             console.error('댓글 생성 실패:', error);
-//           });
+//         try {
+//           commentCreate(formData, lookbookId);
+//           setNewComment('');
+//           fetchComments(); // Fetch the latest comments after adding a new one
+//         } catch (error) {
+//           console.error('댓글 생성 실패:', error);
+//         }
 //       }
 //     }
 //   };
@@ -303,35 +295,22 @@ export default SellComment;
 //     formData.append('msg', editingComment);
 //     formData.append('status', 'DM');
 
-//     axios
-//       .put(
-//         `http://192.168.100.89:8080/api/comment/${lookbookId}/${commentId}`,
-//         formData
-//       )
-//       .then((response) => {
-//         if (response.status === 200) {
-//           setNewComment('');
-//           fetchComments(); // Fetch the latest comments after adding a new one
-//         }
-//       })
-//       .catch((error) => {
-//         console.error('Error updating comment:', error);
-//       });
+//     try {
+//       commentUpdate(formData, lookbookId, commentId);
+//       setNewComment('');
+//       fetchComments();
+//     } catch (error) {
+//       console.error(error);
+//     }
 //   };
 
 //   const handleDeleteComment = (commentId) => {
-//     axios
-//       .delete(
-//         `http://192.168.100.89:8080/api/comment/${lookbookId}/${commentId}`
-//       )
-//       .then((response) => {
-//         if (response.status == 200) {
-//           fetchComments();
-//         }
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
+//     try {
+//       commentDelete(lookbookId, commentId);
+//       fetchComments();
+//     } catch (error) {
+//       console.error(error);
+//     }
 //   };
 
 //   const handleKeyDown = (e, commentId) => {
@@ -366,36 +345,25 @@ export default SellComment;
 //   const handleSaveEditReply = (commentId, replyId) => {
 //     const formData = new FormData();
 //     formData.append('uid', 1);
-//     formData.append('msg', editingReply);
+//     formData.append('msg', editingComment);
 //     formData.append('status', 'DM');
 
-//     axios
-//       .put(
-//         `http://192.168.100.89:8080/api/comment/${lookbookId}/${replyId}`,
-//         formData
-//       )
-//       .then((response) => {
-//         if (response.status === 200) {
-//           setNewComment('');
-//           fetchComments(); // Fetch the latest comments after adding a new one
-//         }
-//       })
-//       .catch((error) => {
-//         console.error('Error updating reply:', error);
-//       });
+//     try {
+//       replyUpdate(formData, lookbookId, replyId);
+//       setNewComment('');
+//       fetchComments();
+//     } catch (error) {
+//       console.error(error);
+//     }
 //   };
 
 //   const handleDeleteReply = (commentId, replyId) => {
-//     axios
-//       .delete(`http://192.168.100.89:8080/api/comment/${lookbookId}/${replyId}`)
-//       .then((response) => {
-//         if (response.status == 200) {
-//           fetchComments();
-//         }
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
+//     try {
+//       replyDelete(lookbookId, replyId);
+//       fetchComments();
+//     } catch (error) {
+//       console.error(error);
+//     }
 //   };
 
 //   const handleKeyDownReply = (e, commentId, replyId) => {
@@ -410,33 +378,20 @@ export default SellComment;
 //     if (diff < 60) {
 //       return `${Math.floor(diff)}초 전`;
 //     } else if (diff < 3600) {
-//       return `${Math.floor(diff / 60)}분 전}`;
+//       return `${Math.floor(diff / 60)}분 전`;
 //     } else if (diff < 86400) {
-//       return `${Math.floor(diff / 3600)}시간 전}`;
+//       return `${Math.floor(diff / 3600)}시간 전`;
 //     } else {
-//       return `${Math.floor(diff / 86400)}일 전}`;
+//       return `${Math.floor(diff / 86400)}일 전`;
 //     }
 //   };
 
-//   const filteredComments = commentList.filter((comment) => {
-//     if (currentUser === lookbookNickname) {
-//       return true; // 판매자 (글 작성자)는 모든 댓글과 답글을 볼 수 있음
-//     } else {
-//       const isAuthor = comment.nickname === currentUser;
-//       const hasSellerReply = comment.replies.some(
-//         (reply) => reply.nickname === lookbookNickname
-//       );
-//       const isSellerComment = comment.nickname === lookbookNickname;
-//       return isAuthor || hasSellerReply || isSellerComment;
-//     }
-//   });
-
 //   return (
 //     <div className="py-2">
-//       {filteredComments.length === 0 ? (
+//       {commentList.length === 0 ? (
 //         <div className="text-center text-gray-500">댓글이 없습니다</div>
 //       ) : (
-//         filteredComments.map((comment) => (
+//         commentList.map((comment) => (
 //           <div key={comment.id} className="mb-4">
 //             <div className="flex justify-between items-center">
 //               {comment.isEditing ? (
