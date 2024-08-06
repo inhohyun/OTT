@@ -267,9 +267,10 @@
 
 // export default Lookbook;
 
-import React from 'react';
+import React, { useState } from 'react';
 import LookbookDetail from './LookbookDetail';
 import hearticon from '../../assets/icons/hearticon.png';
+import fillhearticon from '../../assets/icons/fillhearticon.png';
 import commenticon from '../../assets/icons/commenticon.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -278,8 +279,14 @@ import detailStore from '../../data/lookbook/detailStore';
 const Lookbook = ({ data, onDelete }) => {
   // Receive onDelete prop
   const nav = useNavigate();
-  const { showDetail, hideDetail, isDetailVisible, selectedLookbook } =
-    detailStore();
+  const {
+    showDetail,
+    hideDetail,
+    isDetailVisible,
+    selectedLookbook,
+    fetchLookbooks,
+  } = detailStore();
+  // const [liked, setLiked] = useState(data.like);
 
   const handleShowDetail = () => {
     axios
@@ -307,6 +314,7 @@ const Lookbook = ({ data, onDelete }) => {
 
   const handleCloseDetail = () => {
     hideDetail();
+    fetchLookbooks();
   };
 
   const calcTimeAgo = (createdAt) => {
@@ -368,7 +376,11 @@ const Lookbook = ({ data, onDelete }) => {
         <div className="px-3 pb-1 flex justify-end items-center">
           <div className="flex items-center space-x-1">
             <div className="flex items-center">
-              <img src={hearticon} alt="hearticon" className="w-4 mr-1 mt-1" />
+              <img
+                src={data.like ? fillhearticon : hearticon}
+                className="w-4 mr-1 mt-1"
+              />
+              {/* <img src={hearticon} alt="hearticon" className="w-4 " /> */}
               <span className="text-gray-600 text-[10px] mt-1">
                 {data.cntLike}
               </span>

@@ -547,7 +547,9 @@ const LookbookDetail = ({
   lookbook,
 }) => {
   const [showSellComments, setShowSellComments] = useState(false);
-  const [liked, setLiked] = useState(false);
+  // const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(lookbook.like);
+  const [cntLike, setCntLike] = useState(lookbook.cntLike);
   const [followed, setFollowed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
@@ -556,6 +558,10 @@ const LookbookDetail = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteLookbook, fetchLookbooks } = detailStore(); // Use Zustand store
 
+  useEffect(() => {
+    setLiked(lookbook.like);
+    setCntLike(lookbook.cntLike);
+  }, [lookbook]);
   // Fetch comments whenever showSellComments or lookbook.id changes
   useEffect(() => {
     // console.log('댓글아이디', lookbook.id);
@@ -588,7 +594,38 @@ const LookbookDetail = ({
 
   const currentUser = 'kimssafy';
 
-  const toggleLike = () => setLiked(!liked);
+  // const toggleLike = () => setLiked(!liked);
+  const toggleLike = () => {
+    // const uid = 1;
+    if (liked) {
+      axios
+        .post(
+          `http://192.168.100.89:8080/api/lookbook/${lookbook.id}/dislike`,
+          { lookbookId: lookbook.id, uid: '1' }
+        )
+        .then(() => {
+          setLiked(false);
+          setCntLike((prevCntLike) => prevCntLike - 1);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      axios
+        .post(`http://192.168.100.89:8080/api/lookbook/${lookbook.id}/like`, {
+          lookbookId: lookbook.id,
+          uid: '1',
+        })
+        .then(() => {
+          setLiked(true);
+          setCntLike((prevCntLike) => prevCntLike + 1);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   const toggleFollow = () => setFollowed(!followed);
 
   const handlePreviousImage = () => {
@@ -749,7 +786,7 @@ const LookbookDetail = ({
             onClick={toggleLike}
           />
           <div className="flex items-center space-x-4 text-[13px]">
-            <span>{lookbook.cntLike}</span>
+            <span>{cntLike}</span>
             <img className="w-[20px] h-[20px]" src={lookicon} alt="" />
           </div>
           <span className="text-[13px]">{lookbook.viewCount}</span>
