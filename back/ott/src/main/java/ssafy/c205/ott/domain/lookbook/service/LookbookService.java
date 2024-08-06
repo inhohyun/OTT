@@ -3,8 +3,8 @@ package ssafy.c205.ott.domain.lookbook.service;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookFavoriteDto;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookSearchDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FindLookbookDto;
-import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.FollowLookbookResponseDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookDetailDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.LookbookMineDto;
@@ -15,7 +15,7 @@ import java.util.List;
 public interface LookbookService {
     void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file);
 
-    LookbookDetailDto detailLookbook(String lookbookId);
+    LookbookDetailDto detailLookbook(String lookbookId, Long uid);
 
     boolean deleteLookbook(String lookbookId);
 
@@ -31,7 +31,7 @@ public interface LookbookService {
 
     List<FindLookbookDto> findPrivateLookbooks(String uid);
 
-    List<TagLookbookDto> findByTag(String[] tags);
+    List<TagLookbookDto> findByTag(LookbookSearchDto lookbookSearchDto);
 
     int countLookbook(String uid);
 
