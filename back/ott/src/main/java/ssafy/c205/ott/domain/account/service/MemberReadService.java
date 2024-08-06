@@ -84,6 +84,19 @@ public class MemberReadService {
                 .collect(Collectors.toList());
     }
 
+    public List<FollowsResponseDto> followRequestListSearch(MemberIdDto MemberIdDto) {
+        List<Follow> followingRequestList = followRepository.findByFromMemberIdAndFollowStatus(MemberIdDto.getId(), FollowStatus.WAIT);
+
+        return followingRequestList.stream()
+                .map(follow -> FollowsResponseDto.builder()
+                        .memberId(follow.getFromMember().getId())
+                        .name(follow.getFromMember().getName())
+                        .nickname(follow.getFromMember().getNickname())
+                        .profileImageUrl(follow.getFromMember().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     public List<MemberSearchResponseDto> findActiveMembersByNickname(String nickname, int offset, int limit) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         return memberRepository.findByNicknameContainingAndActiveStatus(nickname, ActiveStatus.ACTIVE, pageable)
