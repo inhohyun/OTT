@@ -122,4 +122,9 @@ public class MemberController {
                 .build();
         return ApiResponse.success(memberReadService.followersSearch(followRequestDto));
     }
+
+    @GetMapping("/follow/request-list")
+    public ApiResponse<List<FollowsResponseDto>> getFollowRequestList(@AuthenticationPrincipal CustomOAuth2User currentMember) {
+        return ApiResponse.success(memberReadService.followRequestListSearch(MemberIdDto.builder().id(currentMember.getId()).build()));
+    }
 }
