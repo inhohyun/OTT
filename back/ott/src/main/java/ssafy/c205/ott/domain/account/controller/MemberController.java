@@ -11,6 +11,7 @@ import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.UploadProfileImageRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
+import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.account.service.MemberReadService;
 import ssafy.c205.ott.domain.account.service.MemberValidator;
 import ssafy.c205.ott.domain.account.service.MemberWriteService;
@@ -25,10 +26,11 @@ public class MemberController {
     private final MemberReadService memberReadService;
     private final MemberWriteService memberWriteService;
     private final MemberValidator memberValidator;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/my")
     public ApiResponse<MemberIdDto> getMember(@AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(MemberIdDto.builder().id(currentMember.getId()).build());
+        return ApiResponse.success(MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).getId()).build());
     }
 
     @GetMapping("/{id}")
