@@ -6,7 +6,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-        import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
+import org.springframework.web.multipart.MultipartFile;
+import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 import ssafy.c205.ott.domain.ai.service.AiService;
 
 import java.io.File;
@@ -31,8 +32,11 @@ public class AiController {
     }
 
     @PostMapping(value = "/ai", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> processImage(@ModelAttribute AiRequestDto aiRequestDto) {
-        log.info(aiRequestDto.toString());
+    public ResponseEntity<Map<String, Object>> processImage(@ModelAttribute AiRequestDto aiRequestDto, @RequestParam Long uid, @RequestParam MultipartFile modelImageFile) {
+        aiRequestDto.setMemberId(uid);
+        aiRequestDto.setModelImageFile(modelImageFile);
+
+        
 
         return aiService.processImage(aiRequestDto);
     }
