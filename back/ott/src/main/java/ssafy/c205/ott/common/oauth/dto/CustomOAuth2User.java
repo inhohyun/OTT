@@ -16,6 +16,10 @@ public class CustomOAuth2User implements OAuth2User {
         this.memberRegisterDTO = memberRegisterDTO;
     }
 
+    public Long getId() {
+        return memberRegisterDTO.getId();
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
 

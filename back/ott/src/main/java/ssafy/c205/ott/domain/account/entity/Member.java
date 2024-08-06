@@ -57,9 +57,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    @OneToMany(mappedBy = "member")
-    private List<Closet> closets = new ArrayList<>();
-
     @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
     private List<Follow> followings = new ArrayList<>();
 

@@ -11,8 +11,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 import ssafy.c205.ott.common.oauth.CustomSuccessHandler;
 import ssafy.c205.ott.common.oauth.jwt.CustomLogoutFilter;
 import ssafy.c205.ott.common.oauth.jwt.JWTFilter;
@@ -40,6 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
                     @Override
@@ -48,7 +51,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
 //                        configuration.setAllowedOrigins(Arrays.asList("https://i11c205.p.ssafy.io/", "http://localhost:3000/")); //프론트단 주소
-                        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+                        configuration.setAllowedOriginPatterns(Collections.singletonList("https://i11c205.p.ssafy.io"));
                         configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
                         configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
                         configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
@@ -83,13 +86,15 @@ public class SecurityConfig {
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
-                        .successHandler(customSuccessHandler));
+                        .successHandler(customSuccessHandler)
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
+
         //oauth2
         log.debug("oauth 들어가기 후");
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/", "/reissue", "/oauth2/authorization/**", "/**").permitAll()
+                        .requestMatchers("/login","/", "/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
                         .anyRequest().authenticated());
 
         http

@@ -20,7 +20,7 @@ public class LoginController {
         log.info("naverLogin");
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/oauth2/authorization/naver"));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping("/login/kakao")
@@ -28,7 +28,7 @@ public class LoginController {
         log.info("kakaoLogin");
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/oauth2/authorization/kakao"));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping("/login/google")
@@ -36,6 +36,6 @@ public class LoginController {
         log.info("googleLogin");
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/oauth2/authorization/google"));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 }
