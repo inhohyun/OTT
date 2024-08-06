@@ -37,19 +37,21 @@ public class ReissueController {
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refresh")) {
-
                 refresh = cookie.getValue();
+                log.info("refresh 추출" + refresh);
             }
         }
 
         if (refresh == null) {
 
+            log.info("refresh가 null");
             //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
         //expired check
         try {
+            log.info("refresh가 만료");
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
 
