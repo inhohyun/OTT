@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class MemberController {
+    //Todo: Authentication Id를 가져오는 작업 최적화 필요
 
     private final MemberReadService memberReadService;
     private final MemberWriteService memberWriteService;
@@ -64,7 +65,7 @@ public class MemberController {
     @PostMapping("/follow/{targetId}")
     public ApiResponse<FollowResponseDto> followMember(@PathVariable Long targetId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
-                .requestMemberId(currentMember.getId())
+                .requestMemberId(memberReadService.myIdSearch(currentMember).getId())
                 .targetMemberId(targetId)
                 .build();
         return ApiResponse.success(memberWriteService.followMember(followRequestDto));
@@ -73,7 +74,7 @@ public class MemberController {
     @PostMapping("/unfollow/{targetId}")
     public ApiResponse<FollowResponseDto> unfollowMember(@PathVariable Long targetId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
-                .requestMemberId(currentMember.getId())
+                .requestMemberId(memberReadService.myIdSearch(currentMember).getId())
                 .targetMemberId(targetId)
                 .build();
         return ApiResponse.success(memberWriteService.unfollowMember(followRequestDto));
@@ -83,7 +84,7 @@ public class MemberController {
     public ApiResponse<FollowResponseDto> acceptFollow(@PathVariable Long requestId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
                 .requestMemberId(requestId)
-                .targetMemberId(currentMember.getId())
+                .targetMemberId(memberReadService.myIdSearch(currentMember).getId())
                 .build();
         return ApiResponse.success(memberWriteService.acceptFollow(followRequestDto));
     }
@@ -92,7 +93,7 @@ public class MemberController {
     public ApiResponse<FollowResponseDto> rejectFollow(@PathVariable Long requestId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
                 .requestMemberId(requestId)
-                .targetMemberId(currentMember.getId())
+                .targetMemberId(memberReadService.myIdSearch(currentMember).getId())
                 .build();
         return ApiResponse.success(memberWriteService.rejectFollow(followRequestDto));
     }
@@ -101,7 +102,7 @@ public class MemberController {
     public ApiResponse<ProfileImageSuccessDto> uploadProfile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         UploadProfileImageRequestDto uploadProfileImageRequestDto = UploadProfileImageRequestDto.builder()
                 .file(file)
-                .memberId(currentMember.getId())
+                .memberId(memberReadService.myIdSearch(currentMember).getId())
                 .build();
         return ApiResponse.success(memberWriteService.uploadProfileImage(uploadProfileImageRequestDto));
     }
