@@ -4,10 +4,12 @@ import {
   setAccessToken,
   removeAccessToken,
 } from '@/utils/localUtils';
+// 환경 변수에서 API 기본 URL을 가져옴
+const baseURL = 'https://i11c205.p.ssafy.io';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: baseURL,
   timeout: 1000000, // FIXME : 타임아웃 시간 수정 필요
   headers: { 'Content-Type': 'application/json' },
 });

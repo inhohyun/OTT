@@ -1,4 +1,4 @@
-import { setAccessToken, setLocalRefreshToken } from '@/utils/localUtils'; // AccessToken을 저장하는 유틸리티 함수
+import { setAccessToken } from '@/utils/localUtils'; // AccessToken을 저장하는 유틸리티 함수
 import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위해 사용
 import { useEffect } from 'react'; // 특정 작업을 수행하기 위해 사용
 import axios from 'axios';

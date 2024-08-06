@@ -10,32 +10,31 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-// import { getUserInfo } from '../../api/user/user';
+import { getUid, getUserInfo } from '../../api/user/user';
 
-const UserPage = ({ uid }) => {
+const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [uid, setUid] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserData = async () => {
       try {
-        // const data = await getUserInfo(uid);
-        const dummyData = {
-          username: '인호현',
-          isMe: false,
-          isPublic: false,
-          tags: ['패션', '여행', '음악'],
-        };
-        setUserInfo(dummyData);
+        const uidResponse = await getUid();
+        const uid = uidResponse.data.uid;
+        setUid(uid);
+
+        const userInfoResponse = await getUserInfo(uid);
+        setUserInfo(userInfoResponse.data);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
 
-    fetchUserInfo();
-  }, [uid]);
+    fetchUserData();
+  }, []);
 
   if (!userInfo) {
     return <div>Loading...</div>;
@@ -144,7 +143,9 @@ const UserPage = ({ uid }) => {
           </div>
         </div>
         <div
-          className={`flex justify-center mt-1 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}
+          className={`flex justify-center mt-1 ${
+            tags.length > 3 ? 'flex-wrap' : ''
+          } space-x-2`}
         >
           {tags.map((tag) => (
             <span
