@@ -24,7 +24,7 @@ const UserPage = () => {
       try {
         const uidResponse = await getUid();
         console.log('uidResponse:', uidResponse);
-        // const uid = uidResponse.data.uid;
+        // const uid = uidResponse.data.id;
         // setUid(uid);
 
         // const userInfoResponse = await getUserInfo(uid);
