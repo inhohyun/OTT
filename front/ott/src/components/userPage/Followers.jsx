@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import defaultImage from '../../assets/icons/main.logo.png';
 import { getFollowerList } from '../../api/follower/follower';
 const Followers = (uid) => {
