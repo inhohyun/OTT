@@ -56,7 +56,7 @@ const UserPage = () => {
       renderComponent = <Posts isMe={isMe} isPublic={isPublic} />;
       break;
     case 'followers':
-      renderComponent = <Followers />;
+      renderComponent = <Followers uid={uid} />;
       break;
     case 'following':
       renderComponent = <Following />;
