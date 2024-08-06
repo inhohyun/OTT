@@ -14,18 +14,15 @@ const reissueAccessToken = async () => {
     if (response.status === 200) {
       // 응답 헤더에서 새로운 Access Token 가져오기
       const newAccessToken = response.headers['access'];
-      
+
       // 새로운 Access Token을 저장 또는 사용
       console.log('New Access Token:', newAccessToken);
 
       // localUtils.js의 함수 사용
       setAccessToken(newAccessToken);
-      // 필요한 경우 새로운 Refresh Token도 저장
-      // setLocalRefreshToken(newRefreshToken);
-
       // 여기서 필요한 작업 수행 (예: localStorage에 저장)
-      localStorage.setItem('accessToken', newAccessToken);
-      alert('Access token stored in local storage');
+      // localStorage.setItem('accessToken', newAccessToken);
+      // alert('Access token stored in local storage');
     } else {
       // 실패 처리 (예: Refresh Token 만료 등)
       console.error('Failed to reissue access token:', response.statusText);

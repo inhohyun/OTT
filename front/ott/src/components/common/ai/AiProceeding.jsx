@@ -3,19 +3,27 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import mainIcon from '@/assets/icons/main.logo.png';
 import useStore from '@/data/ai/aiStore';
+import { sendfittingData } from '@/api/ai/ai';
 
+// props로 전달받은 데이터를 서버로 보내고 대기하는 컴포넌트
 const Loading = ({ selectedImage, numImages, selectedClothingId }) => {
   const percentage = useStore((state) => state.percentage);
   const setPercentage = useStore((state) => state.setPercentage);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
 
   useEffect(() => {
-    const duration = 5; // 5초 동안 진행, 임시로 설정
+    const duration = 5; // TODO : 현재 5초 동안 진행, 이후 수정 예정
     const targetPercentage = 99; // 목표 퍼센트는 99
     const increment = targetPercentage / duration;
     const interval = 1000; // 1초마다 업데이트
 
-    console.log('Loading Component:', selectedImage, numImages, selectedClothingId);
+    console.log(
+      'Loading Component:',
+      selectedImage,
+      numImages,
+      selectedClothingId
+    );
+
     const intervalId = setInterval(() => {
       setPercentage((prev) => {
         const nextPercentage = prev + increment;
@@ -33,10 +41,6 @@ const Loading = ({ selectedImage, numImages, selectedClothingId }) => {
 
   // 전달받은 정보를 콘솔에 출력
   useEffect(() => {
-    console.log('Selected Image:', selectedImage);
-    console.log('Number of Images:', numImages);
-    console.log('Selected Clothing ID:', selectedClothingId);
-
     // 서버로 데이터를 전송하는 로직 추가
     const formData = new FormData();
     formData.append('selectedImage', selectedImage);
@@ -44,17 +48,13 @@ const Loading = ({ selectedImage, numImages, selectedClothingId }) => {
     formData.append('selectedClothingId', selectedClothingId);
 
     // 서버에 요청 보내기 (예시)
-    fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('서버 응답:', data);
-      })
-      .catch((error) => {
-        console.error('서버 에러:', error);
-      });
+    const sendData = async () => {
+      try {
+        const response = await sendfittingData(formData);
+      } catch (error) {
+        console.error('AI 옷 피팅 중 에러발생(컴포넌트) :', error);
+      }
+    };
   }, [selectedImage, numImages, selectedClothingId]);
 
   return (
