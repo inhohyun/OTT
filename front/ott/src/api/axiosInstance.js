@@ -1,86 +1,66 @@
 import axios from 'axios';
-import {
-  getAccessToken,
-  setAccessToken,
-  removeAccessToken,
-  getRefreshToken,
-  removeRefreshToken,
-} from './tokenUtils';
-import { setCookie, removeCookie } from './cookieUtils';
-
-//TODO : React-query로 리펙토링 예정
+// import {
+//   getAccessToken,
+//   setAccessToken,
+//   removeAccessToken,
+// } from '@/utils/localUtils';
+// 환경 변수에서 API 기본 URL을 가져옴
+const baseURL = 'http://192.168.100.89:8080';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: 'https://api.example.com', // 서버의 URL로 변경
-  timeout: 1000,
+  baseURL: baseURL,
+  timeout: 1000000, // FIXME : 타임아웃 시간 수정 필요
   headers: { 'Content-Type': 'application/json' },
 });
 
 // 요청 인터셉터 설정
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken();
-    if (token) {
-      config.headers.access = `${token}`;
-    } else {
-      alert('로그인이 필요합니다.');
-      window.location.href = '/';
-      return Promise.reject(new Error('No access token found'));
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     const token = getAccessToken();
+//     if (token) {
+//       config.headers.access = `${token}`;
+//     } else {
+//       alert('로그인이 필요합니다.');
+//       window.location.href = '/';
+//       return Promise.reject(new Error('No access token found'));
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
 
-// 응답 인터셉터 설정
-axiosInstance.interceptors.response.use(
-  (response) => response.data, // 정상 응답 중 data만 꺼내주기
-  async (error) => {
-    const originalRequest = error.config; // 실패한 요청의 설정을 가져옴
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const refreshToken = getRefreshToken();
-        setCookie('refreshToken', refreshToken); // 쿠키에 Refresh Token 설정
-        const response = await axiosInstance.get('/refresh-token'); // Refresh Token 요청
-        setAccessToken(response.data.accessToken); // 새로운 Access Token 저장
-        originalRequest.headers.access = `${response.data.accessToken}`; // 요청에 새로운 Access Token 포함
-        removeCookie('refreshToken'); // 응답 후 쿠키에서 Refresh Token 제거
-        return axiosInstance(originalRequest); // 원래 요청 재시도
-      } catch (err) {
-        console.error('토큰 갱신 실패:', err);
-        removeAccessToken(); // 실패 시 토큰 제거
-        removeRefreshToken();
-        window.location.href = '/'; // 로그인 페이지로 리디렉션
-      }
-    }
-    console.error('API 호출 실패:', error);
-    return Promise.reject(error); // 그 외의 오류는 그대로 반환
-  }
-);
+// //TODO : 에러 핸들링 추가 예정
+// // 응답 인터셉터 설정
+// axiosInstance.interceptors.response.use(
+//   (response) => response.data, // 정상 응답 중 data만 꺼내주기
+//   async (error) => {
+//     const originalRequest = error.config; // 실패한 요청의 설정을 가져옴
+//     if (
+//       error.response &&
+//       error.response.status === 401 &&
+//       !originalRequest._retry
+//     ) {
+//       originalRequest._retry = true;
+//       try {
+//         const response = await axiosInstance.get('/api/reissue');
+//         const newAccessToken = response.headers['access']; // 새로운 Access Token 가져오기
+//         setAccessToken(newAccessToken); // 새로운 Access Token 저장
 
-// API 메서드 예시
-export const get = ({ endPoint, id }) => {
-  if (id) {
-    return axiosInstance.get(endPoint, { params: { id } });
-  }
-  return axiosInstance.get(endPoint);
-};
+//         // 수정된 부분: 요청에 새로운 Access Token 포함
+//         originalRequest.headers.access = `${newAccessToken}`;
 
-export const post = ({ endPoint, data }) => {
-  return axiosInstance.post(endPoint, data);
-};
-
-export const put = ({ endPoint, data }) => {
-  return axiosInstance.put(endPoint, data);
-};
-
-export const del = ({ endPoint, id }) => {
-  if (id) {
-    return axiosInstance.delete(endPoint, { data: { id } });
-  }
-  return axiosInstance.delete(endPoint);
-};
+//         return axiosInstance(originalRequest); // 원래 요청 재시도
+//       } catch (err) {
+//         console.error('토큰 에러: ', err);
+//         alert('세션이 만료되었습니다. 다시 로그인해주세요:');
+//         removeAccessToken(); // 실패 시 토큰 제거
+//         window.location.href = '/'; // 로그인 페이지로 리디렉션
+//       }
+//     }
+//     console.error('인스턴스에서 API 호출 실패:', error);
+//     return Promise.reject(error); // 그 외의 오류는 그대로 반환
+//   }
+// );
 
 export default axiosInstance;

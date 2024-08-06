@@ -536,16 +536,15 @@ import Modal from './Modal';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import lookicon from '../../assets/icons/lookicon.png';
-import axios from 'axios';
-import detailStore from '../../data/lookbook/detailStore';
+import {
+  lookbookComment,
+  lookbookDislike,
+  lookbookLike,
+  lookbookDelete,
+} from '../../api/lookbook/lookbookdetail';
+import useLookbookStore from '../../data/lookbook/detailStore';
 
-const LookbookDetail = ({
-  onClose,
-  onEdit,
-  onDelete,
-  lookbookId,
-  lookbook,
-}) => {
+const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const [showSellComments, setShowSellComments] = useState(false);
   // const [liked, setLiked] = useState(false);
   const [liked, setLiked] = useState(lookbook.like);
@@ -554,30 +553,24 @@ const LookbookDetail = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
   const [comments, setComments] = useState([]);
-  const [commentStatus, setCommentStatus] = useState('');
+  // const [commentStatus, setCommentStatus] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { deleteLookbook, fetchLookbooks } = detailStore(); // Use Zustand store
+  const { deleteLookbook, hideDetail } = useLookbookStore(); // Use Zustand store
 
   useEffect(() => {
     setLiked(lookbook.like);
     setCntLike(lookbook.cntLike);
   }, [lookbook]);
+
   // Fetch comments whenever showSellComments or lookbook.id changes
   useEffect(() => {
-    // console.log('댓글아이디', lookbook.id);
-    const status = showSellComments ? 'DM' : 'comment';
-    axios
-      .get(`http://192.168.100.89:8080/api/comment/${lookbook.id}`, {
-        params: { status: status },
-      })
-      .then((response) => {
-        console.log(response);
-        setComments(response.data);
-        setCommentStatus(response.data.status); // API response includes status
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const fetchComments = () => {
+      const status = showSellComments ? 'DM' : 'comment';
+      const commentsData = lookbookComment(lookbook, status);
+      setComments(commentsData);
+    };
+
+    fetchComments();
   }, [showSellComments, lookbook.id]);
 
   // Handling arrays and default values
@@ -598,11 +591,7 @@ const LookbookDetail = ({
   const toggleLike = () => {
     // const uid = 1;
     if (liked) {
-      axios
-        .post(
-          `http://192.168.100.89:8080/api/lookbook/${lookbook.id}/dislike`,
-          { lookbookId: lookbook.id, uid: '1' }
-        )
+      lookbookDislike(lookbook)
         .then(() => {
           setLiked(false);
           setCntLike((prevCntLike) => prevCntLike - 1);
@@ -611,11 +600,7 @@ const LookbookDetail = ({
           console.error(error);
         });
     } else {
-      axios
-        .post(`http://192.168.100.89:8080/api/lookbook/${lookbook.id}/like`, {
-          lookbookId: lookbook.id,
-          uid: '1',
-        })
+      lookbookLike(lookbook)
         .then(() => {
           setLiked(true);
           setCntLike((prevCntLike) => prevCntLike + 1);
@@ -652,13 +637,12 @@ const LookbookDetail = ({
   };
 
   const handleDelete = () => {
-    console.log('룩북 삭제');
-    axios
-      .delete(`http://192.168.100.89:8080/api/lookbook/${lookbook.id}`)
-      .then((response) => {
-        console.log('룩북 삭제 성공');
+    // console.log('룩북 삭제');
+    lookbookDelete(lookbook)
+      .then(() => {
+        hideDetail();
         deleteLookbook(lookbook.id); // Update Zustand store
-        fetchLookbooks(); // Fetch updated lookbooks
+        // fetchLookbooks(); // Fetch updated lookbooks
         onClose(); // Close the detail view
       })
       .catch((error) => {

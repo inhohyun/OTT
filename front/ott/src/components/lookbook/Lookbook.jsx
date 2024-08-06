@@ -267,7 +267,6 @@
 
 // export default Lookbook;
 
-import React, { useState } from 'react';
 import LookbookDetail from './LookbookDetail';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
@@ -284,7 +283,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
     hideDetail,
     isDetailVisible,
     selectedLookbook,
-    fetchLookbooks,
+    // fetchLookbooks,
   } = detailStore();
   // const [liked, setLiked] = useState(data.like);
 

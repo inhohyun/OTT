@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { lookbookComment } from '../../api/lookbook/lookbookdetail';
 
 const Comment = ({ comments = [], lookbookId }) => {
   const currentUser = 'kimssafy'; // Replace with the actual current user nickname
@@ -11,44 +12,41 @@ const Comment = ({ comments = [], lookbookId }) => {
   const inputRef = useRef(null); // Ref for the input field
 
   useEffect(() => {
-    setCommentList(
-      comments.map((comment) => ({
-        ...comment,
-        id: comment.commentId,
-        replies: (comment.children || []).map((reply) => ({
-          ...reply,
-          isEditing: false, // Track if the reply is being edited
-        })),
-        showReplies: false, // Control the visibility of replies
-        isEditing: false, // Track if the comment is being edited
-      }))
-    );
+    if (comments.length > 0) {
+      setCommentList(
+        comments.map((comment) => ({
+          ...comment,
+          id: comment.commentId,
+          replies: (comment.children || []).map((reply) => ({
+            ...reply,
+            isEditing: false, // Track if the reply is being edited
+          })),
+          showReplies: false, // Control the visibility of replies
+          isEditing: false, // Track if the comment is being edited
+        }))
+      );
+    }
   }, [comments]);
 
-  const fetchComments = () => {
-    const status = 'comment';
-    console.log('fetch');
-    axios
-      .get(`http://192.168.100.89:8080/api/comment/${lookbookId}`, {
-        params: { status: status },
-      })
-      .then((response) => {
-        setCommentList(
-          response.data.map((comment) => ({
-            ...comment,
-            id: comment.commentId,
-            replies: (comment.children || []).map((reply) => ({
-              ...reply,
-              isEditing: false, // Track if the reply is being edited
-            })),
-            showReplies: false, // Control the visibility of replies
-            isEditing: false, // Track if the comment is being edited
-          }))
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const fetchComments = async () => {
+    try {
+      const status = 'comment';
+      const commentsData = await lookbookComment(lookbookId, status);
+      setCommentList(
+        commentsData.map((comment) => ({
+          ...comment,
+          id: comment.commentId,
+          replies: (comment.children || []).map((reply) => ({
+            ...reply,
+            isEditing: false, // Track if the reply is being edited
+          })),
+          showReplies: false, // Control the visibility of replies
+          isEditing: false, // Track if the comment is being edited
+        }))
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleAddComment = (e) => {

@@ -4,21 +4,24 @@ import LookbookList from '../lookbook/LookbookList';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
-import detailStore from '../../data/lookbook/detailStore';
+import useLookbookStore from '../../data/lookbook/detailStore';
+import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 
 const MyLookbook = () => {
   const initialLimit = 10;
-  const { lookbooks, fetchLookbooks, deleteLookbook, hideDetail } =
-    detailStore();
+  const { lookbooks, setLookbooks, deleteLookbook, hideDetail } =
+    useLookbookStore();
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedTag, setSelectedTag] = useState(null);
   const scrollRefs = useRef({});
-  const [selectedLookbook, setSelectedLookbook] = useState(null);
 
   useEffect(() => {
-    fetchLookbooks().then(() => {
+    const fetchInitialLookbooks = async () => {
+      const lookbooksData = await fetchMyLookbooks();
+      setLookbooks(lookbooksData);
+
       const tags = Array.from(
-        new Set(lookbooks.flatMap((lb) => lb.tags || []))
+        new Set(lookbooksData.flatMap((lb) => lb.tags || []))
       );
       console.log('Tags:', tags);
 
@@ -31,16 +34,19 @@ const MyLookbook = () => {
           scrollRefs.current[tag] = React.createRef();
         }
       });
-    });
-  }, [fetchLookbooks]);
+    };
+
+    fetchInitialLookbooks();
+  }, [setLookbooks]);
 
   const handleDelete = (deletedLookbookId) => {
     deleteLookbook(deletedLookbookId);
   };
 
-  const handleCloseDetail = () => {
+  const handleCloseDetail = async () => {
     hideDetail();
-    fetchLookbooks();
+    const lookbooksData = await fetchMyLookbooks();
+    setLookbooks(lookbooksData);
   };
 
   const categorizedLookbooks = lookbooks.reduce((acc, lookbook) => {
@@ -84,7 +90,6 @@ const MyLookbook = () => {
 
   const closeDetailedView = () => {
     setSelectedTag(null);
-    fetchLookbooks();
   };
 
   if (lookbooks.length === 0) {
@@ -119,7 +124,7 @@ const MyLookbook = () => {
         }
       `}</style>
 
-      {tags.map((tag, index) => (
+      {tags.map((tag) => (
         <div key={tag} className="w-full">
           <p className="ml-2 text-xl font-bold">{tag}</p>
           <div className="relative">
