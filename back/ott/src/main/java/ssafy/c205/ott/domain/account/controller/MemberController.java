@@ -26,7 +26,6 @@ public class MemberController {
     private final MemberReadService memberReadService;
     private final MemberWriteService memberWriteService;
     private final MemberValidator memberValidator;
-    private final MemberRepository memberRepository;
 
     @GetMapping("/my")
     public ApiResponse<MemberIdDto> getMember(@AuthenticationPrincipal CustomOAuth2User currentMember) {

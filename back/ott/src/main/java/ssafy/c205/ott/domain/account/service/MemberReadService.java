@@ -39,7 +39,7 @@ public class MemberReadService {
     private final FollowRepository followRepository;
 
     public MemberIdDto myIdSearch(CustomOAuth2User currentMember) {
-        return MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).orElseThrow(MemberNotFoundException::new).getId()).build();
+        return MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).getId()).build();
     }
 
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
