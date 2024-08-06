@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Modal from 'react-modal';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -10,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
-
+import { updateUserInfo } from '../../api/user/user';
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -91,29 +90,9 @@ const UpdatePage = () => {
     document.getElementById('profileImageInput').click();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('memberId', uid);
-    formData.append('nickname', userInfoState.nickname);
-    formData.append('phoneNumber', userInfoState.phone);
-    if (profileImageFile) {
-      formData.append('profileImage', profileImageFile);
-    }
-    formData.append('height', parseFloat(userInfoState.height));
-    formData.append('weight', parseFloat(userInfoState.weight));
-    formData.append('bodyType', bodyType);
-    formData.append('publicStatus', isChecked ? 'PUBLIC' : 'PRIVATE');
-    formData.append('memberTags', JSON.stringify(tags));
-
-    try {
-      // 서버로 업데이트 요청을 보내는 함수 예시
-      // await updateUserInfo(formData);
-      console.log('Update data:', formData); // formData 확인용 콘솔 출력
-      redirectProfile();
-    } catch (error) {
-      console.error('Error updating user info:', error);
-    }
+  //저장 클릭시 동작
+  const handleSubmit = async () => {
+    console.log('submit');
   };
 
   return (
