@@ -1,10 +1,10 @@
-package ssafy.c205.ott.domain.lookbook.dto.responsedto;
+package ssafy.c205.ott.domain.notification.dto.responsedto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ssafy.c205.ott.domain.lookbook.entity.NotificationStatus;
+import ssafy.c205.ott.domain.notification.entity.NotificationStatus;
 
 @Getter @Setter
 @ToString @Builder

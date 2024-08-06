@@ -1,9 +1,10 @@
-package ssafy.c205.ott.domain.lookbook.entity;
+package ssafy.c205.ott.domain.notification.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
+import ssafy.c205.ott.domain.lookbook.entity.Comment;
 
 @Entity @Getter
 public class Notification {
@@ -18,8 +19,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     NotificationStatus notificationStatus = NotificationStatus.UNREAD;
 
-    @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 

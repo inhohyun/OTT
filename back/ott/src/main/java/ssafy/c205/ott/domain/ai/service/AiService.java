@@ -2,7 +2,6 @@ package ssafy.c205.ott.domain.ai.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,26 +15,24 @@ import ssafy.c205.ott.common.exception.S3FileNotExistException;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 import ssafy.c205.ott.domain.ai.exception.AiBadRequestException;
+import ssafy.c205.ott.domain.notification.util.NotificationMessage;
+import ssafy.c205.ott.domain.notification.service.NotificationService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class AiService {
     @Value("${gpu.server.url}")
     private String GPU_SERVER_BASE_URL;
 
-    private final RestTemplate restTemplate;
-
-    @Autowired
-    private AmazonS3Util amazonS3Util;
-
-    public AiService() {
-        this.restTemplate = new RestTemplate();
-    }
+    private final NotificationService notificationService;
+    private final AmazonS3Util amazonS3Util;
 
     public String ping() {
+        RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(GPU_SERVER_BASE_URL + "/", String.class);
     }
 
@@ -52,7 +49,7 @@ public class AiService {
         }
 
         // 최대 4장만 가능하도록 제한
-        aiRequestDto.setCategory(Math.max(4, aiRequestDto.getCategory()));
+        aiRequestDto.setSample(Math.min(4, aiRequestDto.getSample()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -76,6 +73,7 @@ public class AiService {
         log.info(body.toString());
 
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.postForEntity(GPU_SERVER_BASE_URL + "/generate", request, Map.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
@@ -89,6 +87,9 @@ public class AiService {
 
         // 모델 사진 삭제
         amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
+
+        // AI 이미지 완성 알림
+        notificationService.createNotification(NotificationMessage.AI_COMPLETE);
 
         return ResponseEntity.ok(responseBody);
     }
