@@ -41,7 +41,8 @@ public class MemberWriteService {
         return new RegisterMemberSuccessDto(member.getId());
     }
 
-    public UpdateMemberSuccessDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto) {
+    public UpdateMemberSuccessDto updateMember(Long id, MemberUpdateRequestDto memberUpdateRequestDto) {
+        memberValidator.validateSelfRequest(MemberRequestDto.builder().id(memberUpdateRequestDto.getMemberId()).currentId(id).build());
         Member member = findMemberById(memberUpdateRequestDto.getMemberId());
         member.updateMember(memberUpdateRequestDto.getNickname(), memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getHeight()
                 , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus(), memberUpdateRequestDto.getMemberTags());

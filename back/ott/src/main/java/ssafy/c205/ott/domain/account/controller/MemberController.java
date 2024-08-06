@@ -11,7 +11,6 @@ import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.UploadProfileImageRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
-import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.account.service.MemberReadService;
 import ssafy.c205.ott.domain.account.service.MemberValidator;
 import ssafy.c205.ott.domain.account.service.MemberWriteService;
@@ -42,7 +41,7 @@ public class MemberController {
 
     @PutMapping("/{id}")
     public ApiResponse<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
-        return ApiResponse.success(memberWriteService.updateMember(memberUpdateRequestDto));
+        return ApiResponse.success(memberWriteService.updateMember(id, memberUpdateRequestDto));
     }
 
     @DeleteMapping("/{id}")
