@@ -44,9 +44,10 @@ const UserPage = () => {
 
   const { name, publicStatus, FollowerStatus, tags } = userInfo;
 
-  if (FollowerStatus.status === 'SELF') {
+  if (FollowerStatus === 'SELF') {
     isMe = true;
   } else {
+    //TODO : 본인, 팔로우 대기중, 팔로우 중인 사람, 팔로우 안된 사람 분기처리
     isMe = false;
   }
 
