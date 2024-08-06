@@ -24,10 +24,10 @@ const UserPage = () => {
       try {
         const uidResponse = await getUid();
 
-        const uid = uidResponse.data.id;
-        setUid(uid);
+        const id = uidResponse.data.id;
+        setUid(id);
 
-        const userInfoResponse = await getUserInfo(uid);
+        const userInfoResponse = await getUserInfo(id);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
       } catch (error) {
