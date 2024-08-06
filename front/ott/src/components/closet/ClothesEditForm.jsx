@@ -29,19 +29,23 @@ const ClothesEditForm = ({
     }),
   };
 
+  // 입력값 변경 처리 함수
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setItemDetails((prev) => ({ ...prev, [name]: value }));
   };
 
+  // 선택값 변경 처리 함수
   const handleSelectChange = (selectedOption, name) => {
     setItemDetails((prev) => ({ ...prev, [name]: selectedOption.value }));
   };
 
+  // 이미지 선택 처리 함수
   const handleImageSelection = (index) => {
     document.getElementById(`image-file-input-${index}`).click();
   };
 
+  // 파일 변경 처리 함수
   const handleFileChange = (e, index) => {
     if (e.target.files && e.target.files[0]) {
       const newImageFiles = [...imageFiles];
@@ -50,12 +54,14 @@ const ClothesEditForm = ({
     }
   };
 
+  // 이미지 삭제 함수
   const clearImage = (index) => {
     const newImageFiles = [...imageFiles];
     newImageFiles[index] = null;
     setImageFiles(newImageFiles);
   };
 
+  // 이미지 입력 요소 렌더링 함수
   const renderImageInputs = () => {
     const labels = ['앞면', '뒷면'];
     return labels.map((label, index) => (
