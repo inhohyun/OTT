@@ -11,6 +11,7 @@ import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.MemberSsoDto;
 import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberIdDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
@@ -84,8 +85,8 @@ public class MemberReadService {
                 .collect(Collectors.toList());
     }
 
-    public List<FollowsResponseDto> followRequestListSearch(MemberIdDto MemberIdDto) {
-        List<Follow> followingRequestList = followRepository.findByToMemberIdAndFollowStatus(MemberIdDto.getId(), FollowStatus.WAIT);
+    public List<FollowsResponseDto> followRequestListSearch(MemberSsoDto memberSsoDto) {
+        List<Follow> followingRequestList = followRepository.findByToMemberSsoAndFollowStatus(memberSsoDto.getSso(), FollowStatus.WAIT);
 
         return followingRequestList.stream()
                 .map(follow -> FollowsResponseDto.builder()

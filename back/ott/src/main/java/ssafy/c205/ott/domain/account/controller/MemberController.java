@@ -8,6 +8,7 @@ import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.MemberSsoDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.UploadProfileImageRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.*;
@@ -125,6 +126,7 @@ public class MemberController {
 
     @GetMapping("/follow/request-list")
     public ApiResponse<List<FollowsResponseDto>> getFollowRequestList(@AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(memberReadService.followRequestListSearch(MemberIdDto.builder().id(currentMember.getId()).build()));
+        return ApiResponse.success(memberReadService.followRequestListSearch(MemberSsoDto.builder().sso(
+                currentMember.getUsername()).build()));
     }
 }
