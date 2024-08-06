@@ -3,19 +3,11 @@ import {
   getAccessToken,
   setAccessToken,
   removeAccessToken,
-  getLocalRefreshToken,
-  removeLocalRefreshToken,
 } from '@/utils/localUtils';
-import {
-  setCookie,
-  removeCookie as removeRefreshToken,
-} from '@/utils/cookieUtils';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  // TODO : 서버의 URL로 변경
-  // baseURL: process.env.REACT_APP_API_BASE_URL,
-  baseURL: `localhost:3000`,
+  baseURL: process.env.REACT_APP_API_BASE_URL,
   timeout: 1000000, // FIXME : 타임아웃 시간 수정 필요
   headers: { 'Content-Type': 'application/json' },
 });
@@ -58,9 +50,9 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(originalRequest); // 원래 요청 재시도
       } catch (err) {
-        console.error('세션이 만료되었습니다. 다시 로그인해주세요:', err);
+        console.error('토큰 에러: ', err);
+        alert('세션이 만료되었습니다. 다시 로그인해주세요:');
         removeAccessToken(); // 실패 시 토큰 제거
-
         window.location.href = '/'; // 로그인 페이지로 리디렉션
       }
     }
