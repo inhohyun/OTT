@@ -6,6 +6,7 @@ const Followers = (uid) => {
   const [visibleFollowers, setVisibleFollowers] = useState(10);
 
   useEffect(() => {
+    console.log(uid);
     const fetchFollowers = async () => {
       try {
         const response = await getFollowerList(uid);
