@@ -8,23 +8,29 @@ import detailStore from '../../data/lookbook/detailStore';
 
 const MyLookbook = () => {
   const initialLimit = 10;
-  const { lookbooks, fetchLookbooks, deleteLookbook } = detailStore();
+  const { lookbooks, fetchLookbooks, deleteLookbook, hideDetail } =
+    detailStore();
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedTag, setSelectedTag] = useState(null);
-  const scrollRefs = useRef([]);
+  const scrollRefs = useRef({});
   const [selectedLookbook, setSelectedLookbook] = useState(null);
 
   useEffect(() => {
     fetchLookbooks().then(() => {
       const tags = Array.from(
-        new Set(lookbooks.flatMap((lb) => lb.tags || ['No Tag']))
+        new Set(lookbooks.flatMap((lb) => lb.tags || []))
       );
       console.log('Tags:', tags);
 
       setVisibleLookbooks(
         tags.reduce((acc, tag) => ({ ...acc, [tag]: initialLimit }), {})
       );
-      scrollRefs.current = tags.map(() => React.createRef());
+
+      tags.forEach((tag) => {
+        if (!scrollRefs.current[tag]) {
+          scrollRefs.current[tag] = React.createRef();
+        }
+      });
     });
   }, [fetchLookbooks]);
 
@@ -32,9 +38,14 @@ const MyLookbook = () => {
     deleteLookbook(deletedLookbookId);
   };
 
+  const handleCloseDetail = () => {
+    hideDetail();
+    fetchLookbooks();
+  };
+
   const categorizedLookbooks = lookbooks.reduce((acc, lookbook) => {
     const lookbookTags =
-      lookbook.tags && lookbook.tags.length > 0 ? lookbook.tags : ['No tags'];
+      lookbook.tags && lookbook.tags.length > 0 ? lookbook.tags : [];
     lookbookTags.forEach((tag) => {
       if (!acc[tag]) acc[tag] = [];
       acc[tag].push(lookbook);
@@ -45,15 +56,21 @@ const MyLookbook = () => {
   const tags = Object.keys(categorizedLookbooks);
   console.log('Categorized lookbooks:', categorizedLookbooks);
 
-  const scrollLeft = (ref) => {
-    if (ref.current) {
-      ref.current.scrollBy({ left: -200, behavior: 'smooth' });
+  const scrollLeft = (tag) => {
+    if (scrollRefs.current[tag] && scrollRefs.current[tag].current) {
+      scrollRefs.current[tag].current.scrollBy({
+        left: -200,
+        behavior: 'smooth',
+      });
     }
   };
 
-  const scrollRight = (ref) => {
-    if (ref.current) {
-      ref.current.scrollBy({ left: 200, behavior: 'smooth' });
+  const scrollRight = (tag) => {
+    if (scrollRefs.current[tag] && scrollRefs.current[tag].current) {
+      scrollRefs.current[tag].current.scrollBy({
+        left: 200,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -67,6 +84,7 @@ const MyLookbook = () => {
 
   const closeDetailedView = () => {
     setSelectedTag(null);
+    fetchLookbooks();
   };
 
   if (lookbooks.length === 0) {
@@ -109,7 +127,7 @@ const MyLookbook = () => {
               categorizedLookbooks[tag].length > 3 && (
                 <button
                   key={`${tag}-left-button`} // unique key for the button
-                  onClick={() => scrollLeft(scrollRefs.current[index])}
+                  onClick={() => scrollLeft(tag)}
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
                   style={{
                     backgroundImage: `url(${leftArrow})`,
@@ -122,18 +140,21 @@ const MyLookbook = () => {
                 ></button>
               )}
             <div
-              ref={scrollRefs.current[index]}
+              ref={scrollRefs.current[tag]}
               className="flex overflow-x-auto py-3 scrollbar-hide"
             >
               {categorizedLookbooks[tag] &&
                 categorizedLookbooks[tag]
                   .slice(0, visibleLookbooks[tag])
                   .map((lookbook) => (
-                    <div key={lookbook.id} className="lookbook-container">
+                    <div
+                      key={`${tag}-${lookbook.id}`}
+                      className="lookbook-container"
+                    >
                       <Lookbook
-                        key={lookbook.id}
                         data={lookbook}
                         onDelete={handleDelete} // Pass handleDelete
+                        onClose={handleCloseDetail}
                       />
                     </div>
                   ))}
@@ -153,7 +174,7 @@ const MyLookbook = () => {
               categorizedLookbooks[tag].length > 3 && (
                 <button
                   key={`${tag}-right-button`} // unique key for the button
-                  onClick={() => scrollRight(scrollRefs.current[index])}
+                  onClick={() => scrollRight(tag)}
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 mr-2 w-6 h-6"
                   style={{
                     backgroundImage: `url(${rightArrow})`,

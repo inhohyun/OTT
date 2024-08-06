@@ -276,7 +276,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import detailStore from '../../data/lookbook/detailStore';
 
-const Lookbook = ({ data, onDelete }) => {
+const Lookbook = ({ data, onDelete, onClose }) => {
   // Receive onDelete prop
   const nav = useNavigate();
   const {
@@ -310,11 +310,6 @@ const Lookbook = ({ data, onDelete }) => {
           console.error('Error message:', error.message);
         }
       });
-  };
-
-  const handleCloseDetail = () => {
-    hideDetail();
-    fetchLookbooks();
   };
 
   const calcTimeAgo = (createdAt) => {
@@ -401,7 +396,7 @@ const Lookbook = ({ data, onDelete }) => {
       {isDetailVisible && selectedLookbook && (
         <LookbookDetail
           lookbook={selectedLookbook}
-          onClose={handleCloseDetail}
+          onClose={onClose}
           onEdit={handleEditLookbook}
           lookbookId={selectedLookbook.id}
           onDelete={onDelete} // Pass onDelete to LookbookDetail
