@@ -4,7 +4,7 @@ import axiosInstance from '../axiosInstance';
 // 옷 추가
 export const addClothes = (formData) => {
   return axios
-    .post('http://192.168.100.89:8080/api/clothes/', formData, {
+    .post('http://localhost:8080/api/clothes/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -23,7 +23,7 @@ export const addClothes = (formData) => {
 export const getClothesItemData = async (clothesId) => {
   try {
     const response = await axios.get(
-      `http://192.168.100.89:8080/api/clothes/${clothesId}`
+      `http://localhost:8080/api/clothes/${clothesId}`
     );
     return response.data;
   } catch (error) {
@@ -36,7 +36,7 @@ export const getClothesItemData = async (clothesId) => {
 export const getClothesList = async (userId) => {
   try {
     const response = await axios.get(
-      `http://192.168.100.89:8080/api/clothes/${userId}/list`
+      `http://localhost:8080/api/clothes/${userId}/list`
     );
     return response.data.map((item, index) => ({
       ...item,
@@ -52,7 +52,7 @@ export const getClothesList = async (userId) => {
 export const bookmarkClothes = async (clothesId) => {
   try {
     await axios.post(
-      `http://192.168.100.89:8080/api/clothes/bookmark/${clothesId}`
+      `http://localhost:8080/api/clothes/bookmark/${clothesId}`
     );
     console.log(`${clothesId} 북마크 성공`);
   } catch (error) {
@@ -65,7 +65,7 @@ export const bookmarkClothes = async (clothesId) => {
 export const unbookmarkClothes = async (clothesId) => {
   try {
     await axios.post(
-      `http://192.168.100.89:8080/api/clothes/unbookmark/${clothesId}`
+      `http://localhost:8080/api/clothes/unbookmark/${clothesId}`
     );
     console.log(`${clothesId} 언북마크 성공`);
   } catch (error) {
@@ -78,7 +78,7 @@ export const unbookmarkClothes = async (clothesId) => {
 export const updateClothes = async (clothesId, formData) => {
   try {
     const response = await axios.put(
-      `http://192.168.100.89:8080/api/clothes/${clothesId}`,
+      `http://localhost:8080/api/clothes/${clothesId}`,
       formData,
       {
         headers: {
@@ -90,6 +90,17 @@ export const updateClothes = async (clothesId, formData) => {
     return response.data;
   } catch (error) {
     console.error('Error updating clothes:', error);
+    throw error;
+  }
+};
+
+// 옷 삭제
+export const deleteClothes = async (clothesId) => {
+  try {
+    await axios.delete(`http://localhost:8080/api/clothes/${clothesId}`);
+    console.log(`${clothesId} 삭제 성공`);
+  } catch (error) {
+    console.error(`${clothesId} 삭제 실패:`, error);
     throw error;
   }
 };

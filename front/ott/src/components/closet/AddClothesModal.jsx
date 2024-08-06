@@ -5,16 +5,19 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { addClothes } from '../../api/closet/clothes';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
-  const [category, setCategory] = useState('');
-  const [frontImage, setFrontImage] = useState('');
-  const [backImage, setBackImage] = useState('');
-  const [brand, setBrand] = useState('');
-  const [purchaseLocation, setPurchaseLocation] = useState('');
-  const [size, setSize] = useState('');
-  const [color, setColor] = useState('');
-  const [publicStatus, setPublicStatus] = useState(false);
-  const [salesStatus, setSalesStatus] = useState(false);
-  const [gender, setGender] = useState('');
+  const [formData, setFormData] = useState({
+    category: '',
+    frontImage: '',
+    backImage: '',
+    brand: '',
+    purchaseLocation: '',
+    size: '',
+    color: '',
+    publicStatus: false,
+    salesStatus: false,
+    gender: '',
+  });
+
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -22,39 +25,36 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
-      clearInputs(); // input값 초기화
+      clearInputs();
     }
   }, [isOpen]);
 
   useEffect(() => {
     if (categories.length > 0) {
-      setCategory(categories[0]);
+      setFormData((prev) => ({ ...prev, category: categories[0] }));
     }
   }, [categories]);
 
-  // 추가하고자 하는 옷의 input들
   const validateInputs = () => {
     const newErrors = {};
-    if (!frontImage.trim()) newErrors.frontImage = '앞면 이미지를 선택하세요.';
-    if (!brand.trim()) newErrors.brand = '브랜드를 입력하세요.';
-    if (!purchaseLocation.trim())
-      newErrors.purchaseLocation = '구매처를 입력하세요.';
-    if (!size.trim()) newErrors.size = '사이즈를 입력하세요.';
-    if (!color.trim()) newErrors.color = '색상을 입력하세요.';
-    if (!gender.trim()) newErrors.gender = '성별을 선택하세요.';
+    if (!formData.frontImage.trim()) newErrors.frontImage = '앞면 이미지를 선택하세요.';
+    if (!formData.brand.trim()) newErrors.brand = '브랜드를 입력하세요.';
+    if (!formData.purchaseLocation.trim()) newErrors.purchaseLocation = '구매처를 입력하세요.';
+    if (!formData.size.trim()) newErrors.size = '사이즈를 입력하세요.';
+    if (!formData.color.trim()) newErrors.color = '색상을 입력하세요.';
+    if (!formData.gender.trim()) newErrors.gender = '성별을 선택하세요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // 드롭다운 커스터마이징
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      'borderColor': state.isFocused ? 'black' : provided.borderColor,
+      borderColor: state.isFocused ? 'black' : provided.borderColor,
       '&:hover': {
         borderColor: 'black',
       },
-      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
     }),
     option: (provided, state) => ({
       ...provided,
@@ -66,39 +66,26 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     }),
   };
 
-  // 옷 추가 함수
   const handleAddClothes = () => {
     if (validateInputs()) {
-      const formData = new FormData();
-      formData.append('id', Date.now());
-      formData.append('size', size);
-      formData.append('brand', brand);
-      formData.append('purchase', purchaseLocation);
-      formData.append('category', category);
-      formData.append('publicStatus', publicStatus ? 'PUBLIC' : 'PRIVATE');
-      formData.append('salesStatus', salesStatus ? 'ON_SALE' : 'NOT_SALE');
-      formData.append('color', color);
-      formData.append('gender', gender);
-      formData.append('uid', 1);
+      const data = new FormData();
+      data.append('id', Date.now());
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
+      });
 
       const frontFileInput = document.getElementById('front-file-input');
       const backFileInput = document.getElementById('back-file-input');
 
-      if (frontFileInput && frontFileInput.files[0]) {
-        formData.append('frontImg', frontFileInput.files[0]);
+      if (frontFileInput?.files[0]) {
+        data.append('frontImg', frontFileInput.files[0]);
       }
 
-      if (backFileInput && backFileInput.files[0]) {
-        formData.append('backImg', backFileInput.files[0]);
+      if (backFileInput?.files[0]) {
+        data.append('backImg', backFileInput.files[0]);
       }
 
-      console.log('test');
-      for (let [key, value] of formData.entries()) {
-        console.log(key + '|' + value);
-      }
-
-      // Corrected call to addClothes
-      addClothes(formData)
+      addClothes(data)
         .then((response) => {
           console.log('Successfully added clothes:', response);
           onAddClothes({ key: response.key });
@@ -110,37 +97,36 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         });
     }
   };
-  // 옷 추가 input들 초기화
+
   const clearInputs = () => {
-    setCategory(categories[0]);
-    setFrontImage('');
-    setBackImage('');
-    setBrand('');
-    setPurchaseLocation('');
-    setSize('');
-    setColor('');
-    setPublicStatus(false);
-    setSalesStatus(false); // 판매 상태 초기화
-    setGender('');
+    setFormData({
+      category: categories[0],
+      frontImage: '',
+      backImage: '',
+      brand: '',
+      purchaseLocation: '',
+      size: '',
+      color: '',
+      publicStatus: false,
+      salesStatus: false,
+      gender: '',
+    });
     setErrors({});
   };
 
-  // 이미지 추가 과정 함수... 빈 공백 클릭 시 실행
   const handleImageSelection = (type) => {
     document.getElementById(`${type}-file-input`).click();
   };
 
-  // 기존에 추가했던 파일 변경
   const handleFileChange = (e, type) => {
     if (e.target.files && e.target.files[0]) {
-      // 임의의 이미지 url 생성
       const imageUrl = URL.createObjectURL(e.target.files[0]);
-      if (type === 'front') {
-        setFrontImage(imageUrl);
-      } else if (type === 'back') {
-        setBackImage(imageUrl);
-      }
+      setFormData((prev) => ({ ...prev, [`${type}Image`]: imageUrl }));
     }
+  };
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
@@ -166,127 +152,74 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         </div>
         <h2 className="text-xl font-bold mb-4">새 옷 추가하기</h2>
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-gray-700 mb-2 text-center">앞면</label>
-            <div
-              className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
-              onClick={() => handleImageSelection('front')}
-            >
-              {frontImage ? (
-                <img
-                  src={frontImage}
-                  alt="Front"
-                  className="object-cover h-full w-full rounded-lg"
-                />
-              ) : (
-                <span className="text-gray-400">이미지 추가</span>
+          {['front', 'back'].map((type) => (
+            <div key={type}>
+              <label className="block text-gray-700 mb-2 text-center">
+                {type === 'front' ? '앞면' : '뒷면'}
+              </label>
+              <div
+                className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
+                onClick={() => handleImageSelection(type)}
+              >
+                {formData[`${type}Image`] ? (
+                  <img
+                    src={formData[`${type}Image`]}
+                    alt={type}
+                    className="object-cover h-full w-full rounded-lg"
+                  />
+                ) : (
+                  <span className="text-gray-400">이미지 추가</span>
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                id={`${type}-file-input`}
+                onChange={(e) => handleFileChange(e, type)}
+                className="hidden"
+              />
+              {errors[`${type}Image`] && (
+                <p className="text-red-500 text-sm mt-1">{errors[`${type}Image`]}</p>
               )}
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="front-file-input"
-              onChange={(e) => handleFileChange(e, 'front')}
-              className="hidden"
-            />
-            {errors.frontImage && (
-              <p className="text-red-500 text-sm mt-1">{errors.frontImage}</p>
+          ))}
+        </div>
+        {[
+          { label: '카테고리', value: formData.category, options: categoryOptions, field: 'category' },
+          { label: '브랜드', value: formData.brand, field: 'brand', placeholder: '브랜드를 입력하세요' },
+          { label: '구매처', value: formData.purchaseLocation, field: 'purchaseLocation', placeholder: '구매처를 입력하세요' },
+          { label: '사이즈', value: formData.size, field: 'size', placeholder: '사이즈를 입력하세요' },
+          { label: '색상', value: formData.color, field: 'color', placeholder: '색상을 입력하세요' },
+        ].map(({ label, value, options, field, placeholder }, index) => (
+          <div className="mb-4" key={index}>
+            <label className="block text-gray-700 mb-2">{label}</label>
+            {options ? (
+              <Select
+                value={options.find((opt) => opt.value === value)}
+                onChange={(opt) => handleChange(field, opt.value)}
+                options={options}
+                styles={customStyles}
+              />
+            ) : (
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => handleChange(field, e.target.value)}
+                className="w-full p-2 border rounded-lg"
+                placeholder={placeholder}
+              />
+            )}
+            {errors[field] && (
+              <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
             )}
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2 text-center">뒷면</label>
-            <div
-              className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
-              onClick={() => handleImageSelection('back')}
-            >
-              {backImage ? (
-                <img
-                  src={backImage}
-                  alt="Back"
-                  className="object-cover h-full w-full rounded-lg"
-                />
-              ) : (
-                <span className="text-gray-400">이미지 추가</span>
-              )}
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="back-file-input"
-              onChange={(e) => handleFileChange(e, 'back')}
-              className="hidden"
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">카테고리</label>
-          <Select
-            value={categoryOptions.find((opt) => opt.value === category)}
-            onChange={(opt) => setCategory(opt.value)}
-            options={categoryOptions}
-            styles={customStyles}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">브랜드</label>
-          <input
-            type="text"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="브랜드를 입력하세요"
-          />
-          {errors.brand && (
-            <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">구매처</label>
-          <input
-            type="text"
-            value={purchaseLocation}
-            onChange={(e) => setPurchaseLocation(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="구매처를 입력하세요"
-          />
-          {errors.purchaseLocation && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.purchaseLocation}
-            </p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">사이즈</label>
-          <input
-            type="text"
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="사이즈를 입력하세요"
-          />
-          {errors.size && (
-            <p className="text-red-500 text-sm mt-1">{errors.size}</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">색상</label>
-          <input
-            type="text"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="색상을 입력하세요"
-          />
-          {errors.color && (
-            <p className="text-red-500 text-sm mt-1">{errors.color}</p>
-          )}
-        </div>
+        ))}
         <div className="mb-4 flex items-center">
           <label className="text-gray-700 mr-2">공개 여부</label>
           <input
             type="checkbox"
-            checked={publicStatus}
-            onChange={(e) => setPublicStatus(e.target.checked)}
+            checked={formData.publicStatus}
+            onChange={(e) => handleChange('publicStatus', e.target.checked)}
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>
@@ -294,16 +227,16 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           <label className="text-gray-700 mr-2">판매 여부</label>
           <input
             type="checkbox"
-            checked={salesStatus}
-            onChange={(e) => setSalesStatus(e.target.checked)} // 판매 상태 변경 함수
+            checked={formData.salesStatus}
+            onChange={(e) => handleChange('salesStatus', e.target.checked)}
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">성별</label>
           <Select
-            value={genderOptions.find((opt) => opt.value === gender)}
-            onChange={(opt) => setGender(opt.value)}
+            value={genderOptions.find((opt) => opt.value === formData.gender)}
+            onChange={(opt) => handleChange('gender', opt.value)}
             options={genderOptions}
             styles={customStyles}
             placeholder="성별을 선택하세요"
