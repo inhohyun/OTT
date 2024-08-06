@@ -26,6 +26,11 @@ public class MemberController {
     private final MemberWriteService memberWriteService;
     private final MemberValidator memberValidator;
 
+    @GetMapping("/my")
+    public ApiResponse<MemberIdDto> getMember(@AuthenticationPrincipal CustomOAuth2User currentMember) {
+        return ApiResponse.success(MemberIdDto.builder().id(currentMember.getId()).build());
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder().id(id).currentId(currentMember.getId()).build()));
