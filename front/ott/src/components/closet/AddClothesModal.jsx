@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
+import { addClothes } from '../../api/closet/clothes';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [category, setCategory] = useState('');
@@ -103,12 +103,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       }
 
       // 벡엔드로 보내지는 값 확인
-      axios
-        .post('http://192.168.100.89:8080/api/clothes/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
+      addClothes(formData)
         .then((response) => {
           console.log('Successfully added clothes:', response.data);
           onAddClothes({ key: response.data.key });

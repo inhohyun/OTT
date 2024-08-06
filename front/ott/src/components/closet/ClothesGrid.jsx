@@ -5,6 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import {
+  getClothesList,
+  bookmarkClothes,
+  unbookmarkClothes,
+} from '../../api/closet/clothes';
+import {
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
@@ -18,30 +23,22 @@ const ClothesGrid = ({ onClothesClick }) => {
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
 
   useEffect(() => {
-    // 서버에서 옷 데이터를 가져오기 위한 함수
     const fetchClothes = async () => {
       try {
-        const userId = 1; // 사용자 ID (예시로 1 사용)
-        const response = await axios.get(
-          `http://192.168.100.89:8080/api/clothes/${userId}/list`
-        );
-        // 각 항목에 고유한 키 추가
-        const clothesWithKeys = response.data.map((item, index) => ({
-          ...item,
-          key: item.id || index, // 고유 ID를 사용하거나, 없을 경우 인덱스를 사용
-        }));
+        const userId = 1;
+        const clothesWithKeys = await getClothesList(userId);
         setClothes(clothesWithKeys);
         setVisibleImages(
           clothesWithKeys.map((item) => ({ id: item.key, isFront: true }))
         );
-        setLoading(false); // 로딩 완료
+        setLoading(false);
       } catch (error) {
-        setError(error); // 에러 발생 시 설정
-        setLoading(false); // 로딩 종료
+        setError(error);
+        setLoading(false);
       }
     };
 
-    fetchClothes(); // 컴포넌트 마운트 시 데이터 가져오기
+    fetchClothes();
   }, []);
 
   // 가로 무한 스크롤 처리 함수
@@ -91,39 +88,32 @@ const ClothesGrid = ({ onClothesClick }) => {
 
   // 좋아요 상태 토글 함수
   const handleToggleLike = async (key) => {
-    const updatedClothes = clothes.map((item) => {
-      if (item.key === key) {
-        const newStatus =
-          item.bookmarkStatus === 'BOOKMARKING'
-            ? 'NOT_BOOKMARKING'
-            : 'BOOKMARKING';
-
-        // UI 피드백을 위한 bookmarkStatus 로컬 업데이트
-        return { ...item, bookmarkStatus: newStatus };
-      }
-      return item;
-    });
-    setClothes(updatedClothes);
-
-    const toggledItem = updatedClothes.find((item) => item.key === key);
+    const toggledItem = clothes.find((item) => item.key === key);
     if (toggledItem) {
       const clothesId = toggledItem.clothesId;
 
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
-          // 좋아요로 변경 시
-          await axios.post(
-            `http://192.168.100.89:8080/api/clothes/bookmark/${clothesId}`
+          await unbookmarkClothes(clothesId);
+          setClothes((prevClothes) =>
+            prevClothes.map((item) =>
+              item.key === key
+                ? { ...item, bookmarkStatus: 'UNBOOKMARKED' }
+                : item
+            )
           );
         } else {
-          // 좋아요 취소로 변경 시
-          await axios.post(
-            `http://192.168.100.89:8080/api/clothes/unbookmark/${clothesId}`
+          await bookmarkClothes(clothesId);
+          setClothes((prevClothes) =>
+            prevClothes.map((item) =>
+              item.key === key
+                ? { ...item, bookmarkStatus: 'BOOKMARKING' }
+                : item
+            )
           );
         }
       } catch (error) {
-        console.error('좋아요 상태 변경 중 오류:', error);
-        // 필요 시 에러 처리 추가
+        console.error('Error changing bookmark status:', error);
       }
     }
   };

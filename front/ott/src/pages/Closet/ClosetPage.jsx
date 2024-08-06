@@ -85,7 +85,7 @@ const ClosetPage = () => {
         item.id === updatedClothing.id ? updatedClothing : item
       )
     );
-    setIsDetailModalOpen(false);
+    // setIsDetailModalOpen(false);
   };
 
   const handleDeleteClothes = (id) => {
