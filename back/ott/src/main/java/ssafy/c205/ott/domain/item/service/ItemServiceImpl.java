@@ -12,6 +12,7 @@ import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
+import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
@@ -32,7 +33,11 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImageRepository itemImageRepository;
 
     @Override
-    public void createItem(ItemCreateDto itemCreateDto, List<MultipartFile> files) {
+    public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
+        MultipartFile backImg) {
+        log.info("dto : {}", itemCreateDto.toString());
+        log.info("frontImg : {}", frontImg);
+        log.info("backImg : {}", backImg);
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
             ActiveStatus.ACTIVE);
         Member member = null;
@@ -43,7 +48,13 @@ public class ItemServiceImpl implements ItemService {
         Item saveItem = itemRepository.save(Item.builder().member(member).build());
 
         //이미지 저장
-        List<String> urls = amazonS3Util.saveFiles(files);
+        List<String> urls = new ArrayList<>();
+        if (frontImg != null) {
+            urls.add(amazonS3Util.saveFile(frontImg));
+        }
+        if (backImg != null) {
+            urls.add(amazonS3Util.saveFile(backImg));
+        }
         List<ItemImage> itemImages = new ArrayList<>();
         int idx = 0;
         for (String url : urls) {
@@ -76,30 +87,38 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(Long clothesId, ItemCreateDto itemCreateDto, List<MultipartFile> files) {
+    public void updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
+        MultipartFile backImg) {
+        log.info("dto : {}", itemUpdateDto.toString());
+        log.info("frontImg : {}", frontImg);
+        log.info("backImg : {}", backImg);
         //이전 정보 가져오기
         Optional<Item> oi = itemRepository.findById(clothesId);
         if (oi.isPresent()) {
             Item item = oi.get();
-            //옷 삭제
-            for (ItemImage itemImage : item.getItemImages()) {
-                amazonS3Util.deleteFile(itemImage.getItemImagePath());
-                itemImageRepository.delete(itemImage);
+            List<ItemImage> itemImages = item.getItemImages();
+            if (frontImg != null) {
+                amazonS3Util.deleteFile(item.getItemImages().get(0).getItemImagePath());
+                itemImageRepository.delete(item.getItemImages().get(0));
+
+                itemImages.set(0, ItemImage
+                    .builder()
+                    .itemImagePath(amazonS3Util.saveFile(frontImg))
+                    .item(item)
+                    .itemStatus(ItemStatus.FRONT)
+                    .build());
             }
 
-            //옷 최신화
-            List<String> urls = amazonS3Util.saveFiles(files);
-            List<ItemImage> itemImages = new ArrayList<>();
-            int idx = 0;
-            for (String url : urls) {
-                ItemImage saveImage = itemImageRepository.save(ItemImage
+            if (backImg != null) {
+                amazonS3Util.deleteFile(item.getItemImages().get(1).getItemImagePath());
+                itemImageRepository.delete(item.getItemImages().get(1));
+
+                itemImages.set(1, ItemImage
                     .builder()
-                    .itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
-                    .itemImagePath(url)
+                    .itemImagePath(amazonS3Util.saveFile(backImg))
+                    .itemStatus(ItemStatus.BACK)
                     .item(item)
                     .build());
-
-                itemImages.add(saveImage);
             }
 
             //Todo : 카테고리 변경
@@ -108,8 +127,7 @@ public class ItemServiceImpl implements ItemService {
 
             //2. 신규 카테고리 생성
 
-            // 옷 변경
-            Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
+            Optional<Member> om = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
                 ActiveStatus.ACTIVE);
             if (om.isPresent()) {
                 Member member = om.get();
@@ -117,15 +135,15 @@ public class ItemServiceImpl implements ItemService {
                 itemRepository.save(Item
                     .builder()
                     .id(item.getId())
-                    .color(itemCreateDto.getColor())
-                    .sex(itemCreateDto.getGender())
-                    .brand(itemCreateDto.getBrand())
+                    .sex(itemUpdateDto.getGender())
+                    .brand(itemUpdateDto.getBrand())
                     .member(member)
                     .itemImages(itemImages)
-                    .size(itemCreateDto.getSize())
-                    .purchase(itemCreateDto.getPurchase())
-                    .publicStatus(itemCreateDto.getPublicStatus())
-                    .salesStatus(itemCreateDto.getSalesStatus())
+                    .size(itemUpdateDto.getSize())
+                    .purchase(itemUpdateDto.getPurchase())
+                    .publicStatus(itemUpdateDto.getPublicStatus())
+                    .salesStatus(itemUpdateDto.getSalesStatus())
+                    .color(itemUpdateDto.getColor())
                     .build());
             }
         }
@@ -174,6 +192,7 @@ public class ItemServiceImpl implements ItemService {
                 .publicStatus(item.getPublicStatus())
                 .salesStatus(item.getSalesStatus())
                 .brand(item.getBrand())
+                .color(item.getColor())
                 .imageUrls(images)
                 .build();
         }
