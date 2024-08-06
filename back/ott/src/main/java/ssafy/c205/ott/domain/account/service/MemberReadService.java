@@ -2,14 +2,17 @@ package ssafy.c205.ott.domain.account.service;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.MemberTag;
+import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberIdDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberSearchResponseDto;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -34,7 +38,13 @@ public class MemberReadService {
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
 
+    public MemberIdDto myIdSearch(CustomOAuth2User currentMember) {
+        return MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).orElseThrow(MemberNotFoundException::new).getId()).build();
+    }
+
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
+        log.info("memberId" + memberRequestDto.getId());
+        log.info("CurrentId" + memberRequestDto.getCurrentId());
         Member member = findActiveMemberById(memberRequestDto.getId());
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
         int followingCount = member.getFollowings().size();
@@ -96,7 +106,7 @@ public class MemberReadService {
     }
 
     private boolean isSelf(MemberRequestDto memberRequestDto, Member member) {
-        return member.getId().equals(memberRequestDto.getCurrentId());
+        return member.getId().longValue() == memberRequestDto.getCurrentId().longValue();
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {
