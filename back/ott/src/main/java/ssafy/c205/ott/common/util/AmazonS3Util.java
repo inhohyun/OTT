@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import ssafy.c205.ott.exception.ErrorMessage;
-import ssafy.c205.ott.exception.Exception400;
-import ssafy.c205.ott.exception.Exception500;
+import ssafy.c205.ott.common.exception.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,15 +31,20 @@ public class AmazonS3Util {
 
     // 여러장의 파일 저장
     public List<String> saveFiles(List<MultipartFile> multipartFiles) {
+        return saveFiles(multipartFiles, "");
+    }
+
+    // 폴더 지정 여러장의 파일 저장
+    public List<String> saveFiles(List<MultipartFile> multipartFiles, String saveFolder) {
         List<String> uploadedUrls = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles) {
 
             if (isDuplicate(multipartFile)) {
-                throw new Exception400("file", ErrorMessage.DUPLICATE_IMAGE);
+                throw new S3DuplicateImageException();
             }
 
-            String uploadedUrl = saveFile(multipartFile);
+            String uploadedUrl = saveFile(multipartFile, saveFolder);
             uploadedUrls.add(uploadedUrl);
         }
 
@@ -55,23 +58,23 @@ public class AmazonS3Util {
         String fileBucket = urlParts[2].split("\\.")[0];
 
         if (!fileBucket.equals(bucket)) {
-            throw new Exception400("fileUrl", ErrorMessage.NO_IMAGE_EXIST);
+            throw new S3FileNotExistException();
         }
 
         String objectKey = String.join("/", Arrays.copyOfRange(urlParts, 3, urlParts.length));
 
         if (!amazonS3.doesObjectExist(bucket, objectKey)) {
-            throw new Exception400("fileUrl", ErrorMessage.NO_IMAGE_EXIST);
+            throw new S3FileNotExistException();
         }
 
         try {
             amazonS3.deleteObject(bucket, objectKey);
         } catch (AmazonS3Exception e) {
             log.error("File delete fail : " + e.getMessage());
-            throw new Exception500(ErrorMessage.FAIL_DELETE);
+            throw new S3FileDeleteException();
         } catch (SdkClientException e) {
             log.error("AWS SDK client error : " + e.getMessage());
-            throw new Exception500(ErrorMessage.FAIL_DELETE);
+            throw new S3FileDeleteException();
         }
 
         log.info("File delete complete: " + objectKey);
@@ -79,8 +82,12 @@ public class AmazonS3Util {
 
     // 단일 파일 저장
     public String saveFile(MultipartFile file) {
-        log.info("Saving file : " + file.getOriginalFilename());
-        String randomFilename = generateRandomFilename(file);
+        return saveFile(file, "");
+    }
+
+    // 폴더 지정 단일 파일 저장
+    public String saveFile(MultipartFile file, String saveFolder) {
+        String randomFilename = saveFolder + generateRandomFilename(file);
 
         log.info("File upload started: " + randomFilename);
 
@@ -92,13 +99,13 @@ public class AmazonS3Util {
             amazonS3.putObject(bucket, randomFilename, file.getInputStream(), metadata);
         } catch (AmazonS3Exception e) {
             log.error("Amazon S3 error while uploading file: " + e.getMessage());
-            throw new Exception500(ErrorMessage.FAIL_UPLOAD);
+            throw new S3FileUploadException();
         } catch (SdkClientException e) {
             log.error("AWS SDK client error while uploading file: " + e.getMessage());
-            throw new Exception500(ErrorMessage.FAIL_UPLOAD);
+            throw new S3FileUploadException();
         } catch (IOException e) {
             log.error("IO error while uploading file: " + e.getMessage());
-            throw new Exception500(ErrorMessage.FAIL_UPLOAD);
+            throw new S3FileUploadException();
         }
 
         log.info("File upload completed: " + randomFilename);
@@ -140,7 +147,7 @@ public class AmazonS3Util {
         List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
 
         if (!allowedExtensions.contains(fileExtension)) {
-            throw new Exception400("file", ErrorMessage.NOT_IMAGE_EXTENSION);
+            throw new S3ImageExtensionException();
         }
         return fileExtension;
     }
