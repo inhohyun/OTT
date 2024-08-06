@@ -19,8 +19,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     NotificationStatus notificationStatus = NotificationStatus.UNREAD;
 
-    @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
