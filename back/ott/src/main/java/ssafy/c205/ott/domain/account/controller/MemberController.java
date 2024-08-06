@@ -30,12 +30,15 @@ public class MemberController {
 
     @GetMapping("/my")
     public ApiResponse<MemberIdDto> getMember(@AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).getId()).build());
+        return ApiResponse.success(MemberIdDto.builder().id(memberReadService.myIdSearch(currentMember).getId()).build());
     }
 
     @GetMapping("/{id}")
     public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder().id(id).currentId(currentMember.getId()).build()));
+        return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder()
+                .id(id)
+                .currentId(memberReadService.myIdSearch(currentMember).getId())
+                .build()));
     }
 
     @PutMapping("/{id}")
@@ -45,7 +48,7 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(memberRepository.findBySso(currentMember.getUsername()).getId()).build()));
+        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(memberReadService.myIdSearch(currentMember).getId()).build()));
     }
 
     @GetMapping("/validate-nickname/{nickname}")
