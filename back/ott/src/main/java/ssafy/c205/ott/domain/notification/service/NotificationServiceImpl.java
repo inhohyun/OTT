@@ -1,4 +1,4 @@
-package ssafy.c205.ott.domain.lookbook.service;
+package ssafy.c205.ott.domain.notification.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationCreateDto;
-import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationSelectDto;
-import ssafy.c205.ott.domain.lookbook.dto.responsedto.NotificationDto;
+import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationCreateDto;
+import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationSelectDto;
+import ssafy.c205.ott.domain.notification.dto.responsedto.NotificationDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
-import ssafy.c205.ott.domain.lookbook.entity.Notification;
-import ssafy.c205.ott.domain.lookbook.entity.NotificationStatus;
+import ssafy.c205.ott.domain.notification.entity.Notification;
+import ssafy.c205.ott.domain.notification.entity.NotificationStatus;
 import ssafy.c205.ott.domain.lookbook.repository.CommentRepository;
-import ssafy.c205.ott.domain.lookbook.repository.NotificationRepository;
+import ssafy.c205.ott.domain.notification.repository.NotificationRepository;
 
 @Service
 @Slf4j

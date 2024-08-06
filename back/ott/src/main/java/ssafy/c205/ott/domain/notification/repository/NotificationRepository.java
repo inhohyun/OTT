@@ -1,11 +1,11 @@
-package ssafy.c205.ott.domain.lookbook.repository;
+package ssafy.c205.ott.domain.notification.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ssafy.c205.ott.domain.lookbook.entity.Notification;
-import ssafy.c205.ott.domain.lookbook.entity.NotificationStatus;
+import ssafy.c205.ott.domain.notification.entity.Notification;
+import ssafy.c205.ott.domain.notification.entity.NotificationStatus;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 

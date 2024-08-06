@@ -11,13 +11,14 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
-import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationCreateDto;
+import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationCreateDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentChildrenDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentSelectResponseDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.repository.CommentRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
+import ssafy.c205.ott.domain.notification.service.NotificationService;
 
 @Service
 @RequiredArgsConstructor

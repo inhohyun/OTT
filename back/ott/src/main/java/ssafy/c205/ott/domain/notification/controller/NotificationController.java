@@ -1,4 +1,4 @@
-package ssafy.c205.ott.domain.lookbook.controller;
+package ssafy.c205.ott.domain.notification.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationCreateDto;
-import ssafy.c205.ott.domain.lookbook.dto.requestdto.NotificationSelectDto;
-import ssafy.c205.ott.domain.lookbook.dto.responsedto.NotificationDto;
-import ssafy.c205.ott.domain.lookbook.service.NotificationService;
+import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationCreateDto;
+import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationSelectDto;
+import ssafy.c205.ott.domain.notification.dto.responsedto.NotificationDto;
+import ssafy.c205.ott.domain.notification.service.NotificationService;
 
 @Slf4j
 @RestController
