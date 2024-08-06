@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
                 : CommentStatus.NOT_DELETED)
             .build());
 
-        notificationService.createNotification(NotificationCreateDto
+        notificationService.createCommentNotification(NotificationCreateDto
             .builder()
             .commentId(String.valueOf(c.getId()))
             .build());

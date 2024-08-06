@@ -40,8 +40,8 @@ public class NotificationController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createNotification(@ModelAttribute
-    NotificationCreateDto notificationCreateDto) {
-        notificationService.createNotification(notificationCreateDto);
+                                                NotificationCreateDto notificationCreateDto) {
+        notificationService.createCommentNotification(notificationCreateDto);
         return ResponseEntity.ok().body("알림 생성을 완료했습니다.");
     }
 
