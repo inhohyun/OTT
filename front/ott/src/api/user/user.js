@@ -2,9 +2,8 @@ import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 
 // 유저 페이지에서 사용자 정보를 불러옴
-export const getUserInfo = async (uid) => {
+export const getUserInfo = async (id) => {
   try {
-    //TODO : 엔드포인트 맞추기
     const response = await axiosInstance.get(`/api/members/${id}`);
     return response;
   } catch (error) {
