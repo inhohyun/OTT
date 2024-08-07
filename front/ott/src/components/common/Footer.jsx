@@ -12,11 +12,11 @@ const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
-  // Set the initial active button based on the current pathname
+  // 현재 떠있는 페이지에 해당하는 하단바에 선택 표시
   const getCurrentPage = () => {
     const path = location.pathname.slice(1);
     if (path) return path;
-    return 'mainpage'; // Default to mainpage
+    return 'mainpage'; // 메인페이지를 기본 디폴트 페이지로 설정
   };
 
   const [activeButton, setActiveButton] = useState(getCurrentPage);
@@ -25,16 +25,16 @@ const Footer = () => {
   };
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
-    // Navigate to the corresponding page
+    // 하단바의 아이콘 누르면 해당 아이콘 선택 처리
     navigate(`/${buttonName}`);
   };
 
   const handleXButtonClick = () => {
-    navigate(-1); // Navigate back to the previous page
+    navigate(-1); // 이전 페이지로 돌아가도록
   };
 
   useEffect(() => {
-    // Reset the active button only when navigating to the closet page
+    // 옷장 페이지 접속했을 때에만 하단바 선택 상태 초기화
     if (location.pathname === '/closet') {
       setActiveButton('');
     } else {
@@ -48,13 +48,13 @@ const Footer = () => {
         className="w-full p-4 relative flex justify-center items-center z-50"
         style={{
           backgroundImage: `url(${footerBackgroundImg})`,
-          backgroundSize: 'cover', // Adjust the size here
-          backgroundPosition: 'center bottom', // Adjust position as needed
+          backgroundSize: 'cover', // 하단바 이미지 크기
+          backgroundPosition: 'center bottom', // 하단바 위치
           backgroundRepeat: 'no-repeat',
           position: 'fixed',
           bottom: 0,
-          height: '100px', // Set a fixed height for the footer
-          maxWidth: '390px', // Set a max-width for the footer
+          height: '100px',
+          maxWidth: '390px',
           left: '50%',
           transform: 'translateX(-50%)',
         }}
@@ -68,7 +68,7 @@ const Footer = () => {
               activeButton === 'mainpage' ? 'bg-violet-300 rounded-full' : ''
             }`}
             onClick={() => handleButtonClick('mainpage')}
-            style={{ marginTop: '30px', marginRight: '30px' }} // Adjust marginRight for positioning
+            style={{ marginTop: '30px', marginRight: '30px' }}
           >
             <img src={homeIcon} alt="Home" className="w-6 h-6" />
           </div>
@@ -77,7 +77,7 @@ const Footer = () => {
               activeButton === 'search' ? 'bg-violet-300 rounded-full' : ''
             }`}
             onClick={() => handleButtonClick('search')}
-            style={{ marginTop: '10px', marginRight: '30px' }} // Adjust marginRight for positioning
+            style={{ marginTop: '10px', marginRight: '30px' }}
           >
             <img src={searchIcon} alt="Search" className="w-6 h-6" />
           </div>
@@ -99,7 +99,7 @@ const Footer = () => {
               activeButton === 'webrtc' ? 'bg-violet-300 rounded-full' : ''
             }`}
             onClick={() => handleButtonClick('webrtc')}
-            style={{ marginTop: '10px', marginLeft: '30px' }} // Adjust marginLeft for positioning
+            style={{ marginTop: '10px', marginLeft: '30px' }}
           >
             <img src={camIcon} alt="Cam" className="w-6 h-6" />
           </div>
@@ -108,13 +108,14 @@ const Footer = () => {
               activeButton === 'userPage' ? 'bg-violet-300 rounded-full' : ''
             }`}
             onClick={() => handleButtonClick('userPage')}
-            style={{ marginTop: '30px', marginLeft: '30px' }} // Adjust marginLeft for positioning
+            style={{ marginTop: '30px', marginLeft: '30px' }}
           >
             <img src={profileIcon} alt="userPage" className="w-6 h-6" />
           </div>
         </div>
       </footer>
-      <AiModal isOpen={isModalOpen} onClose={toggleModal} /> {/* 모달 추가 */}
+      <AiModal isOpen={isModalOpen} onClose={toggleModal} />{' '}
+      {/* ai 모달 추가 */}
     </>
   );
 };

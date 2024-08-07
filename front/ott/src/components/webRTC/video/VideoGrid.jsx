@@ -3,10 +3,10 @@ import UserVideoComponent from './UserVideoComponent';
 import MainLogo from '../../../assets/icons/main.logo.png';
 
 const VideoGrid = ({ mainStreamManager, subscribers }) => {
-  const [isMainVideoFullScreen, setIsMainVideoFullScreen] = useState(false);
+  const [isMainVideoFullScreen, setIsMainVideoFullScreen] = useState(false); // 메인 비디오의 전체 화면 여부 상태 관리
 
   const toggleMainVideoSize = () => {
-    setIsMainVideoFullScreen(!isMainVideoFullScreen);
+    setIsMainVideoFullScreen(!isMainVideoFullScreen); // 메인 비디오의 크기를 전환
   };
 
   return (
@@ -14,20 +14,21 @@ const VideoGrid = ({ mainStreamManager, subscribers }) => {
       <div
         style={{
           ...styles.mainVideo,
-          ...(isMainVideoFullScreen ? styles.fullScreen : {}),
+          ...(isMainVideoFullScreen ? styles.fullScreen : {}), // 전체 화면 여부에 따라 스타일 변경
         }}
-        onClick={toggleMainVideoSize}
+        onClick={toggleMainVideoSize} // 비디오 클릭 시 크기 전환
       >
         {mainStreamManager ? (
-          <UserVideoComponent streamManager={mainStreamManager} />
+          <UserVideoComponent streamManager={mainStreamManager} /> // 메인 스트림 매니저가 있을 경우 비디오 컴포넌트 표시
         ) : (
-          <div style={styles.placeholder}>로딩중...</div>
+          <div style={styles.placeholder}>로딩중...</div> // 메인 스트림 매니저가 없을 경우 로딩 메시지 표시
         )}
       </div>
       <div style={styles.subscribers}>
         {subscribers.length > 0 ? (
           subscribers.map((sub, i) => (
             <div key={i} style={styles.subscriber}>
+              {/* 상대방 화면 표시 */}
               <UserVideoComponent streamManager={sub} />
             </div>
           ))
@@ -37,7 +38,7 @@ const VideoGrid = ({ mainStreamManager, subscribers }) => {
               src={MainLogo}
               alt="Default Opponent"
               style={styles.defaultImage}
-            />
+            /> {/* 상대방 없을 경우 기본 이미지 표시 */}
           </div>
         )}
       </div>
@@ -54,20 +55,20 @@ const styles = {
     width: '100%',
     height: '100%',
     padding: '10px',
-    position: 'relative', // Ensure absolute positioning of fullScreen works
+    position: 'relative',
   },
   mainVideo: {
-    width: '100px', // Default small width
-    height: '100px', // Default small height
+    width: '100px',
+    height: '100px',
     marginRight: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '10px',
     overflow: 'hidden',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Optional: background for main video
-    transition: 'all 0.3s ease', // Smooth transition
-    cursor: 'pointer', // Indicate interactivity
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer',
   },
   fullScreen: {
     position: 'absolute',
@@ -75,9 +76,9 @@ const styles = {
     left: 0,
     width: '100%',
     height: '100%',
-    zIndex: 10, // Ensure it covers other elements
-    marginRight: 0, // Reset margin in full screen mode
-    borderRadius: 0, // Reset border-radius for full screen
+    zIndex: 10,
+    marginRight: 0, 
+    borderRadius: 0, 
   },
   subscribers: {
     display: 'flex',
@@ -89,7 +90,7 @@ const styles = {
     borderRadius: '10px',
     overflow: 'hidden',
     position: 'relative',
-    zIndex: 1, // Ensure it stays below fullScreen video
+    zIndex: 1,
   },
   subscriber: {
     flex: '1 1 calc(50% - 10px)',

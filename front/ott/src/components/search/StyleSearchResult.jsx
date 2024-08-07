@@ -9,8 +9,9 @@ const StyleSearchResult = ({ results, searchQuery }) => {
   const handleScroll = () => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+      // 스크롤이 끝에 도달하면 visibleResults 증가
       if (scrollLeft + clientWidth >= scrollWidth - 10) {
-        setVisibleResults(prev => prev + 6);
+        setVisibleResults((prev) => prev + 6);
       }
     }
   };
@@ -27,6 +28,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
     };
   }, []);
 
+  // 숫자 포맷하는 함수 정의
   const formatNumber = (num) => {
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + 'k';
@@ -39,23 +41,27 @@ const StyleSearchResult = ({ results, searchQuery }) => {
   }
 
   return (
-    <div 
+    <div
       className="mx-auto text-stone-600 p-4 rounded-3xl"
       style={{ width: '80%', maxWidth: '1000px' }}
     >
-      <h2 
-        className="font-bold mb-4 text-center"
-        style={{ fontSize: '16px' }}
-      >
+      <h2 className="font-bold mb-4 text-center" style={{ fontSize: '16px' }}>
         "#{searchQuery}"에 대한 검색결과
       </h2>
-      <div className="overflow-x-auto" ref={containerRef} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-4" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div
+        className="overflow-x-auto"
+        ref={containerRef}
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <div
+          className="grid grid-flow-col auto-cols-max grid-rows-2 gap-4"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {results.slice(0, visibleResults).map((result, index) => (
-            <div 
-              key={index} 
-              className="flex-none w-56 p-2 rounded-lg relative flex flex-col items-center" 
-              style={{ minWidth: '180px', height: '250px' }} // Adjust the width and height
+            <div
+              key={index}
+              className="flex-none w-56 p-2 rounded-lg relative flex flex-col items-center"
+              style={{ minWidth: '180px', height: '250px' }}
             >
               <div className="bg-stone-200 p-4 rounded-lg shadow-md w-full h-full relative">
                 <div className="absolute top-2 left-2 flex items-center">
@@ -72,13 +78,20 @@ const StyleSearchResult = ({ results, searchQuery }) => {
                     className="text-gray-400 mb-2"
                     style={{ fontSize: '135px' }}
                   />
-                  <h3 className="text-base font-semibold" style={{ fontSize: '14px' }}>
-                    {result.tags.map(tag => `#${tag}`).join(' ')}
+                  <h3
+                    className="text-base font-semibold"
+                    style={{ fontSize: '14px' }}
+                  >
+                    {result.tags.map((tag) => `#${tag}`).join(' ')}
                   </h3>
                 </div>
                 <div className="absolute bottom-2 right-2 flex w-full justify-end">
-                  <span className="text-xs text-gray-500 ml-2">❤️ {formatNumber(result.likes)}</span>
-                  <span className="text-xs text-gray-500 ml-2">💬 {formatNumber(result.comments)}</span>
+                  <span className="text-xs text-gray-500 ml-2">
+                    ❤️ {formatNumber(result.likes)}
+                  </span>
+                  <span className="text-xs text-gray-500 ml-2">
+                    💬 {formatNumber(result.comments)}
+                  </span>
                 </div>
               </div>
             </div>

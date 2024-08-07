@@ -6,36 +6,37 @@ import MicIcon from '../../../assets/icons/micicon.png';
 import MicOffIcon from '../../../assets/icons/micofficon.png';
 
 const VideoControlPanel = ({
-  isCameraOn,
-  isMicOn,
-  toggleCamera,
-  toggleMicrophone,
-  leaveSession,
+  isCameraOn, // 카메라 상태
+  isMicOn, // 마이크 상태
+  toggleCamera, // 카메라 전환 함수
+  toggleMicrophone, // 마이크 전환 함수
+  leaveSession, // 통화 종료 함수
 }) => {
   return (
     <div style={styles.controlIcons}>
       <img
-        src={isCameraOn ? CameraOnIcon : CameraOffIcon}
+        src={isCameraOn ? CameraOnIcon : CameraOffIcon} // 카메라 상태에 따른 아이콘 표시
         alt="Toggle Camera"
-        onClick={toggleCamera}
+        onClick={toggleCamera} // 카메라 전환 함수 호출
         style={styles.icon}
       />
       <img
-        src={isMicOn ? MicIcon : MicOffIcon}
+        src={isMicOn ? MicIcon : MicOffIcon} // 마이크 상태에 따른 아이콘 표시
         alt="Toggle Microphone"
-        onClick={toggleMicrophone}
+        onClick={toggleMicrophone} // 마이크 전환 함수 호출
         style={styles.icon}
       />
       <img
         src={FinishCallIcon}
         alt="Finish Call"
-        onClick={leaveSession}
+        onClick={leaveSession} // 통화 종료 함수 호출
         style={styles.icon}
       />
     </div>
   );
 };
 
+// 스타일 정의 객체
 const styles = {
   controlIcons: {
     position: 'absolute',
@@ -43,12 +44,12 @@ const styles = {
     left: '18%',
     transform: 'translateX(-50%)',
     display: 'flex',
-    gap: '7px',
+    gap: '7px', // 아이콘 간의 간격
   },
   icon: {
-    width: '30px', // Adjust size
-    height: '30px', // Adjust size
-    cursor: 'pointer',
+    width: '30px', // 아이콘 너비
+    height: '30px', // 아이콘 높이
+    cursor: 'pointer', // 마우스 포인터가 아이콘 위에 있을 때 포인터로 변경
   },
 };
 

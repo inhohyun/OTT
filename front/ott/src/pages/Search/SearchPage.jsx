@@ -6,7 +6,7 @@ import StyleSearchResult from '../../components/search/StyleSearchResult';
 import { searchPeople } from '../../api/search/searchPeople';
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [lastSearchQuery, setLastSearchQuery] = useState(''); // To store the last search query
+  const [lastSearchQuery, setLastSearchQuery] = useState(''); // 마지막 검색 쿼리 저장
   const [isChecked, setIsChecked] = useState(false);
   const [results, setResults] = useState([]);
 
@@ -36,10 +36,10 @@ const SearchPage = () => {
       return;
     }
 
-    setLastSearchQuery(searchQuery); // Update the last search query
+    setLastSearchQuery(searchQuery); // 마지막 검색 쿼리 업데이트
 
     if (isChecked) {
-      // Mock search function for tags
+      // 태그 검색을 위한 모의 검색 함수
       const styleData = [
         {
           tags: ['소개팅', '남친룩'],
@@ -127,6 +127,7 @@ const SearchPage = () => {
         },
       ];
 
+      // 검색어와 일치하는 스타일 데이터 필터링
       const matchedResults = styleData.filter((item) =>
         item.tags.some((tag) =>
           tag.toLowerCase().includes(searchQuery.toLowerCase())
@@ -157,10 +158,11 @@ const SearchPage = () => {
     }
   };
 
+  // 체크박스 상태 변경하는 함수
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
-    setSearchQuery(''); // Clear the search input
-    setResults([]); // Clear the search results
+    setSearchQuery('');
+    setResults([]);
   };
 
   return (
@@ -176,6 +178,7 @@ const SearchPage = () => {
           handleCheckboxChange={handleCheckboxChange}
           handleSearch={handleSearch}
         />
+        {/* 체크박스 상태에 따라 결과를 다르게 렌더링 */}
         {isChecked ? (
           <StyleSearchResult results={results} searchQuery={lastSearchQuery} />
         ) : (

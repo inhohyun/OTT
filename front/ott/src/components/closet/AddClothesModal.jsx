@@ -1,21 +1,28 @@
 import { useState, useEffect } from 'react';
+import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { addClothes } from '../../api/closet/clothes';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
-  const [category, setCategory] = useState('');
-  const [frontImage, setFrontImage] = useState('');
-  const [backImage, setBackImage] = useState('');
-  const [brand, setBrand] = useState('');
-  const [purchaseLocation, setPurchaseLocation] = useState('');
-  const [size, setSize] = useState('');
-  const [color, setColor] = useState('');
-  const [publicStatus, setPublicStatus] = useState(false); // New field
-  const [gender, setGender] = useState(''); // New field
+  const [formData, setFormData] = useState({
+    category: '',
+    frontImg: '',
+    backImg: '',
+    brand: '',
+    purchase: '',
+    size: '',
+    color: '',
+    publicStatus: 'PRIVATE',
+    salesStatus: 'NOT_SALE',
+    gender: '',
+    uid: 1,
+  });
+
   const [errors, setErrors] = useState({});
-  const [showPhotoOptions, setShowPhotoOptions] = useState({
-    front: false,
-    back: false,
+  const [previewImages, setPreviewImages] = useState({
+    frontImg: '',
+    backImg: '',
   });
 
   useEffect(() => {
@@ -23,91 +30,147 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
-      clearInputs(); // Clear inputs when the modal is closed
+      clearInputs();
     }
   }, [isOpen]);
 
   useEffect(() => {
     if (categories.length > 0) {
-      setCategory(categories[0]);
+      setFormData((prev) => ({ ...prev, category: categories[0] }));
     }
   }, [categories]);
 
   const validateInputs = () => {
     const newErrors = {};
-    if (!frontImage.trim()) newErrors.frontImage = '앞면 이미지를 선택하세요.';
-    if (!brand.trim()) newErrors.brand = '브랜드를 입력하세요.';
-    if (!purchaseLocation.trim())
-      newErrors.purchaseLocation = '구매처를 입력하세요.';
-    if (!size.trim()) newErrors.size = '사이즈를 입력하세요.';
-    if (!color.trim()) newErrors.color = '색상을 입력하세요.';
-    if (!gender.trim()) newErrors.gender = '성별을 선택하세요.';
+    if (!formData.frontImg) newErrors.frontImg = '앞면 이미지를 선택하세요.';
+    if (!(formData.brand || '').trim())
+      newErrors.brand = '브랜드를 입력하세요.';
+    if (!(formData.purchase || '').trim())
+      newErrors.purchase = '구매처를 입력하세요.';
+    if (!(formData.size || '').trim()) newErrors.size = '사이즈를 입력하세요.';
+    if (!(formData.color || '').trim()) newErrors.color = '색상을 입력하세요.';
+    if (!(formData.gender || '').trim())
+      newErrors.gender = '성별을 선택하세요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
+      '&:hover': {
+        borderColor: 'black',
+      },
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#a78bfa' : 'white',
+      color: state.isSelected ? 'white' : 'black',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    }),
+  };
+
   const handleAddClothes = () => {
+    console.log('Add Clothes button clicked');
+
     if (validateInputs()) {
-      // Define newClothes object with all the necessary data
-      const newClothes = {
-        id: Date.now(), // Unique identifier
-        category,
-        frontImage,
-        backImage,
-        brand,
-        purchase: purchaseLocation,
-        size,
-        color,
-        public_status: publicStatus ? 'y' : 'n', // Convert boolean to 'y'/'n'
-        gender,
-        user_id: 1, // Placeholder, replace with actual user ID management logic
-      };
+      const data = new FormData();
+      data.append('id', Date.now());
+      data.append('category', formData.category);
+      data.append('brand', formData.brand);
+      data.append('purchase', formData.purchase);
+      data.append('size', formData.size);
+      data.append('color', formData.color);
+      data.append('publicStatus', formData.publicStatus);
+      data.append('salesStatus', formData.salesStatus);
+      data.append('gender', formData.gender);
+      data.append('uid', formData.uid);
 
-      // Log the input data to the console
-      console.log('New clothes data:', newClothes);
+      if (formData.frontImg) {
+        data.append('frontImg', formData.frontImg);
+      }
+      if (formData.backImg) {
+        data.append('backImg', formData.backImg);
+      }
 
-      // Call the onAddClothes function with the new clothes data
-      onAddClothes(newClothes);
+      // Log FormData contents for debugging
+      for (let [key, value] of data.entries()) {
+        console.log(`${key}:`, value);
+      }
 
-      // Clear the input fields and close the modal
-      clearInputs();
-      onClose();
+      addClothes(data)
+        .then((response) => {
+          console.log('Successfully added clothes:', response);
+          onAddClothes();
+          clearInputs();
+          onClose();
+        })
+        .catch((error) => {
+          console.error('Error adding clothes:', error);
+        });
+    } else {
+      console.log('Validation failed:', errors);
     }
   };
 
   const clearInputs = () => {
-    setCategory(categories[0]);
-    setFrontImage('');
-    setBackImage('');
-    setBrand('');
-    setPurchaseLocation('');
-    setSize('');
-    setColor('');
-    setPublicStatus(false);
-    setGender('');
+    setFormData({
+      category: categories[0],
+      frontImg: null,
+      backImg: null,
+      brand: '',
+      purchase: '',
+      size: '',
+      color: '',
+      publicStatus: 'PRIVATE',
+      salesStatus: 'NOT_SALE',
+      gender: '',
+      uid: 1,
+    });
+    setPreviewImages({ frontImg: '', backImg: '' });
     setErrors({});
   };
 
-  const handleImageSelection = (type, method) => {
-    if (method === 'album') {
-      document.getElementById(`${type}-file-input`).click();
-    } else if (method === 'camera') {
-      // Implement camera capture logic here
-      alert('Camera capture is not implemented yet.');
-    }
-    setShowPhotoOptions({ front: false, back: false });
+  const handleImageSelection = (type) => {
+    document.getElementById(`${type}-file-input`).click();
   };
 
   const handleFileChange = (e, type) => {
     if (e.target.files && e.target.files[0]) {
-      const imageUrl = URL.createObjectURL(e.target.files[0]);
-      if (type === 'front') {
-        setFrontImage(imageUrl);
-      } else if (type === 'back') {
-        setBackImage(imageUrl);
-      }
+      const file = e.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+
+      setFormData((prev) => ({ ...prev, [`${type}Img`]: file }));
+      setPreviewImages((prev) => ({ ...prev, [`${type}Img`]: imageUrl }));
     }
   };
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleStatusChange = (field, checked) => {
+    const statusValue =
+      field === 'publicStatus'
+        ? checked
+          ? 'PUBLIC'
+          : 'PRIVATE'
+        : checked
+          ? 'ON_SALE'
+          : 'NOT_SALE';
+    setFormData((prev) => ({ ...prev, [field]: statusValue }));
+  };
+
+  const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
+  const genderOptions = [
+    { value: 'MAN', label: '남성' },
+    { value: 'WOMAN', label: '여성' },
+    { value: 'COMMON', label: '남녀공용' },
+  ];
 
   if (!isOpen) return null;
 
@@ -125,199 +188,126 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         </div>
         <h2 className="text-xl font-bold mb-4">새 옷 추가하기</h2>
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-gray-700 mb-2 text-center">앞면</label>
-            <div className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center">
-              {frontImage ? (
-                <img
-                  src={frontImage}
-                  alt="Front"
-                  className="object-cover h-full w-full rounded-lg"
-                />
-              ) : (
-                <span className="text-gray-400">이미지 없음</span>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                className="w-full mt-2 p-2 bg-violet-400 text-white rounded-lg"
-                onClick={() =>
-                  setShowPhotoOptions({
-                    ...showPhotoOptions,
-                    front: !showPhotoOptions.front,
-                  })
-                }
+          {['front', 'back'].map((type) => (
+            <div key={type}>
+              <label className="block text-gray-700 mb-2 text-center">
+                {type === 'front' ? '앞면' : '뒷면'}
+              </label>
+              <div
+                className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
+                onClick={() => handleImageSelection(type)}
               >
-                사진 선택
-              </button>
-              {showPhotoOptions.front && (
-                <div className="absolute left-0 right-0 bg-white border rounded-lg shadow-lg z-10">
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('front', 'album')}
-                  >
-                    앨범에서 선택
-                  </button>
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('front', 'camera')}
-                  >
-                    사진 촬영
-                  </button>
-                </div>
+                {previewImages[`${type}Img`] ? (
+                  <img
+                    src={previewImages[`${type}Img`]}
+                    alt={type}
+                    className="object-cover h-full w-full rounded-lg"
+                  />
+                ) : (
+                  <span className="text-gray-400">이미지 추가</span>
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                id={`${type}-file-input`}
+                onChange={(e) => handleFileChange(e, type)}
+                className="hidden"
+              />
+              {errors[`${type}Img`] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors[`${type}Img`]}
+                </p>
               )}
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="front-file-input"
-              onChange={(e) => handleFileChange(e, 'front')}
-              className="hidden"
-            />
-            {errors.frontImage && (
-              <p className="text-red-500 text-sm mt-1">{errors.frontImage}</p>
+          ))}
+        </div>
+        {[
+          {
+            label: '카테고리',
+            value: formData.category,
+            options: categoryOptions,
+            field: 'category',
+          },
+          {
+            label: '브랜드',
+            value: formData.brand,
+            field: 'brand',
+            placeholder: '브랜드를 입력하세요',
+          },
+          {
+            label: '구매처',
+            value: formData.purchase,
+            field: 'purchase',
+            placeholder: '구매처를 입력하세요',
+          },
+          {
+            label: '사이즈',
+            value: formData.size,
+            field: 'size',
+            placeholder: '사이즈를 입력하세요',
+          },
+          {
+            label: '색상',
+            value: formData.color,
+            field: 'color',
+            placeholder: '색상을 입력하세요',
+          },
+        ].map(({ label, value, options, field, placeholder }, index) => (
+          <div className="mb-4" key={index}>
+            <label className="block text-gray-700 mb-2">{label}</label>
+            {options ? (
+              <Select
+                value={options.find((opt) => opt.value === value)}
+                onChange={(opt) => handleChange(field, opt.value)}
+                options={options}
+                styles={customStyles}
+              />
+            ) : (
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => handleChange(field, e.target.value)}
+                className="w-full p-2 border rounded-lg"
+                placeholder={placeholder}
+              />
+            )}
+            {errors[field] && (
+              <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
             )}
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2 text-center">뒷면</label>
-            <div className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center">
-              {backImage ? (
-                <img
-                  src={backImage}
-                  alt="Back"
-                  className="object-cover h-full w-full rounded-lg"
-                />
-              ) : (
-                <span className="text-gray-400">이미지 없음</span>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                className="w-full mt-2 p-2 bg-violet-400 text-white rounded-lg"
-                onClick={() =>
-                  setShowPhotoOptions({
-                    ...showPhotoOptions,
-                    back: !showPhotoOptions.back,
-                  })
-                }
-              >
-                사진 선택
-              </button>
-              {showPhotoOptions.back && (
-                <div className="absolute left-0 right-0 bg-white border rounded-lg shadow-lg z-10">
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('back', 'album')}
-                  >
-                    앨범에서 선택
-                  </button>
-                  <button
-                    className="w-full p-2 text-left text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleImageSelection('back', 'camera')}
-                  >
-                    사진 촬영
-                  </button>
-                </div>
-              )}
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="back-file-input"
-              onChange={(e) => handleFileChange(e, 'back')}
-              className="hidden"
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">카테고리</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">브랜드</label>
-          <input
-            type="text"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="브랜드를 입력하세요"
-          />
-          {errors.brand && (
-            <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">구매처</label>
-          <input
-            type="text"
-            value={purchaseLocation}
-            onChange={(e) => setPurchaseLocation(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="구매처를 입력하세요"
-          />
-          {errors.purchaseLocation && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.purchaseLocation}
-            </p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">사이즈</label>
-          <input
-            type="text"
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="사이즈를 입력하세요"
-          />
-          {errors.size && (
-            <p className="text-red-500 text-sm mt-1">{errors.size}</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">색상</label>
-          <input
-            type="text"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-            placeholder="색상을 입력하세요"
-          />
-          {errors.color && (
-            <p className="text-red-500 text-sm mt-1">{errors.color}</p>
-          )}
-        </div>
+        ))}
         <div className="mb-4 flex items-center">
           <label className="text-gray-700 mr-2">공개 여부</label>
           <input
             type="checkbox"
-            checked={publicStatus}
-            onChange={(e) => setPublicStatus(e.target.checked)}
+            checked={formData.publicStatus === 'PUBLIC'}
+            onChange={(e) =>
+              handleStatusChange('publicStatus', e.target.checked)
+            }
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>
-
+        <div className="mb-4 flex items-center">
+          <label className="text-gray-700 mr-2">판매 여부</label>
+          <input
+            type="checkbox"
+            checked={formData.salesStatus === 'ON_SALE'}
+            onChange={(e) =>
+              handleStatusChange('salesStatus', e.target.checked)
+            }
+            className="form-checkbox h-5 w-5 text-violet-400"
+          />
+        </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">성별</label>
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            className="w-full p-2 border rounded-lg"
-          >
-            <option value="">성별을 선택하세요</option>
-            <option value="m">남성</option>
-            <option value="f">여성</option>
-          </select>
+          <Select
+            value={genderOptions.find((opt) => opt.value === formData.gender)}
+            onChange={(opt) => handleChange('gender', opt.value)}
+            options={genderOptions}
+            styles={customStyles}
+            placeholder="성별을 선택하세요"
+          />
           {errors.gender && (
             <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
           )}
