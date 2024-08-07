@@ -82,47 +82,23 @@ public class ItemServiceImpl implements ItemService {
         List<ClosetDto> closets = closetService.findByMemberId(itemCreateDto.getUid());
         Long closetId = closets.get(0).getId();
 
-        Optional<Category> oc = categoryRepository.findByNameAndClosetId(
-            itemCreateDto.getCategory(), closetId);
+        Optional<Category> oc = categoryRepository.findById(itemCreateDto.getCategoryId());
         Category category = null;
         if (oc.isPresent()) {
             category = oc.get();
         }
         List<ItemCategory> categories = new ArrayList<>();
-
-        //카테고리가 존재하면 해당 카테고리로 넣어줌
-        if (category != null) {
-            categories.add(ItemCategory
+        categories.add(ItemCategory
+            .builder()
+            .category(category)
+            .item(saveItem)
+            .build());
+        itemCategoryRepository.save(
+            ItemCategory
                 .builder()
+                .item(saveItem)
                 .category(category)
-                .item(saveItem)
                 .build());
-            itemCategoryRepository.save(
-                ItemCategory
-                    .builder()
-                    .item(saveItem)
-                    .category(category)
-                    .build());
-        } else {
-            //카테고리를 추가한 후 해당 카테고리 추가
-            Category saveCategory = categoryRepository.save(Category
-                .builder()
-                .name(itemCreateDto.getCategory())
-                .closet(closetRepository.findById(closetId).get())
-                .build());
-
-            itemCategoryRepository.save(
-                ItemCategory
-                    .builder()
-                    .item(saveItem)
-                    .category(saveCategory)
-                    .build());
-            categories.add(ItemCategory
-                .builder()
-                .category(saveCategory)
-                .item(saveItem)
-                .build());
-        }
 
         itemRepository.save(Item
             .builder()
@@ -178,35 +154,26 @@ public class ItemServiceImpl implements ItemService {
             List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getUid());
             Long closetId = closets.get(0).getId();
 
-            Optional<Category> oc = categoryRepository.findByNameAndClosetId(
-                itemUpdateDto.getCategory(), closetId);
+            Optional<Category> oc = categoryRepository.findById(itemUpdateDto.getCategoryId());
             Category category = null;
             if (oc.isPresent()) {
                 category = oc.get();
             }
             List<ItemCategory> categories = new ArrayList<>();
+            ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
+                itemUpdateDto.getUid(),
+                itemUpdateDto.getCategoryId()).get(0);
 
-            //카테고리가 존재하면 해당 카테고리로 넣어줌
-            if (category != null) {
-                categories.add(ItemCategory
+            ItemCategory saveCategory = itemCategoryRepository.save(
+                ItemCategory
                     .builder()
+                    .id(itemCategory.getId())
                     .category(category)
                     .item(item)
-                    .build());
-            } else {
-                //카테고리를 추가한 후 해당 카테고리 추가
-                Category saveCategory = categoryRepository.save(Category
-                    .builder()
-                    .name(itemUpdateDto.getCategory())
-                    .closet(closetRepository.findById(closetId).get())
-                    .build());
+                    .build()
+            );
 
-                categories.add(ItemCategory
-                    .builder()
-                    .category(saveCategory)
-                    .item(item)
-                    .build());
-            }
+            categories.add(saveCategory);
             Optional<Member> om = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
                 ActiveStatus.ACTIVE);
             if (om.isPresent()) {
@@ -221,6 +188,7 @@ public class ItemServiceImpl implements ItemService {
                     .size(itemUpdateDto.getSize())
                     .purchase(itemUpdateDto.getPurchase())
                     .itemCategories(categories)
+                    .bookmarkStatus(item.getBookmarkStatus())
                     .publicStatus(itemUpdateDto.getPublicStatus())
                     .salesStatus(itemUpdateDto.getSalesStatus())
                     .color(itemUpdateDto.getColor())
@@ -276,7 +244,6 @@ public class ItemServiceImpl implements ItemService {
                 .imageUrls(images)
                 .build();
         }
-
         return null;
     }
 

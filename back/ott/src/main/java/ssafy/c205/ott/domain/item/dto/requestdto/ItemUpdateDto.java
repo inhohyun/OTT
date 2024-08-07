@@ -21,11 +21,11 @@ public class ItemUpdateDto {
     private Sex gender;
     private Long uid;
     private SalesStatus salesStatus;
-    private String category;
+    private Long categoryId;
 
     @Builder
     public ItemUpdateDto(String size, String brand, String purchase, PublicStatus publicStatus,
-        String color, Sex gender, Long uid, SalesStatus salesStatus, String category) {
+        String color, Sex gender, Long uid, SalesStatus salesStatus, Long categoryId) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
@@ -34,7 +34,7 @@ public class ItemUpdateDto {
         this.gender = gender;
         this.uid = uid;
         this.salesStatus = salesStatus;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public ItemUpdateDto() {
