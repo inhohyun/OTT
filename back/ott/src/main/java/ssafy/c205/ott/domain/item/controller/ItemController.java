@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
+import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 import ssafy.c205.ott.domain.item.service.ItemService;
 
@@ -37,10 +39,11 @@ public class ItemController {
     })
     @PostMapping("/")
     public ResponseEntity<?> createItem(@ModelAttribute ItemCreateDto itemCreateDto,
-        @RequestParam(value = "img") List<MultipartFile> images) {
-        log.debug("request to create item: {}", itemCreateDto);
-        log.debug("images: {}", images);
-        itemService.createItem(itemCreateDto, images);
+        @RequestParam(value = "frontImg", required = true) MultipartFile frontImg, @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
+        if (frontImg == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필요 이미지가 없습니다.");
+        }
+        itemService.createItem(itemCreateDto, frontImg, backImg);
         return ResponseEntity.ok().body("옷 저장을 완료했습니다.");
     }
 
@@ -50,9 +53,9 @@ public class ItemController {
     })
     @PutMapping("/{clothes_id}")
     public ResponseEntity<?> updateItem(@PathVariable("clothes_id") Long clothesId,
-        @ModelAttribute ItemCreateDto itemCreateDto,
-        @RequestParam(value = "img") List<MultipartFile> images) {
-        itemService.updateItem(clothesId, itemCreateDto, images);
+        @ModelAttribute ItemUpdateDto itemUpdateDto,
+        @RequestParam(value = "frontImg", required = false) MultipartFile frontImg, @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
+        itemService.updateItem(clothesId, itemUpdateDto, frontImg, backImg);
         return ResponseEntity.ok().body("옷 수정을 완료했습니다.");
     }
 
@@ -90,18 +93,21 @@ public class ItemController {
     }
 
     @GetMapping("/{user_id}/{category_id}")
-    public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId, @PathVariable("category_id") Long categoryId) {
-        return null;
+    public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId,
+        @PathVariable("category_id") Long categoryId, @RequestParam("closet_id") Long closetId) {
+        return ResponseEntity.ok().body(itemService.selectByCategory(categoryId, userId, closetId));
     }
 
     @PostMapping("/bookmark/{cloth_id}")
     public ResponseEntity<?> bookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
+        log.info("룩북 아이디 : {}", clothesId);
         itemService.bookmarkLookbook(clothesId);
         return ResponseEntity.ok().body("북마크를 완료했습니다.");
     }
 
     @PostMapping("/unbookmark/{cloth_id}")
     public ResponseEntity<?> unbookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
+        log.info("룩북 아이디 : {}", clothesId);
         itemService.unbookmarkLookbook(clothesId);
         return ResponseEntity.ok().body("북마크 해제를 완료했습니다.");
     }

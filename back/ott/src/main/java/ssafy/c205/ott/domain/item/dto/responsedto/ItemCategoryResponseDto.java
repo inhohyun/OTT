@@ -9,19 +9,20 @@ import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
 @Getter
 @Setter
 @ToString
-public class ItemListResponseDto {
+public class ItemCategoryResponseDto {
 
     private String[] img;
-    private Long clothesId;
+    private Long clothId;
     private BookmarkStatus bookmarkStatus;
 
     @Builder
-    public ItemListResponseDto(String[] img, Long clothesId, BookmarkStatus bookmarkStatus) {
+    public ItemCategoryResponseDto(String[] img, Long clothId, BookmarkStatus bookmarkStatus) {
         this.img = img;
-        this.clothesId = clothesId;
+        this.clothId = clothId;
         this.bookmarkStatus = bookmarkStatus;
     }
 
-    public ItemListResponseDto() {
+    public ItemCategoryResponseDto() {
+
     }
 }

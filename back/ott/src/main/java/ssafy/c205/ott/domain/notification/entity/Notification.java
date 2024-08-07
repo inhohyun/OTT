@@ -23,13 +23,15 @@ public class Notification {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
+    private Long memberid;
+
     @Builder
-    public Notification(Long id, String message, NotificationStatus notificationStatus,
-        Comment comment) {
+    public Notification(Long id, String message, NotificationStatus notificationStatus, Comment comment, Long memberid) {
         this.id = id;
         this.message = message;
         this.notificationStatus = notificationStatus;
         this.comment = comment;
+        this.memberid = memberid;
     }
 
     public Notification() {

@@ -4,17 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ssafy.c205.ott.common.entity.LookbookItem;
-import ssafy.c205.ott.common.entity.LookbookTag;
-import ssafy.c205.ott.domain.account.entity.Member;
-import ssafy.c205.ott.domain.lookbook.entity.Comment;
-import ssafy.c205.ott.domain.lookbook.entity.LookbookImage;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
-@ToString @Builder
+@Getter
+@Setter
+@ToString
 public class LookbookDetailDto {
     private long viewCount;
     private String content;
@@ -25,4 +21,25 @@ public class LookbookDetailDto {
     private LocalDateTime createdAt;
     private String thumnail;
     private int cntLike;
+    private int cntComment;
+    private boolean isLike;
+
+    @Builder
+    public LookbookDetailDto(long viewCount, String content, String nickname, List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes, LocalDateTime createdAt, String thumnail, int cntLike,int cntComment, boolean isLike) {
+        this.viewCount = viewCount;
+        this.content = content;
+        this.nickname = nickname;
+        this.images = images;
+        this.tags = tags;
+        this.salesClothes = salesClothes;
+        this.createdAt = createdAt;
+        this.thumnail = thumnail;
+        this.cntLike = cntLike;
+        this.isLike = isLike;
+        this.cntComment = cntComment;
+    }
+
+    public LookbookDetailDto() {
+
+    }
 }

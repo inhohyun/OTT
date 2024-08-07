@@ -14,4 +14,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
         @Param("userid") String userid,
         @Param("statuses") List<NotificationStatus> statuses
     );
+
+    List<Notification> findByMemberidOrderByIdDesc(Long memberId);
 }

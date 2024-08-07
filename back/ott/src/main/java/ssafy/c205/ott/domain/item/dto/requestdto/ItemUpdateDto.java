@@ -1,4 +1,4 @@
-package ssafy.c205.ott.domain.item.dto.responsedto;
+package ssafy.c205.ott.domain.item.dto.requestdto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,33 +11,32 @@ import ssafy.c205.ott.domain.item.entity.Sex;
 @Getter
 @Setter
 @ToString
-public class ItemResponseDto {
+public class ItemUpdateDto {
+
     private String size;
     private String brand;
     private String purchase;
     private PublicStatus publicStatus;
     private String color;
     private Sex gender;
+    private Long uid;
     private SalesStatus salesStatus;
-    private String category;
-    private String[] imageUrls;
-    private Long clothesId;
+    private Long categoryId;
 
     @Builder
-    public ItemResponseDto(String size, String brand, String purchase, PublicStatus publicStatus, String color, Sex gender, SalesStatus salesStatus, String category, String[] imageUrls, Long clothesId) {
+    public ItemUpdateDto(String size, String brand, String purchase, PublicStatus publicStatus,
+        String color, Sex gender, Long uid, SalesStatus salesStatus, Long categoryId) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
         this.publicStatus = publicStatus;
         this.color = color;
         this.gender = gender;
+        this.uid = uid;
         this.salesStatus = salesStatus;
-        this.category = category;
-        this.imageUrls = imageUrls;
-        this.clothesId = clothesId;
+        this.categoryId = categoryId;
     }
 
-    private ItemResponseDto() {
-
+    public ItemUpdateDto() {
     }
 }

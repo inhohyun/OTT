@@ -42,63 +42,63 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+            .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
+            .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                @Override
+                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
-                        CorsConfiguration configuration = new CorsConfiguration();
+                    CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://locatlhost:3000"));
-                        configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
-                        configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
-                        configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
-                        configuration.setMaxAge(3600L);
+                    configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://locatlhost:3000"));
+                    configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
+                    configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
+                    configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
+                    configuration.setMaxAge(3600L);
 
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정
+                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정
 
-                        return configuration;
-                    }
-                }));
+                    return configuration;
+                }
+            }));
 
         //csrf disable
         http
-                .csrf((auth) -> auth.disable());
+            .csrf((auth) -> auth.disable());
 
         //Form 로그인 방식 disable
         http
-                .formLogin((auth) -> auth.disable());
+            .formLogin((auth) -> auth.disable());
 
         //HTTP Basic 인증 방식 disable
         http
-                .httpBasic((auth) -> auth.disable());
+            .httpBasic((auth) -> auth.disable());
 
         //JWTFilter 추가
         http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+            .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         http
-                .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))
-                        .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
-                        .successHandler(customSuccessHandler)
-                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
+            .oauth2Login((oauth2) -> oauth2
+                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                    .userService(customOAuth2UserService))
+                .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
+                .successHandler(customSuccessHandler)
+                .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
 
         //경로별 인가 작업
         http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
-                        .anyRequest().authenticated());
+            .authorizeHttpRequests((auth) -> auth
+                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
+                .anyRequest().authenticated());
 
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+            .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         //세션 설정 : STATELESS
         http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .sessionManagement((session) -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 
         return http.build();

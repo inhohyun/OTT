@@ -82,8 +82,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "해당 룩북의 상세 데이터"),
     })
     @GetMapping("/{lookbook_id}")
-    public ResponseEntity<?> detailLookbook(@PathVariable("lookbook_id") String lookbookId) {
-        LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId);
+    public ResponseEntity<?> detailLookbook(@PathVariable("lookbook_id") String lookbookId, @RequestParam("uid") Long uid) {
+        LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId, uid);
         if (lookbookDetailDto == null) {
             log.error("룩북 상세조회 실패");
             return new ResponseEntity<String>("해당 룩북을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
@@ -115,8 +115,12 @@ public class LookbookController {
     })
     @PostMapping("/{lookbook_id}/like")
     public ResponseEntity<?> likeLookbook(@PathVariable("lookbook_id") String lookbookId,
-        @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
+        @RequestBody LookbookFavoriteDto lookbookFavoriteDto) {
+        log.info("lookbookid : {}", lookbookId);
+        lookbookFavoriteDto.setLookbookId(lookbookId);
+        log.info("dto : {}", lookbookFavoriteDto.toString());
         boolean isFavoriteSuccess = lookbookService.likeLookbook(lookbookFavoriteDto);
+
         if (isFavoriteSuccess) {
             return new ResponseEntity<String>("룩북 좋아요를 성공했습니다.", HttpStatus.OK);
         } else {
@@ -130,7 +134,8 @@ public class LookbookController {
     })
     @PostMapping("/{lookbook_id}/dislike")
     public ResponseEntity<?> dislikeLookbook(@PathVariable("lookbook_id") String lookbookId,
-        @ModelAttribute LookbookFavoriteDto lookbookFavoriteDto) {
+        @RequestBody LookbookFavoriteDto lookbookFavoriteDto) {
+        lookbookFavoriteDto.setLookbookId(lookbookId);
         boolean isFavoriteSuccess = lookbookService.dislikeLookbook(lookbookFavoriteDto);
         if (isFavoriteSuccess) {
             return new ResponseEntity<String>("룩북 좋아요 삭제를 성공했습니다.", HttpStatus.OK);
@@ -202,7 +207,7 @@ public class LookbookController {
     })
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@ModelAttribute LookbookSearchDto lookbookSearchDto) {
-        List<TagLookbookDto> findByTags = lookbookService.findByTag(lookbookSearchDto.getTags());
+        List<TagLookbookDto> findByTags = lookbookService.findByTag(lookbookSearchDto);
         log.info("Return 후 컨트롤러");
         for (TagLookbookDto findByTag : findByTags) {
             log.info(findByTag.toString());

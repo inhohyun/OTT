@@ -12,14 +12,16 @@ public class LookbookMineDto {
     private int cntLike;
     private int cntComment;
     private Long lookbookId;
+    private boolean isLike;
 
     @Builder
-    public LookbookMineDto(String img, String[] tags, int cntLike, int cntComment, Long lookbookId) {
+    public LookbookMineDto(String img, String[] tags, int cntLike, int cntComment, Long lookbookId, boolean isLike) {
         this.img = img;
         this.tags = tags;
         this.cntLike = cntLike;
         this.cntComment = cntComment;
         this.lookbookId = lookbookId;
+        this.isLike = isLike;
     }
 
     public LookbookMineDto() {}

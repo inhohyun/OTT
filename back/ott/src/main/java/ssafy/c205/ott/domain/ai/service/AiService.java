@@ -89,7 +89,7 @@ public class AiService {
         amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
 
         // AI 이미지 완성 알림
-        notificationService.createNotification(NotificationMessage.AI_COMPLETE);
+        notificationService.createNotification(NotificationMessage.AI_COMPLETE, aiRequestDto.getMemberId());
 
         return ResponseEntity.ok(responseBody);
     }

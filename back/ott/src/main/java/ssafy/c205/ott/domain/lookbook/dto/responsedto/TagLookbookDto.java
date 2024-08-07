@@ -26,16 +26,18 @@ public class TagLookbookDto {
     private int cntComment;
     private LocalDateTime createdAt;
     private String img;
+    private boolean isLike;
 
     @Builder
     public TagLookbookDto(Long lookbookId, String nickname, int cntLike, int cntComment,
-        LocalDateTime createdAt, String img) {
+        LocalDateTime createdAt, String img, boolean isLike) {
         this.lookbookId = lookbookId;
         this.nickname = nickname;
         this.cntLike = cntLike;
         this.cntComment = cntComment;
         this.createdAt = createdAt;
         this.img = img;
+        this.isLike = isLike;
     }
 
     public TagLookbookDto() {

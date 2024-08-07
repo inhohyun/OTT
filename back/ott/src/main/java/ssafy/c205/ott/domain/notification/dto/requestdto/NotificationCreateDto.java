@@ -9,9 +9,11 @@ import lombok.ToString;
 @ToString @Builder
 public class NotificationCreateDto {
     private String commentId;
+    private Long memberid;
 
     @Builder
-    public NotificationCreateDto(String commentId) {
+    public NotificationCreateDto(String commentId, Long memberid) {
         this.commentId = commentId;
+        this.memberid = memberid;
     }
 }
