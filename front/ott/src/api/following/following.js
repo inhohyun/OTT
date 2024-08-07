@@ -1,7 +1,7 @@
 import axiosInstance from '../axiosInstance';
 
 //팔로잉 목록을 조회하는 API
-export const getFollowerList = async (id) => {
+export const getFollowingList = async (id) => {
   try {
     const response = await axiosInstance.get(
       `api/members/follow/${id}/followings`
