@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import ssafy.c205.ott.common.oauth.service.CookieService;
 import ssafy.c205.ott.common.oauth.service.RefreshService;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ReissueController {
@@ -28,25 +30,29 @@ public class ReissueController {
     @GetMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
+
+        log.info("reissue 진입");
         //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refresh")) {
-
                 refresh = cookie.getValue();
+                log.info("refresh 추출" + refresh);
             }
         }
 
         if (refresh == null) {
 
+            log.info("refresh가 null");
             //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
         //expired check
         try {
+            log.info("refresh가 만료");
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
 
@@ -82,6 +88,7 @@ public class ReissueController {
         refreshService.addRefreshEntity(username, newRefresh, 86400000L);
 
         //response
+        log.info("new accessToken" + newAccess);
         response.setHeader("access", newAccess);
         response.addHeader(HttpHeaders.SET_COOKIE, cookieService.createCookie("refresh", newRefresh).toString());
 

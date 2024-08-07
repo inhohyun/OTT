@@ -82,12 +82,11 @@ public class Member extends BaseEntity {
     }
 
     public void updateMember(String nickname, String phoneNumber, String introduction,
-                             String profileImageUrl, float height, float weight, Gender gender,
+                             float height, float weight, Gender gender,
                              BodyType bodyType, PublicStatus publicStatus, List<MemberTag> memberTags) {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.introduction = introduction;
-        this.profileImageUrl = profileImageUrl;
         this.height = height;
         this.weight = weight;
         this.gender = gender;

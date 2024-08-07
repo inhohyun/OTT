@@ -50,15 +50,13 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-//                        configuration.setAllowedOrigins(Arrays.asList("https://i11c205.p.ssafy.io/", "http://localhost:3000/")); //프론트단 주소
-                        configuration.setAllowedOriginPatterns(Collections.singletonList("https://i11c205.p.ssafy.io"));
+                        configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://locatlhost:3000"));
                         configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
                         configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
                         configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
                         configuration.setMaxAge(3600L);
 
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정해라
-//                        configuration.setExposedHeaders(Collections.singletonList());
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization")); //쿠키를 반환할거라서 쿠키랑 authorization을 설정
 
                         return configuration;
                     }
@@ -80,7 +78,6 @@ public class SecurityConfig {
         http
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
-        log.debug("oauth 들어가기 전");
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
@@ -89,12 +86,10 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
                         .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
 
-        //oauth2
-        log.debug("oauth 들어가기 후");
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/", "/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
+                        .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
                         .anyRequest().authenticated());
 
         http
