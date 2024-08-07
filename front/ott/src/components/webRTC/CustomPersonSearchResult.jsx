@@ -4,13 +4,14 @@ import { faVideo, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const CustomPersonSearchResult = ({
-  results,
-  searchQuery,
-  onStartVideoChat,
+  // 검색 결과 데이터 배열
+  results,        
+  // 사용자가 입력한 검색어 
+  searchQuery,     
 }) => {
-  const [visibleResults, setVisibleResults] = useState(4);
-  const [filteredResults, setFilteredResults] = useState([]);
-  const navigate = useNavigate();
+  const [visibleResults, setVisibleResults] = useState(4); // 한 번에 결과 4개 표시
+  const [filteredResults, setFilteredResults] = useState([]); // 필터링된 결과 저장
+  const navigate = useNavigate(); // 페이지 이동
 
   useEffect(() => {
     if (!searchQuery) {
@@ -18,7 +19,7 @@ const CustomPersonSearchResult = ({
       return;
     }
 
-    // Filter and sort results based on the searchQuery resemblance
+    // 검색어와 일치하는 결과 필터링 및 정렬
     const filtered = results
       .filter(
         (result) =>
@@ -48,10 +49,12 @@ const CustomPersonSearchResult = ({
     setFilteredResults(filtered);
   }, [results, searchQuery]);
 
+  // "더보기" 버튼 클릭 시 추가 결과 표시
   const handleShowMore = () => {
-    setVisibleResults((prev) => prev + 4); // Show 4 more results
+    setVisibleResults((prev) => prev + 4);
   };
 
+  // 비디오 채팅 시작
   const startVideoChat = (username) => {
     navigate(`/video-chat/${username}`);
   };

@@ -9,14 +9,14 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
 
   useEffect(() => {
     if (!show) {
-      setVisibleNotifications(4); // Reset to initial state when the modal is closed
+      setVisibleNotifications(4); // 알림 모달 꺼지면 보여주기 상태 초기화
     }
   }, [show]);
 
   if (!show) return null;
 
   const handleShowMore = () => {
-    setVisibleNotifications((prev) => prev + 4); // Show 4 more notifications
+    setVisibleNotifications((prev) => prev + 4); // 알림 4개 더 보여주기
   };
 
   const handleOutsideClick = (e) => {
@@ -40,7 +40,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     if (!isSwiping) return;
     const diffX = moveX - startX;
     if (diffX > 100) {
-      // Adjust the threshold for swipe detection
+      // 옆으로 밀어서 알림 삭제
       handleDeleteNotification(swipedIndex);
     }
     setIsSwiping(false);

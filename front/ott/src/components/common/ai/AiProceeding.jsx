@@ -3,19 +3,32 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import mainIcon from '@/assets/icons/main.logo.png';
 import useStore from '@/data/ai/aiStore';
+import { sendfittingData } from '@/api/ai/ai';
 
-const Loading = ({ selectedImage, numImages, selectedClothingId }) => {
+const AiProceeding = ({
+  modelPicture,
+  makePictureCnt,
+  category,
+  selectedClothingId,
+}) => {
   const percentage = useStore((state) => state.percentage);
   const setPercentage = useStore((state) => state.setPercentage);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
 
   useEffect(() => {
-    const duration = 5; // 5초 동안 진행, 임시로 설정
+    const duration = 5; // TODO: 현재 5초 동안 진행, 이후 수정 예정
     const targetPercentage = 99; // 목표 퍼센트는 99
     const increment = targetPercentage / duration;
     const interval = 1000; // 1초마다 업데이트
 
-    console.log('Loading Component:', selectedImage, numImages, selectedClothingId);
+    console.log(
+      'AiProceeding Component:',
+      modelPicture,
+      makePictureCnt,
+      category,
+      selectedClothingId
+    );
+
     const intervalId = setInterval(() => {
       setPercentage((prev) => {
         const nextPercentage = prev + increment;
@@ -31,31 +44,26 @@ const Loading = ({ selectedImage, numImages, selectedClothingId }) => {
     return () => clearInterval(intervalId);
   }, [setPercentage, setCurrentStep]);
 
-  // 전달받은 정보를 콘솔에 출력
   useEffect(() => {
-    console.log('Selected Image:', selectedImage);
-    console.log('Number of Images:', numImages);
-    console.log('Selected Clothing ID:', selectedClothingId);
-
     // 서버로 데이터를 전송하는 로직 추가
-    const formData = new FormData();
-    formData.append('selectedImage', selectedImage);
-    formData.append('numImages', numImages.value);
-    formData.append('selectedClothingId', selectedClothingId);
 
-    // 서버에 요청 보내기 (예시)
-    fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('서버 응답:', data);
-      })
-      .catch((error) => {
-        console.error('서버 에러:', error);
-      });
-  }, [selectedImage, numImages, selectedClothingId]);
+    const formData = new FormData();
+    formData.append('modelPicture', modelPicture); // modelPicture 전달
+    formData.append('makePictureCnt', makePictureCnt.value); // makePictureCnt 전달
+    formData.append('category', category); // category 전달
+    formData.append('selectedClothingId', selectedClothingId); // selectedClothingId 전달
+
+    const sendData = async () => {
+      try {
+        const response = await sendfittingData(formData);
+        // 서버 응답 처리 로직 추가
+      } catch (error) {
+        console.error('AI 옷 피팅 중 에러 발생(컴포넌트):', error);
+      }
+    };
+
+    sendData();
+  }, [modelPicture, makePictureCnt, category, selectedClothingId]);
 
   return (
     <div
@@ -91,11 +99,11 @@ const Loading = ({ selectedImage, numImages, selectedClothingId }) => {
           />
         </div>
         <div className="mt-4">
-          <p>생성할 이미지 수: {numImages.label}</p>
+          <p>생성할 이미지 수: {makePictureCnt.label}</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default Loading;
+export default AiProceeding;

@@ -1,9 +1,10 @@
-import { get, put } from '../axiosInstance';
+import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 
 // 유저 페이지에서 사용자 정보를 불러옴
-export const getUserInfo = async (userId) => {
+export const getUserInfo = async (id) => {
   try {
-    const response = await get({ endPoint: `/user/${userId}` });
+    const response = await axiosInstance.get(`/api/members/${id}`);
     return response;
   } catch (error) {
     console.error('Error fetching user info:', error);
@@ -12,15 +13,26 @@ export const getUserInfo = async (userId) => {
 };
 
 // 사용자 정보를 업데이트함
-export const updateUserInfo = async (userId, updateData) => {
+export const updateUserInfo = async (memberId, MemberUpdateRequestDto) => {
   try {
-    const response = await put({
-      endPoint: `/user/${userId}`,
-      data: updateData,
-    });
+    const response = await axiosInstance.put(
+      `/api/members/${memberId}`,
+      MemberUpdateRequestDto
+    );
     return response;
   } catch (error) {
     console.error('Error updating user info:', error);
+    throw error;
+  }
+};
+
+// uid를 가져오는 api
+export const getUid = async () => {
+  try {
+    const response = await axiosInstance.get('/api/members/my');
+    return response;
+  } catch (error) {
+    console.error('Error fetching user info:', error);
     throw error;
   }
 };

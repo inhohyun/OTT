@@ -157,14 +157,16 @@ const Recommend = () => {
             >
               {filteredLookbooks[category]
                 ?.slice(0, visibleLookbooks[category])
-                .map((lookbook) => (
-                  <div key={lookbook.id} className="lookbook-container">
-                    <Lookbook
-                      data={lookbook}
-                      onClick={() => setSelectedLookbook(lookbook)}
-                    />
-                  </div>
-                ))}
+                .map((lookbook) => {
+                  return (
+                    <div key={lookbook.id} className="lookbook-container">
+                      <Lookbook
+                        data={lookbook}
+                        onClick={() => setSelectedLookbook(lookbook)}
+                      />
+                    </div>
+                  );
+                })}
               {visibleLookbooks[category] <
                 filteredLookbooks[category]?.length && (
                 <div className="show-more-button">

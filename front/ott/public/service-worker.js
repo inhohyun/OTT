@@ -1,61 +1,61 @@
-// importScripts 함수가 정의되어 있는지 확인 (즉, 웹 워커 컨텍스트에서 실행 중인지 확인)
-if (typeof importScripts === 'function') {
-  // Workbox 라이브러리를 서비스 워커에 가져옴
-  importScripts(
-    'https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js'
-  );
 
-  // 캐시 이름 정의
-  const CACHE = 'pwabuilder-page';
-  // 오프라인 대체 페이지 정의
-  const offlineFallbackPage = 'index.html';
+// // 이 파일은 "오프라인 페이지" 서비스 워커입니다.
 
-  // 'SKIP_WAITING' 메시지를 수신하면 즉시 활성화
-  self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
-    }
-  });
+// importScripts(
+//   'https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js'
+// );
 
-  // 서비스 워커 설치 이벤트 핸들러
-  self.addEventListener('install', async (event) => {
-    event.waitUntil(
-      // 캐시에 오프라인 대체 페이지 추가
-      caches.open(CACHE).then((cache) => cache.add(offlineFallbackPage))
-    );
-  });
+// // 캐시 이름을 정의합니다.
+// const CACHE = 'pwabuilder-page';
 
-  // 네비게이션 프리로드가 지원되는 경우 활성화
-  if (workbox.navigationPreload.isSupported()) {
-    workbox.navigationPreload.enable();
-  }
+// // 오프라인 대체 페이지를 설정합니다.
+// const offlineFallbackPage = 'index.html';
 
-  // fetch 이벤트 핸들러
-  self.addEventListener('fetch', (event) => {
-    // 네비게이션 요청에 대해서만 처리
-    if (event.request.mode === 'navigate') {
-      event.respondWith(
-        (async () => {
-          try {
-            // 네비게이션 프리로드 응답 사용 시도
-            const preloadResp = await event.preloadResponse;
+// // 'SKIP_WAITING' 메시지를 받으면 현재 서비스 워커가 활성화될 때까지 대기하지 않고 즉시 활성화합니다.
+// self.addEventListener('message', (event) => {
+//   if (event.data && event.data.type === 'SKIP_WAITING') {
+//     self.skipWaiting();
+//   }
+// });
 
-            // 프리로드 응답이 있으면 반환
-            if (preloadResp) {
-              return preloadResp;
-            }
+// // 서비스 워커 설치 이벤트 처리기입니다.
+// self.addEventListener('install', async (event) => {
+//   // 오프라인 대체 페이지를 캐시에 추가합니다.
+//   event.waitUntil(
+//     caches.open(CACHE).then((cache) => cache.add(offlineFallbackPage))
+//   );
+// });
 
-            // 네트워크 요청 시도
-            const networkResp = await fetch(event.request);
-            return networkResp;
-          } catch (error) {
-            // 네트워크 요청 실패 시, 캐시에서 오프라인 대체 페이지 반환
-            const cache = await caches.open(CACHE);
-            const cachedResp = await cache.match(offlineFallbackPage);
-            return cachedResp;
-          }
-        })()
-      );
-    }
-  });
-}
+// // 네비게이션 프리로드가 지원되면 활성화합니다.
+// if (workbox.navigationPreload.isSupported()) {
+//   workbox.navigationPreload.enable();
+// }
+
+// // fetch 이벤트 처리기입니다.
+// self.addEventListener('fetch', (event) => {
+//   // 네비게이션 요청(즉, 페이지 탐색 요청)에 대해서만 응답을 처리합니다.
+//   if (event.request.mode === 'navigate') {
+//     event.respondWith(
+//       (async () => {
+//         try {
+//           // 네비게이션 프리로드 응답을 사용해봅니다.
+//           const preloadResp = await event.preloadResponse;
+
+//           // 프리로드 응답이 있다면 이를 반환합니다.
+//           if (preloadResp) {
+//             return preloadResp;
+//           }
+
+//           // 네트워크 요청을 시도합니다.
+//           const networkResp = await fetch(event.request);
+//           return networkResp;
+//         } catch (error) {
+//           // 네트워크 요청이 실패하면 캐시에서 오프라인 대체 페이지를 반환합니다.
+//           const cache = await caches.open(CACHE);
+//           const cachedResp = await cache.match(offlineFallbackPage);
+//           return cachedResp;
+//         }
+//       })()
+//     );
+//   }
+// });
