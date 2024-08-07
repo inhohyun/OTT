@@ -51,9 +51,7 @@ export const getClothesList = async (userId) => {
 // 옷 즐겨찾기 추가
 export const bookmarkClothes = async (clothesId) => {
   try {
-    await axios.post(
-      `http://localhost:8080/api/clothes/bookmark/${clothesId}`
-    );
+    await axios.post(`http://localhost:8080/api/clothes/bookmark/${clothesId}`);
     console.log(`${clothesId} 북마크 성공`);
   } catch (error) {
     console.error(`${clothesId} 북마크 실패:`, error);

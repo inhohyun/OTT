@@ -7,18 +7,23 @@ import { addClothes } from '../../api/closet/clothes';
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [formData, setFormData] = useState({
     category: '',
-    frontImage: '',
-    backImage: '',
+    frontImg: '',
+    backImg: '',
     brand: '',
-    purchaseLocation: '',
+    purchase: '',
     size: '',
     color: '',
-    publicStatus: false,
-    salesStatus: false,
+    publicStatus: 'PRIVATE',
+    salesStatus: 'NOT_SALE',
     gender: '',
+    uid: 1,
   });
 
   const [errors, setErrors] = useState({});
+  const [previewImages, setPreviewImages] = useState({
+    frontImg: '',
+    backImg: '',
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -37,12 +42,15 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const validateInputs = () => {
     const newErrors = {};
-    if (!formData.frontImage.trim()) newErrors.frontImage = '앞면 이미지를 선택하세요.';
-    if (!formData.brand.trim()) newErrors.brand = '브랜드를 입력하세요.';
-    if (!formData.purchaseLocation.trim()) newErrors.purchaseLocation = '구매처를 입력하세요.';
-    if (!formData.size.trim()) newErrors.size = '사이즈를 입력하세요.';
-    if (!formData.color.trim()) newErrors.color = '색상을 입력하세요.';
-    if (!formData.gender.trim()) newErrors.gender = '성별을 선택하세요.';
+    if (!formData.frontImg) newErrors.frontImg = '앞면 이미지를 선택하세요.';
+    if (!(formData.brand || '').trim())
+      newErrors.brand = '브랜드를 입력하세요.';
+    if (!(formData.purchase || '').trim())
+      newErrors.purchase = '구매처를 입력하세요.';
+    if (!(formData.size || '').trim()) newErrors.size = '사이즈를 입력하세요.';
+    if (!(formData.color || '').trim()) newErrors.color = '색상을 입력하세요.';
+    if (!(formData.gender || '').trim())
+      newErrors.gender = '성별을 선택하세요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -50,11 +58,11 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      borderColor: state.isFocused ? 'black' : provided.borderColor,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
       '&:hover': {
         borderColor: 'black',
       },
-      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
     }),
     option: (provided, state) => ({
       ...provided,
@@ -67,50 +75,63 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   };
 
   const handleAddClothes = () => {
+    console.log('Add Clothes button clicked');
+
     if (validateInputs()) {
       const data = new FormData();
       data.append('id', Date.now());
-      Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
-      });
+      data.append('category', formData.category);
+      data.append('brand', formData.brand);
+      data.append('purchase', formData.purchase);
+      data.append('size', formData.size);
+      data.append('color', formData.color);
+      data.append('publicStatus', formData.publicStatus);
+      data.append('salesStatus', formData.salesStatus);
+      data.append('gender', formData.gender);
+      data.append('uid', formData.uid);
 
-      const frontFileInput = document.getElementById('front-file-input');
-      const backFileInput = document.getElementById('back-file-input');
-
-      if (frontFileInput?.files[0]) {
-        data.append('frontImg', frontFileInput.files[0]);
+      if (formData.frontImg) {
+        data.append('frontImg', formData.frontImg);
+      }
+      if (formData.backImg) {
+        data.append('backImg', formData.backImg);
       }
 
-      if (backFileInput?.files[0]) {
-        data.append('backImg', backFileInput.files[0]);
+      // Log FormData contents for debugging
+      for (let [key, value] of data.entries()) {
+        console.log(`${key}:`, value);
       }
 
       addClothes(data)
         .then((response) => {
           console.log('Successfully added clothes:', response);
-          onAddClothes({ key: response.key });
+          onAddClothes();
           clearInputs();
           onClose();
         })
         .catch((error) => {
           console.error('Error adding clothes:', error);
         });
+    } else {
+      console.log('Validation failed:', errors);
     }
   };
 
   const clearInputs = () => {
     setFormData({
       category: categories[0],
-      frontImage: '',
-      backImage: '',
+      frontImg: null,
+      backImg: null,
       brand: '',
-      purchaseLocation: '',
+      purchase: '',
       size: '',
       color: '',
-      publicStatus: false,
-      salesStatus: false,
+      publicStatus: 'PRIVATE',
+      salesStatus: 'NOT_SALE',
       gender: '',
+      uid: 1,
     });
+    setPreviewImages({ frontImg: '', backImg: '' });
     setErrors({});
   };
 
@@ -120,13 +141,28 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const handleFileChange = (e, type) => {
     if (e.target.files && e.target.files[0]) {
-      const imageUrl = URL.createObjectURL(e.target.files[0]);
-      setFormData((prev) => ({ ...prev, [`${type}Image`]: imageUrl }));
+      const file = e.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+
+      setFormData((prev) => ({ ...prev, [`${type}Img`]: file }));
+      setPreviewImages((prev) => ({ ...prev, [`${type}Img`]: imageUrl }));
     }
   };
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleStatusChange = (field, checked) => {
+    const statusValue =
+      field === 'publicStatus'
+        ? checked
+          ? 'PUBLIC'
+          : 'PRIVATE'
+        : checked
+          ? 'ON_SALE'
+          : 'NOT_SALE';
+    setFormData((prev) => ({ ...prev, [field]: statusValue }));
   };
 
   const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
@@ -161,9 +197,9 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
                 className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
                 onClick={() => handleImageSelection(type)}
               >
-                {formData[`${type}Image`] ? (
+                {previewImages[`${type}Img`] ? (
                   <img
-                    src={formData[`${type}Image`]}
+                    src={previewImages[`${type}Img`]}
                     alt={type}
                     className="object-cover h-full w-full rounded-lg"
                   />
@@ -178,18 +214,45 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
                 onChange={(e) => handleFileChange(e, type)}
                 className="hidden"
               />
-              {errors[`${type}Image`] && (
-                <p className="text-red-500 text-sm mt-1">{errors[`${type}Image`]}</p>
+              {errors[`${type}Img`] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors[`${type}Img`]}
+                </p>
               )}
             </div>
           ))}
         </div>
         {[
-          { label: '카테고리', value: formData.category, options: categoryOptions, field: 'category' },
-          { label: '브랜드', value: formData.brand, field: 'brand', placeholder: '브랜드를 입력하세요' },
-          { label: '구매처', value: formData.purchaseLocation, field: 'purchaseLocation', placeholder: '구매처를 입력하세요' },
-          { label: '사이즈', value: formData.size, field: 'size', placeholder: '사이즈를 입력하세요' },
-          { label: '색상', value: formData.color, field: 'color', placeholder: '색상을 입력하세요' },
+          {
+            label: '카테고리',
+            value: formData.category,
+            options: categoryOptions,
+            field: 'category',
+          },
+          {
+            label: '브랜드',
+            value: formData.brand,
+            field: 'brand',
+            placeholder: '브랜드를 입력하세요',
+          },
+          {
+            label: '구매처',
+            value: formData.purchase,
+            field: 'purchase',
+            placeholder: '구매처를 입력하세요',
+          },
+          {
+            label: '사이즈',
+            value: formData.size,
+            field: 'size',
+            placeholder: '사이즈를 입력하세요',
+          },
+          {
+            label: '색상',
+            value: formData.color,
+            field: 'color',
+            placeholder: '색상을 입력하세요',
+          },
         ].map(({ label, value, options, field, placeholder }, index) => (
           <div className="mb-4" key={index}>
             <label className="block text-gray-700 mb-2">{label}</label>
@@ -218,8 +281,10 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           <label className="text-gray-700 mr-2">공개 여부</label>
           <input
             type="checkbox"
-            checked={formData.publicStatus}
-            onChange={(e) => handleChange('publicStatus', e.target.checked)}
+            checked={formData.publicStatus === 'PUBLIC'}
+            onChange={(e) =>
+              handleStatusChange('publicStatus', e.target.checked)
+            }
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>
@@ -227,8 +292,10 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           <label className="text-gray-700 mr-2">판매 여부</label>
           <input
             type="checkbox"
-            checked={formData.salesStatus}
-            onChange={(e) => handleChange('salesStatus', e.target.checked)}
+            checked={formData.salesStatus === 'ON_SALE'}
+            onChange={(e) =>
+              handleStatusChange('salesStatus', e.target.checked)
+            }
             className="form-checkbox h-5 w-5 text-violet-400"
           />
         </div>

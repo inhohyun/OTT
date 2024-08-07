@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
 import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
-import clothesData from './clothesData.js';
+import { getClothesList } from '../../api/closet/clothes';
 
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
-  const [clothes, setClothes] = useState(clothesData);
   const [categories, setCategories] = useState([
     '전체',
     '상의',
@@ -17,9 +16,24 @@ const ClosetPage = () => {
     '한벌옷',
     '즐겨찾기',
   ]);
+  const [clothes, setClothes] = useState([]); // Initialize clothes state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedClothing, setSelectedClothing] = useState(null);
+
+  useEffect(() => {
+    fetchClothes();
+  }, []);
+
+  const fetchClothes = async () => {
+    try {
+      const userId = 1;
+      const clothesList = await getClothesList(userId);
+      setClothes(clothesList); // Set the clothes state with fetched data
+    } catch (error) {
+      console.error('Failed to fetch clothes:', error);
+    }
+  };
 
   const handleCategoryChange = (newCategory) => {
     setSelectedCategory(newCategory);
@@ -59,16 +73,13 @@ const ClosetPage = () => {
     );
   };
 
-  const handleAddClothes = (newClothes) => {
-    setClothes([...clothes, newClothes]);
-    if (!categories.includes(newClothes.category)) {
-      setCategories([...categories, newClothes.category]);
-    }
+  const handleAddClothes = () => {
+    fetchClothes(); // Refresh the clothes list after adding new clothes
   };
 
   const handleToggleLike = (id) => {
-    setClothes(
-      clothes.map((item) =>
+    setClothes((prevClothes) =>
+      prevClothes.map((item) =>
         item.id === id ? { ...item, isLiked: !item.isLiked } : item
       )
     );
@@ -80,16 +91,16 @@ const ClosetPage = () => {
   };
 
   const handleEditClothes = (updatedClothing) => {
-    setClothes(
-      clothes.map((item) =>
+    setClothes((prevClothes) =>
+      prevClothes.map((item) =>
         item.id === updatedClothing.id ? updatedClothing : item
       )
     );
-    // setIsDetailModalOpen(false);
+    setIsDetailModalOpen(false);
   };
 
   const handleDeleteClothes = (id) => {
-    setClothes(clothes.filter((item) => item.id !== id));
+    setClothes((prevClothes) => prevClothes.filter((item) => item.id !== id));
     setIsDetailModalOpen(false);
   };
 
