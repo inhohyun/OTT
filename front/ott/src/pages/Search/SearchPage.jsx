@@ -10,10 +10,10 @@ const SearchPage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [results, setResults] = useState([]);
 
-  const searchPeople = async (offset, limit, searchQuery) => {
+  const searchPeople = async (searchQuery, offset, limit) => {
     try {
       // TODO : 목록 하드코딩 수정
-      const response = await searchPeople(1, 10, searchQuery);
+      const response = await searchPeople(offset, limit, searchQuery);
       console.log('검색한 사용자 : ', response);
       return response;
     } catch (error) {
@@ -130,7 +130,8 @@ const SearchPage = () => {
       setResults(matchedResults);
     } else {
       //TODO : 서버에서 받아온 데이터를 대체해주세요.
-      searchPeople(1, 10, searchQuery);
+      console.log('검색한 사용자 : ', searchQuery);
+      searchPeople(searchQuery, 1, 10);
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
         { title: 'eunwoo_c', description: 'Description for person 2' },

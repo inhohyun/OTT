@@ -1,12 +1,12 @@
 import axiosInstance from '../axiosInstance';
 
-export const searchPeople = async (offset, limit, nickname) => {
+export const searchPeople = async (nickname, offset, limit) => {
   try {
     const response = await axiosInstance.get('/more', {
       params: {
+        nickname,
         offset,
         limit,
-        nickname,
       },
     });
     return response;
