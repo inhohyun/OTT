@@ -9,8 +9,9 @@ const Following = ({ uid }) => {
   useEffect(() => {
     const fetchFollowing = async () => {
       try {
+        console.log('팔로잉 uid:', uid);
         const response = await getFollowingList(uid); // uid를 사용하여 팔로잉 목록을 가져옵니다
-        console.log('response:', response);
+        console.log('팔로잉:', response);
         setFollowing(response.data);
       } catch (error) {
         console.error('팔로잉 목록을 불러오는 중 오류 발생:', error);
