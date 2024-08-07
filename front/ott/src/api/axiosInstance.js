@@ -25,7 +25,7 @@ axiosInstance.interceptors.request.use(
       config.headers.access = `${token}`;
     } else {
       // 액세스 토큰이 없으면 로그인 필요 메시지와 함께 로그인 페이지로 리디렉션
-      alert('Login required.');
+      alert('로그인 후 이용해주세요.');
       window.location.href = '/';
       return Promise.reject(new Error('No access token found'));
     }
