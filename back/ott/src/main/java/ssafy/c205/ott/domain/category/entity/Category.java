@@ -22,7 +22,7 @@ public class Category extends BaseEntity {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @NotNull
