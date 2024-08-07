@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
-import ssafy.c205.ott.common.entity.ClosetCategory;
 import ssafy.c205.ott.domain.account.entity.Member;
 
 @Entity
@@ -21,9 +20,6 @@ public class Closet extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToMany(mappedBy = "closet", fetch = FetchType.LAZY)
-    private List<ClosetCategory> closetCategories = new ArrayList<>();
 
     public Closet(Member member) {
         this.member = member;
