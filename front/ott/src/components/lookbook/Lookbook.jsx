@@ -272,7 +272,8 @@ import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import commenticon from '../../assets/icons/commenticon.png';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import { lookbookDetail } from '../../api/lookbook/lookbookdetail';
 import detailStore from '../../data/lookbook/detailStore';
 
 const Lookbook = ({ data, onDelete, onClose }) => {
@@ -287,28 +288,14 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   } = detailStore();
   // const [liked, setLiked] = useState(data.like);
 
-  const handleShowDetail = () => {
-    axios
-      .get(`http://192.168.100.89:8080/api/lookbook/${data.lookbookId}`, {
-        params: { uid: 1 },
-      })
-      .then((response) => {
-        console.log('룩북 상세보기', response.data);
-        console.log('룩북아이디', data.lookbookId);
-        showDetail({ ...response.data, id: data.lookbookId });
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.error('Response data:', error.response.data);
-          console.error('Response status:', error.response.status);
-          console.error('Response headers:', error.response.headers);
-        } else if (error.request) {
-          console.error('Request data:', error.request);
-        } else {
-          console.error('Error message:', error.message);
-        }
-      });
+  const handleShowDetail = async () => {
+    try {
+      const lookbookData = await lookbookDetail(data.lookbookId);
+      console.log('룩북 상세보기', lookbookData);
+      showDetail({ ...lookbookData, id: data.lookbookId });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const calcTimeAgo = (createdAt) => {

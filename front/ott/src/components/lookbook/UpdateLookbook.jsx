@@ -513,7 +513,7 @@ const clothesData = {
 };
 
 const UpdateLookbook = ({ lookbook, lookbookid }) => {
-  const [isPublic, setIsPublic] = useState(lookbook.isPublic === 'Y');
+  const [isPublic, setIsPublic] = useState(lookbook.isPublic === 'N');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [tags, setTags] = useState(lookbook.tags || []);
   const [newTag, setNewTag] = useState('');
@@ -541,7 +541,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   useEffect(() => {
     if (lookbook) {
-      setIsPublic(lookbook.isPublic === 'Y');
+      setIsPublic(lookbook.isPublic === 'N');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
     }

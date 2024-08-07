@@ -1,5 +1,16 @@
 import axiosInstance from '../axiosInstance';
 
+export const lookbookDetail = async (lookbookId) => {
+  try {
+    const response = await axiosInstance.get(`api/lookbook/${lookbookId}`, {
+      params: { uid: 1 },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const lookbookDislike = (lookbook) => {
   axiosInstance
     .post(`/api/lookbook/${lookbook.id}/dislike`, {
