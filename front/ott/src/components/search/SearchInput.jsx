@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Switch from './Switch'; // Adjust the import path as necessary
-
+import { searchPeople } from '../../api/search/searchPeople';
 const SearchInput = ({
   searchQuery,
   handleInputChange,

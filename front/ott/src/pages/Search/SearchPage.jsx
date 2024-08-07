@@ -3,13 +3,23 @@ import backgroundImage from '../../assets/images/background_image_main.png';
 import SearchInput from '../../components/search/SearchInput';
 import PersonSearchResult from '../../components/search/PersonSearchResult';
 import StyleSearchResult from '../../components/search/StyleSearchResult';
-
+import { searchPeople } from '../../api/search/searchPeople';
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [lastSearchQuery, setLastSearchQuery] = useState(''); // To store the last search query
   const [isChecked, setIsChecked] = useState(false);
   const [results, setResults] = useState([]);
 
+  const searchPeople = async (offset, limit, searchQuery) => {
+    try {
+      // TODO : 목록 하드코딩 수정
+      const response = await searchPeople(1, 10, searchQuery);
+      console.log('검색한 사용자 : ', response);
+      return response;
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -119,7 +129,7 @@ const SearchPage = () => {
 
       setResults(matchedResults);
     } else {
-      // Mock search function for people
+      //TODO : 서버에서 받아온 데이터를 대체해주세요.
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
         { title: 'eunwoo_c', description: 'Description for person 2' },
