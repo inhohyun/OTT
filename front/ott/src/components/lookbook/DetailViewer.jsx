@@ -27,7 +27,7 @@ const DetailViewer = ({
         </button>
         <img
           src={allImages[0]} // Thumbnail image
-          alt="Thumbnail"
+          alt="Thumnail"
           className="w-full h-auto object-cover rounded-lg"
         />
         <button

@@ -6,12 +6,13 @@ import {
 } from '@/utils/localUtils';
 
 // 환경 변수에서 API 기본 URL 가져오기
+
 const baseURL = import.meta.env.REACT_APP_API_BASE_URL;
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: baseURL,
-  timeout: 1000000, // FIXME: 타임아웃 시간 수정 필요
+  timeout: 1000,
   headers: { 'Content-Type': 'application/json' },
 });
 

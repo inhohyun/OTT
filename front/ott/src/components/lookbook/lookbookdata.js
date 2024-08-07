@@ -4,6 +4,7 @@ import clothesbackimg from '../../assets/images/clothes/shirt1-1.jpg';
 
 export const dummyLookbooks = [
   {
+    lookbookId: 1,
     id: 1,
     createdAt: '2024-07-16',
     nickname: 'John',
@@ -168,6 +169,7 @@ export const dummyLookbooks = [
     ],
   },
   {
+    lookbookId: 5,
     id: 5,
     createdAt: '2024-07-20',
     nickname: 'ChrisBrown',
@@ -518,6 +520,7 @@ export const dummyLookbooks = [
     ],
   },
   {
+    lookbookId: 15,
     id: 15,
     createdAt: '2024-07-15',
     nickname: 'ChrisBrown',
