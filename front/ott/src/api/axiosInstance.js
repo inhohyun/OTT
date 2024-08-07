@@ -5,7 +5,8 @@ import axios from 'axios';
 //   removeAccessToken,
 // } from '@/utils/localUtils';
 // 환경 변수에서 API 기본 URL을 가져옴
-const baseURL = 'http://192.168.100.89:8080';
+// const baseURL = 'http://192.168.100.89:8080';
+const baseURL = import.meta.env.REACT_APP_API_BASE_URL;
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({

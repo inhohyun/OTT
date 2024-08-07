@@ -336,7 +336,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   return (
     <>
       <div
-        onClick={handleShowDetail}
+        // onClick={handleShowDetail}   // api 연결 전
         className="w-[120px] h-[160px] rounded-[5px] overflow-hidden shadow-lg bg-white m-2 flex-shrink-0 cursor-pointer"
       >
         <div className="px-2 py-1 flex justify-between items-center">

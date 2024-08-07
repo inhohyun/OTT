@@ -17,7 +17,7 @@ import axiosInstance from '../axiosInstance';
 
 export const lookbookComment = async (lookbookId, status) => {
   try {
-    console.log('댓글룩북:', lookbookId);
+    // console.log('댓글룩북:', lookbookId);
     const response = await axiosInstance.get(`/api/comment/${lookbookId.id}`, {
       params: { status: status },
     });
