@@ -1,4 +1,4 @@
-package ssafy.c205.ott.domain.lookbook.dto.requestdto;
+package ssafy.c205.ott.domain.notification.dto.requestdto;
 
 import lombok.Builder;
 import lombok.Getter;
