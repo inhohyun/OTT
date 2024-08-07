@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Switch from './Switch'; // Adjust the import path as necessary
+const [nicknameError, setNicknameError] = useState('');
 const SearchInput = ({
   searchQuery, // 검색 쿼리 값
   handleInputChange, // 입력 변화 처리 함수
@@ -27,6 +28,10 @@ const SearchInput = ({
     const { value } = e.target;
     if (isChecked || validateInput(value)) {
       handleInputChange(e);
+    } else {
+      setNicknameError(
+        '영어, 숫자, _만 입력 가능하며, 최대 길이는 25자입니다.'
+      );
     }
   };
 
