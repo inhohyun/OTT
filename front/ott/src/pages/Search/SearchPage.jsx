@@ -23,7 +23,7 @@ const SearchPage = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchQuery) {
       setResults([]);
       return;
@@ -131,7 +131,7 @@ const SearchPage = () => {
       const nickname = searchQuery;
       const offset = 1;
       const limit = 10;
-      const searchResult = searchPeopleMethod(nickname, offset, limit);
+      const searchResult = await searchPeopleMethod(nickname, offset, limit);
 
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
