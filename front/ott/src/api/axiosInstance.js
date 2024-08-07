@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
     // 오류가 발생하면 아래 요청 수행
     if (
       (error.response && error.response.status === 401) ||
-      error.response.status === 400
+      (error.response && error.response.status === 400)
     ) {
       // 요청이 이미 한 번 재시도 되었는지 확인
       if (!originalRequest._retry) {
