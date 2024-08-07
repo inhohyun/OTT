@@ -1,8 +1,11 @@
 package ssafy.c205.ott.domain.item.entity;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Builder;
 import lombok.Getter;
 import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
@@ -45,4 +48,23 @@ public class Item extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private SalesStatus salesStatus = SalesStatus.NOT_SALE;
+
+    @Builder
+    public Item(Long id, String size, String brand, String purchase, PublicStatus publicStatus, String color, Sex sex, List<ItemCategory> itemCategories, Member member, List<ItemImage> itemImages, BookmarkStatus bookmarkStatus, SalesStatus salesStatus) {
+        this.id = id;
+        this.size = size;
+        this.brand = brand;
+        this.purchase = purchase;
+        this.publicStatus = publicStatus;
+        this.color = color;
+        this.sex = sex;
+        this.itemCategories = itemCategories;
+        this.member = member;
+        this.itemImages = itemImages;
+        this.bookmarkStatus = bookmarkStatus;
+        this.salesStatus = salesStatus;
+    }
+
+    public Item() {
+    }
 }

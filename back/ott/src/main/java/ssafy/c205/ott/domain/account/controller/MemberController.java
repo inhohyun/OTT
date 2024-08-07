@@ -1,5 +1,8 @@
 package ssafy.c205.ott.domain.account.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
+@Tag(name = "멤버 컨트롤러", description = "멤버 생성, 조회, 삭제 등 전반적인 멤버를 관리하는 클래스")
 public class MemberController {
     //Todo: Authentication Id를 가져오는 작업 최적화 필요
 
@@ -33,6 +37,11 @@ public class MemberController {
         return ApiResponse.success(MemberIdDto.builder().id(memberReadService.myIdSearch(currentMember).getId()).build());
     }
 
+
+    @Operation(summary = "멤버 상세보기", description = "<big>유저 데이터를</big> 상세조회 합니다.")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
+    })
     @GetMapping("/{id}")
     public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder()
@@ -41,16 +50,28 @@ public class MemberController {
                 .build()));
     }
 
+    @Operation(summary = "유저정보 수정", description = "<big>유저 데이터를</big> 수정합니다.")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
+    })
     @PutMapping("/{id}")
     public ApiResponse<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
         return ApiResponse.success(memberWriteService.updateMember(id, memberUpdateRequestDto));
     }
 
+    @Operation(summary = "회원탈퇴", description = "<big>회원탈퇴</big> 합니다.")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
+    })
     @DeleteMapping("/{id}")
     public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(memberReadService.myIdSearch(currentMember).getId()).build()));
     }
 
+    @Operation(summary = "닉네임 중복조회", description = "<big>닉네임을</big> 중복 조회합니다.")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
+    })
     @GetMapping("/validate-nickname/{nickname}")
     public ApiResponse<ValidateNicknameSuccessDto> validateNickname(@PathVariable String nickname) {
         return ApiResponse.success(memberValidator.validateMemberNickname(nickname));
