@@ -59,7 +59,7 @@ const UserPage = () => {
       renderComponent = <Followers uid={uid} />;
       break;
     case 'following':
-      renderComponent = <Following />;
+      renderComponent = <Following uid={uid} />;
       break;
     default:
       renderComponent = null;
