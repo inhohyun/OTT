@@ -1,6 +1,7 @@
 import axiosInstance from '../axiosInstance';
 
 export const searchPeople = async (nickname, offset, limit) => {
+  console.log(`searchPeople에 넘어온 값 : ${nickname}, ${offset}, ${limit}`);
   try {
     const response = await axiosInstance.get('api/members/more', {
       params: {
