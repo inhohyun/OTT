@@ -3,7 +3,7 @@ import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
-import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
+// import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
 import { getClothesList } from '../../api/closet/clothes';
 
 const ClosetPage = () => {
@@ -148,6 +148,7 @@ const ClosetPage = () => {
         onAddClothes={handleAddClothes}
         categories={filteredCategories}
       />
+      {/*
       {selectedClothing && (
         <ClothesDetailModal
           isOpen={isDetailModalOpen}
@@ -158,6 +159,7 @@ const ClosetPage = () => {
           categories={filteredCategories}
         />
       )}
+      */}
     </div>
   );
 };
