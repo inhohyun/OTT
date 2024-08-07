@@ -41,6 +41,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config; // 실패한 요청의 설정 가져오기
 
+    console.error('Error response:', error.response);
     // 오류가 발생하면 아래 요청 수행
     if (
       (error.response && error.response.status === 401) ||
