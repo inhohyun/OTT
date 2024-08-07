@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Switch from './Switch'; // Adjust the import path as necessary
-const [nicknameError, setNicknameError] = useState('');
+
 const SearchInput = ({
   searchQuery, // 검색 쿼리 값
   handleInputChange, // 입력 변화 처리 함수
@@ -10,6 +10,7 @@ const SearchInput = ({
   handleCheckboxChange, // 스위치 체크 상태 변화 처리 함수
   handleSearch, // 검색 실행 함수
 }) => {
+  const [nicknameError, setNicknameError] = useState('');
   // 사용자가 Enter 키를 눌렀을 때 handleSearch 함수를 호출하는 handleKeyPress 함수 정의
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
