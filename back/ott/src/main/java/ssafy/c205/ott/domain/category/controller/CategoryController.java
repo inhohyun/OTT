@@ -16,7 +16,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/{closetId}")
-    public ApiResponse<RegisterCategorySuccessDto> registerCategory(@PathVariable long closetId, @RequestBody CategoryDto categoryDto) {
+    public ApiResponse<RegisterCategorySuccessDto> registerCategory(@PathVariable Long closetId, @RequestBody CategoryDto categoryDto) {
         return ApiResponse.success(categoryService.registerCategory(CategoryRequestDto.builder().closetId(closetId).name(categoryDto.getName()).build()));
     }
 
@@ -26,7 +26,12 @@ public class CategoryController {
     }
 
     @PutMapping("/{closetId}")
-    public ApiResponse<UpdateCategorySuccessDto> updateCategory(@PathVariable long closetId, @RequestBody UpdateCategoryRequestDto updateCategoryRequestDto) {
+    public ApiResponse<UpdateCategorySuccessDto> updateCategory(@PathVariable Long closetId, @RequestBody UpdateCategoryRequestDto updateCategoryRequestDto) {
         return ApiResponse.success(categoryService.updateCategory(updateCategoryRequestDto));
+    }
+
+    @DeleteMapping("/{closetId}")
+    public ApiResponse<DeleteCategorySuccessDto> deleteCategory(@PathVariable Long closetId) {
+        return ApiResponse.success(categoryService.deleteCategory(CategoryRequestDto.builder().closetId(closetId).build()));
     }
 }
