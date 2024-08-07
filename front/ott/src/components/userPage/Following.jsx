@@ -7,9 +7,9 @@ const Following = ({ uid }) => {
   const [visibleFollowing, setVisibleFollowing] = useState(10);
 
   useEffect(() => {
+    console.log('팔로잉 uid:', uid);
     const fetchFollowing = async () => {
       try {
-        console.log('팔로잉 uid:', uid);
         const response = await getFollowingList(uid); // uid를 사용하여 팔로잉 목록을 가져옵니다
         console.log('팔로잉:', response);
         setFollowing(response.data);
