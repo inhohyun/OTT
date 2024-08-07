@@ -10,7 +10,7 @@ import {
   replyDelete,
 } from '../../api/lookbook/comments';
 
-const Comment = ({ comments = [], lookbookId }) => {
+const Comment = ({ comments = [], lookbookId, lookbook }) => {
   const currentUser = 'kimssafy'; // Replace with the actual current user nickname
   const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -36,10 +36,11 @@ const Comment = ({ comments = [], lookbookId }) => {
     }
   }, [comments]);
 
-  const fetchComments = () => {
+  const fetchComments = async () => {
     try {
       const status = 'comment';
-      const commentsData = lookbookComment(lookbookId, status);
+      const commentsData = await lookbookComment(lookbook, status);
+      // console.log('룩북아이디', lookbookId);
       setCommentList(
         commentsData.map((comment) => ({
           ...comment,
@@ -69,6 +70,9 @@ const Comment = ({ comments = [], lookbookId }) => {
       formData.append('msg', message);
       formData.append('status', 'comment');
 
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0] + ': ' + pair[1]);
+      // }
       if (replyTo !== null) {
         // 기존 댓글에 답글 추가
         try {

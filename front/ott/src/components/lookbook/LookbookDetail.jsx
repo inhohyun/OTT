@@ -564,14 +564,18 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
 
   // Fetch comments whenever showSellComments or lookbook.id changes
   useEffect(() => {
-    const fetchComments = () => {
-      const status = showSellComments ? 'DM' : 'comment';
-      const commentsData = lookbookComment(lookbook, status);
-      setComments(commentsData);
+    const fetchComments = async () => {
+      try {
+        const status = showSellComments ? 'DM' : 'comment';
+        const commentsData = await lookbookComment(lookbook, status);
+        setComments(commentsData);
+      } catch (error) {
+        console.error('Failed to fetch comments:', error);
+      }
     };
 
     fetchComments();
-  }, [showSellComments, lookbook.id]);
+  }, [showSellComments, lookbook]);
 
   // Handling arrays and default values
   const tags = Array.isArray(lookbook?.tags) ? lookbook.tags : [];
@@ -591,23 +595,21 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const toggleLike = () => {
     // const uid = 1;
     if (liked) {
-      lookbookDislike(lookbook)
-        .then(() => {
-          setLiked(false);
-          setCntLike((prevCntLike) => prevCntLike - 1);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      try {
+        lookbookDislike(lookbook);
+        setLiked(false);
+        setCntLike((prevCntLike) => prevCntLike - 1);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
-      lookbookLike(lookbook)
-        .then(() => {
-          setLiked(true);
-          setCntLike((prevCntLike) => prevCntLike + 1);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      try {
+        lookbookLike(lookbook);
+        setLiked(true);
+        setCntLike((prevCntLike) => prevCntLike + 1);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -801,9 +803,17 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
             style={{ maxHeight: '200px' }}
           >
             {showSellComments ? (
-              <SellComment comments={comments} lookbookId={lookbook.id} />
+              <SellComment
+                comments={comments}
+                lookbookId={lookbook.id}
+                lookbook={lookbook}
+              />
             ) : (
-              <Comment comments={comments} lookbookId={lookbook.id} />
+              <Comment
+                comments={comments}
+                lookbookId={lookbook.id}
+                lookbook={lookbook}
+              />
             )}
           </div>
         </div>
