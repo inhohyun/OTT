@@ -128,8 +128,6 @@ const SearchPage = () => {
 
       setResults(matchedResults);
     } else {
-      //TODO : 서버에서 받아온 데이터를 대체해주세요.
-      console.log('검색한 사용자 : ', searchQuery);
       searchPeopleMethod(searchQuery, 1, 10);
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
