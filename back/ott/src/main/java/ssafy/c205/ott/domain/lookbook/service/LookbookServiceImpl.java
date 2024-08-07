@@ -562,6 +562,12 @@ public class LookbookServiceImpl implements LookbookService {
             Optional<Lookbook> ol = lookbookRepository.findById(key);
             if (ol.isPresent()) {
                 Lookbook lookbook = ol.get();
+                //룩북의 소유주가 회원탈퇴면 건너뛰기
+                //Todo : Query문으로 처리 하는걸로 수정 예정
+                if (lookbook.getMember().getActiveStatus().equals(
+                    ssafy.c205.ott.domain.account.entity.ActiveStatus.INACTIVE)) {
+                    continue;
+                }
                 boolean isFavorite = false;
                 Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     Long.parseLong(lookbookSearchDto.getUid()));
@@ -646,6 +652,12 @@ public class LookbookServiceImpl implements LookbookService {
             //팔로잉 사람들의 룩북을 최신순으로 가져와 리스트에 추가
             for (Follow follow : followings) {
                 log.info(follow.toString());
+                //해당 룩북의 사용자가 회원 탈퇴면 넣지 않음
+                //Todo : Query문으로 받아오는 걸로 변경하면 좋을듯
+                if (follow.getToMember().getActiveStatus().equals(
+                    ssafy.c205.ott.domain.account.entity.ActiveStatus.INACTIVE)) {
+                    continue;
+                }
                 List<FollowLookbookDto> followingLooks = new ArrayList<>();
                 List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatusOrderByCreatedAtDesc(
                     follow.getToMember().getId(),

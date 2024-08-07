@@ -36,7 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .builder()
                 .id(Long.parseLong(notificationId))
                 .notificationStatus(NotificationStatus.READ)
-                .memberid(notification.getId())
+                .memberid(notification.getMemberid())
                 .comment(notification.getComment())
                 .message(notification.getMessage())
                 .build());
@@ -92,6 +92,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationDto> getNotifications(NotificationSelectDto notificationSelectDto) {
+        //Todo : Delete된 알림은 가져오지 말것
         List<NotificationDto> notifications = new ArrayList<>();
         List<Notification> notificationArr = notificationRepository.findByMemberidOrderByIdDesc(Long.parseLong(notificationSelectDto.getUid()));
 

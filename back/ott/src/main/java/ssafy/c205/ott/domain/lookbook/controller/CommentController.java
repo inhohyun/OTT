@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
@@ -39,6 +41,8 @@ public class CommentController {
     @PostMapping("/{post_id}")
     public ResponseEntity<?> createComment(@PathVariable("post_id") String postId, @ModelAttribute
     CommentMessageDto commentMessageDto) {
+        log.info("postId : {}", postId);
+        log.info("dto : {}", commentMessageDto.toString());
         commentService.createComment(postId, commentMessageDto);
         return ResponseEntity.ok().body("댓글 작성을 완료했습니다.");
     }

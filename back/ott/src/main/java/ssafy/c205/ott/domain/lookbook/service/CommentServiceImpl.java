@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.CommentStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
@@ -21,6 +22,7 @@ import ssafy.c205.ott.domain.lookbook.repository.CommentRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.notification.service.NotificationService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -32,6 +34,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createComment(String postId, CommentMessageDto commentMessageDto) {
+
+
         Member member = null;
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
                 Long.parseLong(commentMessageDto.getUid()), ActiveStatus.ACTIVE);
