@@ -130,6 +130,7 @@ const SearchPage = () => {
       setResults(matchedResults);
     } else {
       //TODO : 서버에서 받아온 데이터를 대체해주세요.
+      searchPeople(1, 10, searchQuery);
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
         { title: 'eunwoo_c', description: 'Description for person 2' },
