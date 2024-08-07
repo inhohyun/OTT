@@ -10,3 +10,14 @@ export const followFeed = () => {
       console.error(error);
     });
 };
+
+// export const followFeed = (userId) => {
+//   axiosInstance
+//     .get('/api/lookbook/followings', { params: { uid: userId } })
+//     .then((response) => {
+//       return response.data;
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// };

@@ -543,6 +543,7 @@ import {
 import { lookbookComment } from '../../api/lookbook/comments';
 import { lookbookDelete } from '../../api/lookbook/lookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
+import useUserStore from '../../data/lookbook/userStore';
 
 const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const [showSellComments, setShowSellComments] = useState(false);
@@ -556,6 +557,8 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   // const [commentStatus, setCommentStatus] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteLookbook, hideDetail } = useLookbookStore(); // Use Zustand store
+
+  const userId = useUserStore((state) => state.userId);
 
   useEffect(() => {
     setLiked(lookbook.like);
@@ -597,6 +600,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     if (liked) {
       try {
         lookbookDislike(lookbook);
+        // lookbookDislike(lookbook, userId);  // uid 넘겨주기
         setLiked(false);
         setCntLike((prevCntLike) => prevCntLike - 1);
       } catch (error) {
@@ -605,6 +609,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     } else {
       try {
         lookbookLike(lookbook);
+        // lookbookLike(lookbook, userId);
         setLiked(true);
         setCntLike((prevCntLike) => prevCntLike + 1);
       } catch (error) {
@@ -807,12 +812,14 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
                 comments={comments}
                 lookbookId={lookbook.id}
                 lookbook={lookbook}
+                userId={userId}
               />
             ) : (
               <Comment
                 comments={comments}
                 lookbookId={lookbook.id}
                 lookbook={lookbook}
+                userId={userId}
               />
             )}
           </div>

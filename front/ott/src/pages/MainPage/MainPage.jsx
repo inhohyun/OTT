@@ -4,6 +4,8 @@ import MyLookbook from '../../components/mylookbook/MyLookbook';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import FeedFollow from '../../components/feed/FeedFollow.jsx';
 import FeedNoFollow from '../../components/feed/FeedNoFollow.jsx';
+import { getUid } from '../../api/user/user.js';
+import useUserStore from '../../data/lookbook/userStore.js';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
@@ -33,6 +35,8 @@ const MainPage = () => {
 
   const [hasFollow, setHasFollow] = useState(false);
 
+  const setUserId = useUserStore((state) => state.setUserId);
+
   const checkUserFollowers = () => {
     const userHasFollowers = true;
     setHasFollow(userHasFollowers);
@@ -54,6 +58,21 @@ const MainPage = () => {
   useEffect(() => {
     checkUserFollowers();
   }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const uidResponse = await getUid();
+        const id = uidResponse.data.id;
+        setUserId(id); // Set the userId in the Zustand store
+        console.log('User ID:', id);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [setUserId]);
 
   return (
     <div

@@ -6,6 +6,7 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
+import useUserStore from '../../data/lookbook/userStore';
 
 const MyLookbook = () => {
   const initialLimit = 10;
@@ -15,9 +16,11 @@ const MyLookbook = () => {
   const [selectedTag, setSelectedTag] = useState(null);
   const scrollRefs = useRef({});
 
+  const userId = useUserStore((state) => state.userId);
+
   useEffect(() => {
     const fetchInitialLookbooks = async () => {
-      const lookbooksData = await fetchMyLookbooks();
+      const lookbooksData = await fetchMyLookbooks(userId);
       setLookbooks(lookbooksData);
 
       const tags = Array.from(

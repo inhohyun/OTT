@@ -471,6 +471,7 @@ import { lookbookCreate } from '../../api/lookbook/lookbook';
 import shirt1 from '../../assets/images/clothes/shirt1.jpg';
 import shirt2 from '../../assets/images/clothes/shirt2.jpg';
 import pants1 from '../../assets/images/clothes/pants1.jpg';
+import useUserStore from '../../data/lookbook/userStore';
 
 const clothesData = {
   상의: [
@@ -516,6 +517,9 @@ const CreateLookbook = () => {
   const [showDeleteButton, setShowDeleteButton] = useState(true);
 
   const categoryRef = useRef(null);
+
+  const userId = useUserStore((state) => state.userId);
+
   const {
     canvasItems,
     draggedItem,
@@ -547,6 +551,7 @@ const CreateLookbook = () => {
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
           formData.append('uid', 1);
+          // formData.append('uid', userId);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);

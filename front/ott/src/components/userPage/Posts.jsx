@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PublicPosts from '../userPage/PublicPosts';
 import PrivatePosts from '../userPage/PrivatePosts';
 import AddIcon from '../../assets/icons/add_icon.png';
@@ -6,9 +7,12 @@ import lockIcon from '../../assets/icons/lockicon.png';
 const Posts = ({ isMe, isPublic }) => {
   const [activePostType, setActivePostType] = useState('public');
 
+  const nav = useNavigate();
+
   const handleLookbookRegister = () => {
     console.log('룩북 등록 버튼이 클릭되었습니다!');
     // 추가적인 동작을 여기에 작성할 수 있습니다.
+    nav('/lookbookcreate');
   };
 
   if (!isMe && !isPublic) {

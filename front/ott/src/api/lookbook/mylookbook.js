@@ -11,3 +11,16 @@ export const fetchMyLookbooks = async () => {
     console.log(error);
   }
 };
+
+// import axiosInstance from '../axiosInstance';
+
+// export const fetchMyLookbooks = async (userId) => {
+//   try {
+//     const response = await axiosInstance.get('/api/lookbook/mylookbook', {
+//       params: { uid: userId },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

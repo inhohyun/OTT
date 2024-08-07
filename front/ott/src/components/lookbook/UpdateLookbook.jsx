@@ -481,6 +481,7 @@ import FormControls from './FormControls';
 import ToggleButton from './ToggleButton';
 import { lookbookUpdate } from '../../api/lookbook/lookbook';
 import shirt1 from '../../assets/images/clothes/shirt1.jpg';
+import useUserStore from '../../data/lookbook/userStore';
 
 const clothesData = {
   상의: [
@@ -521,6 +522,9 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   const [showDeleteButton, setShowDeleteButton] = useState(true);
 
   const categoryRef = useRef(null);
+
+  const userId = useUserStore((state) => state.userId);
+
   const {
     canvasItems,
     draggedItem,
@@ -563,6 +567,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
           formData.append('uid', 1);
+          // formData.append('uid',userId)
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);

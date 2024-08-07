@@ -275,6 +275,7 @@ import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import { lookbookDetail } from '../../api/lookbook/lookbookdetail';
 import detailStore from '../../data/lookbook/detailStore';
+import useUserStore from '../../data/lookbook/userStore';
 
 const Lookbook = ({ data, onDelete, onClose }) => {
   // Receive onDelete prop
@@ -288,9 +289,12 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   } = detailStore();
   // const [liked, setLiked] = useState(data.like);
 
+  const userId = useUserStore((state) => state.userId);
+
   const handleShowDetail = async () => {
     try {
       const lookbookData = await lookbookDetail(data.lookbookId);
+      // const lookbookData = await lookbookDetail(data.lookbookId, userId);
       console.log('룩북 상세보기', lookbookData);
       showDetail({ ...lookbookData, id: data.lookbookId });
     } catch (error) {

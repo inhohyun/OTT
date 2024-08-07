@@ -154,6 +154,7 @@ import { followFeed } from '../../api/lookbook/feed';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
+import useUserStore from '../../data/lookbook/userStore';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
@@ -162,9 +163,12 @@ const FeedFollow = () => {
 
   const scrollRefs = useRef([]);
 
+  const userId = useUserStore((state) => state.userId);
+
   useEffect(() => {
     try {
       const data = followFeed();
+      // const data = followFeed(userId);
       setFollowersData(data);
       setVisibleLookbooks(
         data.reduce(
