@@ -14,7 +14,7 @@ const SearchPage = () => {
     try {
       const response = await searchPeople(nickname, offset, limit);
       console.log('검색한 response : ', response);
-      return response;
+      return response.data;
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
@@ -141,7 +141,7 @@ const SearchPage = () => {
         { title: '_wonbin_', description: 'Description for person 5' },
         { title: 'junny_cha', description: 'Description for person 6' },
       ];
-
+      //여기서 에러가 뜨는 이유 : filteredResults에는 {}
       const filteredResults = searchResult.filter((item) =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
