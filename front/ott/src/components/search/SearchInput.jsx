@@ -15,6 +15,21 @@ const SearchInput = ({
     }
   };
 
+  // 입력 값이 유효한지 검사하는 함수 정의
+  const validateInput = (value) => {
+    // 영어, 숫자, 언더스코어(_)만 포함하는 정규 표현식
+    const regex = /^[a-zA-Z0-9_]*$/;
+    return regex.test(value);
+  };
+
+  // 입력 변화 처리 함수 수정
+  const handleValidatedInputChange = (e) => {
+    const { value } = e.target;
+    if (isChecked || validateInput(value)) {
+      handleInputChange(e);
+    }
+  };
+
   // 컴포넌트의 반환값으로 UI 정의
   return (
     <div className="flex items-center w-full mb-4">
@@ -28,7 +43,7 @@ const SearchInput = ({
         <input
           type="text"
           value={searchQuery}
-          onChange={handleInputChange}
+          onChange={handleValidatedInputChange}
           onKeyPress={handleKeyPress}
           placeholder={
             isChecked
