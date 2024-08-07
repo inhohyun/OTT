@@ -128,7 +128,10 @@ const SearchPage = () => {
 
       setResults(matchedResults);
     } else {
-      searchPeopleMethod(searchQuery, 1, 10);
+      const nickname = searchQuery;
+      const offset = 1;
+      const limit = 10;
+      searchPeopleMethod(nickname, offset, limit);
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
         { title: 'eunwoo_c', description: 'Description for person 2' },
