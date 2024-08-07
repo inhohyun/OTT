@@ -131,7 +131,8 @@ const SearchPage = () => {
       const nickname = searchQuery;
       const offset = 1;
       const limit = 10;
-      searchPeopleMethod(nickname, offset, limit);
+      const searchResult = searchPeopleMethod(nickname, offset, limit);
+
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
         { title: 'eunwoo_c', description: 'Description for person 2' },
@@ -141,11 +142,11 @@ const SearchPage = () => {
         { title: 'junny_cha', description: 'Description for person 6' },
       ];
 
-      const filteredResults = mockPeopleResults.filter((item) =>
+      const filteredResults = searchResult.filter((item) =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
-      setResults(filteredResults);
+      setResults(searchResult);
     }
   };
 

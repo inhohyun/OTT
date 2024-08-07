@@ -78,14 +78,8 @@ const PersonSearchResult = ({ results, searchQuery }) => {
                 className="text-base font-semibold mb-2"
                 style={{ fontSize: '14px' }}
               >
-                {result.title}
+                {result.nickname}
               </h3>
-              <p
-                className="text-xs text-stone-500"
-                style={{ fontSize: '12px' }}
-              >
-                {result.description}
-              </p>
             </div>
           </div>
         ))}
