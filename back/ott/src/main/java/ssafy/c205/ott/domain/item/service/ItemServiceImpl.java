@@ -7,10 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ssafy.c205.ott.common.entity.ItemCategory;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
+import ssafy.c205.ott.domain.category.entity.Category;
+import ssafy.c205.ott.domain.category.repository.CategoryRepository;
+import ssafy.c205.ott.domain.closet.dto.ClosetDto;
+import ssafy.c205.ott.domain.closet.repository.ClosetRepository;
+import ssafy.c205.ott.domain.closet.service.ClosetService;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
@@ -31,13 +37,13 @@ public class ItemServiceImpl implements ItemService {
     private final MemberRepository memberRepository;
     private final AmazonS3Util amazonS3Util;
     private final ItemImageRepository itemImageRepository;
+    private final ClosetService closetService;
+    private final CategoryRepository categoryRepository;
+    private final ClosetRepository closetRepository;
 
     @Override
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
         MultipartFile backImg) {
-        log.info("dto : {}", itemCreateDto.toString());
-        log.info("frontImg : {}", frontImg);
-        log.info("backImg : {}", backImg);
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
             ActiveStatus.ACTIVE);
         Member member = null;
@@ -69,7 +75,40 @@ public class ItemServiceImpl implements ItemService {
         }
 
         //옷 저장
-        //Todo : Category 추가
+        //closet id 가져오기
+        List<ClosetDto> closets = closetService.findByMemberId(itemCreateDto.getUid());
+        Long closetId = closets.get(0).getId();
+
+        Optional<Category> oc = categoryRepository.findByNameAndClosetId(
+            itemCreateDto.getCategory(), closetId);
+        Category category = null;
+        if (oc.isPresent()) {
+            category = oc.get();
+        }
+        List<ItemCategory> categories = new ArrayList<>();
+
+        //카테고리가 존재하면 해당 카테고리로 넣어줌
+        if (category != null) {
+            categories.add(ItemCategory
+                .builder()
+                .category(category)
+                .item(saveItem)
+                .build());
+        } else {
+            //카테고리를 추가한 후 해당 카테고리 추가
+            Category saveCategory = categoryRepository.save(Category
+                .builder()
+                .name(itemCreateDto.getCategory())
+                .closet(closetRepository.findById(closetId).get())
+                .build());
+
+            categories.add(ItemCategory
+                .builder()
+                .category(saveCategory)
+                .item(saveItem)
+                .build());
+        }
+
         itemRepository.save(Item
             .builder()
             .id(saveItem.getId())
@@ -79,6 +118,7 @@ public class ItemServiceImpl implements ItemService {
             .member(member)
             .itemImages(itemImages)
             .size(itemCreateDto.getSize())
+            .itemCategories(categories)
             .purchase(itemCreateDto.getPurchase())
             .publicStatus(itemCreateDto.getPublicStatus())
             .salesStatus(itemCreateDto.getSalesStatus())
@@ -89,9 +129,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
         MultipartFile backImg) {
-        log.info("dto : {}", itemUpdateDto.toString());
-        log.info("frontImg : {}", frontImg);
-        log.info("backImg : {}", backImg);
         //이전 정보 가져오기
         Optional<Item> oi = itemRepository.findById(clothesId);
         if (oi.isPresent()) {
@@ -121,17 +158,44 @@ public class ItemServiceImpl implements ItemService {
                     .build());
             }
 
-            //Todo : 카테고리 변경
             //카테고리 변경
-            //1. 기존 카테고리 삭제
+            //closet id 가져오기
+            List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getUid());
+            Long closetId = closets.get(0).getId();
 
-            //2. 신규 카테고리 생성
+            Optional<Category> oc = categoryRepository.findByNameAndClosetId(
+                itemUpdateDto.getCategory(), closetId);
+            Category category = null;
+            if (oc.isPresent()) {
+                category = oc.get();
+            }
+            List<ItemCategory> categories = new ArrayList<>();
 
+            //카테고리가 존재하면 해당 카테고리로 넣어줌
+            if (category != null) {
+                categories.add(ItemCategory
+                    .builder()
+                    .category(category)
+                    .item(item)
+                    .build());
+            } else {
+                //카테고리를 추가한 후 해당 카테고리 추가
+                Category saveCategory = categoryRepository.save(Category
+                    .builder()
+                    .name(itemUpdateDto.getCategory())
+                    .closet(closetRepository.findById(closetId).get())
+                    .build());
+
+                categories.add(ItemCategory
+                    .builder()
+                    .category(saveCategory)
+                    .item(item)
+                    .build());
+            }
             Optional<Member> om = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
                 ActiveStatus.ACTIVE);
             if (om.isPresent()) {
                 Member member = om.get();
-                //Todo : Category 추가
                 itemRepository.save(Item
                     .builder()
                     .id(item.getId())
@@ -141,6 +205,7 @@ public class ItemServiceImpl implements ItemService {
                     .itemImages(itemImages)
                     .size(itemUpdateDto.getSize())
                     .purchase(itemUpdateDto.getPurchase())
+                    .itemCategories(categories)
                     .publicStatus(itemUpdateDto.getPublicStatus())
                     .salesStatus(itemUpdateDto.getSalesStatus())
                     .color(itemUpdateDto.getColor())
@@ -160,8 +225,8 @@ public class ItemServiceImpl implements ItemService {
                 amazonS3Util.deleteFile(itemImage.getItemImagePath());
                 itemImageRepository.delete(itemImage);
             }
-            //todo: 카테고리삭제
             //카테고리 삭제
+            categoryRepository.delete(item.getItemCategories().get(0).getCategory());
 
             //옷 삭제하기
             itemRepository.delete(item);
@@ -182,7 +247,6 @@ public class ItemServiceImpl implements ItemService {
             //카테고리 가져오기
 
             //return
-            //Todo : 카테고리 return 넣을것
             return ItemResponseDto
                 .builder()
                 .clothesId(item.getId())
@@ -191,11 +255,13 @@ public class ItemServiceImpl implements ItemService {
                 .purchase(item.getPurchase())
                 .publicStatus(item.getPublicStatus())
                 .salesStatus(item.getSalesStatus())
+                .category(item.getItemCategories().get(0).getCategory().getName())
                 .brand(item.getBrand())
                 .color(item.getColor())
                 .imageUrls(images)
                 .build();
         }
+
         return null;
     }
 
