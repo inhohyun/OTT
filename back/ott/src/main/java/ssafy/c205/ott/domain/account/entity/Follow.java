@@ -32,5 +32,10 @@ public class Follow extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FollowStatus followStatus = FollowStatus.WAIT;
+    private FollowStatus followStatus;
+
+    public void updateFollowStatus() {
+        this.followStatus = FollowStatus.FOLLOWING;
+    }
+
 }

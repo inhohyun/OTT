@@ -1,4 +1,4 @@
-//package ssafy.c205.ott.domain.account.service;
+package ssafy.c205.ott.domain.account.service;//package ssafy.c205.ott.domain.account.service;
 //
 //import jakarta.persistence.EntityManager;
 //import jakarta.persistence.PersistenceContext;
