@@ -101,7 +101,6 @@ class MemberWriteServiceTest {
                 .nickname("NewNickname")
                 .phoneNumber("123-456-7890")
                 .introduction("New Introduction")
-                .profileImageUrl("http://newprofileimage.com")
                 .height(180)
                 .weight(75)
                 .gender(Gender.MAN)
@@ -111,14 +110,13 @@ class MemberWriteServiceTest {
                 .build();
 
         // when
-        UpdateMemberSuccessDto result = memberWriteService.updateMember(memberUpdateRequestDto);
+        UpdateMemberSuccessDto result = memberWriteService.updateMember(1L, memberUpdateRequestDto);
 
         // then
         Member updatedMember = memberRepository.findById(result.getMemberId()).orElseThrow();
         assertThat(updatedMember.getNickname()).isEqualTo(memberUpdateRequestDto.getNickname());
         assertThat(updatedMember.getPhoneNumber()).isEqualTo(memberUpdateRequestDto.getPhoneNumber());
         assertThat(updatedMember.getIntroduction()).isEqualTo(memberUpdateRequestDto.getIntroduction());
-        assertThat(updatedMember.getProfileImageUrl()).isEqualTo(memberUpdateRequestDto.getProfileImageUrl());
         assertThat(updatedMember.getHeight()).isEqualTo(memberUpdateRequestDto.getHeight());
         assertThat(updatedMember.getWeight()).isEqualTo(memberUpdateRequestDto.getWeight());
         assertThat(updatedMember.getGender()).isEqualTo(memberUpdateRequestDto.getGender());

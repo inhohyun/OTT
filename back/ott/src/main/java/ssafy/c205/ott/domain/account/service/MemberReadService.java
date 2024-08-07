@@ -2,14 +2,18 @@ package ssafy.c205.ott.domain.account.service;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.MemberTag;
+import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.MemberSsoDto;
 import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberIdDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
 import ssafy.c205.ott.domain.account.dto.response.MemberSearchResponseDto;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
@@ -25,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -34,7 +39,13 @@ public class MemberReadService {
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
 
+    public MemberIdDto myIdSearch(CustomOAuth2User currentMember) {
+        return MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).getId()).build();
+    }
+
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
+        log.info("memberId" + memberRequestDto.getId());
+        log.info("CurrentId" + memberRequestDto.getCurrentId());
         Member member = findActiveMemberById(memberRequestDto.getId());
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
         int followingCount = member.getFollowings().size();
@@ -49,7 +60,7 @@ public class MemberReadService {
     }
 
     public List<FollowsResponseDto> followingsSearch(FollowRequestDto followRequestDto) {
-        List<Follow> followings = followRepository.findByToMemberId(followRequestDto.getTargetMemberId());
+        List<Follow> followings = followRepository.findByFromMemberId(followRequestDto.getTargetMemberId());
 
         return followings.stream()
                 .map(follow -> FollowsResponseDto.builder()
@@ -62,9 +73,22 @@ public class MemberReadService {
     }
 
     public List<FollowsResponseDto> followersSearch(FollowRequestDto followRequestDto) {
-        List<Follow> followings = followRepository.findByFromMemberId(followRequestDto.getTargetMemberId());
+        List<Follow> followings = followRepository.findByToMemberId(followRequestDto.getTargetMemberId());
 
         return followings.stream()
+                .map(follow -> FollowsResponseDto.builder()
+                        .memberId(follow.getFromMember().getId())
+                        .name(follow.getFromMember().getName())
+                        .nickname(follow.getFromMember().getNickname())
+                        .profileImageUrl(follow.getFromMember().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<FollowsResponseDto> followRequestListSearch(MemberSsoDto memberSsoDto) {
+        List<Follow> followingRequestList = followRepository.findByToMemberSsoAndFollowStatus(memberSsoDto.getSso(), FollowStatus.WAIT);
+
+        return followingRequestList.stream()
                 .map(follow -> FollowsResponseDto.builder()
                         .memberId(follow.getFromMember().getId())
                         .name(follow.getFromMember().getName())
@@ -96,7 +120,7 @@ public class MemberReadService {
     }
 
     private boolean isSelf(MemberRequestDto memberRequestDto, Member member) {
-        return member.getId().equals(memberRequestDto.getCurrentId());
+        return member.getId().longValue() == memberRequestDto.getCurrentId().longValue();
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {

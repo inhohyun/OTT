@@ -5,8 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import ssafy.c205.ott.domain.account.entity.MemberRole;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -50,10 +51,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshService.addRefreshEntity(username, refreshToken, 86400000L);
 
         //응답 설정
-        response.setHeader("access", accessToken);
-        ResponseCookie responseCookie = cookieService.createCookie("refresh", refreshToken);
-        response.addHeader("Set-Cookie", responseCookie.toString());
+        response.addCookie(cookieService.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
+
+        log.info("Access Token: {}", accessToken);
+        log.info("Refresh Token: {}", refreshToken);
 
         response.sendRedirect("https://i11c205.p.ssafy.io/oauth/callback");
     }

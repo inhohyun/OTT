@@ -22,7 +22,6 @@ public class MemberUpdateRequestDto {
     private String nickname;
     private String phoneNumber;
     private String introduction;
-    private String profileImageUrl;
     private float height;
     private float weight;
     private Gender gender;
