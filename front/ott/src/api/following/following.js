@@ -4,7 +4,7 @@ import axiosInstance from '../axiosInstance';
 export const getFollowerList = async (id) => {
   try {
     const response = await axiosInstance.get(
-      `api/members/follow/${id}/followerings`
+      `api/members/follow/${id}/followings`
     );
     return response;
   } catch (error) {
