@@ -4,6 +4,7 @@ import {
   setAccessToken,
   removeAccessToken,
 } from '@/utils/localUtils';
+
 // 환경 변수에서 API 기본 URL을 가져옴
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -30,34 +31,40 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-//TODO : 에러 핸들링 추가 예정
 // 응답 인터셉터 설정
 axiosInstance.interceptors.response.use(
   (response) => response.data, // 정상 응답 중 data만 꺼내주기
   async (error) => {
     const originalRequest = error.config; // 실패한 요청의 설정을 가져옴
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-      try {
-        const response = await axiosInstance.get('/api/reissue');
-        const newAccessToken = response.headers['access']; // 새로운 Access Token 가져오기
-        setAccessToken(newAccessToken); // 새로운 Access Token 저장
 
-        // 수정된 부분: 요청에 새로운 Access Token 포함
-        originalRequest.headers.access = `${newAccessToken}`;
+    if (error.response && error.response.status === 401) {
+      // 이미 한번 재시도한 요청이 아닌지 확인
+      if (!originalRequest._retry) {
+        originalRequest._retry = true;
 
-        return axiosInstance(originalRequest); // 원래 요청 재시도
-      } catch (err) {
-        console.error('토큰 에러: ', err);
-        alert('세션이 만료되었습니다. 다시 로그인해주세요:');
+        try {
+          const response = await axiosInstance.get('/api/reissue');
+          const newAccessToken = response.headers['access']; // 새로운 Access Token 가져오기
+          setAccessToken(newAccessToken); // 새로운 Access Token 저장
+
+          // 수정된 부분: 요청에 새로운 Access Token 포함
+          originalRequest.headers.access = `${newAccessToken}`;
+
+          return axiosInstance(originalRequest); // 원래 요청 재시도
+        } catch (err) {
+          console.error('토큰 재발급 에러: ', err);
+          alert('세션이 만료되었습니다. 다시 로그인해주세요:');
+          removeAccessToken(); // 실패 시 토큰 제거
+          window.location.href = '/'; // 로그인 페이지로 리디렉션
+          return Promise.reject(err);
+        }
+      } else {
+        // 이미 재시도를 한 경우, 무한 루프를 방지하기 위해 바로 에러를 반환
         removeAccessToken(); // 실패 시 토큰 제거
         window.location.href = '/'; // 로그인 페이지로 리디렉션
       }
     }
+
     console.error('인스턴스에서 API 호출 실패:', error);
     return Promise.reject(error); // 그 외의 오류는 그대로 반환
   }
