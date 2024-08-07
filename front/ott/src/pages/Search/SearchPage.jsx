@@ -21,6 +21,13 @@ const SearchPage = () => {
   };
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
+    const { value } = e.target;
+    // 영어, 숫자, 언더스코어(_)만 허용하는 정규식
+    const regex = /^[a-zA-Z0-9_]*$/;
+
+    if (regex.test(value)) {
+      setSearchQuery(value);
+    }
   };
 
   const handleSearch = async () => {
@@ -141,7 +148,7 @@ const SearchPage = () => {
         { title: '_wonbin_', description: 'Description for person 5' },
         { title: 'junny_cha', description: 'Description for person 6' },
       ];
-      //여기서 에러가 뜨는 이유 : filteredResults에는 {}
+      //여기서 에러가 뜨는 이유
       const filteredResults = searchResult.filter((item) =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
