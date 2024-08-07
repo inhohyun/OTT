@@ -82,11 +82,12 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void createNotification(NotificationMessage message) {
+    public void createNotification(NotificationMessage message, Long memberId) {
         notificationRepository.save(Notification
                 .builder()
                 .notificationStatus(NotificationStatus.UNREAD)
                 .message(message.getMessage())
+                .memberid(memberId)
                 .build());
     }
 

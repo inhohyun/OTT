@@ -10,6 +10,6 @@ public interface NotificationService {
     void readNotification(String notificationId);
     void deleteNotification(String notificationId);
     void createCommentNotification(NotificationCreateDto notificationCreateDto);
-    void createNotification(NotificationMessage message);
+    void createNotification(NotificationMessage message, Long memberId);
     List<NotificationDto> getNotifications(NotificationSelectDto notificationSelectDto);
 }
