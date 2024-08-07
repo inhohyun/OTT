@@ -146,7 +146,7 @@ const SearchPage = () => {
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
-      setResults(searchResult);
+      setResults(filteredResults);
     }
   };
 
