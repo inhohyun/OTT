@@ -15,5 +15,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
         @Param("statuses") List<NotificationStatus> statuses
     );
 
-    List<Notification> findByMemberIdOrderByIdDesc(Long memberId);
+    List<Notification> findByMemberidOrderByIdDesc(Long memberId);
 }

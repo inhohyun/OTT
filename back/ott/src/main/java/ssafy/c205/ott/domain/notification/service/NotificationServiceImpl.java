@@ -45,11 +45,20 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void deleteNotification(String notificationId) {
+        Optional<Notification> bn = notificationRepository.findById(
+            Long.parseLong(notificationId));
+        Notification notification = null;
+        if (bn.isPresent()) {
+            notification = bn.get();
+        }
         notificationRepository.save(Notification
-                .builder()
-                .id(Long.parseLong(notificationId))
-                .notificationStatus(NotificationStatus.DELETE)
-                .build());
+            .builder()
+            .id(Long.parseLong(notificationId))
+            .notificationStatus(NotificationStatus.READ)
+            .memberid(notification.getId())
+            .comment(notification.getComment())
+            .message(notification.getMessage())
+            .build());
         //Todo : 알림 삭제처리가 잘 되었는지 확인하여 예외처리
     }
 
@@ -84,11 +93,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationDto> getNotifications(NotificationSelectDto notificationSelectDto) {
         List<NotificationDto> notifications = new ArrayList<>();
-//        List<NotificationStatus> notificationStatuses = new ArrayList<>();
-//        notificationStatuses.add(NotificationStatus.READ);
-//        notificationStatuses.add(NotificationStatus.UNREAD);
-
-        List<Notification> notificationArr = notificationRepository.findByMemberIdOrderByIdDesc(Long.parseLong(notificationSelectDto.getUid()));
+        List<Notification> notificationArr = notificationRepository.findByMemberidOrderByIdDesc(Long.parseLong(notificationSelectDto.getUid()));
 
         for (Notification notification : notificationArr) {
             notifications.add(NotificationDto
