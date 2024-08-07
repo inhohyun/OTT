@@ -19,12 +19,14 @@ import ssafy.c205.ott.domain.closet.repository.ClosetRepository;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
+import ssafy.c205.ott.domain.item.dto.responsedto.ItemCategoryResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
 import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.ItemStatus;
+import ssafy.c205.ott.domain.item.repository.ItemCategoryRepository;
 import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
 import ssafy.c205.ott.domain.item.repository.ItemRepository;
 
@@ -40,6 +42,7 @@ public class ItemServiceImpl implements ItemService {
     private final ClosetService closetService;
     private final CategoryRepository categoryRepository;
     private final ClosetRepository closetRepository;
+    private final ItemCategoryRepository itemCategoryRepository;
 
     @Override
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
@@ -94,6 +97,12 @@ public class ItemServiceImpl implements ItemService {
                 .category(category)
                 .item(saveItem)
                 .build());
+            itemCategoryRepository.save(
+                ItemCategory
+                    .builder()
+                    .item(saveItem)
+                    .category(category)
+                    .build());
         } else {
             //카테고리를 추가한 후 해당 카테고리 추가
             Category saveCategory = categoryRepository.save(Category
@@ -102,6 +111,12 @@ public class ItemServiceImpl implements ItemService {
                 .closet(closetRepository.findById(closetId).get())
                 .build());
 
+            itemCategoryRepository.save(
+                ItemCategory
+                    .builder()
+                    .item(saveItem)
+                    .category(saveCategory)
+                    .build());
             categories.add(ItemCategory
                 .builder()
                 .category(saveCategory)
@@ -326,5 +341,30 @@ public class ItemServiceImpl implements ItemService {
                 .salesStatus(item.getSalesStatus())
                 .build());
         }
+    }
+
+    @Override
+    public List<ItemCategoryResponseDto> selectByCategory(Long categoryId, Long userId,
+        Long closetId) {
+        List<ItemCategory> items = itemCategoryRepository.findByMemberIdAndCategoryId(
+            userId, categoryId);
+
+        List<ItemCategoryResponseDto> itemCategoryResponseDtos = new ArrayList<>();
+        for (ItemCategory item : items) {
+            if (item.getCategory().getCloset().getId() != closetId) {
+                continue;
+            }
+            String[] imgUrls = new String[item.getItem().getItemImages().size()];
+            for (int i = 0; i < item.getItem().getItemImages().size(); i++) {
+                imgUrls[i] = item.getItem().getItemImages().get(i).getItemImagePath();
+            }
+            itemCategoryResponseDtos.add(ItemCategoryResponseDto
+                .builder()
+                .bookmarkStatus(item.getItem().getBookmarkStatus())
+                .clothId(item.getId())
+                .img(imgUrls)
+                .build());
+        }
+        return itemCategoryResponseDtos;
     }
 }

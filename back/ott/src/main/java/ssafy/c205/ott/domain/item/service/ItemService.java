@@ -3,6 +3,7 @@ package ssafy.c205.ott.domain.item.service;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
+import ssafy.c205.ott.domain.item.dto.responsedto.ItemCategoryResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 
@@ -23,4 +24,6 @@ public interface ItemService {
     void bookmarkLookbook(Long clothesId);
 
     void unbookmarkLookbook(Long clothesId);
+
+    List<ItemCategoryResponseDto> selectByCategory(Long categoryId, Long userId, Long closetId);
 }

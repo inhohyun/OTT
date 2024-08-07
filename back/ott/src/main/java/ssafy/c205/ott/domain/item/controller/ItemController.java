@@ -94,8 +94,8 @@ public class ItemController {
 
     @GetMapping("/{user_id}/{category_id}")
     public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId,
-        @PathVariable("category_id") Long categoryId) {
-        return null;
+        @PathVariable("category_id") Long categoryId, @RequestParam("closet_id") Long closetId) {
+        return ResponseEntity.ok().body(itemService.selectByCategory(categoryId, userId, closetId));
     }
 
     @PostMapping("/bookmark/{cloth_id}")
