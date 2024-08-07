@@ -50,7 +50,9 @@ const SearchInput = ({
               ? '스타일의 태그를 입력하세요' // 스위치가 체크되었을 때
               : '사용자 닉네임을 입력하세요' // 스위치가 체크되지 않았을 때
           }
-          className="border p-2 rounded-full w-full pl-4"
+          className={`border p-2 rounded-full w-full pl-4 ${
+            nicknameError ? 'border-red-500' : 'border-violet-300'
+          }`}
         />
         {/* 검색 아이콘, 클릭 시 handleSearch 함수를 호출 */}
         <FontAwesomeIcon
