@@ -63,9 +63,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PublicStatus publicStatus;
 
-    @OneToMany(mappedBy = "member")
-    private List<Closet> closets = new ArrayList<>();
-
     @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
     private List<Follow> followings = new ArrayList<>();
 
@@ -74,4 +71,41 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberTag> memberTags = new ArrayList<>();
+
+    @Builder
+    public Member(String name, String sso, String email, MemberRole role) {
+        this.name = name;
+        this.sso = sso;
+        this.email = email;
+        this.role = role;
+        this.activeStatus = ActiveStatus.ACTIVE;
+        this.publicStatus = PublicStatus.PUBLIC;
+    }
+
+    public void updateNameAndEmail(String email, String name) {
+        this.email = email;
+        this.name = name;
+    }
+
+    public void updateMember(String nickname, String phoneNumber, String introduction,
+                             float height, float weight, Gender gender,
+                             BodyType bodyType, PublicStatus publicStatus, List<MemberTag> memberTags) {
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.introduction = introduction;
+        this.height = height;
+        this.weight = weight;
+        this.gender = gender;
+        this.bodyType = bodyType;
+        this.publicStatus = publicStatus;
+        this.memberTags = memberTags;
+    }
+
+    public void deleteMember() {
+        this.activeStatus = ActiveStatus.INACTIVE;
+    }
+
+    public void updateProfileImage(String ProfileImageUrl) {
+        this.profileImageUrl = ProfileImageUrl;
+    }
 }
