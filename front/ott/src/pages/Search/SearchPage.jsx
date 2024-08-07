@@ -10,9 +10,9 @@ const SearchPage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [results, setResults] = useState([]);
 
-  const searchPeopleMethod = async (searchQuery, offset, limit) => {
+  const searchPeopleMethod = async (nickname, offset, limit) => {
     try {
-      const response = await searchPeople(offset, limit, searchQuery);
+      const response = await searchPeople(offset, limit, nickname);
       console.log('검색한 response : ', response);
       return response;
     } catch (error) {

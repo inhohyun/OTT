@@ -62,13 +62,14 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest); // 원래 요청 재시도
         } catch (err) {
           console.error('Token reissue error: ', err);
-          alert('Your session has expired. Please log in again:');
+          alert('로그인 후 이용해주세요.');
           removeAccessToken(); // 실패 시 토큰 제거
           window.location.href = '/'; // 로그인 페이지로 리디렉션
           return Promise.reject(err);
         }
       } else {
         // 재시도가 이미 이루어진 경우, 무한 루프를 방지하기 위해 즉시 오류 반환
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
         removeAccessToken(); // 실패 시 토큰 제거
         window.location.href = '/'; // 로그인 페이지로 리디렉션
         return Promise.reject(error);
