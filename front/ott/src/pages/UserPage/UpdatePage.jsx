@@ -156,9 +156,6 @@ const UpdatePage = () => {
             isChecked={isChecked}
             handleCheckboxChange={handleCheckboxChange}
           />
-          <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)] mt-[7px] ml-[5px]">
-            공개 여부
-          </p>
         </div>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form className="space-y-6 mb-" onSubmit={handleSubmit}>

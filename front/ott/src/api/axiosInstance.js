@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
         originalRequest._retry = true;
 
         try {
-          const response = await axiosInstance.get('/api/reissue');
+          const response = await axios.get(`${baseURL}/api/reissue`);
           const newAccessToken = response.headers['access']; // 새로운 Access Token 가져오기
           setAccessToken(newAccessToken); // 새로운 Access Token 저장
 
