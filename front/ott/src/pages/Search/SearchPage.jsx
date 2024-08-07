@@ -12,7 +12,7 @@ const SearchPage = () => {
 
   const searchPeopleMethod = async (nickname, offset, limit) => {
     try {
-      const response = await searchPeople(offset, limit, nickname);
+      const response = await searchPeople(nickname, offset, limit);
       console.log('검색한 response : ', response);
       return response;
     } catch (error) {
