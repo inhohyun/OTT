@@ -10,39 +10,44 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-// import { getUserInfo } from '../../api/user/user';
+import { getUid, getUserInfo } from '../../api/user/user';
 
-// 룩북 상세보기 및 사용자 검색에서 프로필로 넘어올 때 uid 값을 받음 근데 마이페이지를 눌렀을 때는 어떻게
-const UserPage = ({ uid }) => {
+const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [uid, setUid] = useState(null);
+  const [isMe, setIsMe] = useState(false); // isMe를 상태로 관리
+  const [isPublic, setIsPublic] = useState(false); // isPublic을 상태로 관리
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserData = async () => {
       try {
-        // const data = await getUserInfo(uid);
-        const dummyData = {
-          username: '홍길동',
-          isMe: false,
-          isPublic: true,
-          tags: ['패션', '여행', '음악'],
-        };
-        setUserInfo(dummyData);
+        const uidResponse = await getUid();
+        const id = uidResponse.data.id;
+        setUid(id);
+
+        const userInfoResponse = await getUserInfo(id);
+        console.log('userInfoResponse : ', userInfoResponse);
+        setUserInfo(userInfoResponse.data);
+
+        // isMe와 isPublic 상태 업데이트
+        setIsMe(userInfoResponse.data.followStatus === 'SELF');
+        setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
 
-    fetchUserInfo();
-  }, [uid]);
+    fetchUserData();
+  }, []);
 
   if (!userInfo) {
     return <div>Loading...</div>;
   }
 
-  const { username, isMe, isPublic, tags } = userInfo;
+  const { name, tags } = userInfo;
 
   let renderComponent;
 
@@ -51,10 +56,10 @@ const UserPage = ({ uid }) => {
       renderComponent = <Posts isMe={isMe} isPublic={isPublic} />;
       break;
     case 'followers':
-      renderComponent = <Followers />;
+      renderComponent = <Followers uid={uid} />;
       break;
     case 'following':
-      renderComponent = <Following />;
+      renderComponent = <Following uid={uid} />;
       break;
     default:
       renderComponent = null;
@@ -71,7 +76,12 @@ const UserPage = ({ uid }) => {
   };
 
   const handleSettingsClick = () => {
-    navigate(`/updatePage`, { state: { userId: uid } });
+    console.log('이동하려는 회원 id', uid);
+    if (uid) {
+      navigate(`/updatePage`, { state: { uid, userInfo } });
+    } else {
+      console.error('ID is not available');
+    }
   };
 
   return (
@@ -94,7 +104,7 @@ const UserPage = ({ uid }) => {
                 <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
               )}
               <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
-                {username}
+                {name}
               </p>
               {isMe && (
                 <img
@@ -140,7 +150,9 @@ const UserPage = ({ uid }) => {
           </div>
         </div>
         <div
-          className={`flex justify-center mt-1 ${tags.length > 3 ? 'flex-wrap' : ''} space-x-2`}
+          className={`flex justify-center mt-1 ${
+            tags.length > 3 ? 'flex-wrap' : ''
+          } space-x-2`}
         >
           {tags.map((tag) => (
             <span

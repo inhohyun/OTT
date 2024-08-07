@@ -3,27 +3,43 @@ import backgroundImage from '../../assets/images/background_image_main.png';
 import SearchInput from '../../components/search/SearchInput';
 import PersonSearchResult from '../../components/search/PersonSearchResult';
 import StyleSearchResult from '../../components/search/StyleSearchResult';
-
+import { searchPeople } from '../../api/search/searchPeople';
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [lastSearchQuery, setLastSearchQuery] = useState(''); // To store the last search query
+  const [lastSearchQuery, setLastSearchQuery] = useState(''); // 마지막 검색 쿼리 저장
   const [isChecked, setIsChecked] = useState(false);
   const [results, setResults] = useState([]);
 
+  const searchPeopleMethod = async (nickname, offset, limit) => {
+    try {
+      const response = await searchPeople(nickname, offset, limit);
+      console.log('검색한 response : ', response);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
+    const { value } = e.target;
+    // 영어, 숫자, 언더스코어(_)만 허용하는 정규식
+    const regex = /^[a-zA-Z0-9_]*$/;
+
+    if (regex.test(value)) {
+      setSearchQuery(value);
+    }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchQuery) {
       setResults([]);
       return;
     }
 
-    setLastSearchQuery(searchQuery); // Update the last search query
+    setLastSearchQuery(searchQuery); // 마지막 검색 쿼리 업데이트
 
     if (isChecked) {
-      // Mock search function for tags
+      // 태그 검색을 위한 모의 검색 함수
       const styleData = [
         {
           tags: ['소개팅', '남친룩'],
@@ -111,6 +127,7 @@ const SearchPage = () => {
         },
       ];
 
+      // 검색어와 일치하는 스타일 데이터 필터링
       const matchedResults = styleData.filter((item) =>
         item.tags.some((tag) =>
           tag.toLowerCase().includes(searchQuery.toLowerCase())
@@ -119,7 +136,11 @@ const SearchPage = () => {
 
       setResults(matchedResults);
     } else {
-      // Mock search function for people
+      const nickname = searchQuery;
+      const offset = 1;
+      const limit = 10;
+      const searchResult = await searchPeopleMethod(nickname, offset, limit);
+
       const mockPeopleResults = [
         { title: 'ofekim0', description: 'Description for person 1' },
         { title: 'eunwoo_c', description: 'Description for person 2' },
@@ -128,8 +149,8 @@ const SearchPage = () => {
         { title: '_wonbin_', description: 'Description for person 5' },
         { title: 'junny_cha', description: 'Description for person 6' },
       ];
-
-      const filteredResults = mockPeopleResults.filter((item) =>
+      //여기서 에러가 뜨는 이유
+      const filteredResults = searchResult.filter((item) =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
@@ -137,10 +158,11 @@ const SearchPage = () => {
     }
   };
 
+  // 체크박스 상태 변경하는 함수
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
-    setSearchQuery(''); // Clear the search input
-    setResults([]); // Clear the search results
+    setSearchQuery('');
+    setResults([]);
   };
 
   return (
@@ -156,6 +178,7 @@ const SearchPage = () => {
           handleCheckboxChange={handleCheckboxChange}
           handleSearch={handleSearch}
         />
+        {/* 체크박스 상태에 따라 결과를 다르게 렌더링 */}
         {isChecked ? (
           <StyleSearchResult results={results} searchQuery={lastSearchQuery} />
         ) : (

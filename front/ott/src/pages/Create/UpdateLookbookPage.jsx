@@ -5,9 +5,9 @@ const UpdateLookbookPage = () => {
   const location = useLocation();
   const lookbook = location.state?.lookbook;
   const lookbookid = useParams();
-  console.log(location);
-  console.log(location.state);
-  console.log(lookbook);
+  // console.log(location);
+  // console.log(location.state);
+  // console.log(lookbook);
 
   return (
     <>

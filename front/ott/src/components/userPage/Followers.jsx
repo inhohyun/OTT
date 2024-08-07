@@ -1,63 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import defaultImage from '../../assets/icons/main.logo.png';
-
-const Followers = () => {
+import { getFollowerList } from '../../api/follower/follower';
+const Followers = ({ uid }) => {
+  const [followers, setFollowers] = useState([]);
   const [visibleFollowers, setVisibleFollowers] = useState(10);
+
+  useEffect(() => {
+    const fetchFollowers = async () => {
+      try {
+        const response = await getFollowerList(uid); // TODO : props로 전달 받을 때 한 번 타고 들어가는거 수정
+        console.log('response:', response);
+        setFollowers(response.data);
+      } catch (error) {
+        console.error('팔로워 목록을 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchFollowers();
+  }, [uid]);
 
   const handleShowMore = () => {
     setVisibleFollowers((prev) => prev + 10); // Show 10 more followers
   };
-
-  const followers = [
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-    { name: '전가현', image: '' },
-    { name: '김민수', image: '' },
-    { name: '박지윤', image: '' },
-    { name: '이준호', image: '' },
-    { name: '최수진', image: '' },
-    { name: '한지민', image: '' },
-  ];
 
   return (
     <div className="flex flex-col items-center mb-20">
@@ -84,7 +48,7 @@ const Followers = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span>{follower.name}</span>
+                      <span>{follower.nickname}</span>
                     </div>
                   ))}
               </div>

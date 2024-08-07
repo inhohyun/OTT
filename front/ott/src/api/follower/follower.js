@@ -1,11 +1,11 @@
-import { get } from '../axiosInstance';
-
-// TODO : 팔로워 수를 받아올지 팔로우 목록을 통해 수를 추출할지 결정
+import axiosInstance from '../axiosInstance';
 
 //팔로워 목록을 조회하는 API
-export const getFollowerList = async ({ userId }) => {
+export const getFollowerList = async (id) => {
   try {
-    const response = await get({ endPoint: `/users/${userId}/followers` });
+    const response = await axiosInstance.get(
+      `api/members/follow/${id}/followers`
+    );
     return response;
   } catch (error) {
     console.error('팔로워 목록 조회중 에러 :', error);

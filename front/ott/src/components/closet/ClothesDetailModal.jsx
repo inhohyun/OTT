@@ -1,56 +1,72 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect } from 'react';
+import { getClothesItemData } from '../../api/closet/clothes';
+import ClothesDetailsView from './ClothesDetailsView';
+import ClothesEditForm from './ClothesEditForm';
 
-const ClothesDetailModal = ({ isOpen, onClose, clothingItem }) => {
-  if (!isOpen || !clothingItem) return null;
+const ClothesDetailModal = ({
+  isOpen,
+  onClose,
+  clothingItem,
+  onEdit,
+  onDelete,
+  categories,
+}) => {
+  const [itemDetails, setItemDetails] = useState(clothingItem);
+  const [isEditing, setIsEditing] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (clothingItem) {
+      const fetchItemDetails = async () => {
+        try {
+          const data = await getClothesItemData(clothingItem.clothesId);
+          setItemDetails(data);
+        } catch (error) {
+          console.error('Failed to fetch item details:', error);
+        }
+      };
+      fetchItemDetails();
+    }
+  }, [clothingItem]);
+
+  useEffect(() => {
+    setItemDetails(clothingItem);
+  }, [clothingItem]);
+
+  const handleToggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleSave = async () => {
+    onEdit(itemDetails);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
+  if (!isOpen || !itemDetails) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 cursor-pointer"
-        >
-          <FontAwesomeIcon icon={faTimes} size="lg" />
-        </button>
-        <div className="flex justify-center mb-4 mt-6">
-          {' '}
-          <img
-            src={clothingItem.frontImage}
-            alt="Front"
-            className="w-40 h-50 object-cover rounded-lg"
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full relative overflow-y-auto max-h-full">
+        {isEditing ? (
+          <ClothesEditForm
+            itemDetails={itemDetails}
+            onSave={handleSave}
+            onCancel={handleCancel}
+            categories={categories}
+            setItemDetails={setItemDetails}
+            errors={errors}
           />
-        </div>
-        <div className="mb-4">
-          <p>
-            <strong>Brand:</strong> {clothingItem.brand}
-          </p>
-          <p>
-            <strong>Size:</strong> {clothingItem.size}
-          </p>
-          <p>
-            <strong>Color:</strong> {clothingItem.color}
-          </p>
-          <p>
-            <strong>Purchase Location:</strong>{' '}
-            <a
-              href={clothingItem.purchase}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {clothingItem.purchase}
-            </a>
-          </p>
-          <p>
-            <strong>Public Status:</strong>{' '}
-            {clothingItem.public_status === 'y' ? 'Public' : 'Private'}
-          </p>
-          <p>
-            <strong>Gender:</strong>{' '}
-            {clothingItem.gender === 'm' ? 'Male' : 'Female'}
-          </p>
-        </div>
+        ) : (
+          <ClothesDetailsView
+            itemDetails={itemDetails}
+            onEdit={handleToggleEdit}
+            onClose={onClose}
+          />
+        )}
       </div>
     </div>
   );

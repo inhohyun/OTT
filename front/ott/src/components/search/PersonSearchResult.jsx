@@ -12,7 +12,7 @@ const PersonSearchResult = ({ results, searchQuery }) => {
       return;
     }
 
-    // Filter and sort results based on the searchQuery resemblance
+    // 검색 쿼리에 따른 검색 결과 나열
     const filtered = results
       .filter(
         (result) =>
@@ -43,7 +43,7 @@ const PersonSearchResult = ({ results, searchQuery }) => {
   }, [results, searchQuery]);
 
   const handleShowMore = () => {
-    setVisibleResults((prev) => prev + 4); // Show 4 more results
+    setVisibleResults((prev) => prev + 4); // 검색결과 4개 더 표시
   };
 
   if (!searchQuery) {
@@ -78,14 +78,8 @@ const PersonSearchResult = ({ results, searchQuery }) => {
                 className="text-base font-semibold mb-2"
                 style={{ fontSize: '14px' }}
               >
-                {result.title}
+                {result.nickname}
               </h3>
-              <p
-                className="text-xs text-stone-500"
-                style={{ fontSize: '12px' }}
-              >
-                {result.description}
-              </p>
             </div>
           </div>
         ))}

@@ -7,7 +7,7 @@ import AiProceeding from './AiProceeding'; // AiProceeding 컴포넌트를 impor
 import AiResult from './AiResult'; // AiResult 컴포넌트를 import
 import useStore from '@/data/ai/aiStore'; // zustand store import
 
-// Importing images
+// 이미지 임포트
 import dress1 from '@/assets/images/clothes/dress1.jpg';
 import dress1Back from '@/assets/images/clothes/dress1-1.jpg';
 import dress2 from '@/assets/images/clothes/dress2.jpg';
@@ -32,13 +32,21 @@ import shirt3 from '@/assets/images/clothes/shirt3.jpg';
 import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 
 const Modal = ({ isOpen, onClose }) => {
-  const [selectedClothing, setSelectedClothing] = useState(null);
-  const [filter, setFilter] = useState('all');
-  const [numImages, setNumImages] = useState({ value: '4장', label: '4장' });
-  const [selectedImage, setSelectedImage] = useState(defaultImage);
+  const [selectedClothing, setSelectedClothingState] = useState(null);
+  const [filter, setFilterState] = useState('all');
+  const [makePictureCnt, setMakePictureCntState] = useState({
+    value: '4장',
+    label: '4장',
+  }); // 이미지 개수 상태 변수
+  const [selectedImage, setSelectedImageState] = useState(defaultImage);
 
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
+  const setSelectedImageInStore = useStore((state) => state.setSelectedImage);
+  const setMakePictureCntInStore = useStore((state) => state.setNumImages); // 이미지 개수 상태 설정 함수
+  const setSelectedClothingInStore = useStore(
+    (state) => state.setSelectedClothing
+  );
 
   const [clothes, setClothes] = useState([
     {
@@ -150,6 +158,9 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handlePutOn = () => {
     if (selectedClothing) {
+      setSelectedImageInStore(selectedImage);
+      setMakePictureCntInStore(makePictureCnt); // 이미지 개수 설정
+      setSelectedClothingInStore(selectedClothing);
       setCurrentStep('AiProceeding');
     } else {
       console.log('No clothing selected');
@@ -166,7 +177,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleNumImagesChange = (option) => {
-    setNumImages(option);
+    setMakePictureCntState(option); // 이미지 개수 변경
   };
 
   const handleImageChange = (event) => {
@@ -210,12 +221,13 @@ const Modal = ({ isOpen, onClose }) => {
         </h2>
         {currentStep === 'AiProceeding' ? (
           <AiProceeding
-            selectedImage={selectedImage}
-            numImages={numImages}
+            modelPicture={selectedImage} // 선택된 이미지 전달
+            makePictureCnt={makePictureCnt} // 이미지 개수 전달
+            category={filter} // 선택된 카테고리 전달
             selectedClothingId={selectedClothing?.id}
           />
         ) : currentStep === 'AiResult' ? (
-          <AiResult selectedImage={selectedImage} numImages={numImages} />
+          <AiResult selectedImage={selectedImage} numImages={makePictureCnt} />
         ) : (
           <>
             <div>
@@ -242,7 +254,7 @@ const Modal = ({ isOpen, onClose }) => {
             <div className="mb-4 dropdown-wrapper">
               <Select
                 options={imageOptions}
-                value={numImages}
+                value={makePictureCnt} // 이미지 개수 설정
                 onChange={handleNumImagesChange}
                 styles={customStyles}
                 className="flex-grow"

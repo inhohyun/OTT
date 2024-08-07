@@ -1,19 +1,35 @@
-// localUtils.js에서 setAccessToken과 setLocalRefreshToken 함수를 가져옵니다.
-import { setAccessToken, setLocalRefreshToken } from '@/utils/localUtils';
-// react-router-dom에서 useNavigate를 가져와 페이지 이동에 사용합니다.
-import { useNavigate } from 'react-router-dom';
-// 컴포넌트가 렌더링될 때 특정 작업을 수행하기 위해 react에서 useEffect를 가져옵니다.
-import { useEffect } from 'react';
-// 쿠키 처리를 위해 js-cookie를 가져옵니다.
-import Cookies from 'js-cookie';
+import { setAccessToken } from '@/utils/localUtils'; // AccessToken을 저장하는 유틸리티 함수
+import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위해 사용
+import { useEffect } from 'react'; // 특정 작업을 수행하기 위해 사용
+import axios from 'axios';
 
-// 헤더에서 액세스 토큰을 추출하는 함수
-const getAccessTokenFromHeaders = () => {
-  // 액세스 토큰이 URL의 쿼리 매개변수로 전달된다고 가정합니다.
-  const accessToken = new URLSearchParams(window.location.search).get(
-    'access_token'
-  );
-  return accessToken;
+// Access Token을 재발급받기 위한 함수
+const reissueAccessToken = async () => {
+  try {
+    // Access Token 재발급 요청
+    const response = await axios.get('https://i11c205.p.ssafy.io/api/reissue', {
+      withCredentials: true, // 쿠키를 포함하여 요청
+    });
+
+    if (response.status === 200) {
+      // 응답 헤더에서 새로운 Access Token 가져오기
+      const newAccessToken = response.headers['access'];
+
+      // 새로운 Access Token을 저장 또는 사용
+      console.log('New Access Token:', newAccessToken);
+
+      // localUtils.js의 함수 사용
+      setAccessToken(newAccessToken);
+      // 여기서 필요한 작업 수행 (예: localStorage에 저장)
+      // localStorage.setItem('accessToken', newAccessToken);
+      // alert('Access token stored in local storage');
+    } else {
+      // 실패 처리 (예: Refresh Token 만료 등)
+      console.error('Failed to reissue access token:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error during reissue access token:', error);
+  }
 };
 
 // OAuthCallback 컴포넌트 정의
