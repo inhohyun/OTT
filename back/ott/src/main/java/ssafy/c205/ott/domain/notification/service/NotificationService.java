@@ -56,4 +56,17 @@ public class NotificationService {
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
+    public NotificationSuccessDto createWebRtcNotification(WebRtcNotificationDto webRtcNotificationDto) {
+        Notification webRtcNotification = WebRtcNotification.builder()
+                .message(webRtcNotificationDto.getRtcRequestMemberName() + COMMENT.getMessage())
+                .notificationType(webRtcNotificationDto.getNotificationType())
+                .notificationStatus(NotificationStatus.UNREAD)
+                .memberId(webRtcNotificationDto.getMemberId())
+                .rtcRequestMemberId(webRtcNotificationDto.getRtcRequestMemberId())
+                .rtcRoomId(webRtcNotificationDto.getRtcRoomId())
+                .build();
+        Notification notification = notificationRepository.save(webRtcNotification);
+        return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
+    }
+
 }
