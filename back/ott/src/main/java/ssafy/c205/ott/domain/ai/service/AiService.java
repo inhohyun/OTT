@@ -15,7 +15,7 @@ import ssafy.c205.ott.common.exception.S3FileNotExistException;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 import ssafy.c205.ott.domain.ai.exception.AiBadRequestException;
-import ssafy.c205.ott.domain.notification.util.NotificationMessage;
+import ssafy.c205.ott.domain.notification.dto.request.AiNotificationDto;
 import ssafy.c205.ott.domain.notification.service.NotificationService;
 
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class AiService {
         amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
 
         // AI 이미지 완성 알림
-        notificationService.createNotification(NotificationMessage.AI_COMPLETE, aiRequestDto.getMemberId());
+        notificationService.createAiNotification(AiNotificationDto.builder().memberId(aiRequestDto.getMemberId()).build());
 
         return ResponseEntity.ok(responseBody);
     }
