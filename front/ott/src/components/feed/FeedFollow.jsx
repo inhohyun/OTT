@@ -166,21 +166,23 @@ const FeedFollow = () => {
   const userId = useUserStore((state) => state.userId);
 
   useEffect(() => {
-    try {
-      const data = followFeed();
-      // const data = followFeed(userId);
-      setFollowersData(data);
-      setVisibleLookbooks(
-        data.reduce(
-          (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
-          {}
-        )
-      );
-      // 각 팔로워의 스크롤 컨테이너에 대한 참조를 생성합니다.
-      scrollRefs.current = data.map(() => React.createRef());
-    } catch (error) {
-      console.error(error);
-    }
+    const fetchFollowFeed = async () => {
+      try {
+        const data = await followFeed();
+        setFollowersData(data);
+        setVisibleLookbooks(
+          data.reduce(
+            (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
+            {}
+          )
+        );
+        scrollRefs.current = data.map(() => React.createRef());
+      } catch (error) {
+        console.error('Failed to fetch follow feed', error);
+      }
+    };
+
+    fetchFollowFeed();
   }, []);
 
   const scrollLeft = (ref) => {
