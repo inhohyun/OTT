@@ -1,13 +1,16 @@
 package ssafy.c205.ott.domain.recommend.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
+import ssafy.c205.ott.domain.account.entity.BodyType;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
@@ -83,13 +86,56 @@ public class RecommendServiceImpl implements RecommendService {
             for (Lookbook lookbook : lookbooks) {
                 bodyResponseDtos.add(
                     BodyResponseDto.builder().img(lookbook.getLookbookImages().get(0).getImageUrl())
-                        .memberId(memberUid).lookbookId(lookbook.getId())
+                        .memberId(memberUid)
+                        .lookbookId(lookbook.getId())
                         .nickname(lookbook.getMember().getNickname())
                         .createdAt(lookbook.getCreatedAt())
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .cntFavorite(
                             lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
                         .build());
+            }
+        }
+        return bodyResponseDtos;
+    }
+
+    @Override
+    public List<BodyResponseDto> getRecommendByBody(Long memberId) {
+        //return할 배열 선언
+        List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
+
+        //현재 사용자 검색
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
+            ActiveStatus.ACTIVE);
+        Member findMember = null;
+        if (om.isPresent()) {
+            findMember = om.get();
+        }
+
+        //사용자와 같은 체형의 사용자들 검색
+        List<Member> members = memberRepository.findByBodyTypeAndActiveStatus(
+            findMember.getBodyType(), ActiveStatus.ACTIVE);
+
+        for (Member member : members) {
+            //회원탈퇴 or 나면 패스
+            if (member.getId() == memberId || member.getActiveStatus().equals(ActiveStatus.INACTIVE)) continue;
+
+            //해당 사용자들의 룩북 조회 (공개 + 삭제X)
+            List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
+                member.getId(),
+                PublicStatus.PUBLIC, ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+            //룩북 추가
+            for (Lookbook lookbook : lookbooks) {
+                bodyResponseDtos.add(BodyResponseDto
+                    .builder()
+                    .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                    .createdAt(lookbook.getCreatedAt())
+                    .nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId())
+                    .lookbookId(lookbook.getId())
+                    .build());
             }
         }
         return bodyResponseDtos;

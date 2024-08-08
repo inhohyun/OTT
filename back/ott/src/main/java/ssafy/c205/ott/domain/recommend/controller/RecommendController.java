@@ -20,22 +20,30 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/newBodyRecommend")
+    @GetMapping("/newHeightWeightRecommend")
     public ResponseEntity<?> heightweight() {
         recommendService.recommendByHeightWeight();
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getBodyRecommend")
-    public ResponseEntity<?> getBodyRecommend(@RequestParam("memberId") Long memberId) {
+    @GetMapping("/getHeightWeightRecommend")
+    public ResponseEntity<?> getHeightWeightRecommend(@RequestParam("memberId") Long memberId) {
         List<BodyResponseDto> bodyResponseDtos = recommendService.getRecommendByHeightWeight(
             memberId);
         if (bodyResponseDtos == null) {
             return ResponseEntity.noContent().build();
         }
-
         Collections.shuffle(bodyResponseDtos);
+        return ResponseEntity.ok().body(bodyResponseDtos);
+    }
 
+    @GetMapping("/getBodyRecommend")
+    public ResponseEntity<?> getBodyRecommend(@RequestParam("memberId") Long memberId) {
+        List<BodyResponseDto> bodyResponseDtos = recommendService.getRecommendByBody(memberId);
+        if (bodyResponseDtos == null) {
+            return ResponseEntity.noContent().build();
+        }
+        Collections.shuffle(bodyResponseDtos);
         return ResponseEntity.ok().body(bodyResponseDtos);
     }
 }

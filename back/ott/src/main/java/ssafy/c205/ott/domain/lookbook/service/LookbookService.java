@@ -15,7 +15,7 @@ import java.util.List;
 public interface LookbookService {
     void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file);
 
-    LookbookDetailDto detailLookbook(String lookbookId, Long uid);
+    LookbookDetailDto detailLookbook(String lookbookId, Long memberId);
 
     boolean deleteLookbook(String lookbookId);
 
@@ -27,15 +27,15 @@ public interface LookbookService {
 
     int cntLikeLookbook(String lookbookId);
 
-    List<FindLookbookDto> findPublicLookbooks(String uid);
+    List<FindLookbookDto> findPublicLookbooks(String memberId);
 
-    List<FindLookbookDto> findPrivateLookbooks(String uid);
+    List<FindLookbookDto> findPrivateLookbooks(String memberId);
 
     List<TagLookbookDto> findByTag(LookbookSearchDto lookbookSearchDto);
 
-    int countLookbook(String uid);
+    int countLookbook(String memberId);
 
-    List<LookbookMineDto> findMineLookbooks(String uid);
+    List<LookbookMineDto> findMineLookbooks(String memberId);
 
-    List<FollowLookbookResponseDto> findFollowingLookbooks(String uid);
+    List<FollowLookbookResponseDto> findFollowingLookbooks(String memberId);
 }

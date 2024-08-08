@@ -10,16 +10,16 @@ import lombok.ToString;
 @ToString
 public class LookbookDto {
 
-    private String uid;
+    private Long memberId;
     private String content;
     private String[] clothes;
     private String[] tags;
     private String publicStatus;
 
     @Builder
-    public LookbookDto(String uid, String content, String[] clothes, String[] tags,
+    public LookbookDto(Long memberId, String content, String[] clothes, String[] tags,
         String publicStatus) {
-        this.uid = uid;
+        this.memberId = memberId;
         this.content = content;
         this.clothes = clothes;
         this.tags = tags;

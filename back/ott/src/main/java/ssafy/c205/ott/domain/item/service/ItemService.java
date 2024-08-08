@@ -19,7 +19,7 @@ public interface ItemService {
 
     ItemResponseDto selectItem(Long clothesId);
 
-    List<ItemListResponseDto> selectItemList(Long uid);
+    List<ItemListResponseDto> selectItemList(Long memberId);
 
     void bookmarkLookbook(Long clothesId);
 

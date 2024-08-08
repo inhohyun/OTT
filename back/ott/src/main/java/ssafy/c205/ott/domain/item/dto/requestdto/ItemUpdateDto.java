@@ -19,20 +19,20 @@ public class ItemUpdateDto {
     private PublicStatus publicStatus;
     private String color;
     private Sex gender;
-    private Long uid;
+    private Long memberId;
     private SalesStatus salesStatus;
     private Long categoryId;
 
     @Builder
     public ItemUpdateDto(String size, String brand, String purchase, PublicStatus publicStatus,
-        String color, Sex gender, Long uid, SalesStatus salesStatus, Long categoryId) {
+        String color, Sex gender, Long memberId, SalesStatus salesStatus, Long categoryId) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
         this.publicStatus = publicStatus;
         this.color = color;
         this.gender = gender;
-        this.uid = uid;
+        this.memberId = memberId;
         this.salesStatus = salesStatus;
         this.categoryId = categoryId;
     }
