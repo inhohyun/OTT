@@ -9,23 +9,28 @@ const AiProceeding = ({}) => {
   const percentage = useStore((state) => state.percentage);
   const setPercentage = useStore((state) => state.setPercentage);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
+
   //서버에 보낼 데이터
   const modelPicture = useStore((state) => state.modelPicture);
   const filter = useStore((state) => state.filter);
   const modelImage = useStore((state) => state.modelImage);
   const selectClothesURL = useStore((state) => state.selectedClothesURL); // TODO : 선택된 URL에 따른 경로로 변동
-  const duration = 100000; // TODO: ai 모델 결과에 따라, 이후 수정 예정
+  const duration = 50; // TODO: ai 모델 결과에 따라, 이후 수정 예정
   const sample = useStore((state) => state.sample);
   const targetPercentage = 99; // 목표 퍼센트는 99
   const increment = targetPercentage / duration;
   const interval = 1000; // 1초마다 업데이트
+
+  //이미지 결과
+  const resultImages = useStore((state) => state.resultImages);
+  const setResultImages = useStore((state) => state.setResultImages);
   useEffect(() => {
     const intervalId = setInterval(() => {
       setPercentage((prev) => {
         const nextPercentage = prev + increment;
         if (nextPercentage >= targetPercentage) {
           clearInterval(intervalId);
-          setCurrentStep('AiResult'); // 99%에 도달하면 currentStep을 AiResult로 변경
+          // setCurrentStep('AiResult'); // 99%에 도달하면 currentStep을 AiResult로 변경
           return 99;
         }
         return nextPercentage;
@@ -46,6 +51,7 @@ const AiProceeding = ({}) => {
       category
     ) => {
       try {
+        //await로 응답 올때까지 기다림?
         const response = await sendfittingData(
           memberId,
           modelImageFile,
@@ -54,6 +60,8 @@ const AiProceeding = ({}) => {
           category
         );
         console.log('서버에서 받은 이미지', response);
+        setResultImages(response.data.images);
+        setCurrentStep('AiResult');
         // 서버 응답 처리 로직 추가
       } catch (error) {
         console.error('AI 옷 피팅 중 에러 발생(컴포넌트):', error);

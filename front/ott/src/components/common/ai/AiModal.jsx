@@ -111,9 +111,7 @@ const Modal = ({ isOpen, onClose }) => {
         >
           &times;
         </p>
-        <h2 className="text-center text-2xl font-semibold mb-4">
-          AI 피팅 서비스
-        </h2>
+
         {currentStep === 'AiProceeding' ? (
           <AiProceeding />
         ) : currentStep === 'AiResult' ? (

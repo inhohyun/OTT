@@ -37,14 +37,16 @@ const useStore = create((set) => ({
   //서버에 보낼 데이터
   //모델 사진
   modelPicture: defaultImage,
+  modelImage: null,
   //현재 필터 정보
   filter: '상의',
   //생성할 이미지 개수
   sample: 4,
   //선택된 옷 사진 url
   selectedClothesURL: null,
-  modelImage: null,
-  resultImageURL: null,
+
+  // 생성된 옷 이미지 데이터 저장
+  resultImages: null,
   clothes: [
     {
       id: 1,
@@ -101,6 +103,7 @@ const useStore = create((set) => ({
   setSelectedImage: (selectedImage) => set({ selectedImage }),
   setModelPicture: (modelPicture) => set({ modelPicture }),
   setselectedClothesURL: (selectedClothesURL) => set({ selectedClothesURL }),
+  setResultImages: (resultImages) => set({ resultImages }),
   toggleLike: (id) =>
     set((state) => ({
       clothes: state.clothes.map((item) =>
