@@ -16,7 +16,7 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategori
       existingCategories.some(
         (existingCategory) =>
           existingCategory.name.toLowerCase() === trimmedName.toLowerCase() &&
-          existingCategory.id !== category.id
+          existingCategory.id !== category.closetId
       )
     ) {
       setError('같은 이름의 카테고리가 이미 존재합니다.');
@@ -25,7 +25,7 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategori
 
     try {
       // API 호출하여 카테고리 수정
-      await fixCategory(closetId, category.id, trimmedName);
+      await fixCategory(closetId, category.closetId, trimmedName);
       // 저장 성공 시 상위 컴포넌트에 변경 사항 전달
       onSave(trimmedName);
       onClose();
