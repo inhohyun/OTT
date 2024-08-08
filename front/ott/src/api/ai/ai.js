@@ -1,7 +1,7 @@
 import axiosInstance from '../axiosInstance';
 
 export const sendfittingData = async (
-  uid,
+  memberId,
   modelImageFile,
   clothImagePath,
   sample,
@@ -10,11 +10,15 @@ export const sendfittingData = async (
   try {
     // FormData 객체 생성
     const formData = new FormData();
-    formData.append('uid', uid);
+    formData.append('memberId', memberId);
     formData.append('modelImageFile', modelImageFile);
     formData.append('clothImagePath', clothImagePath);
     formData.append('sample', sample);
     formData.append('category', category);
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+    // console.log('formData:', formData);
 
     const respnse = await axiosInstance.post('api/process/ai', formData, {
       headers: {

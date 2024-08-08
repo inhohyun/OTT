@@ -33,13 +33,18 @@ const useStore = create((set) => ({
   isModalVisible: false,
   //현재 옷이 선택되어 있는지 여부
   selectedClothing: null,
+
+  //서버에 보낼 데이터
+  //모델 사진
+  modelPicture: defaultImage,
   //현재 필터 정보
   filter: '상의',
   //생성할 이미지 개수
-  numImages: { value: '4장', label: '4장' },
+  sample: 4,
   //선택된 옷 사진 url
-  selectedImage: defaultImage,
-  formData: null,
+  selectedClothesURL: null,
+  modelImage: null,
+  resultImageURL: null,
   clothes: [
     {
       id: 1,
@@ -91,9 +96,11 @@ const useStore = create((set) => ({
   setIsModalVisible: (isVisible) => set({ isModalVisible: isVisible }),
   setSelectedClothing: (clothing) => set({ selectedClothing: clothing }),
   setFilter: (filter) => set({ filter }),
-  setNumImages: (numImages) => set({ numImages }),
+  setSample: (sample) => set({ sample }),
+  setModelImage: (modelImage) => set({ modelImage }),
   setSelectedImage: (selectedImage) => set({ selectedImage }),
-  setFormData: (formData) => set({ formData }),
+  setModelPicture: (modelPicture) => set({ modelPicture }),
+  setselectedClothesURL: (selectedClothesURL) => set({ selectedClothesURL }),
   toggleLike: (id) =>
     set((state) => ({
       clothes: state.clothes.map((item) =>

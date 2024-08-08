@@ -5,30 +5,21 @@ import mainIcon from '@/assets/icons/main.logo.png';
 import useStore from '@/data/ai/aiStore';
 import { sendfittingData } from '@/api/ai/ai';
 
-const AiProceeding = ({
-  modelPicture,
-  makePictureCnt,
-  category,
-  selectedClothingId,
-}) => {
+const AiProceeding = ({}) => {
   const percentage = useStore((state) => state.percentage);
   const setPercentage = useStore((state) => state.setPercentage);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
-
+  //서버에 보낼 데이터
+  const modelPicture = useStore((state) => state.modelPicture);
+  const filter = useStore((state) => state.filter);
+  const modelImage = useStore((state) => state.modelImage);
+  const selectClothesURL = useStore((state) => state.selectedClothesURL); // TODO : 선택된 URL에 따른 경로로 변동
+  const duration = 100000; // TODO: ai 모델 결과에 따라, 이후 수정 예정
+  const sample = useStore((state) => state.sample);
+  const targetPercentage = 99; // 목표 퍼센트는 99
+  const increment = targetPercentage / duration;
+  const interval = 1000; // 1초마다 업데이트
   useEffect(() => {
-    const duration = 5; // TODO: 현재 5초 동안 진행, 이후 수정 예정
-    const targetPercentage = 99; // 목표 퍼센트는 99
-    const increment = targetPercentage / duration;
-    const interval = 1000; // 1초마다 업데이트
-
-    console.log(
-      'AiProceeding Component:',
-      modelPicture,
-      makePictureCnt,
-      category,
-      selectedClothingId
-    );
-
     const intervalId = setInterval(() => {
       setPercentage((prev) => {
         const nextPercentage = prev + increment;
@@ -47,23 +38,37 @@ const AiProceeding = ({
   useEffect(() => {
     // 서버로 데이터를 전송하는 로직 추가
 
-    const formData = new FormData();
-    formData.append('modelPicture', modelPicture); // modelPicture 전달
-    formData.append('makePictureCnt', makePictureCnt.value); // makePictureCnt 전달
-    formData.append('category', category); // category 전달
-    formData.append('selectedClothingId', selectedClothingId); // selectedClothingId 전달
-
-    const sendData = async () => {
+    const sendData = async (
+      memberId,
+      modelImageFile,
+      clothImagePath,
+      sample,
+      category
+    ) => {
       try {
-        const response = await sendfittingData(formData);
+        const response = await sendfittingData(
+          memberId,
+          modelImageFile,
+          clothImagePath,
+          sample,
+          category
+        );
+        console.log('서버에서 받은 이미지', response);
         // 서버 응답 처리 로직 추가
       } catch (error) {
         console.error('AI 옷 피팅 중 에러 발생(컴포넌트):', error);
       }
     };
 
-    sendData();
-  }, [modelPicture, makePictureCnt, category, selectedClothingId]);
+    sendData(
+      1,
+      modelImage,
+      'https://s3-bucket-ott.s3.ap-northeast-2.amazonaws.com/pant.jpg',
+      sample,
+      // filter
+      1
+    );
+  }, []);
 
   return (
     <div
@@ -99,7 +104,7 @@ const AiProceeding = ({
           />
         </div>
         <div className="mt-4">
-          <p>생성할 이미지 수: {makePictureCnt.label}</p>
+          <p>생성할 이미지 수: {sample.label}</p>
         </div>
       </div>
     </div>

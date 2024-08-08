@@ -14,38 +14,21 @@ const Modal = ({ isOpen, onClose }) => {
   const setSelectedClothing = useStore((state) => state.setSelectedClothing);
   const filter = useStore((state) => state.filter);
   const setFilter = useStore((state) => state.setFilter);
-  const numImages = useStore((state) => state.numImages);
-  const setNumImages = useStore((state) => state.setNumImages);
-  const selectedImage = useStore((state) => state.selectedImage);
-  const setSelectedImage = useStore((state) => state.setSelectedImage);
-  const formData = useStore((state) => state.formData);
-  const setFormData = useStore((state) => state.setFormData);
+  const sample = useStore((state) => state.sample);
+  const setSample = useStore((state) => state.setSample);
+  const modelPicture = useStore((state) => state.modelPicture);
+  const modelImage = useStore((state) => state.modelImage);
+  const setModelImage = useStore((state) => state.setModelImage);
+  const setModelPicture = useStore((state) => state.setModelPicture);
+  const selectClothesURL = useStore((state) => state.selectedClothesURL);
+  const setSelectedClothesURL = useStore(
+    (state) => state.setSelectedClothesURL
+  );
+
   const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
 
   // 모달이 열릴 때 Zustand 상태를 콘솔에 출력
-  useEffect(() => {
-    if (isOpen) {
-      console.log('Zustand State:', {
-        currentStep,
-        selectedClothing,
-        filter,
-        numImages,
-        selectedImage,
-        formData,
-        clothes,
-      });
-    }
-  }, [
-    isOpen,
-    currentStep,
-    selectedClothing,
-    filter,
-    numImages,
-    selectedImage,
-    formData,
-    clothes,
-  ]);
 
   const categories = [
     { value: '상의', label: '상의' },
@@ -53,10 +36,10 @@ const Modal = ({ isOpen, onClose }) => {
   ];
 
   const imageOptions = [
-    { value: '1장', label: '1장' },
-    { value: '2장', label: '2장' },
-    { value: '3장', label: '3장' },
-    { value: '4장', label: '4장' },
+    { value: 1, label: '1장' },
+    { value: 2, label: '2장' },
+    { value: 3, label: '3장' },
+    { value: 4, label: '4장' },
   ];
 
   const customStyles = {
@@ -81,7 +64,6 @@ const Modal = ({ isOpen, onClose }) => {
     if (selectedClothing) {
       setCurrentStep('AiProceeding');
     } else {
-      console.log(import.meta.env.VITE_API_BASE_URL);
       alert('옷을 선택해주세요.');
     }
   };
@@ -94,20 +76,19 @@ const Modal = ({ isOpen, onClose }) => {
     setFilter(option.value);
   };
 
-  const handleNumImagesChange = (option) => {
-    setNumImages(option);
+  const handleSampleChange = (option) => {
+    setSample(option.value); // 숫자가 저장되도록 수정
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
+    console.log(file);
 
+    if (file) {
+      setModelImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result);
-        setFormData(formData);
+        setModelPicture(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -134,14 +115,9 @@ const Modal = ({ isOpen, onClose }) => {
           AI 피팅 서비스
         </h2>
         {currentStep === 'AiProceeding' ? (
-          <AiProceeding
-            modelPicture={selectedImage}
-            makePictureCnt={numImages}
-            category={filter}
-            selectedClothingId={selectedClothing?.id}
-          />
+          <AiProceeding />
         ) : currentStep === 'AiResult' ? (
-          <AiResult selectedImage={selectedImage} numImages={numImages} />
+          <AiResult />
         ) : (
           <>
             <div>
@@ -151,7 +127,7 @@ const Modal = ({ isOpen, onClose }) => {
                 onClick={() => document.getElementById('imageInput').click()}
               >
                 <img
-                  src={selectedImage}
+                  src={modelPicture || defaultImage}
                   alt="Default"
                   className="w-full h-auto mb-4 mt-4 rounded-lg"
                 />
@@ -168,8 +144,8 @@ const Modal = ({ isOpen, onClose }) => {
             <div className="mb-4 dropdown-wrapper">
               <Select
                 options={imageOptions}
-                value={numImages}
-                onChange={handleNumImagesChange}
+                value={imageOptions.find((option) => option.value === sample)}
+                onChange={handleSampleChange}
                 styles={customStyles}
                 className="flex-grow"
               />
