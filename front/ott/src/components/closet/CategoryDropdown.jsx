@@ -6,8 +6,6 @@ import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
 import {
   getCategoryList,
-  fixCategory,
-  addCategory,
   deleteCategory,
 } from '../../api/closet/categories';
 import { getClosetId } from '../../api/closet/clothes';
