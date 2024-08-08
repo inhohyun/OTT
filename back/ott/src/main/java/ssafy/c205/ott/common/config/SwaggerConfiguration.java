@@ -51,4 +51,14 @@ public class SwaggerConfiguration {
     public GroupedOpenApi clothesApi(){
         return GroupedOpenApi.builder().group("OTT-Clothes").pathsToMatch("/api/clothes/**").build();
     }
+
+    @Bean
+    public GroupedOpenApi closetApi(){
+        return GroupedOpenApi.builder().group("OTT-closet").pathsToMatch("/api/closet/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi AiApi(){
+        return GroupedOpenApi.builder().group("OTT-ai").pathsToMatch("/api/process/**").build();
+    }
 }
