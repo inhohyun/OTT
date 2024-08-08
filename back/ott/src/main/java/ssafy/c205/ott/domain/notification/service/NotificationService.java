@@ -69,4 +69,14 @@ public class NotificationService {
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
+    public NotificationSuccessDto createAiNotification(AiNotificationDto aiNotificationDto){
+        Notification aiNotification = AiNotification.builder()
+                .message(AI_COMPLETE.getMessage())
+                .notificationType(NotificationType.AI)
+                .notificationStatus(NotificationStatus.UNREAD)
+                .memberId(aiNotificationDto.getMemberId())
+                .build();
+        Notification notification = notificationRepository.save(aiNotification);
+        return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
+    }
 }
