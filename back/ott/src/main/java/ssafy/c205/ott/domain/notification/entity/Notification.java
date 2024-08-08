@@ -1,14 +1,18 @@
 package ssafy.c205.ott.domain.notification.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.antlr.v4.runtime.misc.NotNull;
-import ssafy.c205.ott.domain.lookbook.entity.Comment;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import ssafy.c205.ott.common.entity.BaseEntity;
 
-@Entity @Getter
-public class Notification {
-    //Todo: 알림을 통해서 comment로 이동했을 때, comment가 삭제되었다면 예외처리
+@Entity
+@Getter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,24 +21,14 @@ public class Notification {
     private String message;
 
     @Enumerated(EnumType.STRING)
-    NotificationStatus notificationStatus = NotificationStatus.UNREAD;
+    @Column(nullable = false)
+    NotificationStatus notificationStatus;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    NotificationType notificationType;
 
-    private Long memberid;
+    @Column(nullable = false)
+    private Long memberId;
 
-    @Builder
-    public Notification(Long id, String message, NotificationStatus notificationStatus, Comment comment, Long memberid) {
-        this.id = id;
-        this.message = message;
-        this.notificationStatus = notificationStatus;
-        this.comment = comment;
-        this.memberid = memberid;
-    }
-
-    public Notification() {
-
-    }
 }
