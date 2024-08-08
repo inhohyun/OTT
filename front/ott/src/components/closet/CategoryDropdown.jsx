@@ -5,6 +5,7 @@ import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
 import { getCategoryList, getCategory } from '../../api/closet/categories';
+import { getClosetId } from '../../api/user/user';
 
 const CategoryDropdown = ({
   selectedCategory,

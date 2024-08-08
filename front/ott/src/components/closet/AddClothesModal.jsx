@@ -17,7 +17,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     publicStatus: 'PRIVATE',
     salesStatus: 'NOT_SALE',
     gender: '',
-    uid: 1,
+    memberId: 1,
   });
 
   const [errors, setErrors] = useState({});
@@ -94,7 +94,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       data.append('publicStatus', formData.publicStatus);
       data.append('salesStatus', formData.salesStatus);
       data.append('gender', formData.gender);
-      data.append('uid', formData.uid);
+      data.append('memberId', formData.memberId);
 
       if (formData.frontImg) {
         data.append('frontImg', formData.frontImg);
