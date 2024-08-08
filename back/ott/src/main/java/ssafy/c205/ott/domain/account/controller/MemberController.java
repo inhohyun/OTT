@@ -45,10 +45,10 @@ public class MemberController {
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
     })
-    @GetMapping("/{id}")
-    public ApiResponse<MemberInfoDto> getMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
+    @GetMapping("/{memberId}")
+    public ApiResponse<MemberInfoDto> getMember(@PathVariable Long memberId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         return ApiResponse.success(memberReadService.memberSearch(MemberRequestDto.builder()
-                .id(id)
+                .id(memberId)
                 .currentId(memberReadService.myIdSearch(currentMember).getId())
                 .build()));
     }
@@ -57,18 +57,18 @@ public class MemberController {
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
     })
-    @PutMapping("/{id}")
-    public ApiResponse<UpdateMemberSuccessDto> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
-        return ApiResponse.success(memberWriteService.updateMember(id, memberUpdateRequestDto));
+    @PutMapping("/{memberId}")
+    public ApiResponse<UpdateMemberSuccessDto> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
+        return ApiResponse.success(memberWriteService.updateMember(memberId, memberUpdateRequestDto));
     }
 
     @Operation(summary = "회원탈퇴", description = "<big>회원탈퇴</big> 합니다.")
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
     })
-    @DeleteMapping("/{id}")
-    public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User currentMember) {
-        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(id).currentId(memberReadService.myIdSearch(currentMember).getId()).build()));
+    @DeleteMapping("/{memberId}")
+    public ApiResponse<DeleteMemberSuccessDto> deleteMember(@PathVariable Long memberId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
+        return ApiResponse.success(memberWriteService.deleteMember(MemberRequestDto.builder().id(memberId).currentId(memberReadService.myIdSearch(currentMember).getId()).build()));
     }
 
     @Operation(summary = "닉네임 중복조회", description = "<big>닉네임을</big> 중복 조회합니다.")
