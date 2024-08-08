@@ -30,9 +30,9 @@ export const getClothesItemData = async (clothesId) => {
 };
 
 // 전체 옷 조회
-export const getClothesList = async (userId) => {
+export const getClothesList = async (memberId) => {
   try {
-    const response = await axiosInstance.get(`/api/clothes/${userId}/list`);
+    const response = await axiosInstance.get(`/api/clothes/${memberId}/list`);
     return response.data.map((item, index) => ({
       ...item,
       key: item.id || index,

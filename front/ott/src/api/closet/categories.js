@@ -13,10 +13,10 @@ export const getCategoryList = async (closetId) => {
 };
 
 // 카테고리 조회
-export const getCategory = async (userId, categoryId) => {
+export const getCategory = async (memberId, categoryId) => {
   try {
     const response = await axiosInstance.get(
-      `/api/clothes/${userId}/${categoryId}`
+      `/api/clothes/${memberId}/${categoryId}`
     );
     console.log('카테고리 조회 성공:', response.data);
     return response.data;

@@ -36,3 +36,14 @@ export const getUid = async () => {
     throw error;
   }
 };
+
+// closet id 가져오는 api
+export const getClosetId = async (memberId) => {
+  try {
+    const response = await axiosInstance.get(`api/closet/${memberId}`);
+    return response;
+  } catch (error) {
+    console.error('옷장 id 가져오기 실패:', error);
+    throw error;
+  }
+};
