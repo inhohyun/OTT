@@ -18,9 +18,12 @@ export const fixCategory = async (closetId, categoryId, newName) => {
     const requestBody = {
       categoryId: categoryId,
       closetId: closetId,
-      newName: newName
+      newName: newName,
     };
-    const response = await axiosInstance.put(`/api/category/${closetId}`, requestBody);
+    const response = await axiosInstance.put(
+      `/api/category/${closetId}`,
+      requestBody
+    );
     console.log('카테고리 수정 성공:', response.data);
     return response.data;
   } catch (error) {
@@ -33,9 +36,12 @@ export const fixCategory = async (closetId, categoryId, newName) => {
 export const addCategory = async (closetId, name) => {
   try {
     const requestBody = {
-      name: name
-    }
-    const response = await axiosInstance.post(`/api/category/${closetId}`, requestBody);
+      name: name,
+    };
+    const response = await axiosInstance.post(
+      `/api/category/${closetId}`,
+      requestBody
+    );
     console.log('카테고리 추가 성공', response.data);
     return response.data;
   } catch (error) {
@@ -45,9 +51,9 @@ export const addCategory = async (closetId, name) => {
 };
 
 // 카테고리 삭제
-export const deleteCategory = async (closetId) => {
+export const deleteCategory = async (categorytId) => {
   try {
-    const response = await axiosInstance.delete(`/api/category/${closetId}`);
+    const response = await axiosInstance.delete(`/api/category/${categoryId}`);
     console.log('카테고리 삭제 성공', response.data);
     return response.data;
   } catch (error) {
