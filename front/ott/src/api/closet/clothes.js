@@ -1,5 +1,16 @@
 import axiosInstance from '../axiosInstance';
 
+// closet id 가져오기
+export const getClosetId = async (memberId) => {
+  try {
+    const response = await axiosInstance.get(`api/closet/${memberId}`);
+    return response;
+  } catch (error) {
+    console.error('옷장 id 가져오기 실패:', error);
+    throw error;
+  }
+};
+
 // 옷 추가
 export const addClothes = async (formData) => {
   try {

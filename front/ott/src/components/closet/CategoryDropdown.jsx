@@ -33,6 +33,7 @@ const CategoryDropdown = ({
       try {
         const memberId = 1;
         const closetResponse = await getClosetId(memberId);
+        console.log(closetResponse.data)
         const closetId = closetResponse.data.data[0].id;
         console.log(closetId);
         const categoryList = await getCategoryList(closetId);
