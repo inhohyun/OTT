@@ -16,7 +16,7 @@ export const getCategoryList = async (closetId) => {
 export const fixCategory = async (closetId) => {
   try {
     const response = await axiosInstance.put(`/api/category/${closetId}`);
-    console.log('카테고리 목록 조회 성공:', response.data);
+    console.log('카테고리 수정 성공:', response.data);
     return response.data;
   } catch (error) {
     console.error('카테고리 목록 조회 실패:', error);
@@ -28,10 +28,10 @@ export const fixCategory = async (closetId) => {
 export const addCategory = async (closetId) => {
   try {
     const response = await axiosInstance.post(`/api/category/${closetId}`);
-    console.log('카테고리 목록 조회 성공:', response.data);
+    console.log('카테고리 추가 성공', response.data);
     return response.data;
   } catch (error) {
-    console.error('카테고리 목록 조회 실패:', error);
+    console.error('카테고리 추가 실패:', error);
     throw error;
   }
 };
@@ -40,10 +40,10 @@ export const addCategory = async (closetId) => {
 export const deleteCategory = async (closetId) => {
   try {
     const response = await axiosInstance.delete(`/api/category/${closetId}`);
-    console.log('카테고리 목록 조회 성공:', response.data);
+    console.log('카테고리 삭제 성공', response.data);
     return response.data;
   } catch (error) {
-    console.error('카테고리 목록 조회 실패:', error);
+    console.error('카테고리 삭제 실패:', error);
     throw error;
   }
 };
