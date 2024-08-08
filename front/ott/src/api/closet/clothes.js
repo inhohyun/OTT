@@ -3,8 +3,6 @@ import axiosInstance from '../axiosInstance';
 // 옷 추가
 export const addClothes = async (formData) => {
   try {
-    const url = import.meta.env.REACT_APP_API_BASE_URL;
-    console.log(url);
     const response = await axiosInstance.post('api/clothes/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -92,6 +90,17 @@ export const deleteClothes = async (clothesId) => {
     console.log(`${clothesId} 삭제 성공`);
   } catch (error) {
     console.error(`${clothesId} 삭제 실패:`, error);
+    throw error;
+  }
+};
+
+// 카테고리별 옷 조회
+export const getClothesByCategory = async (memberId, categoryId) => {
+  try {
+    await axiosInstance.get(`/api/clothes/${memberId}/${categoryId}`);
+    console.log('카테고리별 조회 성공');
+  } catch (error) {
+    console.error('카테고리별 조회 실패');
     throw error;
   }
 };
