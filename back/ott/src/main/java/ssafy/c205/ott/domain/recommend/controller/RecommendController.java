@@ -46,4 +46,9 @@ public class RecommendController {
         Collections.shuffle(bodyResponseDtos);
         return ResponseEntity.ok().body(bodyResponseDtos);
     }
+
+    @GetMapping("/getTagRecommend")
+    public ResponseEntity<?> getTagRecommend(@RequestParam("memberId") Long memberId) {
+        return null;
+    }
 }

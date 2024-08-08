@@ -7,7 +7,10 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.BodyType;
@@ -22,6 +25,7 @@ import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 import ssafy.c205.ott.domain.recommend.dto.responsedto.BodyResponseDto;
 import ssafy.c205.ott.domain.recommend.entity.MemberGroup;
 import ssafy.c205.ott.domain.recommend.repository.MemberGroupRepository;
+import ssafy.c205.ott.domain.recommend.repository.MemberTagRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,7 @@ public class RecommendServiceImpl implements RecommendService {
     private final CommentService commentService;
     private final LookbookService lookbookService;
     private final FavoriteRepository favoriteRepository;
+    private final MemberTagRepository memberTagRepository;
 
     @Override
     public void recommendByHeightWeight() {
@@ -158,6 +163,25 @@ public class RecommendServiceImpl implements RecommendService {
                     .build());
             }
         }
+        return bodyResponseDtos;
+    }
+
+    @Override
+    public List<BodyResponseDto> getRecommendByTag(Long memberId) {
+        List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
+        Member member = null;
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
+            ActiveStatus.ACTIVE);
+        if (om.isPresent()) {
+            member = om.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, memberId + "의 사용자를 찾지 못했습니다.");
+        }
+        List<MemberTag> memberTags = memberTagRepository.findByMemberId(memberId);
+        for (MemberTag memberTag : memberTags) {
+            memberTag.getTag();
+        }
+
         return bodyResponseDtos;
     }
 }
