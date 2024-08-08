@@ -10,6 +10,7 @@ public class KMeans {
     private int k;
     private List<User> users;
     private List<User> centroids;
+    private List<List<User>> clusters;
 
     public KMeans(int k, List<User> users) {
         this.k = k;
@@ -63,7 +64,7 @@ public class KMeans {
             if (cluster.size() > 0) {
                 float newHeight = sumHeight / cluster.size();
                 float newWeight = sumWeight / cluster.size();
-                centroids.get(i).update(newHeight, newWeight, 1L);
+                centroids.get(i).update(newHeight, newWeight);
             }
         }
     }
@@ -73,7 +74,7 @@ public class KMeans {
 
         boolean converged = false;
         while (!converged) {
-            List<List<User>> clusters = assignUsersToClusters();
+            clusters = assignUsersToClusters();
             List<User> oldCentroids = new ArrayList<>();
             for (User centroid : centroids) {
                 oldCentroids.add(new User(centroid.getHeight(), centroid.getWeight(), 1L));
@@ -93,5 +94,19 @@ public class KMeans {
     }
     public List<User> getCentroids() {
         return centroids;
+    }
+
+    public List<List<User>> getClusters() {
+        return clusters;
+    }
+    public List<User> findClusterContainingMember(Long memberId) {
+        for (List<User> cluster : clusters) {
+            for (User user : cluster) {
+                if (user.getMemberId().equals(memberId)) {
+                    return cluster;
+                }
+            }
+        }
+        return null;  // Return null if member not found in any cluster
     }
 }
