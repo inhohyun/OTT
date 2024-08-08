@@ -7,6 +7,7 @@ import plus from '../../assets/icons/plusicon.png';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import useUserStore from '../../data/lookbook/userStore';
+import EmptyLookbook from './EmptyLookbook';
 
 const MyLookbook = () => {
   const initialLimit = 10;
@@ -21,26 +22,30 @@ const MyLookbook = () => {
   useEffect(() => {
     const fetchInitialLookbooks = async () => {
       const lookbooksData = await fetchMyLookbooks(userId);
-      setLookbooks(lookbooksData);
+      if (Array.isArray(lookbooksData)) {
+        setLookbooks(lookbooksData);
 
-      const tags = Array.from(
-        new Set(lookbooksData.flatMap((lb) => lb.tags || []))
-      );
-      console.log('Tags:', tags);
+        const tags = Array.from(
+          new Set(lookbooksData.flatMap((lb) => lb.tags || []))
+        );
+        console.log('Tags:', tags);
 
-      setVisibleLookbooks(
-        tags.reduce((acc, tag) => ({ ...acc, [tag]: initialLimit }), {})
-      );
+        setVisibleLookbooks(
+          tags.reduce((acc, tag) => ({ ...acc, [tag]: initialLimit }), {})
+        );
 
-      tags.forEach((tag) => {
-        if (!scrollRefs.current[tag]) {
-          scrollRefs.current[tag] = React.createRef();
-        }
-      });
+        tags.forEach((tag) => {
+          if (!scrollRefs.current[tag]) {
+            scrollRefs.current[tag] = React.createRef();
+          }
+        });
+      } else {
+        console.error('Fetched data is not an array:', lookbooksData);
+      }
     };
 
     fetchInitialLookbooks();
-  }, [setLookbooks]);
+  }, [setLookbooks, userId]);
 
   const handleDelete = (deletedLookbookId) => {
     deleteLookbook(deletedLookbookId);
@@ -48,19 +53,24 @@ const MyLookbook = () => {
 
   const handleCloseDetail = async () => {
     hideDetail();
-    const lookbooksData = await fetchMyLookbooks();
-    setLookbooks(lookbooksData);
+    const lookbooksData = await fetchMyLookbooks(userId);
+    if (Array.isArray(lookbooksData)) {
+      setLookbooks(lookbooksData);
+    } else {
+      console.error('Fetched data is not an array:', lookbooksData);
+    }
   };
 
-  const categorizedLookbooks = lookbooks.reduce((acc, lookbook) => {
-    const lookbookTags =
-      lookbook.tags && lookbook.tags.length > 0 ? lookbook.tags : [];
-    lookbookTags.forEach((tag) => {
-      if (!acc[tag]) acc[tag] = [];
-      acc[tag].push(lookbook);
-    });
-    return acc;
-  }, {});
+  const categorizedLookbooks = Array.isArray(lookbooks)
+    ? lookbooks.reduce((acc, lookbook) => {
+        const lookbookTags = Array.isArray(lookbook.tags) ? lookbook.tags : [];
+        lookbookTags.forEach((tag) => {
+          if (!acc[tag]) acc[tag] = [];
+          acc[tag].push(lookbook);
+        });
+        return acc;
+      }, {})
+    : {};
 
   const tags = Object.keys(categorizedLookbooks);
   console.log('Categorized lookbooks:', categorizedLookbooks);
@@ -95,8 +105,8 @@ const MyLookbook = () => {
     setSelectedTag(null);
   };
 
-  if (lookbooks.length === 0) {
-    return <div>Loading...</div>;
+  if (!Array.isArray(lookbooks) || !lookbooks.length) {
+    return <EmptyLookbook />;
   }
 
   return (
@@ -134,7 +144,7 @@ const MyLookbook = () => {
             {categorizedLookbooks[tag] &&
               categorizedLookbooks[tag].length > 3 && (
                 <button
-                  key={`${tag}-left-button`} // unique key for the button
+                  key={`${tag}-left-button`}
                   onClick={() => scrollLeft(tag)}
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
                   style={{
@@ -161,7 +171,7 @@ const MyLookbook = () => {
                     >
                       <Lookbook
                         data={lookbook}
-                        onDelete={handleDelete} // Pass handleDelete
+                        onDelete={handleDelete}
                         onClose={handleCloseDetail}
                       />
                     </div>
@@ -181,7 +191,7 @@ const MyLookbook = () => {
             {categorizedLookbooks[tag] &&
               categorizedLookbooks[tag].length > 3 && (
                 <button
-                  key={`${tag}-right-button`} // unique key for the button
+                  key={`${tag}-right-button`}
                   onClick={() => scrollRight(tag)}
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 mr-2 w-6 h-6"
                   style={{
@@ -199,7 +209,7 @@ const MyLookbook = () => {
       ))}
       {selectedTag && (
         <LookbookList
-          key={`lookbook-list-${selectedTag}`} // unique key for LookbookList
+          key={`lookbook-list-${selectedTag}`}
           tag={selectedTag}
           lookbooks={categorizedLookbooks[selectedTag]}
           onClose={closeDetailedView}

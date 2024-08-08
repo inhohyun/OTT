@@ -6,7 +6,7 @@ export const fetchMyLookbooks = async () => {
     const response = await axiosInstance.get('/api/lookbook/mylookbook', {
       params: { uid: 1 },
     });
-    return response.data;
+    return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     console.log(error);
   }

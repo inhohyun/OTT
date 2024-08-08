@@ -203,6 +203,10 @@ const FeedFollow = () => {
     setSelectedFollower(null);
   };
 
+  if (!followersData.length) {
+    return <p>Loading...</p>; // Optionally display a loading message
+  }
+
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
       <style>{`
