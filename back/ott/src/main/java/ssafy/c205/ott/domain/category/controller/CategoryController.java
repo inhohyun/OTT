@@ -50,8 +50,8 @@ public class CategoryController {
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카테고리 삭제"),
     })
-    @DeleteMapping("/{closetId}")
-    public ApiResponse<DeleteCategorySuccessDto> deleteCategory(@PathVariable Long closetId) {
-        return ApiResponse.success(categoryService.deleteCategory(CategoryRequestDto.builder().closetId(closetId).build()));
+    @DeleteMapping("/{categoryId}")
+    public ApiResponse<DeleteCategorySuccessDto> deleteCategory(@PathVariable Long categoryId) {
+        return ApiResponse.success(categoryService.deleteCategory(categoryId));
     }
 }
