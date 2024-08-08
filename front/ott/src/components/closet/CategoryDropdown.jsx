@@ -104,11 +104,11 @@ const CategoryDropdown = ({
     <div className="my-12 w-full max-w-xs flex items-center">
       <Select
         options={categories.map((category) => ({
-          value: category,
+          value: category.id,
           label: (
             <div className="flex justify-between items-center w-full">
-              <span className="flex-grow">{category}</span>
-              {category !== '전체' && category !== '즐겨찾기' && (
+              <span className="flex-grow">{category.name}</span>
+              {category.name !== '전체' && category.name !== '즐겨찾기' && (
                 <div className="flex space-x-2 ml-auto">
                   <FontAwesomeIcon
                     icon={faEdit}
@@ -125,15 +125,12 @@ const CategoryDropdown = ({
             </div>
           ),
         }))}
-        value={{ value: selectedCategory, label: selectedCategory }}
+        value={categories.find((cat) => cat.id === selectedCategory) ? { value: selectedCategory, label: categories.find((cat) => cat.id === selectedCategory).name } : null}
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
       />
-      <div
-        onClick={() => setIsModalOpen(true)}
-        className="ml-6 p-2 rounded-lg cursor-pointer"
-      >
+      <div onClick={() => setIsModalOpen(true)} className="ml-6 p-2 rounded-lg cursor-pointer">
         <FontAwesomeIcon icon={faPlus} size="lg" />
       </div>
       <AddCategory
