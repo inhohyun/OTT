@@ -32,11 +32,14 @@ public class MemberController {
     private final MemberWriteService memberWriteService;
     private final MemberValidator memberValidator;
 
+    @Operation(summary = "자신의 id 가져오기", description = "<big>자신의 id를</big> 조회 합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 아이디"),
+    })
     @GetMapping("/my")
     public ApiResponse<MemberIdDto> getMember(@AuthenticationPrincipal CustomOAuth2User currentMember) {
         return ApiResponse.success(MemberIdDto.builder().id(memberReadService.myIdSearch(currentMember).getId()).build());
     }
-
 
     @Operation(summary = "멤버 상세보기", description = "<big>유저 데이터를</big> 상세조회 합니다.")
     @ApiResponses(value = {
@@ -77,6 +80,10 @@ public class MemberController {
         return ApiResponse.success(memberValidator.validateMemberNickname(nickname));
     }
 
+    @Operation(summary = "닉네임으로 유저 검색", description = "<big>유저를</big> 닉네임과 페이지를 통해 조회합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 목록"),
+    })
     @GetMapping("/more")
     public ApiResponse<List<MemberSearchResponseDto>> getMoreMembers(@RequestParam(name = "nickname", required = false) String nickname,
                                                                         @RequestParam(name = "offset", defaultValue = "0") int offset,
@@ -84,6 +91,10 @@ public class MemberController {
         return ApiResponse.success(memberReadService.findActiveMembersByNickname(nickname, offset, limit));
     }
 
+    @Operation(summary = "팔로우", description = "<big>유저를</big> 팔로우합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로우"),
+    })
     @PostMapping("/follow/{targetId}")
     public ApiResponse<FollowResponseDto> followMember(@PathVariable Long targetId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
@@ -93,6 +104,10 @@ public class MemberController {
         return ApiResponse.success(memberWriteService.followMember(followRequestDto));
     }
 
+    @Operation(summary = "언팔로우", description = "<big>유저를</big> 언팔로우합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 언팔로우"),
+    })
     @PostMapping("/unfollow/{targetId}")
     public ApiResponse<FollowResponseDto> unfollowMember(@PathVariable Long targetId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
@@ -102,6 +117,10 @@ public class MemberController {
         return ApiResponse.success(memberWriteService.unfollowMember(followRequestDto));
     }
 
+    @Operation(summary = "팔로우 수락", description = "<big>유저의 팔로우를</big> 수락합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로우 수락"),
+    })
     @PostMapping("/follow/{requestId}/accept")
     public ApiResponse<FollowResponseDto> acceptFollow(@PathVariable Long requestId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
@@ -111,6 +130,10 @@ public class MemberController {
         return ApiResponse.success(memberWriteService.acceptFollow(followRequestDto));
     }
 
+    @Operation(summary = "팔로우 거절", description = "<big>유저의 팔로우를</big> 거절합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로우 거절"),
+    })
     @PostMapping("/follow/{requestId}/reject")
     public ApiResponse<FollowResponseDto> rejectFollow(@PathVariable Long requestId, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
@@ -120,6 +143,10 @@ public class MemberController {
         return ApiResponse.success(memberWriteService.rejectFollow(followRequestDto));
     }
 
+    @Operation(summary = "프로필 이미지 업로드", description = "<big>프로필 이미지를</big> 업로드합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 프로필"),
+    })
     @PostMapping("/profile-image/upload")
     public ApiResponse<ProfileImageSuccessDto> uploadProfile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal CustomOAuth2User currentMember) {
         UploadProfileImageRequestDto uploadProfileImageRequestDto = UploadProfileImageRequestDto.builder()
@@ -129,6 +156,10 @@ public class MemberController {
         return ApiResponse.success(memberWriteService.uploadProfileImage(uploadProfileImageRequestDto));
     }
 
+    @Operation(summary = "팔로잉 목록", description = "<big>유저의 팔로잉 목록을</big> 조회합니다..")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로잉 목록"),
+    })
     @GetMapping("/follow/{memberId}/followings")
     public ApiResponse<List<FollowsResponseDto>> getFollowings(@PathVariable Long memberId) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
@@ -137,6 +168,10 @@ public class MemberController {
         return ApiResponse.success(memberReadService.followingsSearch(followRequestDto));
     }
 
+    @Operation(summary = "팔로워 목록", description = "<big>유저의 팔로워 목록을</big> 조회합니다..")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로워 목록"),
+    })
     @GetMapping("/follow/{memberId}/followers")
     public ApiResponse<List<FollowsResponseDto>> getFollowers(@PathVariable Long memberId) {
         FollowRequestDto followRequestDto = FollowRequestDto.builder()
@@ -145,6 +180,10 @@ public class MemberController {
         return ApiResponse.success(memberReadService.followersSearch(followRequestDto));
     }
 
+    @Operation(summary = "팔로우 요청 목록", description = "<big>자신의 팔로우 요청 목록을</big> 조회합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로우 요청 목록"),
+    })
     @GetMapping("/follow/request-list")
     public ApiResponse<List<FollowsResponseDto>> getFollowRequestList(@AuthenticationPrincipal CustomOAuth2User currentMember) {
         return ApiResponse.success(memberReadService.followRequestListSearch(MemberSsoDto.builder().sso(
