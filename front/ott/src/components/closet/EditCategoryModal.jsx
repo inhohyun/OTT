@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { fixCategory } from '../../api/closet/categories';
 
 const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategories }) => {
   // 새로운 카테고리 이름을 저장할 상태와 오류 메시지 상태
