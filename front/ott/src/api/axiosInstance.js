@@ -7,7 +7,9 @@ import axios from 'axios';
 
 // 환경 변수에서 API 기본 URL 가져오기
 
-const baseURL = import.meta.env.REACT_APP_API_BASE_URL;
+const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
+
+// const baseURL = '192.168.100.89:8080/';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({

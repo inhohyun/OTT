@@ -566,8 +566,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
-          formData.append('uid', 1);
-          // formData.append('uid',userId)
+          formData.append('memberId', 1);
+          // formData.append('memberId',userId)
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);

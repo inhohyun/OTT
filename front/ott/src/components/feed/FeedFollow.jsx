@@ -205,7 +205,7 @@ const FeedFollow = () => {
     setSelectedFollower(null);
   };
 
-  if (!followersData.length) {
+  if (!Array.isArray(followersData) || !followersData.length) {
     return <p>Loading...</p>; // Optionally display a loading message
   }
 

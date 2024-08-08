@@ -18,7 +18,7 @@ import axiosInstance from '../axiosInstance';
 export const lookbookComment = async (lookbookId, status) => {
   try {
     // console.log('댓글룩북:', lookbookId);
-    const response = await axiosInstance.get(`/api/comment/${lookbookId.id}`, {
+    const response = await axiosInstance.get(`api/comment/${lookbookId.id}`, {
       params: { status: status },
     });
     console.log(response.data);
@@ -34,7 +34,7 @@ export const commentCreate = (formData, lookbookId) => {
     console.log(pair[0] + ': ' + pair[1]);
   }
   axiosInstance
-    .post(`/api/comment/${lookbookId}`, formData, {
+    .post(`api/comment/${lookbookId}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((response) => {
@@ -47,7 +47,7 @@ export const commentCreate = (formData, lookbookId) => {
 
 export const replyCreate = (formData, lookbookId, replyTo) => {
   axiosInstance
-    .post(`/api/comment/${lookbookId}/${replyTo}`, formData, {
+    .post(`api/comment/${lookbookId}/${replyTo}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((response) => {
@@ -60,7 +60,7 @@ export const replyCreate = (formData, lookbookId, replyTo) => {
 
 export const commentUpdate = (formData, lookbookId, commentId) => {
   axiosInstance
-    .put(`/api/comment/${lookbookId}/${commentId}`, formData, {
+    .put(`api/comment/${lookbookId}/${commentId}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((response) => {
@@ -73,7 +73,7 @@ export const commentUpdate = (formData, lookbookId, commentId) => {
 
 export const commentDelete = (lookbookId, commentId) => {
   axiosInstance
-    .delete(`/api/comment/${lookbookId}/${commentId}`)
+    .delete(`api/comment/${lookbookId}/${commentId}`)
     .then((response) => {
       return response.status;
     })
@@ -84,7 +84,7 @@ export const commentDelete = (lookbookId, commentId) => {
 
 export const replyUpdate = (formData, lookbookId, replyId) => {
   axiosInstance
-    .put(`/api/comment/${lookbookId}/${replyId}`, formData, {
+    .put(`api/comment/${lookbookId}/${replyId}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((response) => {
@@ -97,7 +97,7 @@ export const replyUpdate = (formData, lookbookId, replyId) => {
 
 export const replyDelete = (lookbookId, replyId) => {
   axiosInstance
-    .delete(`/api/comment/${lookbookId}/${replyId}`)
+    .delete(`api/comment/${lookbookId}/${replyId}`)
     .then((response) => {
       return response.status;
     })

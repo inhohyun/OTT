@@ -62,8 +62,8 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     e.preventDefault();
     if (newComment.trim() !== '') {
       const formData = new FormData();
-      formData.append('uid', 1); // UID를 1로 설정
-      // formData.append('uid',userId);
+      formData.append('memberId', 1); // UID를 1로 설정
+      // formData.append('memberId',userId);
       const message =
         replyTo !== null
           ? newComment.split(' ').slice(1).join(' ')
@@ -129,8 +129,8 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
 
   const handleSaveEdit = (commentId) => {
     const formData = new FormData();
-    formData.append('uid', 1);
-    // formData.append('uid', userId);
+    formData.append('memberId', 1);
+    // formData.append('memberId', userId);
     formData.append('msg', editingComment);
     formData.append('status', 'comment');
 
@@ -183,8 +183,8 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
 
   const handleSaveEditReply = (commentId, replyId) => {
     const formData = new FormData();
-    formData.append('uid', 1);
-    // formData.append('uid',userId);
+    formData.append('memberId', 1);
+    // formData.append('memberId',userId);
     formData.append('msg', editingComment);
     formData.append('status', 'comment');
 

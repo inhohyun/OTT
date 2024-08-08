@@ -3,7 +3,7 @@ import axiosInstance from '../axiosInstance';
 export const lookbookDetail = async (lookbookId) => {
   try {
     const response = await axiosInstance.get(`api/lookbook/${lookbookId}`, {
-      params: { uid: 1 },
+      params: { memberId: 1 },
     });
     return response.data;
   } catch (error) {
@@ -24,9 +24,9 @@ export const lookbookDetail = async (lookbookId) => {
 
 export const lookbookDislike = (lookbook) => {
   axiosInstance
-    .post(`/api/lookbook/${lookbook.id}/dislike`, {
+    .post(`api/lookbook/${lookbook.id}/dislike`, {
       lookbookId: lookbook.id,
-      uid: '1',
+      memberId: '1',
     })
     .then((response) => {
       console.log(response.data);
@@ -38,9 +38,9 @@ export const lookbookDislike = (lookbook) => {
 
 // export const lookbookDislike = (lookbook,userId) => {
 //   axiosInstance
-//     .post(`/api/lookbook/${lookbook.id}/dislike`, {
+//     .post(`api/lookbook/${lookbook.id}/dislike`, {
 //       lookbookId: lookbook.id,
-//       uid: userId,
+//       memberId: userId,
 //     })
 //     .then((response) => {
 //       console.log(response.data);
@@ -52,9 +52,9 @@ export const lookbookDislike = (lookbook) => {
 
 export const lookbookLike = (lookbook) => {
   axiosInstance
-    .post(`/api/lookbook/${lookbook.id}/like`, {
+    .post(`api/lookbook/${lookbook.id}/like`, {
       lookbookId: lookbook.id,
-      uid: '1',
+      memberId: '1',
     })
     .then((response) => {
       console.log(response.data);
@@ -66,9 +66,9 @@ export const lookbookLike = (lookbook) => {
 
 // export const lookbookLike = (lookbook,userId) => {
 //   axiosInstance
-//     .post(`/api/lookbook/${lookbook.id}/like`, {
+//     .post(`api/lookbook/${lookbook.id}/like`, {
 //       lookbookId: lookbook.id,
-//       uid: userId,
+//       memberId: userId,
 //     })
 //     .then((response) => {
 //       console.log(response.data);

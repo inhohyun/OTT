@@ -63,6 +63,7 @@ const MainPage = () => {
     const fetchUserData = async () => {
       try {
         const uidResponse = await getUid();
+        console.log(uidResponse);
         const id = uidResponse.data.id;
         setUserId(id); // Set the userId in the Zustand store
         console.log('User ID:', id);

@@ -459,7 +459,7 @@
 
 // export default CreateLookbook;
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 // import axios from 'axios';
@@ -472,6 +472,7 @@ import shirt1 from '../../assets/images/clothes/shirt1.jpg';
 import shirt2 from '../../assets/images/clothes/shirt2.jpg';
 import pants1 from '../../assets/images/clothes/pants1.jpg';
 import useUserStore from '../../data/lookbook/userStore';
+import { getClosetId, getCategory } from '../../api/lookbook/category';
 
 const clothesData = {
   상의: [
@@ -510,15 +511,51 @@ const clothesData = {
 
 const CreateLookbook = () => {
   const [isPublic, setIsPublic] = useState(true);
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState('');
   const [description, setDescription] = useState('');
   const [showDeleteButton, setShowDeleteButton] = useState(true);
+  const [closetId, setClosetId] = useState(null);
 
   const categoryRef = useRef(null);
 
   const userId = useUserStore((state) => state.userId);
+
+  // 옷장 id 조회
+  useEffect(() => {
+    const uid = 1;
+    const fetchClosetId = async () => {
+      try {
+        const response = await getClosetId(uid);
+        setClosetId(response.data[0].id);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchClosetId();
+  }, []); // 빈 배열은 이 효과가 컴포넌트가 처음 마운트될 때 한 번만 실행되도록 합니다.
+
+  useEffect(() => {
+    console.log('옷장 아이디', closetId);
+  });
+
+  useEffect(() => {
+    if (closetId === null) return;
+    const fetchCategory = async () => {
+      try {
+        const response = await getCategory(closetId);
+        setCategories(response.data);
+        // const category = response.data;
+        console.log(categories);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCategory();
+  }, [closetId]);
 
   const {
     canvasItems,
@@ -550,8 +587,8 @@ const CreateLookbook = () => {
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
-          formData.append('uid', 1);
-          // formData.append('uid', userId);
+          formData.append('memberId', 5);
+          // formData.append('memberId', userId);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
@@ -560,7 +597,7 @@ const CreateLookbook = () => {
 
           try {
             const data = lookbookCreate(formData);
-            console.log('룩북 저장 성공', data);
+            // console.log('룩북 저장 성공', data);
             console.log('clothes', selectedImages);
           } catch (error) {
             console.error('Error:', error);
@@ -616,9 +653,9 @@ const CreateLookbook = () => {
     }),
   };
 
-  const categoryOptions = Object.keys(clothesData).map((categoryName) => ({
-    value: categoryName,
-    label: categoryName,
+  const categoryOptions = categories.map((category) => ({
+    value: category.id,
+    label: category.name,
   }));
 
   return (
