@@ -4,23 +4,47 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
-import { getCategoryList, getCategory } from '../../api/closet/categories';
+import {
+  getCategoryList,
+  fixCategory,
+  addCategory,
+  deleteCategory,
+} from '../../api/closet/categories';
 import { getClosetId } from '../../api/user/user';
 
 const CategoryDropdown = ({
   selectedCategory,
   onCategoryChange,
-  categories,
   onAddCategory,
   onEditCategory,
   onDeleteCategory,
 }) => {
+  // 카테고리 목록 상태
+  const [categories, setCategories] = useState([]);
   // 카테고리 추가 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 카테고리 수정 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const memberId = 1;
+        const closetResponse = await getClosetId(memberId);
+        const closetId = closetResponse.data.data[0].id;
+        console.log(closetId);
+        const categoryList = await getCategoryList(closetId);
+        console.log(categoryList);
+        setCategories(categoryList);
+      } catch (error) {
+        console.error('카테고리 목록 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const customStyles = {
     control: (provided, state) => ({
