@@ -18,8 +18,8 @@ const ClosetPage = () => {
   ]);
   const [clothes, setClothes] = useState([]); // Initialize clothes state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedClothing, setSelectedClothing] = useState(null);
+  // const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  // const [selectedClothing, setSelectedClothing] = useState(null);
 
   useEffect(() => {
     fetchClothes();
@@ -85,24 +85,24 @@ const ClosetPage = () => {
     );
   };
 
-  const handleClothesClick = (clothingItem) => {
-    setSelectedClothing(clothingItem);
-    setIsDetailModalOpen(true);
-  };
+  // const handleClothesClick = (clothingItem) => {
+  //   setSelectedClothing(clothingItem);
+  //   setIsDetailModalOpen(true);
+  // };
 
-  const handleEditClothes = (updatedClothing) => {
-    setClothes((prevClothes) =>
-      prevClothes.map((item) =>
-        item.id === updatedClothing.id ? updatedClothing : item
-      )
-    );
-    setIsDetailModalOpen(false);
-  };
+  // const handleEditClothes = (updatedClothing) => {
+  //   setClothes((prevClothes) =>
+  //     prevClothes.map((item) =>
+  //       item.id === updatedClothing.id ? updatedClothing : item
+  //     )
+  //   );
+  //   setIsDetailModalOpen(false);
+  // };
 
-  const handleDeleteClothes = (id) => {
-    setClothes((prevClothes) => prevClothes.filter((item) => item.id !== id));
-    setIsDetailModalOpen(false);
-  };
+  // const handleDeleteClothes = (id) => {
+  //   setClothes((prevClothes) => prevClothes.filter((item) => item.id !== id));
+  //   setIsDetailModalOpen(false);
+  // };
 
   const filteredClothes =
     selectedCategory === '전체'
@@ -131,7 +131,7 @@ const ClosetPage = () => {
       <ClothesGrid
         clothes={filteredClothes}
         onToggleLike={handleToggleLike}
-        onClothesClick={handleClothesClick}
+        // onClothesClick={handleClothesClick}
       />
       <div className="flex justify-center mt-5">
         <button
