@@ -10,7 +10,8 @@ import {
   addCategory,
   deleteCategory,
 } from '../../api/closet/categories';
-import { getClosetId } from '../../api/user/user';
+import { getClosetId } from '../../api/closet/clothes';
+
 
 const CategoryDropdown = ({
   selectedCategory,
@@ -33,7 +34,7 @@ const CategoryDropdown = ({
       try {
         const memberId = 1;
         const closetResponse = await getClosetId(memberId);
-        console.log(closetResponse.data)
+        console.log(closetResponse)
         const closetId = closetResponse.data.data[0].id;
         console.log(closetId);
         const categoryList = await getCategoryList(closetId);
