@@ -459,55 +459,334 @@
 
 // export default CreateLookbook;
 
+// import React, { useState, useRef, useEffect } from 'react';
+// import html2canvas from 'html2canvas';
+// import backgroundImage from '../../assets/images/background_image_main.png';
+// // import axios from 'axios';
+// import useCanvasItems from '../../hooks/useCanvasItems';
+// import CanvasArea from './CanvasArea';
+// import FormControls from './FormControls';
+// import ToggleButton from './ToggleButton';
+// import { lookbookCreate } from '../../api/lookbook/lookbook';
+// import shirt1 from '../../assets/images/clothes/shirt1.jpg';
+// import shirt2 from '../../assets/images/clothes/shirt2.jpg';
+// import pants1 from '../../assets/images/clothes/pants1.jpg';
+// import useUserStore from '../../data/lookbook/userStore';
+// import {
+//   getClosetId,
+//   getCategory,
+//   getClothes,
+// } from '../../api/lookbook/category';
+
+// const clothesData = {
+//   상의: [
+//     {
+//       id: 1,
+//       name: 'T-Shirt',
+//       image: shirt1,
+//     },
+//     {
+//       id: 2,
+//       name: 'Blouse',
+//       image:
+//         'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
+//     },
+//     {
+//       id: 3,
+//       name: 'T-Shirt',
+//       image: shirt2,
+//     },
+//   ],
+//   하의: [
+//     {
+//       id: 4,
+//       name: 'Jeans',
+//       image: pants1,
+//     },
+//     {
+//       id: 5,
+//       name: 'Shorts',
+//       image:
+//         'https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg',
+//     },
+//   ],
+//   // Add other categories as needed
+// };
+
+// const CreateLookbook = () => {
+//   const [isPublic, setIsPublic] = useState(true);
+//   const [categories, setCategories] = useState([]);
+//   const [selectedCategory, setSelectedCategory] = useState(null);
+//   const [tags, setTags] = useState([]);
+//   const [newTag, setNewTag] = useState('');
+//   const [description, setDescription] = useState('');
+//   const [showDeleteButton, setShowDeleteButton] = useState(true);
+//   const [closetId, setClosetId] = useState(null);
+//   const [clothes, setClothes] = useState([]);
+//   const [allClothes, setAllClothes] = useState([]);
+
+//   const categoryRef = useRef(null);
+
+//   const userId = useUserStore((state) => state.userId);
+
+//   // 옷장 id 조회
+//   useEffect(() => {
+//     const uid = 1;
+//     const fetchClosetId = async () => {
+//       try {
+//         const response = await getClosetId(uid);
+//         setClosetId(response.data[0].id);
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     };
+
+//     fetchClosetId();
+//   }, []); // 빈 배열은 이 효과가 컴포넌트가 처음 마운트될 때 한 번만 실행되도록 합니다.
+
+//   useEffect(() => {
+//     console.log('옷장 아이디', closetId);
+//   });
+
+//   // 카테고리 조회
+//   useEffect(() => {
+//     if (closetId === null) return;
+//     const fetchCategory = async () => {
+//       try {
+//         const response = await getCategory(closetId);
+//         setCategories(response.data);
+//         // const category = response.data;
+//         console.log(categories);
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     };
+//     fetchCategory();
+//   }, [closetId]);
+
+//   // 전체 옷 조회
+//   useEffect(() => {
+//     const allClothes = async () => {
+//       try {
+//         const response = await allClothes(userId);
+//         const allClothesData = response.data[0].map((item) => ({
+//           id: item.id,
+//           image: item.img[0],
+//         }));
+//         setAllClothes(allClothesData);
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     };
+//     allClothes();
+//   }, [userId]);
+
+//   // 카테고리 별 옷 조회
+//   useEffect(() => {
+//     if (!selectedCategory) return;
+
+//     const fetchClothes = async () => {
+//       try {
+//         const response = await getClothes(userId, selectedCategory, closetId);
+//         const clothesData = response.data[0].map((item) => ({
+//           id: item.id,
+//           image: item.image_path,
+//         }));
+//         setClothes(clothesData);
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     };
+
+//     fetchClothes();
+//   }, [selectedCategory, userId]);
+
+//   const {
+//     canvasItems,
+//     draggedItem,
+//     setDraggedItem,
+//     handleAddToCanvas,
+//     handleDelete,
+//     handleMouseDown,
+//     handleMouseUpOrLeave,
+//     handleMouseMove,
+//   } = useCanvasItems();
+
+//   const handleCategoryChange = (selectedOption) => {
+//     setSelectedCategory(selectedOption ? selectedOption.value : null);
+//   };
+
+//   const handleSave = () => {
+//     if (tags.length === 0) {
+//       alert('태그를 입력하세요.');
+//       return;
+//     }
+//     setShowDeleteButton(false);
+//     setTimeout(() => {
+//       const canvasArea = document.getElementById('canvasArea');
+//       html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
+//         canvas.toBlob((imageBlob) => {
+//           if (!imageBlob)
+//             return console.error('Failed to convert canvas to blob.');
+
+//           const selectedImages = canvasItems.map((item) => item.id);
+//           const formData = new FormData();
+//           formData.append('memberId', 5);
+//           // formData.append('memberId', userId);
+//           formData.append('content', description);
+//           formData.append('clothes', selectedImages);
+//           formData.append('tags', tags);
+//           formData.append('publicStatus', isPublic ? 'Y' : 'N');
+//           formData.append('img', imageBlob, 'lookbookimage.png');
+
+//           try {
+//             const data = lookbookCreate(formData);
+//             // console.log('룩북 저장 성공', data);
+//             console.log('clothes', selectedImages);
+//           } catch (error) {
+//             console.error('Error:', error);
+//           } finally {
+//             setShowDeleteButton(true);
+//           }
+//         }, 'image/png');
+//       });
+//     }, 100);
+//   };
+
+//   const handleKeyDown = (event) => {
+//     if (event.key === 'Enter') {
+//       event.preventDefault();
+//       handleAddTag();
+//     }
+//   };
+
+//   const handleAddTag = () => {
+//     if (newTag.trim() && !tags.includes(newTag.trim())) {
+//       setTags([...tags, newTag.trim()]);
+//       setNewTag('');
+//     }
+//   };
+
+//   const handleTagDelete = (tagToDelete) => {
+//     setTags(tags.filter((tag) => tag !== tagToDelete));
+//   };
+
+//   const scrollLeft = () => {
+//     if (categoryRef.current) {
+//       categoryRef.current.scrollLeft -= 100;
+//     }
+//   };
+
+//   const scrollRight = () => {
+//     if (categoryRef.current) {
+//       categoryRef.current.scrollLeft += 100;
+//     }
+//   };
+
+//   const customStyles = {
+//     control: (provided, state) => ({
+//       ...provided,
+//       'borderColor': state.isFocused ? 'black' : provided.borderColor,
+//       'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+//       '&:hover': { borderColor: 'black' },
+//     }),
+//     option: (provided, state) => ({
+//       ...provided,
+//       backgroundColor: state.isSelected ? '#a78bfa' : 'white',
+//       color: state.isSelected ? 'white' : 'black',
+//     }),
+//   };
+
+//   const categoryOptions = categories.map((category) => ({
+//     value: category.id,
+//     label: category.name,
+//   }));
+
+//   return (
+//     <div
+//       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center p-4"
+//       style={{ backgroundImage: `url(${backgroundImage})` }}
+//     >
+//       <style>{`.scrollbar-hide {-ms-overflow-style: none; scrollbar-width: none;}.scrollbar-hide::-webkit-scrollbar {display: none;}`}</style>
+//       <div className="bg-white bg-opacity-60 p-6 rounded-lg shadow-lg w-full max-w-md">
+//         <ToggleButton
+//           isPublic={isPublic}
+//           setIsPublic={setIsPublic}
+//           handleSave={handleSave}
+//           buttonLabel="저장"
+//         />
+//         <div className="border-2 border-dashed w-full h-72 mb-4">
+//           <CanvasArea
+//             canvasItems={canvasItems}
+//             showDeleteButton={showDeleteButton}
+//             handleDelete={handleDelete}
+//             handleMouseDown={handleMouseDown}
+//             handleTouchStart={handleMouseDown}
+//             handleMouseMove={(e) =>
+//               handleMouseMove(
+//                 e,
+//                 document.getElementById('canvasArea').getBoundingClientRect()
+//               )
+//             }
+//             handleMouseUpOrLeave={handleMouseUpOrLeave}
+//             handleTouchMove={(e) =>
+//               handleMouseMove(
+//                 e.touches[0],
+//                 document.getElementById('canvasArea').getBoundingClientRect()
+//               )
+//             }
+//             onDrop={(e) => {
+//               e.preventDefault();
+//               if (!draggedItem) return;
+//               handleAddToCanvas(draggedItem);
+//               setDraggedItem(null);
+//             }}
+//             onDragOver={(e) => e.preventDefault()}
+//           />
+//         </div>
+//         <FormControls
+//           selectedCategory={selectedCategory}
+//           handleCategoryChange={handleCategoryChange}
+//           categoryOptions={categoryOptions}
+//           customStyles={customStyles}
+//           // clothesData={clothesData}
+//           clothesData={clothes}
+//           categoryRef={categoryRef}
+//           handleAddToCanvas={handleAddToCanvas}
+//           handleDragStart={setDraggedItem}
+//           scrollLeft={scrollLeft}
+//           scrollRight={scrollRight}
+//           newTag={newTag}
+//           setNewTag={setNewTag}
+//           handleKeyDown={handleKeyDown}
+//           tags={tags}
+//           handleTagDelete={handleTagDelete}
+//           description={description}
+//           setDescription={setDescription}
+//           canvasItems={canvasItems} // Pass canvasItems here
+//         />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CreateLookbook;
+
 import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
-// import axios from 'axios';
 import useCanvasItems from '../../hooks/useCanvasItems';
 import CanvasArea from './CanvasArea';
 import FormControls from './FormControls';
 import ToggleButton from './ToggleButton';
 import { lookbookCreate } from '../../api/lookbook/lookbook';
-import shirt1 from '../../assets/images/clothes/shirt1.jpg';
-import shirt2 from '../../assets/images/clothes/shirt2.jpg';
-import pants1 from '../../assets/images/clothes/pants1.jpg';
 import useUserStore from '../../data/lookbook/userStore';
-import { getClosetId, getCategory } from '../../api/lookbook/category';
-
-const clothesData = {
-  상의: [
-    {
-      id: 1,
-      name: 'T-Shirt',
-      image: shirt1,
-    },
-    {
-      id: 2,
-      name: 'Blouse',
-      image:
-        'https://images.pexels.com/photos/1682699/pexels-photo-1682699.jpeg',
-    },
-    {
-      id: 3,
-      name: 'T-Shirt',
-      image: shirt2,
-    },
-  ],
-  하의: [
-    {
-      id: 4,
-      name: 'Jeans',
-      image: pants1,
-    },
-    {
-      id: 5,
-      name: 'Shorts',
-      image:
-        'https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg',
-    },
-  ],
-  // Add other categories as needed
-};
+import {
+  getClosetId,
+  getCategory,
+  getClothes,
+  getAllClothes,
+} from '../../api/lookbook/category';
 
 const CreateLookbook = () => {
   const [isPublic, setIsPublic] = useState(true);
@@ -518,9 +797,10 @@ const CreateLookbook = () => {
   const [description, setDescription] = useState('');
   const [showDeleteButton, setShowDeleteButton] = useState(true);
   const [closetId, setClosetId] = useState(null);
+  const [clothes, setClothes] = useState([]);
+  const [allClothes, setAllClothes] = useState([]);
 
   const categoryRef = useRef(null);
-
   const userId = useUserStore((state) => state.userId);
 
   // 옷장 id 조회
@@ -536,26 +816,78 @@ const CreateLookbook = () => {
     };
 
     fetchClosetId();
-  }, []); // 빈 배열은 이 효과가 컴포넌트가 처음 마운트될 때 한 번만 실행되도록 합니다.
+  }, [userId]);
 
   useEffect(() => {
     console.log('옷장 아이디', closetId);
-  });
+  }, [closetId]);
 
+  // 카테고리 조회
   useEffect(() => {
     if (closetId === null) return;
     const fetchCategory = async () => {
       try {
         const response = await getCategory(closetId);
-        setCategories(response.data);
-        // const category = response.data;
-        console.log(categories);
+        setCategories([{ id: 'all', name: '전체' }, ...response.data]);
       } catch (error) {
         console.error(error);
       }
     };
     fetchCategory();
   }, [closetId]);
+
+  // 전체 옷 조회
+  useEffect(() => {
+    const uid = 1;
+    const fetchAllClothes = async () => {
+      try {
+        const response = await getAllClothes(uid);
+        console.log('전체', response);
+        const allClothesData = response.map((item) => {
+          // console.log('아이템', item);
+          return {
+            id: item.clothesId,
+            image: item.img,
+          };
+        });
+        setAllClothes(allClothesData);
+        // console.log(allClothesData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllClothes();
+  }, [userId]);
+
+  // 카테고리 별 옷 조회
+  useEffect(() => {
+    if (!selectedCategory) return;
+
+    if (selectedCategory === 'all') {
+      console.log(allClothes);
+      setClothes(allClothes);
+      return;
+    }
+
+    const fetchClothes = async () => {
+      try {
+        const response = await getClothes(userId, selectedCategory);
+        if (Array.isArray(response.data)) {
+          const clothesData = response.data.map((item) => ({
+            id: item.id,
+            image: item.image_path,
+          }));
+          setClothes(clothesData);
+        } else {
+          console.log('응답 데이터가 배열이 아닙니다:', response.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchClothes();
+  }, [selectedCategory, userId, allClothes]);
 
   const {
     canvasItems,
@@ -587,8 +919,8 @@ const CreateLookbook = () => {
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
-          formData.append('memberId', 5);
           // formData.append('memberId', userId);
+          formData.append('memberId', 5);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
@@ -596,11 +928,10 @@ const CreateLookbook = () => {
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           try {
-            const data = lookbookCreate(formData);
-            // console.log('룩북 저장 성공', data);
-            console.log('clothes', selectedImages);
+            lookbookCreate(formData);
+            console.log('룩북 저장 성공');
           } catch (error) {
-            console.error('Error:', error);
+            console.error(error);
           } finally {
             setShowDeleteButton(true);
           }
@@ -705,7 +1036,7 @@ const CreateLookbook = () => {
           handleCategoryChange={handleCategoryChange}
           categoryOptions={categoryOptions}
           customStyles={customStyles}
-          clothesData={clothesData}
+          clothesData={clothes}
           categoryRef={categoryRef}
           handleAddToCanvas={handleAddToCanvas}
           handleDragStart={setDraggedItem}
@@ -718,7 +1049,8 @@ const CreateLookbook = () => {
           handleTagDelete={handleTagDelete}
           description={description}
           setDescription={setDescription}
-          canvasItems={canvasItems} // Pass canvasItems here
+          canvasItems={canvasItems}
+          allClothes={allClothes}
         />
       </div>
     </div>
