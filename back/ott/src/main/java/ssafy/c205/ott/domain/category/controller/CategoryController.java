@@ -3,7 +3,8 @@ package ssafy.c205.ott.domain.category.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.domain.category.dto.*;
@@ -11,7 +12,7 @@ import ssafy.c205.ott.domain.category.service.CategoryService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/category")
 public class CategoryController {
