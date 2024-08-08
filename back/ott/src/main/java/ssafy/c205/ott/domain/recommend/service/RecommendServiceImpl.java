@@ -13,7 +13,9 @@ import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.BodyType;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
+import ssafy.c205.ott.domain.lookbook.entity.Favorite;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
+import ssafy.c205.ott.domain.lookbook.repository.FavoriteRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
 import ssafy.c205.ott.domain.lookbook.service.CommentService;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
@@ -31,6 +33,7 @@ public class RecommendServiceImpl implements RecommendService {
     private final LookbookRepository lookbookRepository;
     private final CommentService commentService;
     private final LookbookService lookbookService;
+    private final FavoriteRepository favoriteRepository;
 
     @Override
     public void recommendByHeightWeight() {
@@ -84,6 +87,13 @@ public class RecommendServiceImpl implements RecommendService {
 
             //출력 데이터 넣기
             for (Lookbook lookbook : lookbooks) {
+                boolean isFavorite = false;
+                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    memberUid);
+                if (myFavor != null) {
+                    isFavorite = true;
+                }
+
                 bodyResponseDtos.add(
                     BodyResponseDto.builder().img(lookbook.getLookbookImages().get(0).getImageUrl())
                         .memberId(memberUid)
@@ -93,6 +103,7 @@ public class RecommendServiceImpl implements RecommendService {
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .cntFavorite(
                             lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .isFavorite(isFavorite)
                         .build());
             }
         }
@@ -118,7 +129,10 @@ public class RecommendServiceImpl implements RecommendService {
 
         for (Member member : members) {
             //회원탈퇴 or 나면 패스
-            if (member.getId() == memberId || member.getActiveStatus().equals(ActiveStatus.INACTIVE)) continue;
+            if (member.getId() == memberId || member.getActiveStatus()
+                .equals(ActiveStatus.INACTIVE)) {
+                continue;
+            }
 
             //해당 사용자들의 룩북 조회 (공개 + 삭제X)
             List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
@@ -126,6 +140,11 @@ public class RecommendServiceImpl implements RecommendService {
                 PublicStatus.PUBLIC, ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
             //룩북 추가
             for (Lookbook lookbook : lookbooks) {
+                boolean isFavorite = false;
+                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(), member.getId());
+                if (myFavor != null) {
+                    isFavorite = true;
+                }
                 bodyResponseDtos.add(BodyResponseDto
                     .builder()
                     .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
@@ -135,6 +154,7 @@ public class RecommendServiceImpl implements RecommendService {
                     .nickname(lookbook.getMember().getNickname())
                     .memberId(lookbook.getMember().getId())
                     .lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite)
                     .build());
             }
         }
