@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
+//            .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
             .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
                 @Override
@@ -50,7 +50,7 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://locatlhost:3000"));
+                    configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://localhost:3000"));
                     configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
                     configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
                     configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
@@ -75,25 +75,25 @@ public class SecurityConfig {
             .httpBasic((auth) -> auth.disable());
 
         //JWTFilter 추가
-        http
-            .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+//        http
+//            .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
-        http
-            .oauth2Login((oauth2) -> oauth2
-                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                    .userService(customOAuth2UserService))
-                .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
-                .successHandler(customSuccessHandler)
-                .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
+//        http
+//            .oauth2Login((oauth2) -> oauth2
+//                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                    .userService(customOAuth2UserService))
+//                .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
+//                .successHandler(customSuccessHandler)
+//                .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
 
         //경로별 인가 작업
-        http
-            .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
-                .anyRequest().authenticated());
+//        http
+//            .authorizeHttpRequests((auth) -> auth
+//                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
+//                .anyRequest().authenticated());
 
-        http
-            .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+//        http
+//            .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         //세션 설정 : STATELESS
         http
