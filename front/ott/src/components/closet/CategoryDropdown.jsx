@@ -72,6 +72,7 @@ const CategoryDropdown = ({
 
   // 카테고리 추가 함수
   const handleAddCategory = (newCategory) => {
+    setCategories((prevCategories) => [...prevCategories, newCategory]);
     onAddCategory(newCategory);
   };
 

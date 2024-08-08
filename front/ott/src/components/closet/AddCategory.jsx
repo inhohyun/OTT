@@ -40,7 +40,11 @@ const AddCategory = ({
       // API 호출하여 카테고리 추가
       const newCategoryData = await addCategory(closetId, trimmedCategory);
       // 검사 통과한 카테고리 추가
-      onAddCategory(newCategoryData);
+      const newCategoryObject = {
+        id: newCategoryData.categoryId,
+        name: trimmedCategory
+      }
+      onAddCategory(newCategoryObject);
       // 입력값 초기화
       setNewCategory('');
       // 카테고리 추가 모달 닫기
