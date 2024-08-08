@@ -51,7 +51,7 @@ export const addCategory = async (closetId, name) => {
 };
 
 // 카테고리 삭제
-export const deleteCategory = async (categorytId) => {
+export const deleteCategory = async (categoryId) => {
   try {
     const response = await axiosInstance.delete(`/api/category/${categoryId}`);
     console.log('카테고리 삭제 성공', response.data);
