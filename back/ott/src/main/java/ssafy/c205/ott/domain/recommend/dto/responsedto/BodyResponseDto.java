@@ -18,10 +18,11 @@ public class BodyResponseDto {
     private int cntFavorite;
     private int cntComment;
     private Long lookbookId;
+    private boolean isFavorite;
 
     @Builder
     public BodyResponseDto(Long memberId, String nickname, LocalDateTime createdAt, String img,
-        int cntFavorite, int cntComment, Long lookbookId) {
+        int cntFavorite, int cntComment, Long lookbookId, boolean isFavorite) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.createdAt = createdAt;
@@ -29,6 +30,7 @@ public class BodyResponseDto {
         this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
         this.lookbookId = lookbookId;
+        this.isFavorite = isFavorite;
     }
 
     public BodyResponseDto() {
