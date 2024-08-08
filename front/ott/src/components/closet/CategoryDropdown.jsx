@@ -37,7 +37,7 @@ const CategoryDropdown = ({
         console.log(closetId);
         const categoryList = await getCategoryList(closetId);
         console.log(categoryList);
-        setCategories(categoryList);
+        setCategories(categoryList.data);
       } catch (error) {
         console.error('카테고리 목록 불러오는 중 오류 발생:', error);
       }
