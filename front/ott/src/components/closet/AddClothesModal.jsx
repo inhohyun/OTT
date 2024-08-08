@@ -103,7 +103,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         data.append('backImg', formData.backImg);
       }
 
-      // Log FormData contents for debugging
       for (let [key, value] of data.entries()) {
         console.log(`${key}:`, value);
       }

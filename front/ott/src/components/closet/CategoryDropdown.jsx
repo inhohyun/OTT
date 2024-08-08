@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
+import { getCategoryList, getCategory } from '../../api/closet/categories';
 
 const CategoryDropdown = ({
   selectedCategory,
@@ -23,11 +24,11 @@ const CategoryDropdown = ({
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      borderColor: state.isFocused ? 'black' : provided.borderColor,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
       '&:hover': {
         borderColor: 'black',
       },
-      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
     }),
     option: (provided, state) => ({
       ...provided,
@@ -54,7 +55,7 @@ const CategoryDropdown = ({
 
   // 수정하고자 하는 카테고리 클릭
   const handleEditCategoryClick = (category, e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setEditingCategory(category);
     setIsEditModalOpen(true);
   };
@@ -80,7 +81,7 @@ const CategoryDropdown = ({
           label: (
             <div className="flex justify-between items-center w-full">
               <span className="flex-grow">{category}</span>
-              {(category !== '전체' && category !== '즐겨찾기') && (
+              {category !== '전체' && category !== '즐겨찾기' && (
                 <div className="flex space-x-2 ml-auto">
                   <FontAwesomeIcon
                     icon={faEdit}
