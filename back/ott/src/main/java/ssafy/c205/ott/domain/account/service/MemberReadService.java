@@ -27,7 +27,6 @@ import ssafy.c205.ott.domain.lookbook.entity.Tag;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -104,6 +103,10 @@ public class MemberReadService {
                 .stream()
                 .map(MemberSearchResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public Integer getFollowingsCount(MemberRequestDto requestDto) {
+        return followRepository.countByFromMemberId(requestDto.getId());
     }
 
     private Member findActiveMemberById(Long memberId) {
