@@ -18,10 +18,12 @@ const Modal = ({ isOpen, onClose }) => {
   const setNumImages = useStore((state) => state.setNumImages);
   const selectedImage = useStore((state) => state.selectedImage);
   const setSelectedImage = useStore((state) => state.setSelectedImage);
+  const formData = useStore((state) => state.formData);
+  const setFormData = useStore((state) => state.setFormData);
   const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
 
-  // 모달이 열릴 때 zustand 상태를 콘솔에 출력
+  // 모달이 열릴 때 Zustand 상태를 콘솔에 출력
   useEffect(() => {
     if (isOpen) {
       console.log('Zustand State:', {
@@ -30,6 +32,7 @@ const Modal = ({ isOpen, onClose }) => {
         filter,
         numImages,
         selectedImage,
+        formData,
         clothes,
       });
     }
@@ -40,6 +43,7 @@ const Modal = ({ isOpen, onClose }) => {
     filter,
     numImages,
     selectedImage,
+    formData,
     clothes,
   ]);
 
@@ -77,6 +81,7 @@ const Modal = ({ isOpen, onClose }) => {
     if (selectedClothing) {
       setCurrentStep('AiProceeding');
     } else {
+      console.log(import.meta.env.VITE_API_BASE_URL);
       alert('옷을 선택해주세요.');
     }
   };
@@ -96,9 +101,13 @@ const Modal = ({ isOpen, onClose }) => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result);
+        setFormData(formData);
       };
       reader.readAsDataURL(file);
     }

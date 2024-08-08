@@ -39,7 +39,7 @@ const useStore = create((set) => ({
   numImages: { value: '4장', label: '4장' },
   //선택된 옷 사진 url
   selectedImage: defaultImage,
-
+  formData: null,
   clothes: [
     {
       id: 1,
@@ -93,6 +93,7 @@ const useStore = create((set) => ({
   setFilter: (filter) => set({ filter }),
   setNumImages: (numImages) => set({ numImages }),
   setSelectedImage: (selectedImage) => set({ selectedImage }),
+  setFormData: (formData) => set({ formData }),
   toggleLike: (id) =>
     set((state) => ({
       clothes: state.clothes.map((item) =>
