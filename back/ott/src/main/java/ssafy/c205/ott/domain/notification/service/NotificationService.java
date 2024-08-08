@@ -40,4 +40,20 @@ public class NotificationService {
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
+    public NotificationSuccessDto createFollowNotification(FollowNotificationDto followNotificationDto) {
+        String message = followNotificationDto.getFollowerName() +
+                (followNotificationDto.getFollowStatus() == FollowStatus.FOLLOWING ? FOLLOW.getMessage() : FOLLOW_REQUEST.getMessage());
+
+        Notification followNotification = FollowNotification.builder()
+                .message(message)
+                .notificationType(followNotificationDto.getNotificationType())
+                .notificationStatus(NotificationStatus.UNREAD)
+                .memberId(followNotificationDto.getMemberId())
+                .followerId(followNotificationDto.getFollowerId())
+                .followId(followNotificationDto.getFollowId())
+                .build();
+        Notification notification = notificationRepository.save(followNotification);
+        return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
+    }
+
 }
