@@ -182,11 +182,7 @@ const FormControls = ({
           ) : (
             <>
               {clothes.length > 2 && (
-                <button
-                  onClick={scrollLeft}
-                  className="p-2"
-                  style={{ background: 'none' }}
-                >
+                <button onClick={scrollLeft} style={{ background: 'none' }}>
                   <img className="w-4 h-4" src={leftarrow} alt="Left Arrow" />
                 </button>
               )}
@@ -230,11 +226,7 @@ const FormControls = ({
                 })}
               </div>
               {clothes.length > 2 && (
-                <button
-                  onClick={scrollRight}
-                  className="p-2"
-                  style={{ background: 'none' }}
-                >
+                <button onClick={scrollRight} style={{ background: 'none' }}>
                   <img className="w-4 h-4" src={rightarrow} alt="Right Arrow" />
                 </button>
               )}

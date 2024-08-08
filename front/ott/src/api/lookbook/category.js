@@ -23,8 +23,9 @@ export const getClothes = async (userId, categoryId, closetId) => {
   try {
     const response = await axiosInstance.get(
       `api/clothes/${userId}/${categoryId}`,
-      { params: { memberId: closetId } }
+      { params: { closet_id: closetId } }
     );
+    console.log('카테고리 옷', response.data);
     return response.data;
   } catch (error) {
     console.error(error);
