@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
         Member member = null;
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
-                Long.parseLong(commentMessageDto.getUid()), ActiveStatus.ACTIVE);
+                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE);
 
         Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
         Lookbook lookbook = null;
@@ -78,7 +78,7 @@ public class CommentServiceImpl implements CommentService {
         Comment parent = null;
 
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
-                Long.parseLong(commentMessageDto.getUid()), ActiveStatus.ACTIVE);
+                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE);
 
         //Todo : 멤버를 못불러오는거 예외처리
         if (om.isPresent()) {

@@ -10,5 +10,5 @@ import lombok.ToString;
 public class LookbookSearchDto {
 
     private String[] tags;
-    private String uid;
+    private Long memberId;
 }

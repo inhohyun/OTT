@@ -67,7 +67,7 @@ public class LookbookServiceImpl implements LookbookService {
         //태그 유무 확인 및 태그 추가
         List<LookbookTag> lookbookTags = new ArrayList<>();
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
-            Long.parseLong(lookbookCreateDto.getUid()),
+            lookbookCreateDto.getMemberId(),
             ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
         Member member = null;
         if (om.isPresent()) {
@@ -159,7 +159,7 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public LookbookDetailDto detailLookbook(String lookbookId, Long uid) {
+    public LookbookDetailDto detailLookbook(String lookbookId, Long memberId) {
         Optional<Lookbook> odl = lookbookRepository.findById(Long.parseLong(lookbookId));
         Lookbook lookbook = null;
         if (odl.isPresent()) {
@@ -226,7 +226,7 @@ public class LookbookServiceImpl implements LookbookService {
             int cnt = favoriteRepository.findByLookbookId(Long.parseLong(lookbookId)).size();
 
             //내 좋아요 게시물인지
-            Optional<Member> om = memberRepository.findByIdAndActiveStatus(uid,
+            Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
                 ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
 
             Member member = null;
@@ -408,7 +408,7 @@ public class LookbookServiceImpl implements LookbookService {
     @Override
     public boolean likeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(
-            Long.parseLong(lookbookFavoriteDto.getUid()),
+            lookbookFavoriteDto.getMemberId(),
             ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
         Member member = null;
         if (om.isPresent()) {
@@ -441,7 +441,7 @@ public class LookbookServiceImpl implements LookbookService {
     public boolean dislikeLookbook(LookbookFavoriteDto lookbookFavoriteDto) {
         Favorite favoriteLookbook = favoriteRepository.findByLookbookIdAndMemberId(
             Long.parseLong(lookbookFavoriteDto.getLookbookId()),
-            Long.parseLong(lookbookFavoriteDto.getUid()));
+            lookbookFavoriteDto.getMemberId());
         favoriteRepository.delete(favoriteLookbook);
         return true;
     }
@@ -457,9 +457,9 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public List<FindLookbookDto> findPublicLookbooks(String uid) {
+    public List<FindLookbookDto> findPublicLookbooks(String memberId) {
         List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
-            Long.parseLong(uid),
+            Long.parseLong(memberId),
             PublicStatus.PUBLIC, ActiveStatus.ACTIVE);
         List<FindLookbookDto> findLookbookDtos = new ArrayList<>();
         for (Lookbook lookbook : lookbooks) {
@@ -468,13 +468,13 @@ public class LookbookServiceImpl implements LookbookService {
                     boolean isFavorite = false;
                     Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(
                         lookbook.getId(),
-                        Long.parseLong(uid));
+                        Long.parseLong(memberId));
                     if (favorite != null) {
                         isFavorite = true;
                     }
                     findLookbookDtos.add(FindLookbookDto
                         .builder()
-                        .uid(lookbook.getMember().getId())
+                        .memberId(lookbook.getMember().getId())
                         .createdAt(lookbook.getCreatedAt())
                         .imageURL(lookbookImage.getImageUrl())
                         .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
@@ -488,15 +488,15 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public List<FindLookbookDto> findPrivateLookbooks(String uid) {
+    public List<FindLookbookDto> findPrivateLookbooks(String memberId) {
         List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
-            Long.parseLong(uid),
+            Long.parseLong(memberId),
             PublicStatus.PRIVATE, ActiveStatus.ACTIVE);
         List<FindLookbookDto> findLookbookDtos = new ArrayList<>();
         for (Lookbook lookbook : lookbooks) {
             boolean isFavorite = false;
             Favorite favor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
-                Long.parseLong(uid));
+                Long.parseLong(memberId));
 
             if (favor != null) {
                 isFavorite = true;
@@ -506,7 +506,7 @@ public class LookbookServiceImpl implements LookbookService {
                 if (lookbookImage.getLookbookImageStatus() == LookbookImageStatus.THUMBNAIL) {
                     findLookbookDtos.add(FindLookbookDto
                         .builder()
-                        .uid(lookbook.getMember().getId())
+                        .memberId(lookbook.getMember().getId())
                         .createdAt(lookbook.getCreatedAt())
                         .imageURL(lookbookImage.getImageUrl())
                         .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
@@ -570,7 +570,7 @@ public class LookbookServiceImpl implements LookbookService {
                 }
                 boolean isFavorite = false;
                 Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
-                    Long.parseLong(lookbookSearchDto.getUid()));
+                    lookbookSearchDto.getMemberId());
                 if (favorite != null) {
                     isFavorite = true;
                 }
@@ -597,9 +597,9 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public int countLookbook(String uid) {
+    public int countLookbook(String memberId) {
         List<Lookbook> myLookbooks = lookbookRepository.findByMemberIdAndActiveStatus(
-            Long.parseLong(uid), ActiveStatus.ACTIVE);
+            Long.parseLong(memberId), ActiveStatus.ACTIVE);
         if (myLookbooks == null) {
             return -1;
         }
@@ -607,13 +607,13 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public List<LookbookMineDto> findMineLookbooks(String uid) {
+    public List<LookbookMineDto> findMineLookbooks(String memberId) {
         List<Lookbook> findMine = lookbookRepository.findByMemberIdAndActiveStatus(
-            Long.parseLong(uid), ActiveStatus.ACTIVE);
+            Long.parseLong(memberId), ActiveStatus.ACTIVE);
         List<LookbookMineDto> findMineDtos = new ArrayList<>();
         for (Lookbook lookbook : findMine) {
             Favorite fav = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
-                Long.parseLong(uid));
+                Long.parseLong(memberId));
 
             boolean isFavorite = false;
             if (fav != null) {
@@ -639,10 +639,10 @@ public class LookbookServiceImpl implements LookbookService {
     }
 
     @Override
-    public List<FollowLookbookResponseDto> findFollowingLookbooks(String uid) {
+    public List<FollowLookbookResponseDto> findFollowingLookbooks(String memberId) {
         List<FollowLookbookResponseDto> findFollowingLookbookDtos = new ArrayList<>();
 
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(Long.parseLong(uid),
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(Long.parseLong(memberId),
             ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
         if (om.isPresent()) {
             Member member = om.get();

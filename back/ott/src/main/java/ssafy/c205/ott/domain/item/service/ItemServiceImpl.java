@@ -49,12 +49,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
         MultipartFile backImg) {
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getUid(),
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getMemberId(),
             ActiveStatus.ACTIVE);
         Member member = null;
         if (om.isPresent()) {
             member = om.get();
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾지 못했습니다.");
         }
         //빈 객체 생성
@@ -85,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
 
         //옷 저장
         //closet id 가져오기
-        List<ClosetDto> closets = closetService.findByMemberId(itemCreateDto.getUid());
+        List<ClosetDto> closets = closetService.findByMemberId(itemCreateDto.getMemberId());
         Long closetId = closets.get(0).getId();
 
         Optional<Category> oc = categoryRepository.findById(itemCreateDto.getCategoryId());
@@ -135,7 +135,7 @@ public class ItemServiceImpl implements ItemService {
 
             //카테고리 변경
             //closet id 가져오기
-            List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getUid());
+            List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
             Long closetId = closets.get(0).getId();
 
             Optional<Category> oc = categoryRepository.findById(itemUpdateDto.getCategoryId());
@@ -147,7 +147,7 @@ public class ItemServiceImpl implements ItemService {
             }
             List<ItemCategory> categories = new ArrayList<>();
             ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
-                itemUpdateDto.getUid(), itemUpdateDto.getCategoryId()).get(0);
+                itemUpdateDto.getMemberId(), itemUpdateDto.getCategoryId()).get(0);
 
             ItemCategory saveCategory = itemCategoryRepository.save(
                 ItemCategory.builder().id(itemCategory.getId()).category(category).item(item)
@@ -218,8 +218,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemListResponseDto> selectItemList(Long uid) {
-        List<Item> itemLists = itemRepository.findByMemberId(uid);
+    public List<ItemListResponseDto> selectItemList(Long memberId) {
+        List<Item> itemLists = itemRepository.findByMemberId(memberId);
         List<ItemListResponseDto> itemListResponseDtos = new ArrayList<>();
         for (Item itemList : itemLists) {
             String[] urls = new String[itemList.getItemImages().size()];
@@ -262,7 +262,7 @@ public class ItemServiceImpl implements ItemService {
                     .purchase(item.getPurchase()).publicStatus(item.getPublicStatus())
                     .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
                     .salesStatus(item.getSalesStatus()).build());
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "옷을 찾지 못했습니다.");
         }
     }
