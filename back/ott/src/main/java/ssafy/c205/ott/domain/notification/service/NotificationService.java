@@ -1,15 +1,43 @@
 package ssafy.c205.ott.domain.notification.service;
 
-import java.util.List;
-import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationCreateDto;
-import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationSelectDto;
-import ssafy.c205.ott.domain.notification.dto.responsedto.NotificationDto;
-import ssafy.c205.ott.domain.notification.util.NotificationMessage;
+import static ssafy.c205.ott.domain.notification.util.NotificationMessage.*;
 
-public interface NotificationService {
-    void readNotification(String notificationId);
-    void deleteNotification(String notificationId);
-    void createCommentNotification(NotificationCreateDto notificationCreateDto);
-    void createNotification(NotificationMessage message, Long memberId);
-    List<NotificationDto> getNotifications(NotificationSelectDto notificationSelectDto);
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ssafy.c205.ott.domain.account.entity.FollowStatus;
+import ssafy.c205.ott.domain.notification.dto.request.AiNotificationDto;
+import ssafy.c205.ott.domain.notification.dto.request.CommentNotificationDto;
+import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
+import ssafy.c205.ott.domain.notification.dto.request.WebRtcNotificationDto;
+import ssafy.c205.ott.domain.notification.dto.response.NotificationSuccessDto;
+import ssafy.c205.ott.domain.notification.entity.AiNotification;
+import ssafy.c205.ott.domain.notification.entity.CommentNotification;
+import ssafy.c205.ott.domain.notification.entity.FollowNotification;
+import ssafy.c205.ott.domain.notification.entity.Notification;
+import ssafy.c205.ott.domain.notification.entity.NotificationStatus;
+import ssafy.c205.ott.domain.notification.entity.NotificationType;
+import ssafy.c205.ott.domain.notification.entity.WebRtcNotification;
+import ssafy.c205.ott.domain.notification.repository.NotificationRepository;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class NotificationService {
+
+    private final NotificationRepository notificationRepository;
+
+    public NotificationSuccessDto createCommentNotification(CommentNotificationDto commentNotificationDto) {
+        Notification commentNotification = CommentNotification.builder()
+                .message(commentNotificationDto.getCommentAuthorName() + COMMENT.getMessage())
+                .notificationType(commentNotificationDto.getNotificationType())
+                .notificationStatus(NotificationStatus.UNREAD)
+                .memberId(commentNotificationDto.getMemberId())
+                .commentId(commentNotificationDto.getCommentId())
+                .commentAuthorId(commentNotificationDto.getCommentAuthorId())
+                .build();
+        Notification notification = notificationRepository.save(commentNotification);
+        return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
+    }
+
 }
