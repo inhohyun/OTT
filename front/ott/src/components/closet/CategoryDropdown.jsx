@@ -28,6 +28,8 @@ const CategoryDropdown = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
+  // 옷장 ID
+  const [closetId, setClosetId] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -37,6 +39,7 @@ const CategoryDropdown = ({
         console.log(closetResponse)
         const closetId = closetResponse.data.data[0].id;
         console.log(closetId);
+        setClosetId(closetId)
         const categoryList = await getCategoryList(closetId);
         console.log(categoryList);
         setCategories(categoryList.data);
@@ -138,6 +141,7 @@ const CategoryDropdown = ({
         onClose={() => setIsModalOpen(false)}
         onAddCategory={handleAddCategory}
         existingCategories={categories}
+        closetId={closetId}
       />
       {editingCategory && (
         <EditCategoryModal

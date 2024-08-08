@@ -1,12 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { addCategory } from '../../api/closet/categories';
 
 const AddCategory = ({
   isOpen,
   onClose,
   onAddCategory,
   existingCategories = [],
+  closetId
 }) => {
   // 새로 추가되는 카테고리 초기값 공백으로 정의
   const [newCategory, setNewCategory] = useState('');
@@ -14,7 +16,7 @@ const AddCategory = ({
   const [error, setError] = useState('');
 
   // 카테고리 추가 함수
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     // 공백 제외한 카테고리 이름
     const trimmedCategory = newCategory.trim();
     // 입력값 없을 경우
@@ -25,7 +27,7 @@ const AddCategory = ({
 
     // 카테고리 중복 검사
     const categoryExists = existingCategories.some(
-      (category) => category.toLowerCase() === trimmedCategory.toLowerCase()
+      (category) => category.name.toLowerCase() === trimmedCategory.toLowerCase()
     );
     // 같은 이름의 카테고리 존재할 경우
     if (categoryExists) {
@@ -33,12 +35,20 @@ const AddCategory = ({
       return;
     }
 
-    // 검사 통과한 카테고리 추가
-    onAddCategory(trimmedCategory);
-    // 입력값 초기화
-    setNewCategory('');
-    // 카테고리 추가 모달 닫기
-    onClose();
+    // 카테고리 추가 axios 요청
+    try {
+      // API 호출하여 카테고리 추가
+      const newCategoryData = await addCategory(closetId, trimmedCategory);
+      // 검사 통과한 카테고리 추가
+      onAddCategory(newCategoryData);
+      // 입력값 초기화
+      setNewCategory('');
+      // 카테고리 추가 모달 닫기
+      onClose();
+    } catch (error) {
+      console.error('카테고리 추가 중 오류 발생:', error);
+      setError('카테고리 추가 중 오류가 발생했습니다.');
+    }
   };
 
   if (!isOpen) return null;

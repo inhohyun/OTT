@@ -25,9 +25,12 @@ export const fixCategory = async (closetId) => {
 };
 
 // 카테고리 등록
-export const addCategory = async (closetId) => {
+export const addCategory = async (closetId, name) => {
   try {
-    const response = await axiosInstance.post(`/api/category/${closetId}`);
+    const requestBody = {
+      name: name
+    }
+    const response = await axiosInstance.post(`/api/category/${closetId}`, requestBody);
     console.log('카테고리 추가 성공', response.data);
     return response.data;
   } catch (error) {
