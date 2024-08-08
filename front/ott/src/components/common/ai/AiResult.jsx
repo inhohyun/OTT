@@ -31,7 +31,7 @@ const AiResult = () => {
             <div key={index} className="flex justify-center">
               <img
                 src={`data:image/png;base64, ${image}`}
-                className="rounded-lg shadow-md max-h-[44vh]"
+                className="rounded-lg shadow-md max-h-[50vh]"
               />
             </div>
           ))}
