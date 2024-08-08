@@ -83,7 +83,6 @@ public class AiService {
         // GPU 서버로부터 받은 base64 인코딩된 이미지 데이터 그대로 반환
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("images", response.getBody().get("images"));
-        log.info(responseBody.toString());
 
         // 모델 사진 삭제
         amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
