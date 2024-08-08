@@ -1,21 +1,21 @@
 import axiosInstance from '../axiosInstance';
 
 // 옷 추가
-export const addClothes = (formData) => {
-  return axiosInstance
-    .post('/api/clothes/', formData, {
+export const addClothes = async (formData) => {
+  try {
+    const url = import.meta.env.REACT_APP_API_BASE_URL;
+    console.log(url);
+    const response = await axiosInstance.post('api/clothes/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    })
-    .then((response) => {
-      console.log('Successfully added clothes:', response.data);
-      return response.data;
-    })
-    .catch((error) => {
-      console.error('Error adding clothes:', error);
-      throw error;
     });
+    console.log('Successfully added clothes:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error adding clothes:', error);
+    throw error;
+  }
 };
 
 // 단일 옷 정보 조회

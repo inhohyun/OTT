@@ -3,6 +3,7 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { addClothes } from '../../api/closet/clothes';
+import axios from 'axios';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,11 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
   const [previewImages, setPreviewImages] = useState({
     frontImg: '',
     backImg: '',
+  });
+
+  const [isProcessing, setIsProcessing] = useState({
+    frontImg: false,
+    backImg: false,
   });
 
   useEffect(() => {
@@ -146,6 +152,30 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
       setFormData((prev) => ({ ...prev, [`${type}Img`]: file }));
       setPreviewImages((prev) => ({ ...prev, [`${type}Img`]: imageUrl }));
+      setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: true }));
+
+      let formdata = new FormData();
+      formdata.append('file', file);
+
+      axios
+        .post('https://i11c205.p.ssafy.io/rembg', formdata, {
+          responseType: 'blob', // 중요: 응답을 Blob으로 받음
+        })
+        .then((response) => {
+          const blob = response.data;
+          const processedImageUrl = URL.createObjectURL(blob);
+
+          setFormData((prev) => ({ ...prev, [`${type}Img`]: blob }));
+          setPreviewImages((prev) => ({
+            ...prev,
+            [`${type}Img`]: processedImageUrl,
+          }));
+          setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
+        })
+        .catch((error) => {
+          console.error('Error fetching the image:', error);
+          setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
+        });
     }
   };
 
@@ -189,7 +219,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         <h2 className="text-xl font-bold mb-4">새 옷 추가하기</h2>
         <div className="grid grid-cols-2 gap-4 mb-4">
           {['front', 'back'].map((type) => (
-            <div key={type}>
+            <div key={type} className="relative">
               <label className="block text-gray-700 mb-2 text-center">
                 {type === 'front' ? '앞면' : '뒷면'}
               </label>
@@ -201,10 +231,15 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
                   <img
                     src={previewImages[`${type}Img`]}
                     alt={type}
-                    className="object-cover h-full w-full rounded-lg"
+                    className={`object-cover h-full w-full rounded-lg ${isProcessing[`${type}Img`] ? 'blur-sm' : ''}`}
                   />
                 ) : (
                   <span className="text-gray-400">이미지 추가</span>
+                )}
+                {isProcessing[`${type}Img`] && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 rounded-lg">
+                    <span className="text-white text-lg">누끼 따는중...</span>
+                  </div>
                 )}
               </div>
               <input

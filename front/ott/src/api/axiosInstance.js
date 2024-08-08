@@ -7,7 +7,7 @@ import {
 
 // 환경 변수에서 API 기본 URL 가져오기
 
-const baseURL = import.meta.env.REACT_APP_API_BASE_URL;
+const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
@@ -17,22 +17,22 @@ const axiosInstance = axios.create({
 });
 
 // 요청 인터셉터 설정
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken();
-    if (token) {
-      // 액세스 토큰이 있으면 헤더에 추가
-      config.headers.access = `${token}`;
-    } else {
-      // 액세스 토큰이 없으면 로그인 필요 메시지와 함께 로그인 페이지로 리디렉션
-      alert('로그인 후 이용해주세요.');
-      window.location.href = '/';
-      return Promise.reject(new Error('No access token found'));
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     const token = getAccessToken();
+//     if (token) {
+//       // 액세스 토큰이 있으면 헤더에 추가
+//       config.headers.access = `${token}`;
+//     } else {
+//       // 액세스 토큰이 없으면 로그인 필요 메시지와 함께 로그인 페이지로 리디렉션
+//       alert('로그인 후 이용해주세요.');
+//       window.location.href = '/';
+//       return Promise.reject(new Error('No access token found'));
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
 
 // 응답 인터셉터 설정
 axiosInstance.interceptors.response.use(
