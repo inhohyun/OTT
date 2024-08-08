@@ -93,6 +93,9 @@ const CategoryDropdown = ({
 
   // 수정한 카테고리 저장
   const handleEditCategorySave = (newCategoryName) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((cat) => (cat.id === editingCategory.id ? { ...cat, name: newCategoryName } : cat))
+    );
     onEditCategory(editingCategory, newCategoryName);
     setEditingCategory(null); // 수정하는 카테고리 선택 초기화
     setIsEditModalOpen(false);
@@ -151,6 +154,7 @@ const CategoryDropdown = ({
           category={editingCategory}
           onSave={handleEditCategorySave}
           existingCategories={categories}
+          closetId={closetId}
         />
       )}
     </div>

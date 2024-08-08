@@ -15,7 +15,11 @@ export const getCategoryList = async (closetId) => {
 // 카테고리 수정
 export const fixCategory = async (closetId, categoryId, newName) => {
   try {
-    const requestBody = { name: newName }
+    const requestBody = {
+      categoryId: categoryId,
+      closetId: closetId,
+      newName: newName
+    };
     const response = await axiosInstance.put(`/api/category/${closetId}`, requestBody);
     console.log('카테고리 수정 성공:', response.data);
     return response.data;
