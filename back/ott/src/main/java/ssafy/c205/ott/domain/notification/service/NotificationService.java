@@ -5,7 +5,10 @@ import static ssafy.c205.ott.domain.notification.util.NotificationMessage.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ssafy.c205.ott.domain.account.dto.request.MemberSsoDto;
+import ssafy.c205.ott.domain.account.dto.response.MemberNotificationDto;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
+import ssafy.c205.ott.domain.account.service.MemberReadService;
 import ssafy.c205.ott.domain.notification.dto.request.AiNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.request.CommentNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
@@ -26,6 +29,7 @@ import ssafy.c205.ott.domain.notification.repository.NotificationRepository;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final MemberReadService memberReadService;
 
     public NotificationSuccessDto createCommentNotification(CommentNotificationDto commentNotificationDto) {
         Notification commentNotification = CommentNotification.builder()
@@ -57,13 +61,15 @@ public class NotificationService {
     }
 
     public NotificationSuccessDto createWebRtcNotification(WebRtcNotificationDto webRtcNotificationDto) {
+        MemberNotificationDto memberInfo = memberReadService.myInfoSearch(MemberSsoDto.builder().sso(webRtcNotificationDto.getRtcRequestMemberSso()).build());
+
         Notification webRtcNotification = WebRtcNotification.builder()
-                .message(webRtcNotificationDto.getRtcRequestMemberName() + COMMENT.getMessage())
+                .message(memberInfo.getMemberName() + COMMENT.getMessage())
                 .notificationType(webRtcNotificationDto.getNotificationType())
                 .notificationStatus(NotificationStatus.UNREAD)
                 .memberId(webRtcNotificationDto.getMemberId())
-                .rtcRequestMemberId(webRtcNotificationDto.getRtcRequestMemberId())
-                .rtcRoomId(webRtcNotificationDto.getRtcRoomId())
+                .rtcRequestMemberId(memberInfo.getMemberId())
+                .sessionId(webRtcNotificationDto.getSessionId())
                 .build();
         Notification notification = notificationRepository.save(webRtcNotification);
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
