@@ -99,10 +99,16 @@ const CategoryDropdown = ({
 
   // 수정한 카테고리 저장
   const handleEditCategorySave = (newCategoryName) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((cat) =>
+        cat.categoryId === editingCategory.categoryId
+          ? { ...cat, name: newCategoryName }
+          : cat
+      )
+    );
     onEditCategory(editingCategory, newCategoryName);
-    setEditingCategory(null); // 수정하는 카테고리 선택 초기화
+    setEditingCategory(null);
     setIsEditModalOpen(false);
-    fetchCategories();
   };
 
   // 카테고리 수정 취소

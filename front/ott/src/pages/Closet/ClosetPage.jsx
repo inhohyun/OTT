@@ -142,7 +142,7 @@ const ClosetPage = () => {
       <AddClothesModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddClothes={handleAddClothes}
+        onAddClothes={handleNewClothes}
         categories={categories.filter(
           (category) => category !== '전체' && category !== '즐겨찾기'
         )}
