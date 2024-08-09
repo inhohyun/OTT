@@ -55,7 +55,7 @@ const CreateLookbook = () => {
       try {
         const response = await getCategory(closetId);
         console.log('카테고리', response);
-        setCategories([{ id: 'all', name: '전체' }, ...response.data]);
+        setCategories(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -63,28 +63,28 @@ const CreateLookbook = () => {
     fetchCategory();
   }, [closetId]);
 
-  // 전체 옷 조회
-  useEffect(() => {
-    const uid = 1;
-    const fetchAllClothes = async () => {
-      try {
-        const response = await getAllClothes(uid);
-        console.log('전체', response);
-        const allClothesData = response.map((item) => {
-          // console.log('아이템', item);
-          return {
-            id: item.clothesId,
-            image: item.img,
-          };
-        });
-        setAllClothes(allClothesData);
-        // console.log(allClothesData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAllClothes();
-  }, [userId]);
+  // // 전체 옷 조회
+  // useEffect(() => {
+  //   const uid = 1;
+  //   const fetchAllClothes = async () => {
+  //     try {
+  //       const response = await getAllClothes(uid);
+  //       console.log('전체', response);
+  //       const allClothesData = response.map((item) => {
+  //         // console.log('아이템', item);
+  //         return {
+  //           id: item.clothesId,
+  //           image: item.img,
+  //         };
+  //       });
+  //       setAllClothes(allClothesData);
+  //       // console.log(allClothesData);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchAllClothes();
+  // }, [userId]);
 
   // 카테고리 별 옷 조회
   useEffect(() => {
