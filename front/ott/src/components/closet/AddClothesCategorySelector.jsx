@@ -59,8 +59,9 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
           selectedCategory
             ? {
                 value: selectedCategory,
-                label: categories.find((cat) => cat.id === selectedCategory)
-                  ?.label,
+                label: categories.find(
+                  (cat) => cat.categoryId === selectedCategory
+                )?.name,
               }
             : null
         }
