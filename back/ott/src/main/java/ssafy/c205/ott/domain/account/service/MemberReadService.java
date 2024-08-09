@@ -12,10 +12,7 @@ import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberSsoDto;
-import ssafy.c205.ott.domain.account.dto.response.FollowsResponseDto;
-import ssafy.c205.ott.domain.account.dto.response.MemberIdDto;
-import ssafy.c205.ott.domain.account.dto.response.MemberInfoDto;
-import ssafy.c205.ott.domain.account.dto.response.MemberSearchResponseDto;
+import ssafy.c205.ott.domain.account.dto.response.*;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.FollowStatus;
@@ -41,6 +38,11 @@ public class MemberReadService {
 
     public MemberIdDto myIdSearch(CustomOAuth2User currentMember) {
         return MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).getId()).build();
+    }
+
+    public MemberNotificationDto myInfoSearch(MemberSsoDto memberSsoDto) {
+        Member findMember = memberRepository.findBySso(memberSsoDto.getSso());
+        return MemberNotificationDto.builder().memberId(findMember.getId()).memberName(findMember.getName()).build();
     }
 
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
