@@ -81,6 +81,32 @@ public class RecommendServiceImpl implements RecommendService {
         MemberGroup memberGroup = groupRepository.findByMemberId(memberId);
         List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
 
+        //신규회원이여서 데이터가 없으면?
+        if (memberGroup == null) {
+            List<Lookbook> lookbooks = lookbookRepository.findByActiveStatus(
+                ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+            for (Lookbook lookbook : lookbooks) {
+                boolean isFavorite = false;
+                Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    memberId);
+                if (favorite != null) {
+                    isFavorite = true;
+                }
+                bodyResponseDtos.add(BodyResponseDto
+                    .builder()
+                    .memberId(lookbook.getMember().getId())
+                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                    .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                    .createdAt(lookbook.getCreatedAt())
+                    .nickname(lookbook.getMember().getNickname())
+                    .lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite)
+                    .build());
+            }
+            return bodyResponseDtos;
+        }
+
         //해당 그룹아이디의 사람들을 찾기
         List<MemberGroup> memberGroups = groupRepository.findByGroupId(memberGroup.getGroupId());
         for (MemberGroup mygroup : memberGroups) {

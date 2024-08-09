@@ -12,7 +12,7 @@ public interface LookbookRepository extends JpaRepository<Lookbook, Long> {
     List<Lookbook> findByMemberIdAndPublicStatusAndActiveStatus(Long memberId,
         PublicStatus publicStatus, ActiveStatus activeStatus);
 
-    Lookbook findByActiveStatus(ActiveStatus activeStatus);
+    List<Lookbook> findByActiveStatus(ActiveStatus activeStatus);
 
     List<Lookbook> findByMemberIdAndActiveStatus(Long memberId, ActiveStatus activeStatus);
 
