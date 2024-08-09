@@ -3,6 +3,7 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { addClothes } from '../../api/closet/clothes';
+import iconImage from '/icon-192x192.png';
 import axios from 'axios';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
@@ -236,8 +237,15 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
                   <span className="text-gray-400">이미지 추가</span>
                 )}
                 {isProcessing[`${type}Img`] && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 rounded-lg">
-                    <span className="text-white text-lg">누끼 따는중...</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 rounded-lg">
+                    <span className="text-white text-lg mb-2">
+                      누끼 따는중...
+                    </span>
+                    <img
+                      src={iconImage}
+                      alt="Processing Icon"
+                      className="w-10 h-10 rounded-full animate-spin"
+                    />
                   </div>
                 )}
               </div>
