@@ -4,34 +4,42 @@ import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
 // import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
-import { getClothesList } from '../../api/closet/clothes';
+import { getClothesList, getClosetId } from '../../api/closet/clothes';
+import { getCategoryList } from '../../api/closet/categories';
 
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
-  const [categories, setCategories] = useState([
-    '전체',
-    '상의',
-    '하의',
-    '아우터',
-    '한벌옷',
-    '즐겨찾기',
-  ]);
-  const [clothes, setClothes] = useState([]); // Initialize clothes state
+  const [categories, setCategories] = useState([]);
+  const [clothes, setClothes] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedClothing, setSelectedClothing] = useState(null);
+  // const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  // const [selectedClothing, setSelectedClothing] = useState(null);
 
   useEffect(() => {
     fetchClothes();
+    fetchCategories();
   }, []);
+
+  const memberId = 1;
 
   const fetchClothes = async () => {
     try {
-      const userId = 1;
-      const clothesList = await getClothesList(userId);
-      setClothes(clothesList); // Set the clothes state with fetched data
+      const clothesList = await getClothesList(memberId);
+      setClothes(clothesList);
     } catch (error) {
       console.error('Failed to fetch clothes:', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const closetResponse = await getClosetId(memberId);
+      const closetId = closetResponse.data.data[0].id;
+      const categoryList = await getCategoryList(closetId);
+      const fetchedCategories = categoryList.data.map(category => category.name);
+      setCategories(['전체', '즐겨찾기', ...fetchedCategories]);
+    } catch (error) {
+      console.error('카테고리 목록 가져오기 실패:', error);
     }
   };
 
@@ -74,7 +82,7 @@ const ClosetPage = () => {
   };
 
   const handleAddClothes = () => {
-    fetchClothes(); // Refresh the clothes list after adding new clothes
+    fetchClothes();
   };
 
   const handleToggleLike = (id) => {
@@ -85,35 +93,12 @@ const ClosetPage = () => {
     );
   };
 
-  const handleClothesClick = (clothingItem) => {
-    setSelectedClothing(clothingItem);
-    setIsDetailModalOpen(true);
-  };
-
-  const handleEditClothes = (updatedClothing) => {
-    setClothes((prevClothes) =>
-      prevClothes.map((item) =>
-        item.id === updatedClothing.id ? updatedClothing : item
-      )
-    );
-    setIsDetailModalOpen(false);
-  };
-
-  const handleDeleteClothes = (id) => {
-    setClothes((prevClothes) => prevClothes.filter((item) => item.id !== id));
-    setIsDetailModalOpen(false);
-  };
-
   const filteredClothes =
     selectedCategory === '전체'
       ? clothes
       : selectedCategory === '즐겨찾기'
-        ? clothes.filter((item) => item.isLiked)
-        : clothes.filter((item) => item.category === selectedCategory);
-
-  const filteredCategories = categories.filter(
-    (category) => category !== '전체' && category !== '즐겨찾기'
-  );
+      ? clothes.filter((item) => item.isLiked)
+      : clothes.filter((item) => item.category === selectedCategory);
 
   return (
     <div
@@ -131,7 +116,7 @@ const ClosetPage = () => {
       <ClothesGrid
         clothes={filteredClothes}
         onToggleLike={handleToggleLike}
-        onClothesClick={handleClothesClick}
+        // onClothesClick={handleClothesClick}
       />
       <div className="flex justify-center mt-5">
         <button
@@ -146,7 +131,7 @@ const ClosetPage = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAddClothes={handleAddClothes}
-        categories={filteredCategories}
+        categories={categories.filter(category => category !== '전체' && category !== '즐겨찾기')}
       />
       {/*
       {selectedClothing && (
