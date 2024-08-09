@@ -115,7 +115,7 @@ const CategoryDropdown = ({
     <div className="my-12 w-full max-w-xs flex items-center">
       <Select
         options={categories.map((category) => ({
-          value: category.id,
+          value: category.categoryId,
           label: (
             <div className="flex justify-between items-center w-full">
               <span className="flex-grow">{category.name}</span>
@@ -137,11 +137,12 @@ const CategoryDropdown = ({
           ),
         }))}
         value={
-          categories.find((cat) => cat.id === selectedCategory)
+          categories.find((cat) => cat.categoryId === selectedCategory)
             ? {
                 value: selectedCategory,
-                label: categories.find((cat) => cat.id === selectedCategory)
-                  .name,
+                label: categories.find(
+                  (cat) => cat.categoryId === selectedCategory
+                ).name,
               }
             : null
         }

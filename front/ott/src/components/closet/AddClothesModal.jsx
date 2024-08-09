@@ -140,12 +140,17 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
           const blob = response.data;
           const processedImageUrl = URL.createObjectURL(blob);
 
-          setFormData((prev) => ({ ...prev, [`${type}Img`]: blob }));
+          // setFormData((prev) => ({ ...prev, [`${type}Img`]: blob }));
           setPreviewImages((prev) => ({
             ...prev,
             [`${type}Img`]: processedImageUrl,
           }));
           setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
+          const file = new File([blob], `${type}.png`, { type: 'image/png' });
+          setFormData((prev) => ({
+            ...prev,
+            [`${type}Img`]: file,
+          }));
         })
         .catch((error) => {
           console.error('Error fetching the image:', error);
@@ -172,7 +177,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
 
   const handleCategoryChange = (categoryId) => {
     console.log('Category ID passed:', categoryId);
-    setFormData((prev) => ({ ...prev, categoryId }));
+    setFormData((prev) => ({ ...prev, categoryId: categoryId }));
   };
 
   const genderOptions = [
