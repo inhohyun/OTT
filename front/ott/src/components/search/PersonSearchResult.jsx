@@ -69,11 +69,20 @@ const PersonSearchResult = ({ results, searchQuery }) => {
             key={index}
             className="p-2 rounded-lg relative flex items-center"
           >
-            <FontAwesomeIcon
-              icon={faUserCircle}
-              className="text-gray-400 mr-4"
-              style={{ fontSize: '36px' }}
-            />
+            {result.profileImageUrl ? (
+              <img
+                src={result.profileImageUrl}
+                alt="Profile"
+                className="mr-4"
+                style={{ width: '36px', height: '36px', borderRadius: '50%' }}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faUserCircle}
+                className="text-gray-400 mr-4"
+                style={{ fontSize: '36px' }}
+              />
+            )}
             <div>
               <h3
                 className="text-base font-semibold mb-2"
