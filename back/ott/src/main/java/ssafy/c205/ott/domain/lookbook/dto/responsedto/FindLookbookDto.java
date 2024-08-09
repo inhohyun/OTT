@@ -14,19 +14,19 @@ public class FindLookbookDto {
     private String imageURL;
     private Long memberId;
     private LocalDateTime createdAt;
-    private int cntLike;
+    private int cntFavorite;
     private int cntComment;
-    private boolean isLike;
+    private boolean isFavorite;
 
     @Builder
-    public FindLookbookDto(String imageURL, Long memberId, LocalDateTime createdAt, int cntLike,
-        int cntComment, boolean isLike) {
+    public FindLookbookDto(String imageURL, Long memberId, LocalDateTime createdAt, int cntFavorite,
+        int cntComment, boolean isFavorite) {
         this.imageURL = imageURL;
         this.memberId = memberId;
         this.createdAt = createdAt;
-        this.cntLike = cntLike;
+        this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
-        this.isLike = isLike;
+        this.isFavorite = isFavorite;
     }
 
     public FindLookbookDto() {

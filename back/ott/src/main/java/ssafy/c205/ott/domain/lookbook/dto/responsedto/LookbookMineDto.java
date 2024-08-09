@@ -9,19 +9,19 @@ import lombok.ToString;
 public class LookbookMineDto {
     private String img;
     private String[] tags;
-    private int cntLike;
+    private int cntFavorite;
     private int cntComment;
     private Long lookbookId;
-    private boolean isLike;
+    private boolean isFavorite;
 
     @Builder
-    public LookbookMineDto(String img, String[] tags, int cntLike, int cntComment, Long lookbookId, boolean isLike) {
+    public LookbookMineDto(String img, String[] tags, int cntFavorite, int cntComment, Long lookbookId, boolean isFavorite) {
         this.img = img;
         this.tags = tags;
-        this.cntLike = cntLike;
+        this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
         this.lookbookId = lookbookId;
-        this.isLike = isLike;
+        this.isFavorite = isFavorite;
     }
 
     public LookbookMineDto() {}

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ssafy.c205.ott.common.entity.PublicStatus;
+import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
 import ssafy.c205.ott.domain.item.entity.SalesStatus;
 import ssafy.c205.ott.domain.item.entity.Sex;
 
@@ -22,9 +23,12 @@ public class ItemResponseDto {
     private String category;
     private String[] imageUrls;
     private Long clothesId;
+    private BookmarkStatus bookmarkStatus;
 
     @Builder
-    public ItemResponseDto(String size, String brand, String purchase, PublicStatus publicStatus, String color, Sex gender, SalesStatus salesStatus, String category, String[] imageUrls, Long clothesId) {
+    public ItemResponseDto(String size, String brand, String purchase, PublicStatus publicStatus,
+        String color, Sex gender, SalesStatus salesStatus, String category, String[] imageUrls,
+        Long clothesId, BookmarkStatus bookmarkStatus) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
@@ -35,6 +39,7 @@ public class ItemResponseDto {
         this.category = category;
         this.imageUrls = imageUrls;
         this.clothesId = clothesId;
+        this.bookmarkStatus = bookmarkStatus;
     }
 
     private ItemResponseDto() {
