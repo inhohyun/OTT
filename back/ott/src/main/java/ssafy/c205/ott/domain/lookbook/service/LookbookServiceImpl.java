@@ -536,7 +536,7 @@ public class LookbookServiceImpl implements LookbookService {
             for (LookbookTag findLookbook : findLookbooks) {
                 Lookbook lookbook = findLookbook.getLookbook();
                 //삭제된 게시물이면 나오면 안됨
-                if (lookbook.getActiveStatus() == ActiveStatus.INACTIVE) {
+                if (lookbook.getActiveStatus().equals(ActiveStatus.INACTIVE)) {
                     continue;
                 }
                 long id = lookbook.getId();

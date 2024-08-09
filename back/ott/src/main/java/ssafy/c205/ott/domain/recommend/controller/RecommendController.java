@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,11 @@ public class RecommendController {
 
     @GetMapping("/getTagRecommend")
     public ResponseEntity<?> getTagRecommend(@RequestParam("memberId") Long memberId) {
-        return null;
+        List<BodyResponseDto> recommendByTag = recommendService.getRecommendByTag(memberId);
+        if (recommendByTag == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("데이터를 찾지 못했습니다.");
+        }
+        Collections.shuffle(recommendByTag);
+        return ResponseEntity.ok().body(recommendByTag);
     }
 }
