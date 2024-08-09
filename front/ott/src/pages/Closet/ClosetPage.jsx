@@ -3,7 +3,7 @@ import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
-// import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
+import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
 import { getClothesList, getClosetId } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 
@@ -12,8 +12,8 @@ const ClosetPage = () => {
   const [categories, setCategories] = useState([]);
   const [clothes, setClothes] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  // const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  // const [selectedClothing, setSelectedClothing] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedClothing, setSelectedClothing] = useState(null);
 
   useEffect(() => {
     fetchClothes();
@@ -36,7 +36,9 @@ const ClosetPage = () => {
       const closetResponse = await getClosetId(memberId);
       const closetId = closetResponse.data.data[0].id;
       const categoryList = await getCategoryList(closetId);
-      const fetchedCategories = categoryList.data.map(category => category.name);
+      const fetchedCategories = categoryList.data.map(
+        (category) => category.name
+      );
       setCategories(['전체', '즐겨찾기', ...fetchedCategories]);
     } catch (error) {
       console.error('카테고리 목록 가져오기 실패:', error);
@@ -81,7 +83,8 @@ const ClosetPage = () => {
     );
   };
 
-  const handleAddClothes = () => {
+  const handleNewClothes = (newClothes) => {
+    setClothes((prevClothes) => [...prevClothes, newClothes]);
     fetchClothes();
   };
 
@@ -93,12 +96,21 @@ const ClosetPage = () => {
     );
   };
 
+  const handleClothesClick = (clothingItem) => {
+    setSelectedClothing(clothingItem);
+    setIsDetailModalOpen(true);
+  };
+
   const filteredClothes =
     selectedCategory === '전체'
       ? clothes
       : selectedCategory === '즐겨찾기'
-      ? clothes.filter((item) => item.isLiked)
-      : clothes.filter((item) => item.category === selectedCategory);
+        ? clothes.filter((item) => item.isLiked)
+        : clothes.filter((item) => item.category === selectedCategory);
+
+  const filteredCategories = categories.filter(
+    (category) => category !== '전체' && category !== '즐겨찾기'
+  );
 
   return (
     <div
@@ -116,7 +128,7 @@ const ClosetPage = () => {
       <ClothesGrid
         clothes={filteredClothes}
         onToggleLike={handleToggleLike}
-        // onClothesClick={handleClothesClick}
+        onClothesClick={handleClothesClick}
       />
       <div className="flex justify-center mt-5">
         <button
@@ -130,21 +142,22 @@ const ClosetPage = () => {
       <AddClothesModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddClothes={handleAddClothes}
-        categories={categories.filter(category => category !== '전체' && category !== '즐겨찾기')}
+        onAddClothes={handleNewClothes}
+        categories={categories.filter(
+          (category) => category !== '전체' && category !== '즐겨찾기'
+        )}
       />
-      {/*
+
       {selectedClothing && (
         <ClothesDetailModal
           isOpen={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
           clothingItem={selectedClothing}
-          onEdit={handleEditClothes}
-          onDelete={handleDeleteClothes}
+          // onEdit={handleEditClothes}
+          // onDelete={handleDeleteClothes}
           categories={filteredCategories}
         />
       )}
-      */}
     </div>
   );
 };

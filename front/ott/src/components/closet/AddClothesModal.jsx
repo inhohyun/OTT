@@ -86,7 +86,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
       addClothes(data)
         .then((response) => {
           console.log('Successfully added clothes:', response);
-          onAddClothes();
+          onAddClothes(response.data);
           clearInputs();
           onClose();
         })
