@@ -10,7 +10,6 @@ public class WebRtcNotificationDto {
 
     private NotificationType notificationType;
     private Long memberId;
-    private Long rtcRequestMemberId;
-    private String rtcRoomId;
-    private String rtcRequestMemberName;
+    private String sessionId;
+    private String rtcRequestMemberSso;
 }
