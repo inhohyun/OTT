@@ -39,7 +39,4 @@ public class Notification{
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
 }
