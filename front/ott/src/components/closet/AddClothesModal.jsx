@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
+import AddClothesCategorySelector from './AddClothesCategorySelector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { addClothes } from '../../api/closet/clothes';
 import iconImage from '/icon-192x192.png';
 import axios from 'axios';
 
-const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
+const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
   const [formData, setFormData] = useState({
-    category: '',
+    categoryId: null,
     frontImg: '',
     backImg: '',
     brand: '',
@@ -41,12 +42,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (categories.length > 0) {
-      setFormData((prev) => ({ ...prev, category: categories[0] }));
-    }
-  }, [categories]);
-
   const validateInputs = () => {
     const newErrors = {};
     if (!formData.frontImg) newErrors.frontImg = '앞면 이미지를 선택하세요.';
@@ -62,32 +57,12 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      'borderColor': state.isFocused ? 'black' : provided.borderColor,
-      '&:hover': {
-        borderColor: 'black',
-      },
-      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? '#a78bfa' : 'white',
-      color: state.isSelected ? 'white' : 'black',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    }),
-  };
-
   const handleAddClothes = () => {
     console.log('Add Clothes button clicked');
 
     if (validateInputs()) {
       const data = new FormData();
-      data.append('id', Date.now());
-      data.append('category', formData.category);
+      data.append('categoryId', formData.categoryId); // Use categoryId directly
       data.append('brand', formData.brand);
       data.append('purchase', formData.purchase);
       data.append('size', formData.size);
@@ -125,7 +100,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
 
   const clearInputs = () => {
     setFormData({
-      category: categories[0],
+      categoryId: null,
       frontImg: null,
       backImg: null,
       brand: '',
@@ -135,7 +110,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
       publicStatus: 'PRIVATE',
       salesStatus: 'NOT_SALE',
       gender: '',
-      uid: 1,
+      memberId: 1,
     });
     setPreviewImages({ frontImg: '', backImg: '' });
     setErrors({});
@@ -195,7 +170,11 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
     setFormData((prev) => ({ ...prev, [field]: statusValue }));
   };
 
-  const categoryOptions = categories.map((cat) => ({ value: cat, label: cat }));
+  const handleCategoryChange = (categoryId) => {
+    console.log('Category ID passed:', categoryId);
+    setFormData((prev) => ({ ...prev, categoryId }));
+  };
+
   const genderOptions = [
     { value: 'MAN', label: '남성' },
     { value: 'WOMAN', label: '여성' },
@@ -217,6 +196,16 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
           <FontAwesomeIcon icon={faTimes} size="lg" />
         </div>
         <h2 className="text-xl font-bold mb-4">새 옷 추가하기</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">카테고리</label>
+          <AddClothesCategorySelector
+            selectedCategory={formData.categoryId}
+            onCategoryChange={handleCategoryChange}
+          />
+          {errors.category && (
+            <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+          )}
+        </div>
         <div className="grid grid-cols-2 gap-4 mb-4">
           {['front', 'back'].map((type) => (
             <div key={type} className="relative">
@@ -266,12 +255,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
         </div>
         {[
           {
-            label: '카테고리',
-            value: formData.category,
-            options: categoryOptions,
-            field: 'category',
-          },
-          {
             label: '브랜드',
             value: formData.brand,
             field: 'brand',
@@ -295,25 +278,16 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
             field: 'color',
             placeholder: '색상을 입력하세요',
           },
-        ].map(({ label, value, options, field, placeholder }, index) => (
+        ].map(({ label, value, field, placeholder }, index) => (
           <div className="mb-4" key={index}>
             <label className="block text-gray-700 mb-2">{label}</label>
-            {options ? (
-              <Select
-                value={options.find((opt) => opt.value === value)}
-                onChange={(opt) => handleChange(field, opt.value)}
-                options={options}
-                styles={customStyles}
-              />
-            ) : (
-              <input
-                type="text"
-                value={value}
-                onChange={(e) => handleChange(field, e.target.value)}
-                className="w-full p-2 border rounded-lg"
-                placeholder={placeholder}
-              />
-            )}
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => handleChange(field, e.target.value)}
+              className="w-full p-2 border rounded-lg"
+              placeholder={placeholder}
+            />
             {errors[field] && (
               <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
             )}
@@ -347,7 +321,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes, categories }) => {
             value={genderOptions.find((opt) => opt.value === formData.gender)}
             onChange={(opt) => handleChange('gender', opt.value)}
             options={genderOptions}
-            styles={customStyles}
             placeholder="성별을 선택하세요"
           />
           {errors.gender && (
