@@ -88,4 +88,8 @@ public class NotificationWriteService {
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
+    public DeleteNotificationSuccessDto deleteNotification(Long notificationId){
+        notificationRepository.deleteById(notificationId);
+        return DeleteNotificationSuccessDto.builder().build();
+    }
 }
