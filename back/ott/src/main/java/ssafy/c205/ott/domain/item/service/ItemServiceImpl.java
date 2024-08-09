@@ -77,8 +77,12 @@ public class ItemServiceImpl implements ItemService {
         int idx = 0;
         for (String url : urls) {
             ItemImage saveImage = itemImageRepository.save(
-                ItemImage.builder().itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
-                    .itemImagePath(url).item(saveItem).build());
+                ItemImage
+                    .builder()
+                    .itemStatus(idx++ == 0 ? ItemStatus.FRONT : ItemStatus.BACK)
+                    .itemImagePath(url)
+                    .item(saveItem)
+                    .build());
 
             itemImages.add(saveImage);
         }
@@ -98,14 +102,27 @@ public class ItemServiceImpl implements ItemService {
         List<ItemCategory> categories = new ArrayList<>();
         categories.add(ItemCategory.builder().category(category).item(saveItem).build());
         itemCategoryRepository.save(
-            ItemCategory.builder().item(saveItem).category(category).build());
+            ItemCategory
+                .builder()
+                .item(saveItem)
+                .category(category)
+                .build());
 
-        itemRepository.save(Item.builder().id(saveItem.getId()).color(itemCreateDto.getColor())
-            .sex(itemCreateDto.getGender()).brand(itemCreateDto.getBrand()).member(member)
-            .itemImages(itemImages).size(itemCreateDto.getSize()).itemCategories(categories)
-            .purchase(itemCreateDto.getPurchase()).publicStatus(itemCreateDto.getPublicStatus())
+        itemRepository.save(Item
+            .builder()
+            .id(saveItem.getId())
+            .color(itemCreateDto.getColor())
+            .sex(itemCreateDto.getGender())
+            .brand(itemCreateDto.getBrand())
+            .member(member)
+            .itemImages(itemImages)
+            .size(itemCreateDto.getSize())
+            .itemCategories(categories)
+            .purchase(itemCreateDto.getPurchase())
+            .publicStatus(itemCreateDto.getPublicStatus())
             .salesStatus(itemCreateDto.getSalesStatus())
-            .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING).build());
+            .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
+            .build());
     }
 
     @Override
@@ -121,16 +138,24 @@ public class ItemServiceImpl implements ItemService {
                 itemImageRepository.delete(item.getItemImages().get(0));
 
                 itemImages.set(0,
-                    ItemImage.builder().itemImagePath(amazonS3Util.saveFile(frontImg)).item(item)
-                        .itemStatus(ItemStatus.FRONT).build());
+                    ItemImage
+                        .builder()
+                        .itemImagePath(amazonS3Util.saveFile(frontImg))
+                        .item(item)
+                        .itemStatus(ItemStatus.FRONT)
+                        .build());
             }
 
             if (backImg != null) {
                 amazonS3Util.deleteFile(item.getItemImages().get(1).getItemImagePath());
                 itemImageRepository.delete(item.getItemImages().get(1));
 
-                itemImages.set(1, ItemImage.builder().itemImagePath(amazonS3Util.saveFile(backImg))
-                    .itemStatus(ItemStatus.BACK).item(item).build());
+                itemImages.set(1, ItemImage
+                    .builder()
+                    .itemImagePath(amazonS3Util.saveFile(backImg))
+                    .itemStatus(ItemStatus.BACK)
+                    .item(item)
+                    .build());
             }
 
             //카테고리 변경
@@ -150,7 +175,11 @@ public class ItemServiceImpl implements ItemService {
                 itemUpdateDto.getMemberId(), itemUpdateDto.getCategoryId()).get(0);
 
             ItemCategory saveCategory = itemCategoryRepository.save(
-                ItemCategory.builder().id(itemCategory.getId()).category(category).item(item)
+                ItemCategory
+                    .builder()
+                    .id(itemCategory.getId())
+                    .category(category)
+                    .item(item)
                     .build());
 
             categories.add(saveCategory);
@@ -158,12 +187,19 @@ public class ItemServiceImpl implements ItemService {
                 ActiveStatus.ACTIVE);
             if (om.isPresent()) {
                 Member member = om.get();
-                itemRepository.save(Item.builder().id(item.getId()).sex(itemUpdateDto.getGender())
-                    .brand(itemUpdateDto.getBrand()).member(member).itemImages(itemImages)
-                    .size(itemUpdateDto.getSize()).purchase(itemUpdateDto.getPurchase())
-                    .itemCategories(categories).bookmarkStatus(item.getBookmarkStatus())
+                itemRepository.save(Item
+                    .builder()
+                    .id(item.getId())
+                    .sex(itemUpdateDto.getGender())
+                    .brand(itemUpdateDto.getBrand())
+                    .member(member).itemImages(itemImages)
+                    .size(itemUpdateDto.getSize())
+                    .purchase(itemUpdateDto.getPurchase())
+                    .itemCategories(categories)
+                    .bookmarkStatus(item.getBookmarkStatus())
                     .publicStatus(itemUpdateDto.getPublicStatus())
-                    .salesStatus(itemUpdateDto.getSalesStatus()).color(itemUpdateDto.getColor())
+                    .salesStatus(itemUpdateDto.getSalesStatus())
+                    .color(itemUpdateDto.getColor())
                     .build());
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 멤버를 찾을 수 없습니다.");
@@ -207,11 +243,20 @@ public class ItemServiceImpl implements ItemService {
             }
             //카테고리 가져오기
             //return
-            return ItemResponseDto.builder().clothesId(item.getId()).gender(item.getSex())
-                .size(item.getSize()).purchase(item.getPurchase())
-                .publicStatus(item.getPublicStatus()).salesStatus(item.getSalesStatus())
+            return ItemResponseDto
+                .builder()
+                .clothesId(item.getId())
+                .gender(item.getSex())
+                .size(item.getSize())
+                .purchase(item.getPurchase())
+                .publicStatus(item.getPublicStatus())
+                .salesStatus(item.getSalesStatus())
                 .category(item.getItemCategories().get(0).getCategory().getName())
-                .brand(item.getBrand()).color(item.getColor()).imageUrls(images).build();
+                .brand(item.getBrand())
+                .color(item.getColor())
+                .imageUrls(images)
+                .bookmarkStatus(item.getBookmarkStatus())
+                .build();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 옷을 찾지 못했습니다.");
         }
@@ -234,16 +279,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void bookmarkLookbook(Long clothesId) {
+    public void bookmarkClothes(Long clothesId) {
         Optional<Item> oi = itemRepository.findById(clothesId);
         if (oi.isPresent()) {
             Item item = oi.get();
             itemRepository.save(
-                item.builder().id(item.getId()).color(item.getColor()).sex(item.getSex())
-                    .brand(item.getBrand()).member(item.getMember())
-                    .itemImages(item.getItemImages()).size(item.getSize())
-                    .purchase(item.getPurchase()).publicStatus(item.getPublicStatus())
-                    .bookmarkStatus(BookmarkStatus.BOOKMARKING).salesStatus(item.getSalesStatus())
+                item
+                    .builder()
+                    .id(item.getId())
+                    .color(item.getColor())
+                    .sex(item.getSex())
+                    .brand(item.getBrand())
+                    .member(item.getMember())
+                    .itemImages(item.getItemImages())
+                    .size(item.getSize())
+                    .purchase(item.getPurchase())
+                    .publicStatus(item.getPublicStatus())
+                    .bookmarkStatus(BookmarkStatus.BOOKMARKING)
+                    .salesStatus(item.getSalesStatus())
                     .build());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "옷을 찾지 못했습니다.");
@@ -251,17 +304,25 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void unbookmarkLookbook(Long clothesId) {
+    public void unbookmarkClothes(Long clothesId) {
         Optional<Item> oi = itemRepository.findById(clothesId);
         if (oi.isPresent()) {
             Item item = oi.get();
             itemRepository.save(
-                item.builder().id(item.getId()).color(item.getColor()).sex(item.getSex())
-                    .brand(item.getBrand()).member(item.getMember())
-                    .itemImages(item.getItemImages()).size(item.getSize())
-                    .purchase(item.getPurchase()).publicStatus(item.getPublicStatus())
+                item
+                    .builder()
+                    .id(item.getId())
+                    .color(item.getColor())
+                    .sex(item.getSex())
+                    .brand(item.getBrand())
+                    .member(item.getMember())
+                    .itemImages(item.getItemImages())
+                    .size(item.getSize())
+                    .purchase(item.getPurchase())
+                    .publicStatus(item.getPublicStatus())
                     .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
-                    .salesStatus(item.getSalesStatus()).build());
+                    .salesStatus(item.getSalesStatus())
+                    .build());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "옷을 찾지 못했습니다.");
         }
@@ -283,8 +344,12 @@ public class ItemServiceImpl implements ItemService {
                 imgUrls[i] = item.getItem().getItemImages().get(i).getItemImagePath();
             }
             itemCategoryResponseDtos.add(
-                ItemCategoryResponseDto.builder().bookmarkStatus(item.getItem().getBookmarkStatus())
-                    .clothId(item.getId()).img(imgUrls).build());
+                ItemCategoryResponseDto
+                    .builder()
+                    .bookmarkStatus(item.getItem().getBookmarkStatus())
+                    .clothId(item.getId())
+                    .img(imgUrls)
+                    .build());
         }
         return itemCategoryResponseDtos;
     }

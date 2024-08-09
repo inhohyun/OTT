@@ -21,9 +21,9 @@ public interface ItemService {
 
     List<ItemListResponseDto> selectItemList(Long memberId);
 
-    void bookmarkLookbook(Long clothesId);
+    void bookmarkClothes(Long clothesId);
 
-    void unbookmarkLookbook(Long clothesId);
+    void unbookmarkClothes(Long clothesId);
 
     List<ItemCategoryResponseDto> selectByCategory(Long categoryId, Long userId, Long closetId);
 

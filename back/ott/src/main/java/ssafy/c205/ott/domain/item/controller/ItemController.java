@@ -95,26 +95,42 @@ public class ItemController {
         return ResponseEntity.ok().body(itemService.selectItemList(userId));
     }
 
+    @Operation(summary = "카테고리별 옷 조회하기", description = "<big>카테고리별 옷</big>을 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "카테고리별 옷 리스트"),
+    })
     @GetMapping("/{user_id}/{category_id}")
     public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId,
         @PathVariable("category_id") Long categoryId, @RequestParam("closet_id") Long closetId) {
         return ResponseEntity.ok().body(itemService.selectByCategory(categoryId, userId, closetId));
     }
 
+    @Operation(summary = "옷 북마크 하기", description = "옷을 <big>북마크</big>합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "북마크를 완료했습니다."),
+    })
     @PostMapping("/bookmark/{cloth_id}")
     public ResponseEntity<?> bookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
         log.info("룩북 아이디 : {}", clothesId);
-        itemService.bookmarkLookbook(clothesId);
+        itemService.bookmarkClothes(clothesId);
         return ResponseEntity.ok().body("북마크를 완료했습니다.");
     }
 
+    @Operation(summary = "옷 북마크 해제", description = "옷의 <big>북마크를 해제</big>합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "북마크 해제를 완료했습니다."),
+    })
     @PostMapping("/unbookmark/{cloth_id}")
     public ResponseEntity<?> unbookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
         log.info("룩북 아이디 : {}", clothesId);
-        itemService.unbookmarkLookbook(clothesId);
+        itemService.unbookmarkClothes(clothesId);
         return ResponseEntity.ok().body("북마크 해제를 완료했습니다.");
     }
 
+    @Operation(summary = "북마크된 옷 조회", description = "<big>북마크된 옷을 조회</big>합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "북마크된 옷 리스트"),
+    })
     @GetMapping("/bookmark")
     public ResponseEntity<?> getBookmark(@RequestParam("memberId") Long memberId) {
         List<ItemCategoryResponseDto> itemCategoryResponseDtos = itemService.selectByBookmark(
