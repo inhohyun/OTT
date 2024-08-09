@@ -197,6 +197,34 @@ public class RecommendServiceImpl implements RecommendService {
                     .build());
             }
         }
+        //체형이 같은사람이 없거나 룩북이 없으면
+        if (bodyResponseDtos.isEmpty()) {
+            List<Lookbook> lookbooks = lookbookRepository.findByActiveStatus(
+                ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+
+            //모든 룩북을 가져옴
+            for (Lookbook lookbook : lookbooks) {
+                boolean isFavorite = false;
+                Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    memberId);
+                if (favorite != null) {
+                    isFavorite = true;
+                }
+                bodyResponseDtos.add(BodyResponseDto
+                    .builder()
+                    .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                    .createdAt(lookbook.getCreatedAt())
+                    .nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId())
+                    .lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite)
+                    .build());
+            }
+        }
+
+        //return
         return bodyResponseDtos;
     }
 
@@ -308,11 +336,36 @@ public class RecommendServiceImpl implements RecommendService {
                     .createdAt(lookbookDto.getCreatedAt())
                     .lookbookId(lookbookDto.getLookbookId())
                     .nickname(lookbookDto.getNickname())
-                    .cntFavorite(lookbookDto.getCntLike())
+                    .cntFavorite(lookbookDto.getCntFavorite())
                     .cntComment(lookbookDto.getCntComment())
                     .memberId(lookbookRepository.findById(lookbookDto.getLookbookId()).get()
                         .getMember().getId())
                     .img(lookbookDto.getImg())
+                    .build());
+            }
+        }
+
+        //태그가 겹치는 사람이 없으면
+        if (bodyResponseDtos.isEmpty()) {
+            List<Lookbook> lookbooks = lookbookRepository.findByActiveStatus(
+                ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+            for (Lookbook lookbook : lookbooks) {
+                boolean isFavorite = false;
+                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    memberId);
+                if (myFavor != null) {
+                    isFavorite = true;
+                }
+                bodyResponseDtos.add(BodyResponseDto
+                    .builder()
+                    .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                    .createdAt(lookbook.getCreatedAt())
+                    .nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId())
+                    .lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite)
                     .build());
             }
         }

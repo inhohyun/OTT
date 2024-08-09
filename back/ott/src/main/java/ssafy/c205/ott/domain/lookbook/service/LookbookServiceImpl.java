@@ -251,8 +251,8 @@ public class LookbookServiceImpl implements LookbookService {
                 .createdAt(saveLookbook.getCreatedAt())
                 .tags(tags)
                 .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
-                .cntLike(cnt)
-                .isLike(isFavorite)
+                .cntFavorite(cnt)
+                .isFavorite(isFavorite)
                 .cntComment(commentService.countComment(lookbookId))
                 .build();
         } else {
@@ -477,9 +477,9 @@ public class LookbookServiceImpl implements LookbookService {
                         .memberId(lookbook.getMember().getId())
                         .createdAt(lookbook.getCreatedAt())
                         .imageURL(lookbookImage.getImageUrl())
-                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                        .isLike(isFavorite)
+                        .isFavorite(isFavorite)
                         .build());
                 }
             }
@@ -509,9 +509,9 @@ public class LookbookServiceImpl implements LookbookService {
                         .memberId(lookbook.getMember().getId())
                         .createdAt(lookbook.getCreatedAt())
                         .imageURL(lookbookImage.getImageUrl())
-                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                        .isLike(isFavorite)
+                        .isFavorite(isFavorite)
                         .build());
                 }
             }
@@ -580,10 +580,10 @@ public class LookbookServiceImpl implements LookbookService {
                     .lookbookId(lookbook.getId())
                     .nickname(lookbook.getMember().getNickname())
                     .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                    .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                     .createdAt(lookbook.getCreatedAt())
                     .img(lookbook.getLookbookImages().get(0).getImageUrl())
-                    .isLike(isFavorite)
+                    .isFavorite(isFavorite)
                     .build()
                 );
 
@@ -624,11 +624,11 @@ public class LookbookServiceImpl implements LookbookService {
                 .builder()
                 .lookbookId(lookbook.getId())
                 .img(lookbook.getLookbookImages().get(0).getImageUrl())
-                .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                 .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                 .tags(lookbook.getLookbookTags().stream()
                     .map(lookbookTag -> lookbookTag.getTag().getName()).toArray(String[]::new))
-                .isLike(isFavorite)
+                .isFavorite(isFavorite)
                 .build());
         }
 
@@ -668,7 +668,7 @@ public class LookbookServiceImpl implements LookbookService {
                     log.info("lookbook id : {}", lookbook.getId());
                     followingLooks.add(FollowLookbookDto
                         .builder()
-                        .cntLike(cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .imgThumbnail(lookbook.getLookbookImages().get(0).getImageUrl())
                         .createdAt(lookbook.getCreatedAt())

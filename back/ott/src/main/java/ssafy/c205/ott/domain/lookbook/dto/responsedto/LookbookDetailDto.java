@@ -20,12 +20,12 @@ public class LookbookDetailDto {
     private List<ClothesImageDto> salesClothes;
     private LocalDateTime createdAt;
     private String thumnail;
-    private int cntLike;
+    private int cntFavorite;
     private int cntComment;
-    private boolean isLike;
+    private boolean isFavorite;
 
     @Builder
-    public LookbookDetailDto(long viewCount, String content, String nickname, List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes, LocalDateTime createdAt, String thumnail, int cntLike,int cntComment, boolean isLike) {
+    public LookbookDetailDto(long viewCount, String content, String nickname, List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes, LocalDateTime createdAt, String thumnail, int cntFavorite,int cntComment, boolean isFavorite) {
         this.viewCount = viewCount;
         this.content = content;
         this.nickname = nickname;
@@ -34,8 +34,8 @@ public class LookbookDetailDto {
         this.salesClothes = salesClothes;
         this.createdAt = createdAt;
         this.thumnail = thumnail;
-        this.cntLike = cntLike;
-        this.isLike = isLike;
+        this.cntFavorite = cntFavorite;
+        this.isFavorite = isFavorite;
         this.cntComment = cntComment;
     }
 

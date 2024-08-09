@@ -13,16 +13,16 @@ public class FollowLookbookDto {
 
     private LocalDateTime createdAt;
     private String imgThumbnail;
-    private int cntLike;
+    private int cntFavorite;
     private int cntComment;
 
     @Builder
     public FollowLookbookDto(LocalDateTime createdAt, String imgThumbnail,
-        int cntLike,
+        int cntFavorite,
         int cntComment) {
         this.createdAt = createdAt;
         this.imgThumbnail = imgThumbnail;
-        this.cntLike = cntLike;
+        this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
     }
 
