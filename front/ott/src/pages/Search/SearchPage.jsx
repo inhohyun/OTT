@@ -13,7 +13,7 @@ const SearchPage = () => {
   const searchPeopleMethod = async (nickname, offset, limit) => {
     try {
       const response = await searchPeople(nickname, offset, limit);
-      console.log('검색한 response : ', response);
+      console.log('검색한 response.data : ', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching user info:', error);
@@ -128,11 +128,11 @@ const SearchPage = () => {
       ];
 
       // 검색어와 일치하는 스타일 데이터 필터링
-      const matchedResults = styleData.filter((item) =>
-        item.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
+      // const matchedResults = styleData.filter((item) =>
+      //   item.tags.some((tag) =>
+      //     tag.toLowerCase().includes(searchQuery.toLowerCase())
+      //   )
+      // );
 
       setResults(matchedResults);
     } else {
@@ -149,12 +149,8 @@ const SearchPage = () => {
         { title: '_wonbin_', description: 'Description for person 5' },
         { title: 'junny_cha', description: 'Description for person 6' },
       ];
-      //여기서 에러가 뜨는 이유
-      const filteredResults = searchResult.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
 
-      setResults(filteredResults);
+      setResults(searchResult);
     }
   };
 
