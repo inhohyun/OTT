@@ -549,8 +549,8 @@ import useUserStore from '../../data/lookbook/userStore';
 const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const [showSellComments, setShowSellComments] = useState(false);
   // const [liked, setLiked] = useState(false);
-  const [liked, setLiked] = useState(lookbook.like);
-  const [cntLike, setCntLike] = useState(lookbook.cntLike);
+  const [liked, setLiked] = useState(lookbook.favorite);
+  const [cntFavorite, setCntFavorite] = useState(lookbook.cntFavorite);
   const [followed, setFollowed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
@@ -562,8 +562,8 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const userId = useUserStore((state) => state.userId);
 
   useEffect(() => {
-    setLiked(lookbook.like);
-    setCntLike(lookbook.cntLike);
+    setLiked(lookbook.favorite);
+    setCntFavorite(lookbook.cntFavorite);
   }, [lookbook]);
 
   // Fetch comments whenever showSellComments or lookbook.id changes
@@ -603,7 +603,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
         lookbookDislike(lookbook);
         // lookbookDislike(lookbook, userId);  // uid 넘겨주기
         setLiked(false);
-        setCntLike((prevCntLike) => prevCntLike - 1);
+        setCntFavorite((prevCntLike) => prevCntLike - 1);
       } catch (error) {
         console.error(error);
       }
@@ -612,7 +612,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
         lookbookLike(lookbook);
         // lookbookLike(lookbook, userId);
         setLiked(true);
-        setCntLike((prevCntLike) => prevCntLike + 1);
+        setCntFavorite((prevCntLike) => prevCntLike + 1);
       } catch (error) {
         console.error(error);
       }
@@ -779,7 +779,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
             onClick={toggleLike}
           />
           <div className="flex items-center space-x-4 text-[13px]">
-            <span>{cntLike}</span>
+            <span>{cntFavorite}</span>
             <img className="w-[20px] h-[20px]" src={lookicon} alt="" />
           </div>
           <span className="text-[13px]">{lookbook.viewCount}</span>

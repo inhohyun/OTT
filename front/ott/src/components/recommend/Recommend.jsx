@@ -235,7 +235,11 @@
 // export default Recommend;
 
 import React, { useState, useRef, useEffect } from 'react';
-import { heightWeight, bodyType } from '../../api/lookbook/recommend'; // Adjust the import path
+import {
+  heightWeight,
+  bodyType,
+  getTagRecommend,
+} from '../../api/lookbook/recommend'; // Adjust the import path
 import Lookbook from '../lookbook/Lookbook';
 import LookbookDetail from '../lookbook/LookbookDetail';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
@@ -255,11 +259,11 @@ const Recommend = () => {
     const fetchData = async () => {
       const heightWeightData = await heightWeight(memberId);
       const bodyTypeData = await bodyType(memberId);
-      // const styleData = await styleRecommend(memberId);
+      const styleData = await getTagRecommend(memberId);
 
       setHeightWeightRecommend(heightWeightData);
       setBodyTypeRecommend(bodyTypeData);
-      // setStyleRecommend(styleData);
+      setStyleRecommend(styleData);
     };
 
     fetchData();

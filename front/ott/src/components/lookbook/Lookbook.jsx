@@ -362,12 +362,12 @@ const Lookbook = ({ data, onDelete, onClose }) => {
           <div className="flex items-center space-x-1">
             <div className="flex items-center">
               <img
-                src={data.like ? fillhearticon : hearticon}
+                src={data.favorite ? fillhearticon : hearticon}
                 className="w-4 mr-1 mt-1"
               />
               {/* <img src={hearticon} alt="hearticon" className="w-4 " /> */}
               <span className="text-gray-600 text-[10px] mt-1">
-                {data.cntLike}
+                {data.cntFavorite}
               </span>
             </div>
             <div className="flex items-center">
