@@ -4,6 +4,9 @@ import MyLookbook from '../../components/mylookbook/MyLookbook';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import FeedFollow from '../../components/feed/FeedFollow.jsx';
 import FeedNoFollow from '../../components/feed/FeedNoFollow.jsx';
+import { getUid } from '../../api/user/user.js';
+import useUserStore from '../../data/lookbook/userStore.js';
+import { getFollowingCount } from '../../api/user/user.js';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
@@ -33,17 +36,37 @@ const MainPage = () => {
 
   const [hasFollow, setHasFollow] = useState(false);
 
-  const checkUserFollowers = () => {
-    const userHasFollowers = true;
-    setHasFollow(userHasFollowers);
-  };
+  const setUserId = useUserStore((state) => state.setUserId);
+
+  const memberId = 1;
+  useEffect(() => {
+    const fetchFollowCount = async () => {
+      // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
+      try {
+        const response = await getFollowingCount(memberId);
+        // console.log('API Response:', response); // 이 로그가 찍히는지 확인
+        if (response.data.data !== 0) {
+          setHasFollow(true);
+        } else {
+          setHasFollow(false);
+        }
+      } catch (error) {
+        console.error('Error fetching follow count:', error);
+      }
+    };
+    fetchFollowCount();
+  }, []); // 의존성을 빈 배열로 설정
 
   const renderComponent = () => {
     switch (activeComponent) {
       case 'recommendation':
         return <Recommend />;
       case 'feed':
-        return hasFollow ? <FeedFollow /> : <FeedNoFollow />;
+        return hasFollow ? (
+          <FeedFollow />
+        ) : (
+          <FeedNoFollow setActiveComponent={setActiveComponent} />
+        );
       case 'myLookbook':
         return <MyLookbook />;
       default:
@@ -52,8 +75,20 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    checkUserFollowers();
-  }, []);
+    const fetchUserData = async () => {
+      try {
+        const uidResponse = await getUid();
+        console.log(uidResponse);
+        const id = uidResponse.data.id;
+        setUserId(id); // Set the userId in the Zustand store
+        console.log('User ID:', id);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [setUserId]);
 
   return (
     <div
