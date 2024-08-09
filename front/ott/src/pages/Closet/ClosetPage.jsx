@@ -36,7 +36,9 @@ const ClosetPage = () => {
       const closetResponse = await getClosetId(memberId);
       const closetId = closetResponse.data.data[0].id;
       const categoryList = await getCategoryList(closetId);
-      const fetchedCategories = categoryList.data.map(category => category.name);
+      const fetchedCategories = categoryList.data.map(
+        (category) => category.name
+      );
       setCategories(['전체', '즐겨찾기', ...fetchedCategories]);
     } catch (error) {
       console.error('카테고리 목록 가져오기 실패:', error);
@@ -97,8 +99,8 @@ const ClosetPage = () => {
     selectedCategory === '전체'
       ? clothes
       : selectedCategory === '즐겨찾기'
-      ? clothes.filter((item) => item.isLiked)
-      : clothes.filter((item) => item.category === selectedCategory);
+        ? clothes.filter((item) => item.isLiked)
+        : clothes.filter((item) => item.category === selectedCategory);
 
   return (
     <div
@@ -131,7 +133,9 @@ const ClosetPage = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAddClothes={handleAddClothes}
-        categories={categories.filter(category => category !== '전체' && category !== '즐겨찾기')}
+        categories={categories.filter(
+          (category) => category !== '전체' && category !== '즐겨찾기'
+        )}
       />
       {/*
       {selectedClothing && (
