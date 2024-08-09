@@ -82,7 +82,7 @@ const AiProceeding = () => {
 
     if (!hasModalOpenedRef.current) {
       console.log('모달 서버 호출 테스트');
-      //TODO : memberId와 clothImagePath를 서버에서 받아오는 값으로 변경
+      //TODO :  memberId와 clothImagePath를 서버에서 받아오는 값으로 변경
       // sendData(
       //   1,
       //   modelImage,

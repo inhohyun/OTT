@@ -13,33 +13,34 @@ const PersonSearchResult = ({ results, searchQuery }) => {
     }
 
     // 검색 쿼리에 따른 검색 결과 나열
-    const filtered = results
-      .filter(
-        (result) =>
-          result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          result.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      .sort((a, b) => {
-        const aTitleIndex = a.title
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const aDescIndex = a.description
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const bTitleIndex = b.title
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const bDescIndex = b.description
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
+    //FIXME - 필터링 로직 우선 주석처리
+    // const filtered = results
+    //   .filter(
+    //     (result) =>
+    //       result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //       result.description.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    //   .sort((a, b) => {
+    //     const aTitleIndex = a.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const aDescIndex = a.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bTitleIndex = b.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bDescIndex = b.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
 
-        const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
-        const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
+    //     const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
+    //     const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
 
-        return aIndex - bIndex;
-      });
+    //     return aIndex - bIndex;
+    //   });
 
-    setFilteredResults(filtered);
+    setFilteredResults(results);
   }, [results, searchQuery]);
 
   const handleShowMore = () => {
