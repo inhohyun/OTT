@@ -70,7 +70,7 @@ const AiProceeding = () => {
           category
         );
 
-        console.log('서버에서 받은 이미지', response);
+        // console.log('서버에서 받은 이미지', response);
         setResultImages(response.data.images);
         sessionStorage.setItem('hasModalOpened', 'false'); // 넘어간 이후 모달은 최초 모달임을 표시
         setCurrentStep('AiResult');
@@ -82,12 +82,13 @@ const AiProceeding = () => {
 
     if (!hasModalOpenedRef.current) {
       console.log('모달 서버 호출 테스트');
+      //TODO : memberId와 clothImagePath를 서버에서 받아오는 값으로 변경
       // sendData(
       //   1,
       //   modelImage,
       //   'https://s3-bucket-ott.s3.ap-northeast-2.amazonaws.com/pant.jpg',
       //   sample,
-      //   1
+      //   filter === '상의' ? 0 : 1
       // );
 
       // 모달이 열렸음을 표시
@@ -130,7 +131,7 @@ const AiProceeding = () => {
           />
         </div>
         <div className="mt-4">
-          <p>생성할 이미지 수: {sample.label}</p>
+          <p>생성할 이미지 수: {sample}</p>
         </div>
       </div>
     </div>

@@ -15,9 +15,9 @@ export const sendfittingData = async (
     formData.append('clothImagePath', clothImagePath);
     formData.append('sample', sample);
     formData.append('category', category);
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
     // console.log('formData:', formData);
 
     const respnse = await axiosInstance.post('api/process/ai', formData, {
