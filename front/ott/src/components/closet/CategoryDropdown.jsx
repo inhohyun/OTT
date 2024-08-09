@@ -68,6 +68,7 @@ const CategoryDropdown = ({
   const handleAddCategory = (newCategory) => {
     setCategories((prevCategories) => [...prevCategories, newCategory]);
     onAddCategory(newCategory);
+    fetchCategories();
   };
 
   // 카테고리 삭제 함수
@@ -77,9 +78,9 @@ const CategoryDropdown = ({
       window.confirm(`정말 "${category.name}" 카테고리를 삭제하시겠습니까?`)
     ) {
       try {
-        await deleteCategory(category.id);
+        await deleteCategory(category.categoryId);
         setCategories((prevCategories) =>
-          prevCategories.filter((cat) => cat.id !== category.id)
+          prevCategories.filter((cat) => cat.categoryId !== category.categoryId)
         );
         onDeleteCategory(category);
         console.log('카테고리 삭제 성공');
