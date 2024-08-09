@@ -22,7 +22,7 @@ const CreateLookbook = () => {
   const [newTag, setNewTag] = useState('');
   const [description, setDescription] = useState('');
   const [showDeleteButton, setShowDeleteButton] = useState(true);
-  // const [closetId, setClosetId] = useState(null);
+  const [closetId, setClosetId] = useState(null);
   const [clothes, setClothes] = useState([]);
   const [allClothes, setAllClothes] = useState([]);
 
@@ -30,26 +30,25 @@ const CreateLookbook = () => {
   const userId = useUserStore((state) => state.userId);
 
   // 옷장 id 조회
-  // useEffect(() => {
-  //   const uid = 1;
-  //   const fetchClosetId = async () => {
-  //     try {
-  //       const response = await getClosetId(uid);
-  //       setClosetId(response.data[0].id);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  useEffect(() => {
+    const uid = 1;
+    const fetchClosetId = async () => {
+      try {
+        const response = await getClosetId(uid);
+        setClosetId(response.data[0].id);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  //   fetchClosetId();
-  // }, [userId]);
+    fetchClosetId();
+  }, [userId]);
 
-  // useEffect(() => {
-  //   console.log('옷장 아이디', closetId);
-  // }, [closetId]);
+  useEffect(() => {
+    console.log('옷장 아이디', closetId);
+  }, [closetId]);
 
   // 카테고리 조회
-  const closetId = 1;
   useEffect(() => {
     if (closetId === null) return;
     const fetchCategory = async () => {
@@ -215,8 +214,8 @@ const CreateLookbook = () => {
   };
 
   const categoryOptions = categories.map((category) => ({
-    value: category.id,
-    // value: category.categoryId,
+    // value: category.id,
+    value: category.categoryId,
     label: category.name,
   }));
 
