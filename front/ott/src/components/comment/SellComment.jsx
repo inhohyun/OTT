@@ -10,7 +10,7 @@ import {
   replyDelete,
 } from '../../api/lookbook/comments';
 
-const Comment = ({ comments = [], lookbookId, lookbook }) => {
+const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
   const currentUser = 'kimssafy'; // Replace with the actual current user nickname
   const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -62,7 +62,8 @@ const Comment = ({ comments = [], lookbookId, lookbook }) => {
     e.preventDefault();
     if (newComment.trim() !== '') {
       const formData = new FormData();
-      formData.append('uid', 1); // UID를 1로 설정
+      formData.append('memberId', 1); // UID를 1로 설정
+      // formData.append('memberId',userId);
       const message =
         replyTo !== null
           ? newComment.split(' ').slice(1).join(' ')
@@ -128,7 +129,8 @@ const Comment = ({ comments = [], lookbookId, lookbook }) => {
 
   const handleSaveEdit = (commentId) => {
     const formData = new FormData();
-    formData.append('uid', 1);
+    formData.append('memberId', 1);
+    // formData.append('memberId', userId);
     formData.append('msg', editingComment);
     formData.append('status', 'DM');
 
@@ -181,7 +183,8 @@ const Comment = ({ comments = [], lookbookId, lookbook }) => {
 
   const handleSaveEditReply = (commentId, replyId) => {
     const formData = new FormData();
-    formData.append('uid', 1);
+    formData.append('memberId', 1);
+    // formData.append('memberId',userId);
     formData.append('msg', editingComment);
     formData.append('status', 'DM');
 
@@ -368,4 +371,4 @@ const Comment = ({ comments = [], lookbookId, lookbook }) => {
   );
 };
 
-export default Comment;
+export default SellComment;

@@ -6,13 +6,13 @@ const Feed = ({ setActiveComponent }) => {
   const [hasFollow, setHasFollow] = useState(false);
 
   const checkUserFollowers = () => {
-    const userHasFollowers = true;
+    const userHasFollowers = false;
     setHasFollow(userHasFollowers);
   };
 
   useEffect(() => {
     checkUserFollowers();
-  }, []);
+  }, [hasFollow]);
 
   return (
     <div>
