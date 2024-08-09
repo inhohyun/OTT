@@ -17,7 +17,6 @@ const StyleSearchResult = ({ results, searchQuery }) => {
   };
 
   useEffect(() => {
-    console.log('results:', results);
     const container = containerRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
