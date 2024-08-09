@@ -9,7 +9,7 @@ const EmptyLookbook = () => {
   return (
     <div
       className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto mt-[10vh]"
-      style={{ width: '65%' }}
+      style={{ width: '70%' }}
     >
       <div className="w-full bg-violet-200 bg-opacity-60 rounded-t-2xl p-4 relative">
         <div

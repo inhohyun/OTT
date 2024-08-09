@@ -6,6 +6,7 @@ import FeedFollow from '../../components/feed/FeedFollow.jsx';
 import FeedNoFollow from '../../components/feed/FeedNoFollow.jsx';
 import { getUid } from '../../api/user/user.js';
 import useUserStore from '../../data/lookbook/userStore.js';
+import { getFollowingCount } from '../../api/user/user.js';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
@@ -37,27 +38,41 @@ const MainPage = () => {
 
   const setUserId = useUserStore((state) => state.setUserId);
 
-  const checkUserFollowers = () => {
-    const userHasFollowers = true;
-    setHasFollow(userHasFollowers);
-  };
+  const memberId = 1;
+  useEffect(() => {
+    const fetchFollowCount = async () => {
+      // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
+      try {
+        const response = await getFollowingCount(memberId);
+        // console.log('API Response:', response); // 이 로그가 찍히는지 확인
+        if (response.data.data !== 0) {
+          setHasFollow(true);
+        } else {
+          setHasFollow(false);
+        }
+      } catch (error) {
+        console.error('Error fetching follow count:', error);
+      }
+    };
+    fetchFollowCount();
+  }, []); // 의존성을 빈 배열로 설정
 
   const renderComponent = () => {
     switch (activeComponent) {
       case 'recommendation':
         return <Recommend />;
       case 'feed':
-        return hasFollow ? <FeedFollow /> : <FeedNoFollow />;
+        return hasFollow ? (
+          <FeedFollow />
+        ) : (
+          <FeedNoFollow setActiveComponent={setActiveComponent} />
+        );
       case 'myLookbook':
         return <MyLookbook />;
       default:
         return <Recommend />;
     }
   };
-
-  useEffect(() => {
-    checkUserFollowers();
-  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {

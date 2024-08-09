@@ -54,6 +54,7 @@ const CreateLookbook = () => {
     const fetchCategory = async () => {
       try {
         const response = await getCategory(closetId);
+        console.log('카테고리', response);
         setCategories([{ id: 'all', name: '전체' }, ...response.data]);
       } catch (error) {
         console.error(error);
@@ -147,7 +148,7 @@ const CreateLookbook = () => {
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
           // formData.append('memberId', userId);
-          formData.append('memberId', 5);
+          formData.append('memberId', 1);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
@@ -212,7 +213,7 @@ const CreateLookbook = () => {
   };
 
   const categoryOptions = categories.map((category) => ({
-    value: category.id,
+    value: category.categoryId,
     label: category.name,
   }));
 

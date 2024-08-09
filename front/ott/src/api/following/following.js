@@ -12,3 +12,15 @@ export const getFollowingList = async (id) => {
     throw error;
   }
 };
+
+// 팔로우 api
+export const postFollow = (targetId) => {
+  axiosInstance
+    .post(`api/members/follow/${targetId}`)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};

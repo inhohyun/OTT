@@ -1,6 +1,6 @@
 import axiosInstance from '../axiosInstance';
-import axios from 'axios';
 
+// 룩북 저장 api
 export const lookbookCreate = (formData) => {
   axiosInstance
     .post('api/lookbook/', formData, {
@@ -14,19 +14,7 @@ export const lookbookCreate = (formData) => {
     });
 };
 
-// export const lookbookCreate = (formData) => {
-//   axios
-//     .post('192.168.100.89:8080/api/lookbook/', formData, {
-//       headers: { 'Content-Type': 'multipart/form-data' },
-//     })
-//     .then(() => {
-//       console.log('룩북 저장 성공');
-//     })
-//     .catch((error) => {
-//       console.error('Error:', error);
-//     });
-// };
-
+// 룩북 수정 api
 export const lookbookUpdate = (formData, lookbookId) => {
   axiosInstance
     .put(`api/lookbook/${lookbookId}`, formData, {
@@ -40,6 +28,7 @@ export const lookbookUpdate = (formData, lookbookId) => {
     });
 };
 
+// 룩북 삭제 api
 export const lookbookDelete = (lookbook) => {
   axiosInstance
     .delete(`api/lookbook/${lookbook.id}`)

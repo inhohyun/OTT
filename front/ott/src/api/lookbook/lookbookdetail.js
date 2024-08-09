@@ -11,6 +11,7 @@ export const lookbookDetail = async (lookbookId) => {
   }
 };
 
+// 룩북 상세보기 api
 // export const lookbookDetail = async (lookbookId, userId) => {
 //   try {
 //     const response = await axiosInstance.get(`api/lookbook/${lookbookId}`, {
@@ -35,6 +36,8 @@ export const lookbookDislike = (lookbook) => {
       console.error(error);
     });
 };
+
+// 룩북 좋아요 취소 api
 
 // export const lookbookDislike = (lookbook,userId) => {
 //   axiosInstance
@@ -64,6 +67,7 @@ export const lookbookLike = (lookbook) => {
     });
 };
 
+// 룩북 좋아요 api
 // export const lookbookLike = (lookbook,userId) => {
 //   axiosInstance
 //     .post(`api/lookbook/${lookbook.id}/like`, {

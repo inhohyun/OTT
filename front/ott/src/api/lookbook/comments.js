@@ -15,6 +15,7 @@ import axiosInstance from '../axiosInstance';
 //     });
 // };
 
+// 댓글 조회 api
 export const lookbookComment = async (lookbookId, status) => {
   try {
     // console.log('댓글룩북:', lookbookId);
@@ -29,6 +30,7 @@ export const lookbookComment = async (lookbookId, status) => {
   }
 };
 
+// 댓글 생성 api
 export const commentCreate = (formData, lookbookId) => {
   for (let pair of formData.entries()) {
     console.log(pair[0] + ': ' + pair[1]);
@@ -45,6 +47,7 @@ export const commentCreate = (formData, lookbookId) => {
     });
 };
 
+// 답글 생성 api
 export const replyCreate = (formData, lookbookId, replyTo) => {
   axiosInstance
     .post(`api/comment/${lookbookId}/${replyTo}`, formData, {
@@ -58,6 +61,7 @@ export const replyCreate = (formData, lookbookId, replyTo) => {
     });
 };
 
+// 댓글 수정 api
 export const commentUpdate = (formData, lookbookId, commentId) => {
   axiosInstance
     .put(`api/comment/${lookbookId}/${commentId}`, formData, {
@@ -71,6 +75,7 @@ export const commentUpdate = (formData, lookbookId, commentId) => {
     });
 };
 
+// 댓글 삭제 api
 export const commentDelete = (lookbookId, commentId) => {
   axiosInstance
     .delete(`api/comment/${lookbookId}/${commentId}`)
@@ -82,6 +87,7 @@ export const commentDelete = (lookbookId, commentId) => {
     });
 };
 
+// 답글 수정 api
 export const replyUpdate = (formData, lookbookId, replyId) => {
   axiosInstance
     .put(`api/comment/${lookbookId}/${replyId}`, formData, {
@@ -95,6 +101,7 @@ export const replyUpdate = (formData, lookbookId, replyId) => {
     });
 };
 
+// 답글 삭제 api
 export const replyDelete = (lookbookId, replyId) => {
   axiosInstance
     .delete(`api/comment/${lookbookId}/${replyId}`)

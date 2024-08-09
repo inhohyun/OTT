@@ -12,6 +12,7 @@ export const followFeed = async () => {
   }
 };
 
+// 팔로우한 사람 룩북 조회 api
 // export const followFeed = (userId) => {
 //   axiosInstance
 //     .get('/api/lookbook/followings', { params: { memberId: userId } })

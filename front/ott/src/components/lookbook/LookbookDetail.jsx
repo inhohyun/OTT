@@ -542,6 +542,7 @@ import {
 } from '../../api/lookbook/lookbookdetail';
 import { lookbookComment } from '../../api/lookbook/comments';
 import { lookbookDelete } from '../../api/lookbook/lookbook';
+import { postFollow } from '../../api/following/following';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 
@@ -754,7 +755,9 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
           </div>
         </div>
         <div className="mb-4">
-          <h4 className="text-lg font-semibold">판매중인 옷</h4>
+          {salesClothes.length > 0 && (
+            <h4 className="text-lg font-semibold">판매중인 옷</h4>
+          )}
           <div className="flex flex-wrap gap-4">
             {salesClothes.map((item, index) => (
               <div key={index} className="flex items-center space-x-2">

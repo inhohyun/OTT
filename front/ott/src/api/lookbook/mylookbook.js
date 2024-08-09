@@ -12,6 +12,8 @@ export const fetchMyLookbooks = async () => {
   }
 };
 
+// 내 룩북 조회 api
+
 // import axiosInstance from '../axiosInstance';
 
 // export const fetchMyLookbooks = async (userId) => {
