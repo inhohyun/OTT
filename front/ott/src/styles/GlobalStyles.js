@@ -105,9 +105,7 @@ const GlobalStyle = createGlobalStyle`
       max-width: 100%;
     }
 
-    body {
-      padding: 10px;
-    }
+
   }
 `;
 

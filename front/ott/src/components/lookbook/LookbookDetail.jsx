@@ -181,7 +181,9 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
         <div className="flex items-center mb-4">
           <div className="flex-grow">
             <h2 className={`text-xl font-bold`}>{lookbook.nickname}</h2>
-            <p className="text-sm text-gray-500">{lookbook.createdAt}</p>
+            <p className="text-sm text-gray-500">
+              {lookbook.createdAt.split('T')[0]}
+            </p>
           </div>
           {currentUser !== lookbook.nickname && (
             <button
