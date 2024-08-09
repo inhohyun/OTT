@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
+//            .addFilterBefore(new ForwardedHeaderFilter(), WebAsyncManagerIntegrationFilter.class)
             .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
                 @Override
@@ -75,25 +75,25 @@ public class SecurityConfig {
             .httpBasic((auth) -> auth.disable());
 
         //JWTFilter 추가
-        http
-            .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-
-        http
-            .oauth2Login((oauth2) -> oauth2
-                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                    .userService(customOAuth2UserService))
-                .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
-                .successHandler(customSuccessHandler)
-                .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
+//        http
+//            .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+//
+//        http
+//            .oauth2Login((oauth2) -> oauth2
+//                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                    .userService(customOAuth2UserService))
+//                .clientRegistrationRepository(customClientRegistrationRepository.clientRegistrationRepository())
+//                .successHandler(customSuccessHandler)
+//                .redirectionEndpoint(redirection -> redirection.baseUri("/api/login/oauth2/code/*")));
 
         //경로별 인가 작업
-        http
-            .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**", "/swagger-ui/**", "/api-docs/**").permitAll()
-                .anyRequest().authenticated());
-
-        http
-            .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+//        http
+//            .authorizeHttpRequests((auth) -> auth
+//                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+//                .anyRequest().authenticated());
+//
+//        http
+//            .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         //세션 설정 : STATELESS
         http
