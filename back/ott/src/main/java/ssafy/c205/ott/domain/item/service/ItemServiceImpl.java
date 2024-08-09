@@ -284,7 +284,7 @@ public class ItemServiceImpl implements ItemService {
         if (oi.isPresent()) {
             Item item = oi.get();
             itemRepository.save(
-                item
+                Item
                     .builder()
                     .id(item.getId())
                     .color(item.getColor())
@@ -309,7 +309,7 @@ public class ItemServiceImpl implements ItemService {
         if (oi.isPresent()) {
             Item item = oi.get();
             itemRepository.save(
-                item
+                Item
                     .builder()
                     .id(item.getId())
                     .color(item.getColor())
