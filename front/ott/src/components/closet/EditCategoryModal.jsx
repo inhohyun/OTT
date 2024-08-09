@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { fixCategory } from '../../api/closet/categories';
 
-const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategories, closetId }) => {
+const EditCategoryModal = ({
+  isOpen,
+  onClose,
+  category,
+  onSave,
+  existingCategories,
+  closetId,
+}) => {
   // 새로운 카테고리 이름을 저장할 상태와 오류 메시지 상태
   const [newCategoryName, setNewCategoryName] = useState(category.name);
   const [error, setError] = useState('');
@@ -25,7 +32,7 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategori
 
     try {
       // API 호출하여 카테고리 수정
-      await fixCategory(closetId, category.closetId, trimmedName);
+      await fixCategory(closetId, category.categoryId, trimmedName);
       // 저장 성공 시 상위 컴포넌트에 변경 사항 전달
       onSave(trimmedName);
       onClose();

@@ -4,12 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
-import {
-  getCategoryList,
-  deleteCategory,
-} from '../../api/closet/categories';
+import { getCategoryList, deleteCategory } from '../../api/closet/categories';
 import { getClosetId } from '../../api/closet/clothes';
-
 
 const CategoryDropdown = ({
   selectedCategory,
@@ -30,24 +26,24 @@ const CategoryDropdown = ({
   const [closetId, setClosetId] = useState(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const memberId = 1;
-        const closetResponse = await getClosetId(memberId);
-        console.log(closetResponse)
-        const closetId = closetResponse.data.data[0].id;
-        console.log(closetId);
-        setClosetId(closetId)
-        const categoryList = await getCategoryList(closetId);
-        console.log(categoryList);
-        setCategories(categoryList.data);
-      } catch (error) {
-        console.error('카테고리 목록 불러오는 중 오류 발생:', error);
-      }
-    };
-
     fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const memberId = 1;
+      const closetResponse = await getClosetId(memberId);
+      console.log(closetResponse);
+      const closetId = closetResponse.data.data[0].id;
+      console.log(closetId);
+      setClosetId(closetId);
+      const categoryList = await getCategoryList(closetId);
+      console.log(categoryList);
+      setCategories(categoryList.data);
+    } catch (error) {
+      console.error('카테고리 목록 불러오는 중 오류 발생:', error);
+    }
+  };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -75,10 +71,21 @@ const CategoryDropdown = ({
   };
 
   // 카테고리 삭제 함수
-  const handleDeleteCategory = (category, e) => {
+  const handleDeleteCategory = async (category, e) => {
     e.stopPropagation(); // 드롭다운 닫힘 방지
-    if (window.confirm(`정말 "${category}" 카테고리를 삭제하시겠습니까?`)) {
-      onDeleteCategory(category);
+    if (
+      window.confirm(`정말 "${category.name}" 카테고리를 삭제하시겠습니까?`)
+    ) {
+      try {
+        await deleteCategory(category.id);
+        setCategories((prevCategories) =>
+          prevCategories.filter((cat) => cat.id !== category.id)
+        );
+        onDeleteCategory(category);
+        console.log('카테고리 삭제 성공');
+      } catch (error) {
+        console.error('카테고리 삭제 실패:', error);
+      }
     }
   };
 
@@ -91,12 +98,10 @@ const CategoryDropdown = ({
 
   // 수정한 카테고리 저장
   const handleEditCategorySave = (newCategoryName) => {
-    setCategories((prevCategories) =>
-      prevCategories.map((cat) => (cat.id === editingCategory.id ? { ...cat, name: newCategoryName } : cat))
-    );
     onEditCategory(editingCategory, newCategoryName);
     setEditingCategory(null); // 수정하는 카테고리 선택 초기화
     setIsEditModalOpen(false);
+    fetchCategories();
   };
 
   // 카테고리 수정 취소
@@ -130,12 +135,23 @@ const CategoryDropdown = ({
             </div>
           ),
         }))}
-        value={categories.find((cat) => cat.id === selectedCategory) ? { value: selectedCategory, label: categories.find((cat) => cat.id === selectedCategory).name } : null}
+        value={
+          categories.find((cat) => cat.id === selectedCategory)
+            ? {
+                value: selectedCategory,
+                label: categories.find((cat) => cat.id === selectedCategory)
+                  .name,
+              }
+            : null
+        }
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
       />
-      <div onClick={() => setIsModalOpen(true)} className="ml-6 p-2 rounded-lg cursor-pointer">
+      <div
+        onClick={() => setIsModalOpen(true)}
+        className="ml-6 p-2 rounded-lg cursor-pointer"
+      >
         <FontAwesomeIcon icon={faPlus} size="lg" />
       </div>
       <AddCategory
