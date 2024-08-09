@@ -26,6 +26,21 @@ const UserPage = () => {
   const targetId = id || null; // id가 없으면 null
 
   useEffect(() => {
+    console.log('targetId : ', targetId);
+    const fetchUserData = async (targetId) => {
+      try {
+        const userInfoResponse = await getUserInfo(targetId);
+        console.log('userInfoResponse : ', userInfoResponse);
+        setUserInfo(userInfoResponse.data);
+
+        // isMe와 isPublic 상태 업데이트
+        setIsMe(userInfoResponse.data.followStatus === 'SELF');
+        setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
     if (targetId) {
       setUid(targetId);
       fetchUserData(targetId);
@@ -42,20 +57,6 @@ const UserPage = () => {
       };
       fetchCurrentUserData();
     }
-    console.log('targetId : ', targetId);
-    const fetchUserData = async (targetId) => {
-      try {
-        const userInfoResponse = await getUserInfo(targetId);
-        console.log('userInfoResponse : ', userInfoResponse);
-        setUserInfo(userInfoResponse.data);
-
-        // isMe와 isPublic 상태 업데이트
-        setIsMe(userInfoResponse.data.followStatus === 'SELF');
-        setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    };
   }, [targetId]);
 
   if (!userInfo) {
