@@ -275,6 +275,7 @@ import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import { lookbookDetail } from '../../api/lookbook/lookbookdetail';
 import detailStore from '../../data/lookbook/detailStore';
+import useUserStore from '../../data/lookbook/userStore';
 
 const Lookbook = ({ data, onDelete, onClose }) => {
   // Receive onDelete prop
@@ -288,9 +289,12 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   } = detailStore();
   // const [liked, setLiked] = useState(data.like);
 
+  const userId = useUserStore((state) => state.userId);
+
   const handleShowDetail = async () => {
     try {
       const lookbookData = await lookbookDetail(data.lookbookId);
+      // const lookbookData = await lookbookDetail(data.lookbookId, userId);
       console.log('룩북 상세보기', lookbookData);
       showDetail({ ...lookbookData, id: data.lookbookId });
     } catch (error) {
@@ -336,7 +340,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   return (
     <>
       <div
-        // onClick={handleShowDetail}   // api 연결 전
+        onClick={handleShowDetail} // api 연결 전
         className="w-[120px] h-[160px] rounded-[5px] overflow-hidden shadow-lg bg-white m-2 flex-shrink-0 cursor-pointer"
       >
         <div className="px-2 py-1 flex justify-between items-center">
