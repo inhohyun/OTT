@@ -30,4 +30,10 @@ public class NotificationController {
     public ApiResponse<List<NotificationResponseDto>> searchNotification(@PathVariable("memberId") Long memberId) {
         return ApiResponse.success(notificationReadService.searchNotification(memberId));
     }
+
+    @DeleteMapping("/{notificationId}")
+    public ApiResponse<DeleteNotificationSuccessDto> deleteNotification(@PathVariable("notificationId") Long notificationId) {
+        return ApiResponse.success(notificationWriteService.deleteNotification(notificationId));
+    }
+
 }
