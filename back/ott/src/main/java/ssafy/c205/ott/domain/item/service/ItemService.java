@@ -26,4 +26,6 @@ public interface ItemService {
     void unbookmarkLookbook(Long clothesId);
 
     List<ItemCategoryResponseDto> selectByCategory(Long categoryId, Long userId, Long closetId);
+
+    List<ItemCategoryResponseDto> selectByBookmark(Long memberId);
 }

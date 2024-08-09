@@ -2,26 +2,35 @@ package ssafy.c205.ott.domain.recommend.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import ssafy.c205.ott.common.entity.LookbookTag;
+import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
-import ssafy.c205.ott.domain.account.entity.BodyType;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookSearchDto;
+import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
 import ssafy.c205.ott.domain.lookbook.entity.Favorite;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.repository.FavoriteRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
+import ssafy.c205.ott.domain.lookbook.repository.LookbookTagRepository;
+import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 import ssafy.c205.ott.domain.lookbook.service.CommentService;
 import ssafy.c205.ott.domain.lookbook.service.LookbookService;
 import ssafy.c205.ott.domain.recommend.dto.responsedto.BodyResponseDto;
 import ssafy.c205.ott.domain.recommend.entity.MemberGroup;
 import ssafy.c205.ott.domain.recommend.repository.MemberGroupRepository;
+import ssafy.c205.ott.domain.recommend.repository.MemberTagRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +43,9 @@ public class RecommendServiceImpl implements RecommendService {
     private final CommentService commentService;
     private final LookbookService lookbookService;
     private final FavoriteRepository favoriteRepository;
+    private final MemberTagRepository memberTagRepository;
+    private final LookbookTagRepository lookbookTagRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public void recommendByHeightWeight() {
@@ -141,7 +153,8 @@ public class RecommendServiceImpl implements RecommendService {
             //룩북 추가
             for (Lookbook lookbook : lookbooks) {
                 boolean isFavorite = false;
-                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(), member.getId());
+                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    member.getId());
                 if (myFavor != null) {
                     isFavorite = true;
                 }
@@ -155,6 +168,125 @@ public class RecommendServiceImpl implements RecommendService {
                     .memberId(lookbook.getMember().getId())
                     .lookbookId(lookbook.getId())
                     .isFavorite(isFavorite)
+                    .build());
+            }
+        }
+        return bodyResponseDtos;
+    }
+
+    @Override
+    public List<BodyResponseDto> getRecommendByTag(Long memberId) {
+        List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
+
+        //사용자를 불러온다.
+        Member member = null;
+        Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
+            ActiveStatus.ACTIVE);
+        if (om.isPresent()) {
+            member = om.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, memberId + "의 사용자를 찾지 못했습니다.");
+        }
+        List<MemberTag> memberTags = memberTagRepository.findByMemberId(memberId);
+
+        //사용자의 룩북 태그들 조회(사용자의 좋아요한 게시물이 10개 이상일 때)
+        List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);
+        HashMap<Long, Integer> map = new HashMap<>();
+        if (favorites == null || favorites.isEmpty() || favorites.size() <= 10) {
+            log.info("10개 미만으로 들어옴 / favorites 크기 : {}", favorites.size());
+            //사용자 멤버태그로 추천 서비스(10개 이하일때)
+            for (MemberTag memberTag : memberTags) {
+                String tagName = memberTag.getTag().getName();
+                log.info("tag : {}", tagName);
+
+                //해당 태그의 유저들을 조회
+                List<MemberTag> memberTagList = memberTagRepository.findByTagName(tagName);
+                for (MemberTag tag : memberTagList) {
+                    //본인제외
+                    if (tag.getMember().getId() == memberId) {
+                        continue;
+                    }
+                    Long curMemberId = tag.getMember().getId();
+
+                    //태그 카운팅
+                    if (map.containsKey(curMemberId)) {
+                        map.put(curMemberId, map.get(curMemberId) + 1);
+                    } else {
+                        map.put(curMemberId, 1);
+                    }
+                }
+            }
+            //sort해서 태그 많이 포함된 유저들의 룩북들로 리스트 구성
+            List<Long> keys = new ArrayList<>(map.keySet());
+            Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
+            for (Long key : keys) {
+                Optional<Member> omMember = memberRepository.findByIdAndActiveStatus(key,
+                    ActiveStatus.ACTIVE);
+                if (omMember.isPresent()) {
+                    Member otherMember = omMember.get();
+                    List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndActiveStatus(
+                        otherMember.getId(),
+                        ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+
+                    for (Lookbook lookbook : lookbooks) {
+                        log.info("lookbook : {}", lookbook.toString());
+                        boolean isFavorite = false;
+                        Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(
+                            lookbook.getId(), otherMember.getId());
+                        if (myFavor != null) {
+                            isFavorite = true;
+                        }
+
+                        bodyResponseDtos.add(BodyResponseDto
+                            .builder()
+                            .lookbookId(lookbook.getId())
+                            .memberId(otherMember.getId())
+                            .cntFavorite(lookbookService.cntLikeLookbook(
+                                String.valueOf(lookbook.getId())))
+                            .cntComment(
+                                commentService.countComment(String.valueOf(lookbook.getId())))
+                            .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                            .nickname(otherMember.getNickname())
+                            .createdAt(lookbook.getCreatedAt())
+                            .build());
+                    }
+                }
+            }
+        } else {
+            log.info("룩북 좋아요 개수가 10개 넘을때");
+            //사용자가 좋아요 누른 게시물들의 태그를 가져온다.
+            for (Favorite favorite : favorites) {
+                List<LookbookTag> lookbookTags = favorite.getLookbook().getLookbookTags();
+                for (LookbookTag lookbookTag : lookbookTags) {
+                    long tagId = lookbookTag.getTag().getId();
+                    if (map.containsKey(tagId)) {
+                        map.put(tagId, map.get(tagId) + 1);
+                    } else {
+                        map.put(tagId, 1);
+                    }
+                }
+            }
+            List<Long> keys = new ArrayList<>(map.keySet());
+            Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
+            String[] tags = new String[3];
+            for (int i = 0; i < 3; i++) {
+                tags[i] = tagRepository.findById(keys.get(i)).get().getName();
+            }
+            List<TagLookbookDto> lookbookDtos = lookbookService.findByTag(LookbookSearchDto
+                .builder()
+                .tags(tags)
+                .build());
+            for (TagLookbookDto lookbookDto : lookbookDtos) {
+                bodyResponseDtos.add(BodyResponseDto
+                    .builder()
+                    .createdAt(lookbookDto.getCreatedAt())
+                    .lookbookId(lookbookDto.getLookbookId())
+                    .nickname(lookbookDto.getNickname())
+                    .cntFavorite(lookbookDto.getCntLike())
+                    .cntComment(lookbookDto.getCntComment())
+                    .memberId(lookbookRepository.findById(lookbookDto.getLookbookId()).get()
+                        .getMember().getId())
+                    .img(lookbookDto.getImg())
                     .build());
             }
         }

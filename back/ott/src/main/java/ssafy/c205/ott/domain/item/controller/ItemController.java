@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
+import ssafy.c205.ott.domain.item.dto.responsedto.ItemCategoryResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 import ssafy.c205.ott.domain.item.service.ItemService;
 
@@ -39,7 +40,8 @@ public class ItemController {
     })
     @PostMapping("/")
     public ResponseEntity<?> createItem(@ModelAttribute ItemCreateDto itemCreateDto,
-        @RequestParam(value = "frontImg", required = true) MultipartFile frontImg, @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
+        @RequestParam(value = "frontImg", required = true) MultipartFile frontImg,
+        @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
         if (frontImg == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필요 이미지가 없습니다.");
         }
@@ -54,7 +56,8 @@ public class ItemController {
     @PutMapping("/{clothes_id}")
     public ResponseEntity<?> updateItem(@PathVariable("clothes_id") Long clothesId,
         @ModelAttribute ItemUpdateDto itemUpdateDto,
-        @RequestParam(value = "frontImg", required = false) MultipartFile frontImg, @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
+        @RequestParam(value = "frontImg", required = false) MultipartFile frontImg,
+        @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
         itemService.updateItem(clothesId, itemUpdateDto, frontImg, backImg);
         return ResponseEntity.ok().body("옷 수정을 완료했습니다.");
     }
@@ -110,5 +113,15 @@ public class ItemController {
         log.info("룩북 아이디 : {}", clothesId);
         itemService.unbookmarkLookbook(clothesId);
         return ResponseEntity.ok().body("북마크 해제를 완료했습니다.");
+    }
+
+    @GetMapping("/bookmark")
+    public ResponseEntity<?> getBookmark(@RequestParam("memberId") Long memberId) {
+        List<ItemCategoryResponseDto> itemCategoryResponseDtos = itemService.selectByBookmark(
+            memberId);
+        if (itemCategoryResponseDtos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("북마크된 옷을 찾지 못했습니다.");
+        }
+        return ResponseEntity.ok().body(itemCategoryResponseDtos);
     }
 }

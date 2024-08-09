@@ -288,4 +288,26 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemCategoryResponseDtos;
     }
+
+    @Override
+    public List<ItemCategoryResponseDto> selectByBookmark(Long memberId) {
+        List<Item> items = itemRepository.findByMemberIdAndBookmarkStatus(
+            memberId, BookmarkStatus.BOOKMARKING);
+
+        List<ItemCategoryResponseDto> itemCategoryResponseDtos = new ArrayList<>();
+        for (Item item : items) {
+            String[] imgs = new String[item.getItemImages().size()];
+            for (int i = 0; i < item.getItemImages().size(); i++) {
+                imgs[i] = item.getItemImages().get(i).getItemImagePath();
+            }
+            itemCategoryResponseDtos.add(ItemCategoryResponseDto
+                .builder()
+                .bookmarkStatus(item.getBookmarkStatus())
+                .clothId(item.getId())
+                .img(imgs)
+                .build()
+            );
+        }
+        return itemCategoryResponseDtos;
+    }
 }
