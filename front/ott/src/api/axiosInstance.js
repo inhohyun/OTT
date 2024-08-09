@@ -9,8 +9,6 @@ import axios from 'axios';
 
 const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
 
-// const baseURL = '192.168.100.89:8080/';
-
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: baseURL,
@@ -18,7 +16,7 @@ const axiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// // 요청 인터셉터 설정
+// 요청 인터셉터 설정
 // axiosInstance.interceptors.request.use(
 //   (config) => {
 //     const token = getAccessToken();
@@ -36,7 +34,7 @@ const axiosInstance = axios.create({
 //   (error) => Promise.reject(error)
 // );
 
-// // 응답 인터셉터 설정
+// 응답 인터셉터 설정
 // axiosInstance.interceptors.response.use(
 //   (response) => response.data, // 정상 응답에서 데이터만 추출
 
@@ -56,7 +54,7 @@ const axiosInstance = axios.create({
 
 //         try {
 //           // 토큰 재발급 요청
-//           const response = await axios.get(`${baseURL}/api/reissue`);
+//           const response = await axios.get(`${baseURL}api/reissue`);
 //           const newAccessToken = response.headers['access']; // 새로운 액세스 토큰 가져오기
 //           setAccessToken(newAccessToken); // 새로운 액세스 토큰 저장
 

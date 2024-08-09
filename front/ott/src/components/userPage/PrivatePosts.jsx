@@ -92,4 +92,3 @@ const PrivatePosts = () => {
 };
 
 export default PrivatePosts;
-``;

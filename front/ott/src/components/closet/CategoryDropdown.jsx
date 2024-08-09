@@ -1,33 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
+import { getCategoryList, deleteCategory } from '../../api/closet/categories';
+import { getClosetId } from '../../api/closet/clothes';
 
 const CategoryDropdown = ({
   selectedCategory,
   onCategoryChange,
-  categories,
   onAddCategory,
   onEditCategory,
   onDeleteCategory,
 }) => {
+  // 카테고리 목록 상태
+  const [categories, setCategories] = useState([]);
   // 카테고리 추가 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 카테고리 수정 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
+  // 옷장 ID
+  const [closetId, setClosetId] = useState(null);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const memberId = 1;
+      const closetResponse = await getClosetId(memberId);
+      console.log(closetResponse);
+      const closetId = closetResponse.data.data[0].id;
+      console.log(closetId);
+      setClosetId(closetId);
+      const categoryList = await getCategoryList(closetId);
+      console.log(categoryList);
+      setCategories(categoryList.data);
+    } catch (error) {
+      console.error('카테고리 목록 불러오는 중 오류 발생:', error);
+    }
+  };
 
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      borderColor: state.isFocused ? 'black' : provided.borderColor,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
       '&:hover': {
         borderColor: 'black',
       },
-      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
     }),
     option: (provided, state) => ({
       ...provided,
@@ -41,20 +66,33 @@ const CategoryDropdown = ({
 
   // 카테고리 추가 함수
   const handleAddCategory = (newCategory) => {
+    setCategories((prevCategories) => [...prevCategories, newCategory]);
     onAddCategory(newCategory);
+    fetchCategories();
   };
 
   // 카테고리 삭제 함수
-  const handleDeleteCategory = (category, e) => {
+  const handleDeleteCategory = async (category, e) => {
     e.stopPropagation(); // 드롭다운 닫힘 방지
-    if (window.confirm(`정말 "${category}" 카테고리를 삭제하시겠습니까?`)) {
-      onDeleteCategory(category);
+    if (
+      window.confirm(`정말 "${category.name}" 카테고리를 삭제하시겠습니까?`)
+    ) {
+      try {
+        await deleteCategory(category.categoryId);
+        setCategories((prevCategories) =>
+          prevCategories.filter((cat) => cat.categoryId !== category.categoryId)
+        );
+        onDeleteCategory(category);
+        console.log('카테고리 삭제 성공');
+      } catch (error) {
+        console.error('카테고리 삭제 실패:', error);
+      }
     }
   };
 
   // 수정하고자 하는 카테고리 클릭
   const handleEditCategoryClick = (category, e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setEditingCategory(category);
     setIsEditModalOpen(true);
   };
@@ -64,6 +102,7 @@ const CategoryDropdown = ({
     onEditCategory(editingCategory, newCategoryName);
     setEditingCategory(null); // 수정하는 카테고리 선택 초기화
     setIsEditModalOpen(false);
+    fetchCategories();
   };
 
   // 카테고리 수정 취소
@@ -76,11 +115,11 @@ const CategoryDropdown = ({
     <div className="my-12 w-full max-w-xs flex items-center">
       <Select
         options={categories.map((category) => ({
-          value: category,
+          value: category.categoryId,
           label: (
             <div className="flex justify-between items-center w-full">
-              <span className="flex-grow">{category}</span>
-              {(category !== '전체' && category !== '즐겨찾기') && (
+              <span className="flex-grow">{category.name}</span>
+              {category.name !== '전체' && category.name !== '즐겨찾기' && (
                 <div className="flex space-x-2 ml-auto">
                   <FontAwesomeIcon
                     icon={faEdit}
@@ -97,7 +136,16 @@ const CategoryDropdown = ({
             </div>
           ),
         }))}
-        value={{ value: selectedCategory, label: selectedCategory }}
+        value={
+          categories.find((cat) => cat.categoryId === selectedCategory)
+            ? {
+                value: selectedCategory,
+                label: categories.find(
+                  (cat) => cat.categoryId === selectedCategory
+                ).name,
+              }
+            : null
+        }
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
@@ -113,6 +161,7 @@ const CategoryDropdown = ({
         onClose={() => setIsModalOpen(false)}
         onAddCategory={handleAddCategory}
         existingCategories={categories}
+        closetId={closetId}
       />
       {editingCategory && (
         <EditCategoryModal
@@ -121,6 +170,7 @@ const CategoryDropdown = ({
           category={editingCategory}
           onSave={handleEditCategorySave}
           existingCategories={categories}
+          closetId={closetId}
         />
       )}
     </div>
