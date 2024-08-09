@@ -18,7 +18,7 @@ public class WebRtcNotification extends Notification {
     private Long rtcRequestMemberId;
 
     @Column(nullable = false)
-    private String rtcRoomId;
+    private String sessionId;
 
     @Column(nullable = false)
     private String rtcRequestMemberName;
