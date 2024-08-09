@@ -39,4 +39,7 @@ public class Notification{
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    public void updateNotificationStatus(NotificationStatus status) {
+        this.notificationStatus = status;
+    }
 }

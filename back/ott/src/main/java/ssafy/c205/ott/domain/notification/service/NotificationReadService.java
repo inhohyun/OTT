@@ -22,6 +22,11 @@ public class NotificationReadService {
     public List<NotificationResponseDto> searchNotification(Long memberId){
         List<Notification> notifications = notificationRepository.findByMemberIdAndNotificationStatusOrderByCreatedAtDesc(memberId, NotificationStatus.UNREAD);
 
+        notifications.forEach(notification -> notification.updateNotificationStatus(NotificationStatus.READ));
+
+        // 변경된 상태를 데이터베이스에 저장
+        notificationRepository.saveAll(notifications);
+
         return notifications.stream()
                 .map(notification -> {
                     switch (notification.getNotificationType()) {
