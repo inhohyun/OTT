@@ -146,7 +146,8 @@ public class RecommendServiceImpl implements RecommendService {
             //룩북 추가
             for (Lookbook lookbook : lookbooks) {
                 boolean isFavorite = false;
-                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(), member.getId());
+                Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    member.getId());
                 if (myFavor != null) {
                     isFavorite = true;
                 }
@@ -169,6 +170,8 @@ public class RecommendServiceImpl implements RecommendService {
     @Override
     public List<BodyResponseDto> getRecommendByTag(Long memberId) {
         List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
+
+        //사용자를 불러온다.
         Member member = null;
         Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
             ActiveStatus.ACTIVE);
@@ -178,8 +181,20 @@ public class RecommendServiceImpl implements RecommendService {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, memberId + "의 사용자를 찾지 못했습니다.");
         }
         List<MemberTag> memberTags = memberTagRepository.findByMemberId(memberId);
-        for (MemberTag memberTag : memberTags) {
-            memberTag.getTag();
+
+        //사용자의 룩북 태그들 조회(사용자의 좋아요한 게시물이 10개 이상일 때)
+        List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);
+        if (favorites == null || favorites.size() <= 10) {
+            //사용자 멤버태그로 추천 서비스(10개 이하일때)
+            for (MemberTag memberTag : memberTags) {
+                String tagName = memberTag.getTag().getName();
+
+                //해당 태그의 유저들을 조회
+
+                //sort해서 태그 많이 포함된 유저들의 룩북들로 리스트 구성
+            }
+        } else {
+
         }
 
         return bodyResponseDtos;
