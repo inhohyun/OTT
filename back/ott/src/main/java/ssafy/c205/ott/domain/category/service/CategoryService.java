@@ -41,6 +41,7 @@ public class CategoryService {
         return findClosetCategory.stream()
                 .map(category -> CategoryDto.builder()
                         .closetId(category.getCloset().getId())
+                        .categoryId(category.getId())
                         .name(category.getName())
                         .build()
                 )
