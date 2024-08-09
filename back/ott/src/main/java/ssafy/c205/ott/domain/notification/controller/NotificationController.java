@@ -36,4 +36,16 @@ public class NotificationController {
         return ApiResponse.success(notificationWriteService.deleteNotification(notificationId));
     }
 
+    @PostMapping("/meeting")
+    public ApiResponse<NotificationSuccessDto> createWebRtcNotification(@RequestBody WebRtcRequestDto webRtcRequestDto, @AuthenticationPrincipal CustomOAuth2User currentMember) {
+
+        WebRtcNotificationDto webRtcNotificationDto = WebRtcNotificationDto.builder()
+                .sessionId(webRtcRequestDto.getSessionId())
+                .notificationType(NotificationType.RTC)
+                .memberId(webRtcRequestDto.getTargetMemberId())
+                .rtcRequestMemberSso(currentMember.getUsername())
+                .build();
+
+        return ApiResponse.success(notificationWriteService.createWebRtcNotification(webRtcNotificationDto));
+    }
 }
