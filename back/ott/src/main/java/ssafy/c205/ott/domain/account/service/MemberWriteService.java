@@ -18,7 +18,7 @@ import static ssafy.c205.ott.domain.account.util.FollowMessage.*;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
 import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
 import ssafy.c205.ott.domain.notification.entity.NotificationType;
-import ssafy.c205.ott.domain.notification.service.NotificationService;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class MemberWriteService {
     private final FollowRepository followRepository;
     private final MemberValidator memberValidator;
     private final ClosetService closetService;
-    private final NotificationService notificationService;
+    private final NotificationWriteService notificationWriteService;
     private final AmazonS3Util amazonS3Util;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
@@ -99,7 +99,7 @@ public class MemberWriteService {
     }
 
     private void createNotification(Member targetMember, Member requestMember, Follow follow){
-        notificationService.createFollowNotification(FollowNotificationDto.builder()
+        notificationWriteService.createFollowNotification(FollowNotificationDto.builder()
                 .notificationType(NotificationType.FOLLOW)
                 .memberId(targetMember.getId())
                 .followerId(requestMember.getId())

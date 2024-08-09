@@ -16,7 +16,7 @@ import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 import ssafy.c205.ott.domain.ai.exception.AiBadRequestException;
 import ssafy.c205.ott.domain.notification.dto.request.AiNotificationDto;
-import ssafy.c205.ott.domain.notification.service.NotificationService;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class AiService {
     @Value("${gpu.server.url}")
     private String GPU_SERVER_BASE_URL;
 
-    private final NotificationService notificationService;
+    private final NotificationWriteService notificationWriteService;
     private final AmazonS3Util amazonS3Util;
 
     public String ping() {
@@ -89,7 +89,7 @@ public class AiService {
         amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
 
         // AI 이미지 완성 알림
-        notificationService.createAiNotification(AiNotificationDto.builder().memberId(aiRequestDto.getMemberId()).build());
+        notificationWriteService.createAiNotification(AiNotificationDto.builder().memberId(aiRequestDto.getMemberId()).build());
 
         return ResponseEntity.ok(responseBody);
     }
