@@ -14,7 +14,7 @@ const SearchPage = () => {
     try {
       const response = await searchPeople(nickname, offset, limit);
       console.log('검색한 response : ', response);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
