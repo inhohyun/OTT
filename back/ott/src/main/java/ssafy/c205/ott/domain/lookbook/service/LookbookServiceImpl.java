@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -164,6 +165,7 @@ public class LookbookServiceImpl implements LookbookService {
         if (odl.isPresent()) {
             lookbook = odl.get();
             // 조회수 + 1
+            LocalDateTime time = lookbook.getCreatedAt();
             Lookbook saveLookbook = lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
@@ -246,7 +248,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .nickname(saveLookbook.getMember().getNickname())
                 .viewCount(saveLookbook.getHitCount())
                 .salesClothes(salesClothesDtos)
-                .createdAt(saveLookbook.getCreatedAt())
+                .createdAt(time)
                 .tags(tags)
                 .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
                 .cntFavorite(cnt)
