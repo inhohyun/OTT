@@ -89,7 +89,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
+                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated());
 
         http
