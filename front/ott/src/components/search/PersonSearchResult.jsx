@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const PersonSearchResult = ({ results, searchQuery }) => {
   const [visibleResults, setVisibleResults] = useState(4);
   const [filteredResults, setFilteredResults] = useState([]);
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const handleClick = (user) => {
+    // console.log('Clicked user:', user.id);
+    navigate('/userpage', { state: { id: user.id } });
+  };
 
   useEffect(() => {
     if (!searchQuery) {
@@ -67,7 +74,8 @@ const PersonSearchResult = ({ results, searchQuery }) => {
         {filteredResults.slice(0, visibleResults).map((result, index) => (
           <div
             key={index}
-            className="p-2 rounded-lg relative flex items-center"
+            className="p-2 rounded-lg relative flex items-center cursor: 'pointer"
+            onClick={() => handleClick(result)} // 클릭 이벤트 핸들러 추가
           >
             {result.profileImageUrl ? (
               <img

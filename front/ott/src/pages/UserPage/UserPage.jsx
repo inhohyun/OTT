@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
@@ -13,21 +13,22 @@ import rtcIcon from '@/assets/icons/webrtcicon.png';
 import { getUid, getUserInfo } from '../../api/user/user';
 
 const UserPage = () => {
+  // targetId를 props로 받음
   const [activeComponent, setActiveComponent] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [uid, setUid] = useState(null);
-  const [isMe, setIsMe] = useState(false); // isMe를 상태로 관리
-  const [isPublic, setIsPublic] = useState(false); // isPublic을 상태로 관리
+  const [isMe, setIsMe] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = location.state || {}; // state에서 id를 받아옴
+  const targetId = id || null; // id가 없으면 null
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    console.log('targetId : ', targetId);
+    const fetchUserData = async (targetId) => {
       try {
-        const uidResponse = await getUid();
-        const id = uidResponse.data.id;
-        setUid(id);
-
         const userInfoResponse = await getUserInfo(id);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
@@ -40,8 +41,23 @@ const UserPage = () => {
       }
     };
 
-    fetchUserData();
-  }, []);
+    if (targetId) {
+      setUid(targetId);
+      fetchUserData(targetId);
+    } else {
+      const fetchCurrentUserData = async () => {
+        try {
+          const uidResponse = await getUid();
+          const id = uidResponse.data.id;
+          setUid(id);
+          fetchUserData(id);
+        } catch (error) {
+          console.error('Error fetching current user info:', error);
+        }
+      };
+      fetchCurrentUserData();
+    }
+  }, [targetId]);
 
   if (!userInfo) {
     return <div>Loading...</div>;
