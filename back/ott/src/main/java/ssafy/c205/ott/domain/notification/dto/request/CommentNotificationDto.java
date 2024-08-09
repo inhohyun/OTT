@@ -10,6 +10,7 @@ public class CommentNotificationDto {
 
     private NotificationType notificationType;
     private Long memberId;
+    private Long lookbookId;
     private Long commentId;
     private Long commentAuthorId;
     private String commentAuthorName;

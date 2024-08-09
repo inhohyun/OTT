@@ -15,6 +15,9 @@ import lombok.experimental.SuperBuilder;
 public class CommentNotification extends Notification {
 
     @Column(nullable = false)
+    private Long lookbookId;
+
+    @Column(nullable = false)
     private Long commentId;
 
     @Column(nullable = false)
