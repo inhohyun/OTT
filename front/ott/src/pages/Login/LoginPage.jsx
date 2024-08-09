@@ -19,6 +19,7 @@ const LoginPage = () => {
   const onNaverLoginClick = useCallback(() => {
     window.location.href =
       'https://i11c205.p.ssafy.io/oauth2/authorization/naver';
+    // `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/naver`;
   }, [navigate]);
 
   const onGoogleLoginClick = useCallback(() => {
