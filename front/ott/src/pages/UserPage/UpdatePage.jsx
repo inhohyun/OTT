@@ -15,7 +15,7 @@ import BodyTypeModal from '../../components/userPage/BodyTypeModal'; // BodyType
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { uid, userInfo } = location.state; // 사용자 정보 관련 부분 주석 해제
+  const { uid, userInfo } = location.state;
 
   const redirectProfile = () => {
     navigate('/userPage');
@@ -24,12 +24,11 @@ const UpdatePage = () => {
   const [bodyType, setBodyType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(
-    userInfo.publicStatus === 'PUBLIC' // 사용자 정보 관련 부분 주석 해제
+    userInfo.publicStatus !== 'PUBLIC'
   );
   const [profileImage, setProfileImage] = useState(
-    userInfo.profileImage || mainIcon // 사용자 정보 관련 부분 주석 해제
+    userInfo.profileImage || mainIcon
   );
-  const [userInfoState, setUserInfoState] = useState(userInfo); // 사용자 정보 관련 부분 주석 해제
   const [profileImageFile, setProfileImageFile] = useState(null);
 
   const openModal = () => setIsModalOpen(true);
@@ -45,9 +44,7 @@ const UpdatePage = () => {
   };
 
   const [searchText, setSearchText] = useState('');
-  const [tags, setTags] = useState(
-    userInfo.tags || [] // 사용자 정보 관련 부분 주석 해제
-  );
+  const [tags, setTags] = useState(userInfo.tags || []);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSearchChange = (e) => {
