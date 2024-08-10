@@ -9,12 +9,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
-import { updateUserInfo } from '../../api/user/user';
+// import { updateUserInfo } from '../../api/user/user'; // 서버 호출 부분 주석 처리
+import BodyTypeModal from '../../components/userPage/BodyTypeModal'; // BodyTypeModal 컴포넌트 임포트
 
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { uid, userInfo } = location.state;
+  // const { uid, userInfo } = location.state; // 사용자 정보 관련 부분 주석 처리
 
   const redirectProfile = () => {
     navigate('/userPage');
@@ -23,12 +24,14 @@ const UpdatePage = () => {
   const [bodyType, setBodyType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(
-    userInfo.publicStatus === 'PUBLIC'
+    // userInfo.publicStatus === 'PUBLIC' // 사용자 정보 관련 부분 주석 처리
+    false // 기본값 설정
   );
   const [profileImage, setProfileImage] = useState(
-    userInfo.profileImage || mainIcon
+    // userInfo.profileImage || mainIcon // 사용자 정보 관련 부분 주석 처리
+    mainIcon // 기본값 설정
   );
-  const [userInfoState, setUserInfoState] = useState(userInfo);
+  // const [userInfoState, setUserInfoState] = useState(userInfo); // 사용자 정보 관련 부분 주석 처리
   const [profileImageFile, setProfileImageFile] = useState(null);
 
   const openModal = () => setIsModalOpen(true);
@@ -44,7 +47,10 @@ const UpdatePage = () => {
   };
 
   const [searchText, setSearchText] = useState('');
-  const [tags, setTags] = useState(userInfo.tags || []);
+  const [tags, setTags] = useState(
+    // userInfo.tags || [] // 사용자 정보 관련 부분 주석 처리
+    [] // 기본값 설정
+  );
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSearchChange = (e) => {
@@ -95,20 +101,20 @@ const UpdatePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedUserInfo = {
-      memberId: uid,
-      nickname: userInfoState.nickname,
-      phoneNumber: userInfoState.phone,
-      introduction: userInfoState.introduction || '',
-      height: parseFloat(userInfoState.height),
-      weight: parseFloat(userInfoState.weight),
-      gender: userInfoState.gender || null,
+      // memberId: uid, // 사용자 정보 관련 부분 주석 처리
+      // nickname: userInfoState.nickname, // 사용자 정보 관련 부분 주석 처리
+      // phoneNumber: userInfoState.phone, // 사용자 정보 관련 부분 주석 처리
+      // introduction: userInfoState.introduction || '', // 사용자 정보 관련 부분 주석 처리
+      // height: parseFloat(userInfoState.height), // 사용자 정보 관련 부분 주석 처리
+      // weight: parseFloat(userInfoState.weight), // 사용자 정보 관련 부분 주석 처리
+      // gender: userInfoState.gender || null, // 사용자 정보 관련 부분 주석 처리
       bodyType: bodyType || null,
       publicStatus: isChecked ? 'PRIVATE' : 'PUBLIC',
       memberTags: tags.length > 0 ? tags : null,
     };
 
     try {
-      await updateUserInfo(uid, updatedUserInfo);
+      // await updateUserInfo(uid, updatedUserInfo); // 서버 호출 부분 주석 처리
       redirectProfile();
     } catch (error) {
       console.error('Error updating user info:', error);
@@ -136,10 +142,10 @@ const UpdatePage = () => {
               className="absolute bottom-3 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
             >
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 icon={faCamera}
-                className="text-purple-500 text-xs"
-              />
+                className="text-purple-600 text-xs"
+              /> */}
             </div>
             <input
               type="file"
@@ -151,15 +157,16 @@ const UpdatePage = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-[16px]">
+        <div className="flex mr-[40px] mt-[16px]">
           <Switch
             isChecked={isChecked}
             handleCheckboxChange={handleCheckboxChange}
           />
         </div>
-
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form className="space-y-6 mb-" onSubmit={handleSubmit}>
+            {/* 사용자 정보 입력 필드들 주석 처리 */}
+            {/* 
             <div className="flex items-center mb-5">
               <label
                 htmlFor="name"
@@ -262,6 +269,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
+            */}
             <div className="flex items-center mb-5">
               <label
                 htmlFor="bodyType"
@@ -336,6 +344,12 @@ const UpdatePage = () => {
           </form>
         </div>
       </div>
+      {/* BodyTypeModal 추가 */}
+      <BodyTypeModal
+        show={isModalOpen}
+        onClose={onClose}
+        onSelect={handleBodyTypeSelect}
+      />
     </div>
   );
 };
