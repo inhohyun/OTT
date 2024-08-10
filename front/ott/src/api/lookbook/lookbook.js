@@ -29,13 +29,11 @@ export const lookbookUpdate = (formData, lookbookId) => {
 };
 
 // 룩북 삭제 api
-export const lookbookDelete = (lookbook) => {
-  axiosInstance
-    .delete(`api/lookbook/${lookbook.id}`)
-    .then(() => {
-      console.log('룩북삭제성공');
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+export const lookbookDelete = async (lookbook) => {
+  try {
+    axiosInstance.delete(`api/lookbook/${lookbook.id}`);
+    console.log('룩북삭제성공');
+  } catch (error) {
+    console.error(error);
+  }
 };

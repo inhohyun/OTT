@@ -6,6 +6,7 @@ export const fetchMyLookbooks = async () => {
     const response = await axiosInstance.get('api/lookbook/mylookbook', {
       params: { memberId: 1 },
     });
+    console.log('[*] 룩북 데이터 불러오기', response.data);
     return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     console.log(error);

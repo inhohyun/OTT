@@ -49,11 +49,15 @@ const MyLookbook = () => {
 
   const handleDelete = (deletedLookbookId) => {
     deleteLookbook(deletedLookbookId);
+    // handleCloseDetail();
+    hideDetail();
   };
 
   const handleCloseDetail = async () => {
+    console.log('[*]모달 닫기');
     hideDetail();
     const lookbooksData = await fetchMyLookbooks(userId);
+    console.log('[*] 내룩북 불러오기');
     if (Array.isArray(lookbooksData)) {
       setLookbooks(lookbooksData);
     } else {

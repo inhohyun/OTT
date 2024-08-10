@@ -4,6 +4,7 @@ import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
 import DetailViewer from './DetailViewer';
 import Modal from './Modal';
+import ClothesDetailModal from '../closet/ClothesDetailModal';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import lookicon from '../../assets/icons/lookicon.png';
@@ -15,9 +16,9 @@ import { lookbookComment } from '../../api/lookbook/comments';
 import { lookbookDelete } from '../../api/lookbook/lookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
-import bingle from '../../assets/icons/bingle_bingle_icon.png';
+import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 
-const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
+const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
   const [showSellComments, setShowSellComments] = useState(false);
   const [liked, setLiked] = useState(lookbook.favorite);
   const [cntFavorite, setCntFavorite] = useState(lookbook.cntFavorite);
@@ -26,6 +27,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const [currentSides, setCurrentSides] = useState({});
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClothingItem, setSelectedClothingItem] = useState(null); //판매용 댓글 옷 상세보기
   const { deleteLookbook, hideDetail } = useLookbookStore();
   const userId = useUserStore((state) => state.userId);
 
@@ -59,7 +61,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     ...(images ? images.map((item) => item.imagePath.path) : []),
   ];
 
-  const currentUser = 'kimssafy';
+  const currentUser = 'csh';
 
   const toggleLike = () => {
     if (liked) {
@@ -106,11 +108,15 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
-      lookbookDelete(lookbook);
-      hideDetail();
+      await lookbookDelete(lookbook);
       deleteLookbook(lookbook.id);
+
+      await fetchMyLookbooks(); // 또 호출을 해야할까.....?
+      hideDetail();
+      // console.log('삭제하려는 룩북', lookbook);
+
       onClose();
     } catch (error) {
       console.error(error);
@@ -127,19 +133,14 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     return acc;
   }, {});
 
-  // 각 clothesId에 대한 현재 이미지 인덱스를 저장
-  const [currentImageIndexes, setCurrentImageIndexes] = useState({});
+  const handleClothingItemClick = (item) => {
+    setSelectedClothingItem(item);
+    setIsModalOpen(true);
+  };
 
-  // 이미지 전환 함수
-  const toggleImage = (clothesId) => {
-    setCurrentImageIndexes((prevIndexes) => {
-      const currentIndex = prevIndexes[clothesId] || 0;
-      const nextIndex = (currentIndex + 1) % groupedClothes[clothesId].length;
-      return {
-        ...prevIndexes,
-        [clothesId]: nextIndex,
-      };
-    });
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedClothingItem(null);
   };
 
   return (
@@ -182,7 +183,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
           <div className="flex-grow">
             <h2 className={`text-xl font-bold`}>{lookbook.nickname}</h2>
             <p className="text-sm text-gray-500">
-              {lookbook.createdAt.split('T')[0]}
+              {/* {lookbook.createdAt.split('T')[0]} */}
             </p>
           </div>
           {currentUser !== lookbook.nickname && (
@@ -213,6 +214,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onEdit={onEdit}
+            // onDelete={() => onDelete(lookbook.id)}
             onDelete={handleDelete}
           />
         </div>
@@ -247,14 +249,15 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
           )}
           <div className="flex flex-wrap gap-4">
             {Object.keys(groupedClothes).map((clothesId) => {
+              // console.log('판매중인 옷', groupedClothes[clothesId]);
               const images = groupedClothes[clothesId];
-              const currentIndex = currentImageIndexes[clothesId] || 0;
-              const currentItem = images[currentIndex];
+              const currentItem = images[0];
 
               return (
                 <div
                   key={clothesId}
                   className="relative flex items-center space-x-2"
+                  onClick={() => handleClothingItemClick(currentItem)}
                 >
                   <img
                     src={currentItem.imagePath.path}
@@ -262,13 +265,6 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
                     className="w-12 h-12 object-contain rounded-lg"
                     style={{ objectPosition: 'center' }}
                   />
-                  <button
-                    className="absolute top-0 right-0 m-1"
-                    style={{ background: 'none', zIndex: 10 }}
-                    onClick={() => toggleImage(clothesId)}
-                  >
-                    <img className="w-4 h-4" src={bingle} alt="toggle icon" />
-                  </button>
                   <p className="text-sm">{currentItem.name}</p>
                 </div>
               );
@@ -331,6 +327,14 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
           </div>
         </div>
       </div>
+      {selectedClothingItem && (
+        <ClothesDetailModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          clothingItem={selectedClothingItem}
+          categories={[]} // 필요한 카테고리 정보를 전달
+        />
+      )}
     </div>
   );
 };

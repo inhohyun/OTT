@@ -293,6 +293,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
 
   const handleShowDetail = async () => {
     try {
+      // console.log('룩북아이디', data.lookbookId);
       const lookbookData = await lookbookDetail(data.lookbookId);
       // const lookbookData = await lookbookDetail(data.lookbookId, userId);
       console.log('룩북 상세보기', lookbookData);
@@ -389,7 +390,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
           onClose={onClose}
           onEdit={handleEditLookbook}
           lookbookId={selectedLookbook.id}
-          onDelete={onDelete} // Pass onDelete to LookbookDetail
+          onDelete={() => onDelete(selectedLookbook.id)} // Pass onDelete to LookbookDetail
         />
       )}
     </>

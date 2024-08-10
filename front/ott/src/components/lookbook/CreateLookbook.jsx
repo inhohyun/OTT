@@ -56,7 +56,7 @@ const CreateLookbook = () => {
         const response = await getCategory(closetId);
         console.log('카테고리', response);
         // setCategories(response.data);
-        setCategories(response);
+        setCategories(response.data);
       } catch (error) {
         console.error(error);
       }
