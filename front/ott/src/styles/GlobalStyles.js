@@ -4,7 +4,8 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
 @font-face {
   font-family: 'dohyeon';
-  src: url('../assets/fonts/BMDOHYEON_ttf.ttf') format('truetype');
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff')
+    format('woff');
   font-weight: normal;
   font-style: normal;
 }
