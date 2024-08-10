@@ -139,10 +139,10 @@ const UpdatePage = () => {
               className="absolute bottom-3 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
             >
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 icon={faCamera}
                 className="text-purple-600 text-xs"
-              />
+              /> */}
             </div>
             <input
               type="file"
