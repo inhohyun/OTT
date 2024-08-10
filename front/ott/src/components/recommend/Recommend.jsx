@@ -200,12 +200,12 @@ const Recommend = () => {
           onClose={closeDetailedView}
         />
       )}
-      {selectedLookbook && (
+      {/* {selectedLookbook && (
         <LookbookDetail
           lookbook={selectedLookbook}
           onClose={closeDetailedView}
         />
-      )}
+      )} */}
     </div>
   );
 };

@@ -18,8 +18,15 @@ import { lookbookDelete } from '../../api/lookbook/lookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
+import { getUserInfo } from '../../api/user/user';
 
-const LookbookDetail = ({ onClose, onEdit, lookbookId, onDelete }) => {
+const LookbookDetail = async ({
+  onClose,
+  onEdit,
+  lookbookId,
+  onDelete,
+  currentLookbook,
+}) => {
   const [lookbook, setLookbook] = useState(null); // Lookbook 상태를 추가
   const [showSellComments, setShowSellComments] = useState(false);
   const [liked, setLiked] = useState(false); // 초기 값은 false로 설정
@@ -30,15 +37,18 @@ const LookbookDetail = ({ onClose, onEdit, lookbookId, onDelete }) => {
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClothingItem, setSelectedClothingItem] = useState(null);
+  const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
   const userId = useUserStore((state) => state.userId);
   const hasFetchedComments = useRef(false);
 
   useEffect(() => {
+    console.log(currentLookbook, '현재 선택 룩북');
     console.log(lookbookId, '룩북아이디');
     const fetchLookbookDetail = async () => {
       try {
         const data = await lookbookDetail(lookbookId); // API 호출
+        console.log('룩북디테일', data);
         setLookbook(data); // 받아온 데이터를 상태로 설정
         setLiked(data.favorite);
         setCntFavorite(data.cntFavorite);
@@ -68,6 +78,17 @@ const LookbookDetail = ({ onClose, onEdit, lookbookId, onDelete }) => {
       hasFetchedComments.current = true;
     }
   }, [lookbook, showSellComments]);
+
+  // useEffect(() => {
+  //   const checkFollow = async () => {
+  //     try {
+  //       const creatorInfo = await getUserInfo(currentLookbook.memberId);
+  //       setFollowStatus(creatorInfo.data.followStatus);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  // });
 
   if (!lookbook) {
     return null; // 데이터가 아직 로드되지 않았다면 아무것도 렌더링하지 않음

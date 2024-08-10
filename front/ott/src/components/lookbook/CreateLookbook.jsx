@@ -158,10 +158,14 @@ const CreateLookbook = () => {
           formData.append('publicStatus', isPublic ? 'Y' : 'N');
           formData.append('img', imageBlob, 'lookbookimage.png');
 
+          // formData.forEach((value, key) => {
+          //   console.log(`${key}:`, value);
+          // });
+
           try {
             lookbookCreate(formData);
             console.log('룩북 저장 성공');
-            nav(-1);
+            // nav(-1);
           } catch (error) {
             console.error(error);
           } finally {

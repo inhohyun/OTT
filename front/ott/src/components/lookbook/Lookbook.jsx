@@ -374,7 +374,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
       </div>
       {isDetailVisible && selectedLookbook && (
         <LookbookDetail
-          lookbook={selectedLookbook}
+          currentLookbook={selectedLookbook}
           onClose={handleCloseDetail}
           onEdit={handleEditLookbook}
           lookbookId={selectedLookbook.lookbookId}
