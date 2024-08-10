@@ -151,12 +151,13 @@ const UpdatePage = () => {
           </div>
         </div>
 
-        <div className="flex mr-[40px] mt-[16px]">
+        <div className="flex justify-center mt-[16px]">
           <Switch
             isChecked={isChecked}
             handleCheckboxChange={handleCheckboxChange}
           />
         </div>
+
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form className="space-y-6 mb-" onSubmit={handleSubmit}>
             <div className="flex items-center mb-5">
