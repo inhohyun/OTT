@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.account.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,10 @@ import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import static ssafy.c205.ott.domain.account.util.FollowMessage.*;
+
+import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
+import ssafy.c205.ott.domain.category.service.CategoryService;
+import ssafy.c205.ott.domain.closet.entity.Closet;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
 
 @Service
@@ -26,6 +31,7 @@ public class MemberWriteService {
     private final FollowRepository followRepository;
     private final MemberValidator memberValidator;
     private final ClosetService closetService;
+    private final CategoryService categoryService;
     private final AmazonS3Util amazonS3Util;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
@@ -36,8 +42,7 @@ public class MemberWriteService {
                 .role(memberRegisterRequestDto.getRole())
                 .build();
 
-        memberRepository.save(member);
-        closetService.createClosetForMember(member);
+        initializeMemberClosetWithDefaultCategories(memberRepository.save(member));
         return new RegisterMemberSuccessDto(member.getId());
     }
 
@@ -143,6 +148,20 @@ public class MemberWriteService {
         member.updateProfileImage(profileImageUrl);
 
         return new ProfileImageSuccessDto();
+    }
+
+    private void initializeMemberClosetWithDefaultCategories(Member member) {
+        Closet closet = closetService.createClosetForMember(member);
+
+        // 기본 카테고리 등록
+        List<String> defaultCategories = List.of("상의", "하의");
+
+        defaultCategories.stream()
+                .map(categoryName -> CategoryRequestDto.builder()
+                        .closetId(closet.getId())
+                        .name(categoryName)
+                        .build())
+                .forEach(categoryService::registerCategory);
     }
 
 }
