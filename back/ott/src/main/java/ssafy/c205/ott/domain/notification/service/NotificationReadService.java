@@ -31,6 +31,12 @@ public class NotificationReadService {
                 .collect(Collectors.toList());
     }
 
+    public NotificationResponseDto sendNotification(Long memberId) {
+        Notification notification = notificationRepository.findFirstByMemberIdAndNotificationStatusAndOrderByCreatedAtAsc(memberId,
+                NotificationStatus.UNREAD).orElseThrow(NotificationNotFoundException::new);
+        return buildNotificationResponseDto(notification);
+    }
+
     private NotificationResponseDto buildNotificationResponseDto(Notification notification) {
         ObjectNode node = objectMapper.createObjectNode();
 
