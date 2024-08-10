@@ -157,7 +157,7 @@ const UserPage = () => {
                     <img
                       src={closetIcon}
                       alt="Closet Icon"
-                      className="w-4 h-4 cursor-pointer"
+                      className="w-5 h-5 cursor-pointer"
                       onClick={handleClosetIconClick}
                     />
                   </div>
@@ -165,7 +165,7 @@ const UserPage = () => {
                     <img
                       src={rtcIcon}
                       alt="RTC Icon"
-                      className="w-4 h-4 cursor-pointer"
+                      className="w-5 h-5 cursor-pointer"
                       onClick={handleRtcIconClick}
                     />
                   </div>
