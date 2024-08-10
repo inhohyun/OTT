@@ -105,7 +105,7 @@ const UserPage = () => {
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="w-[80%] h-[80%] flex flex-col items-center justify-start  bg-white">
+      <div className="w-full h-full flex flex-col items-center justify-start">
         <div className="w-full flex justify-center mt-8">
           <img
             className="w-[70px] h-[70px] rounded-full"
@@ -132,45 +132,41 @@ const UserPage = () => {
               )}
             </div>
           </div>
-          <div className="w-full flex items-center justify-center mt-2">
-            <div className="w-[50%] flex justify-between p-2">
-              {!isMe && (
-                <div className="flex justify-center items-center w-full">
-                  <button
-                    className={`w-[80%] px-4 py-2 rounded ${
-                      isFollowing
-                        ? 'bg-violet-500 text-white'
-                        : 'bg-white text-[rgba(0,0,0,0.5)]'
-                    }`}
-                    onClick={handleFollowButtonClick}
-                    style={{ fontFamily: 'dohyeon' }}
-                  >
-                    {isFollowing ? '팔로잉' : '팔로우'}
-                  </button>
-                </div>
-              )}
+        </div>
+        <div className="w-full flex items-center justify-center mt-2">
+          <div className="w-[80%] flex justify-between border border-black p-2">
+            {!isMe && (
               <div className="flex justify-center items-center w-full">
-                {!isMe ? (
-                  <div className="flex">
-                    <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white mr-2">
-                      <img
-                        src={closetIcon}
-                        alt="Closet Icon"
-                        className="w-5 h-5 cursor-pointer"
-                        onClick={handleClosetIconClick}
-                      />
-                    </div>
-                    <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white">
-                      <img
-                        src={rtcIcon}
-                        alt="RTC Icon"
-                        className="w-5 h-5 cursor-pointer"
-                        onClick={handleRtcIconClick}
-                      />
-                    </div>
-                  </div>
-                ) : null}
+                <button
+                  className={`w-full px-4 py-2 border rounded ${
+                    isFollowing
+                      ? 'bg-violet-200 text-black-500 border-violet-300'
+                      : 'bg-transparent text-[rgba(0,0,0,0.5)]'
+                  }`}
+                  onClick={handleFollowButtonClick}
+                  style={{ fontFamily: 'dohyeon' }}
+                >
+                  {isFollowing ? '팔로잉' : '팔로우'}
+                </button>
               </div>
+            )}
+            <div className="flex justify-center items-center w-full">
+              {!isMe ? (
+                <div className="flex">
+                  <img
+                    src={closetIcon}
+                    alt="Colset Icon"
+                    className="w-6 h-6 cursor-pointer mr-2"
+                    onClick={handleClosetIconClick}
+                  />
+                  <img
+                    src={rtcIcon}
+                    alt="RTC Icon"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={handleRtcIconClick}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -190,7 +186,6 @@ const UserPage = () => {
         </div>
         <div className="w-full mt-6 h-full">
           <NavBar
-            followerCount={userInfo.followerCount}
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
           />
