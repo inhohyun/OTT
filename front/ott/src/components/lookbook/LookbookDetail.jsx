@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import cancel from '../../assets/icons/blackdeleteicon.png';
 import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
@@ -20,7 +21,7 @@ import useUserStore from '../../data/lookbook/userStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import { getUserInfo } from '../../api/user/user';
 
-const LookbookDetail = async ({
+const LookbookDetail = ({
   onClose,
   onEdit,
   lookbookId,
@@ -42,6 +43,8 @@ const LookbookDetail = async ({
   const userId = useUserStore((state) => state.userId);
   const hasFetchedComments = useRef(false);
 
+  const nav = useNavigate();
+
   useEffect(() => {
     console.log(currentLookbook, '현재 선택 룩북');
     console.log(lookbookId, '룩북아이디');
@@ -58,7 +61,7 @@ const LookbookDetail = async ({
     };
 
     fetchLookbookDetail();
-  }, [lookbookId]);
+  }, []);
 
   useEffect(() => {
     console.log('현재룩북', lookbookId);
@@ -90,6 +93,15 @@ const LookbookDetail = async ({
   //   };
   // });
 
+  const handleEditLookbook = () => {
+    hideDetail();
+    // setIsDetailVisible(false);
+    console.log(lookbook, '룩북!!');
+    nav(`/update-lookbook/${lookbookId}`, {
+      state: { lookbook: lookbook },
+    });
+  };
+
   if (!lookbook) {
     return null; // 데이터가 아직 로드되지 않았다면 아무것도 렌더링하지 않음
   }
@@ -110,7 +122,7 @@ const LookbookDetail = async ({
   const toggleLike = () => {
     if (liked) {
       try {
-        lookbookDislike(lookbook);
+        lookbookDislike(lookbookId);
         setLiked(false);
         setCntFavorite((prevCntLike) => prevCntLike - 1);
       } catch (error) {
@@ -118,7 +130,7 @@ const LookbookDetail = async ({
       }
     } else {
       try {
-        lookbookLike(lookbook);
+        lookbookLike(lookbookId);
         setLiked(true);
         setCntFavorite((prevCntLike) => prevCntLike + 1);
       } catch (error) {
@@ -154,8 +166,8 @@ const LookbookDetail = async ({
 
   const handleDelete = async () => {
     try {
-      await lookbookDelete(lookbook);
-      deleteLookbook(lookbook.id);
+      await lookbookDelete(lookbookId);
+      deleteLookbook(lookbookId);
 
       await fetchMyLookbooks(); // 또 호출을 해야할까.....?
       hideDetail();
@@ -254,7 +266,7 @@ const LookbookDetail = async ({
           <Modal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            onEdit={onEdit}
+            onEdit={handleEditLookbook}
             onDelete={handleDelete}
           />
         </div>

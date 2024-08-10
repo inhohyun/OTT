@@ -29,9 +29,9 @@ export const lookbookUpdate = (formData, lookbookId) => {
 };
 
 // 룩북 삭제 api
-export const lookbookDelete = async (lookbook) => {
+export const lookbookDelete = async (lookbookId) => {
   try {
-    axiosInstance.delete(`api/lookbook/${lookbook.id}`);
+    axiosInstance.delete(`api/lookbook/${lookbookId}`);
     console.log('룩북삭제성공');
   } catch (error) {
     console.error(error);

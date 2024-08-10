@@ -23,10 +23,10 @@ export const lookbookDetail = async (lookbookId) => {
 //   }
 // };
 
-export const lookbookDislike = (lookbook) => {
+export const lookbookDislike = (lookbookId) => {
   axiosInstance
-    .post(`api/lookbook/${lookbook.id}/dislike`, {
-      lookbookId: lookbook.id,
+    .post(`api/lookbook/${lookbookId}/dislike`, {
+      lookbookId: lookbookId,
       memberId: '1',
     })
     .then((response) => {
@@ -53,10 +53,10 @@ export const lookbookDislike = (lookbook) => {
 //     });
 // };
 
-export const lookbookLike = (lookbook) => {
+export const lookbookLike = (lookbookId) => {
   axiosInstance
-    .post(`api/lookbook/${lookbook.id}/like`, {
-      lookbookId: lookbook.id,
+    .post(`api/lookbook/${lookbookId}/like`, {
+      lookbookId: lookbookId,
       memberId: '1',
     })
     .then((response) => {

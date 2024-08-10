@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import UpdateLookbook from '../../components/lookbook/UpdateLookbook';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -8,6 +9,10 @@ const UpdateLookbookPage = () => {
   // console.log(location);
   // console.log(location.state);
   // console.log(lookbook);
+
+  useEffect(() => {
+    console.log('수정하려는', lookbook);
+  });
 
   return (
     <>

@@ -48,7 +48,7 @@ const clothesData = {
 };
 
 const UpdateLookbook = ({ lookbook, lookbookid }) => {
-  const [isPublic, setIsPublic] = useState(lookbook.isPublic !== 'N');
+  const [isPublic, setIsPublic] = useState(lookbook.isPublic !== 'PRIVATE');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState(lookbook.tags || []);
@@ -175,7 +175,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   useEffect(() => {
     if (lookbook) {
-      setIsPublic(lookbook.isPublic !== 'N');
+      setIsPublic(lookbook.isPublic !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
     }
@@ -205,7 +205,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
-          formData.append('publicStatus', isPublic ? 'Y' : 'N');
+          formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           try {

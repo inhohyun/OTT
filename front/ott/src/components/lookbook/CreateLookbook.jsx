@@ -155,7 +155,7 @@ const CreateLookbook = () => {
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
-          formData.append('publicStatus', isPublic ? 'Y' : 'N');
+          formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           // formData.forEach((value, key) => {

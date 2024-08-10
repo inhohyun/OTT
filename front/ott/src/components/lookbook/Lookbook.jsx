@@ -322,7 +322,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   const handleEditLookbook = () => {
     hideDetail();
     setIsDetailVisible(false);
-    nav(`/update-lookbook/${selectedLookbook.id}`, {
+    nav(`/update-lookbook/${selectedLookbook.lookbookId}`, {
       state: { lookbook: selectedLookbook },
     });
   };
@@ -375,7 +375,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
       {isDetailVisible && selectedLookbook && (
         <LookbookDetail
           currentLookbook={selectedLookbook}
-          onClose={handleCloseDetail}
+          onClose={onClose}
           onEdit={handleEditLookbook}
           lookbookId={selectedLookbook.lookbookId}
           onDelete={() => onDelete(selectedLookbook.lookbookId)}
