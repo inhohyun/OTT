@@ -140,8 +140,8 @@ const UserPage = () => {
                 <button
                   className={`w-[80%] px-4 py-2 border rounded ${
                     isFollowing
-                      ? 'bg-violet-200 text-black-500 border-violet-300'
-                      : 'bg-stone-200 text-[rgba(0,0,0,0.5)]'
+                      ? 'bg-violet-600 text-white border-violet-600'
+                      : 'bg-white text-[rgba(0,0,0,0.5)]'
                   }`}
                   onClick={handleFollowButtonClick}
                   style={{ fontFamily: 'dohyeon' }}
@@ -153,18 +153,22 @@ const UserPage = () => {
             <div className="flex justify-center items-center w-full">
               {!isMe ? (
                 <div className="flex">
-                  <img
-                    src={closetIcon}
-                    alt="Colset Icon"
-                    className="w-6 h-6 cursor-pointer mr-2"
-                    onClick={handleClosetIconClick}
-                  />
-                  <img
-                    src={rtcIcon}
-                    alt="RTC Icon"
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={handleRtcIconClick}
-                  />
+                  <div className="flex justify-center items-center w-10 h-10 rounded-full bg-white mr-2">
+                    <img
+                      src={closetIcon}
+                      alt="Closet Icon"
+                      className="w-6 h-6 cursor-pointer"
+                      onClick={handleClosetIconClick}
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-10 h-10 rounded-full bg-white">
+                    <img
+                      src={rtcIcon}
+                      alt="RTC Icon"
+                      className="w-6 h-6 cursor-pointer"
+                      onClick={handleRtcIconClick}
+                    />
+                  </div>
                 </div>
               ) : null}
             </div>
