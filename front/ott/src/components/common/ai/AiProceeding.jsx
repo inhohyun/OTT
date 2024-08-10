@@ -13,7 +13,7 @@ const AiProceeding = () => {
 
   // 서버에 보낼 데이터
   const modelPicture = useStore((state) => state.modelPicture);
-  const filter = useStore((state) => state.filter);
+  const filter = useStore((state) => state.filter) || '상의'; // 안전한 기본값 설정
   const modelImage = useStore((state) => state.modelImage);
   const selectClothesURL = useStore((state) => state.selectedClothesURL); // TODO : 선택된 URL에 따른 경로로 변동
   const sample = useStore((state) => state.sample);
