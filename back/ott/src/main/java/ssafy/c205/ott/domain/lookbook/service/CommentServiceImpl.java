@@ -15,14 +15,15 @@ import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
-import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationCreateDto;
+import ssafy.c205.ott.domain.notification.dto.request.CommentNotificationDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentChildrenDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentSelectResponseDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
 import ssafy.c205.ott.domain.lookbook.repository.CommentRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
-import ssafy.c205.ott.domain.notification.service.NotificationService;
+import ssafy.c205.ott.domain.notification.entity.NotificationType;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
 @Slf4j
 @Service
@@ -32,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final LookbookRepository lookbookRepository;
-    private final NotificationService notificationService;
+    private final NotificationWriteService notificationWriteService;
 
     @Override
     public void createComment(String postId, CommentMessageDto commentMessageDto) {
@@ -66,13 +67,15 @@ public class CommentServiceImpl implements CommentService {
                 : CommentStatus.NOT_DELETED)
             .build());
 
-        if (commentMessageDto.getStatus().equals("DM")) {
-            notificationService.createCommentNotification(NotificationCreateDto
-                .builder()
-                .commentId(String.valueOf(c.getId()))
-                .memberid(lookbook.getMember().getId())
-                .build());
-        }
+        notificationWriteService.createCommentNotification(CommentNotificationDto
+            .builder()
+            .notificationType(NotificationType.COMMENT)
+            .memberId(lookbook.getMember().getId())
+            .lookbookId(lookbook.getId())
+            .commentId(c.getId())
+            .commentAuthorId(member.getId())
+            .commentAuthorName(member.getName())
+            .build());
     }
 
     @Override
