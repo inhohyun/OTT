@@ -16,17 +16,30 @@ const ClothesEditForm = ({
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      borderColor: state.isFocused ? 'black' : provided.borderColor,
+      'borderColor': state.isFocused ? 'black' : provided.borderColor,
       '&:hover': {
         borderColor: 'black',
       },
-      boxShadow: state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
+      'boxShadow': state.isFocused ? '0 0 0 1px black' : provided.boxShadow,
     }),
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected ? '#a78bfa' : 'white',
       color: state.isSelected ? 'white' : 'black',
     }),
+  };
+
+  const getGenderText = (gender) => {
+    switch (gender) {
+      case 'MAN':
+        return '남성';
+      case 'WOMAN':
+        return '여성';
+      case 'COMMON':
+        return '남녀공용';
+      default:
+        return '성별 없음';
+    }
   };
 
   // 입력값 변경 처리 함수
@@ -105,7 +118,10 @@ const ClothesEditForm = ({
   };
 
   return (
-    <>
+    <div
+      className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full relative overflow-y-auto max-h-full"
+      style={{ maxHeight: '75vh', overflowY: 'auto' }}
+    >
       <h2 className="text-xl font-bold mb-4">옷 정보 수정</h2>
       <div className="grid grid-cols-2 gap-4 mb-4">{renderImageInputs()}</div>
       <div className="mb-4">
@@ -167,9 +183,7 @@ const ClothesEditForm = ({
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
         <Select
-          value={
-            categories.find((opt) => opt === itemDetails.category) || ''
-          }
+          value={categories.find((opt) => opt === itemDetails.category) || ''}
           onChange={(opt) => handleSelectChange(opt, 'category')}
           options={categories.map((cat) => ({
             value: cat,
@@ -208,7 +222,7 @@ const ClothesEditForm = ({
           취소
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

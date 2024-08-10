@@ -33,13 +33,15 @@ const CategoryDropdown = ({
     try {
       const memberId = 1;
       const closetResponse = await getClosetId(memberId);
-      console.log(closetResponse);
       const closetId = closetResponse.data.data[0].id;
-      console.log(closetId);
       setClosetId(closetId);
       const categoryList = await getCategoryList(closetId);
-      console.log(categoryList);
-      setCategories(categoryList.data);
+      const fetchedCategories = categoryList.data;
+      const defaultCategories = [
+        { categoryId: -100, name: '전체' },
+        { categoryId: -200, name: '즐겨찾기' },
+      ]
+      setCategories([...defaultCategories, ...fetchedCategories]);
     } catch (error) {
       console.error('카테고리 목록 불러오는 중 오류 발생:', error);
     }
@@ -99,10 +101,16 @@ const CategoryDropdown = ({
 
   // 수정한 카테고리 저장
   const handleEditCategorySave = (newCategoryName) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((cat) =>
+        cat.categoryId === editingCategory.categoryId
+          ? { ...cat, name: newCategoryName }
+          : cat
+      )
+    );
     onEditCategory(editingCategory, newCategoryName);
-    setEditingCategory(null); // 수정하는 카테고리 선택 초기화
+    setEditingCategory(null);
     setIsEditModalOpen(false);
-    fetchCategories();
   };
 
   // 카테고리 수정 취소
@@ -149,6 +157,7 @@ const CategoryDropdown = ({
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
+        placeholder="카테고리를 선택하세요"
       />
       <div
         onClick={() => setIsModalOpen(true)}
