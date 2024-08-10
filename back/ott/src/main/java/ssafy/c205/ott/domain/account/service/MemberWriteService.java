@@ -21,6 +21,9 @@ import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
 import ssafy.c205.ott.domain.category.service.CategoryService;
 import ssafy.c205.ott.domain.closet.entity.Closet;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
+import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
+import ssafy.c205.ott.domain.notification.entity.NotificationType;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class MemberWriteService {
     private final MemberValidator memberValidator;
     private final ClosetService closetService;
     private final CategoryService categoryService;
+    private final NotificationWriteService notificationWriteService;
     private final AmazonS3Util amazonS3Util;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
@@ -88,17 +92,26 @@ public class MemberWriteService {
     }
 
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
-        Follow follow = createFollow(targetMember, requestMember, FollowStatus.FOLLOWING);
-        followRepository.save(follow);
-
-        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
+        Follow follow = followRepository.save(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING));
+        createNotification(targetMember, requestMember, follow);
+        return createFollowResponseDto(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING).getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePrivateFollow(Member targetMember, Member requestMember) {
-        Follow follow = createFollow(targetMember, requestMember, FollowStatus.WAIT);
-        followRepository.save(follow);
+        Follow follow = followRepository.save(createFollow(targetMember, requestMember, FollowStatus.WAIT));
+        createNotification(targetMember, requestMember, follow);
+        return createFollowResponseDto(createFollow(targetMember, requestMember, FollowStatus.WAIT).getFollowStatus(), 0, FOLLOW_REQUEST_MESSAGE.getMessage());
+    }
 
-        return createFollowResponseDto(follow.getFollowStatus(), 0, FOLLOW_REQUEST_MESSAGE.getMessage());
+    private void createNotification(Member targetMember, Member requestMember, Follow follow){
+        notificationWriteService.createFollowNotification(FollowNotificationDto.builder()
+                .notificationType(NotificationType.FOLLOW)
+                .memberId(targetMember.getId())
+                .followerId(requestMember.getId())
+                .followId(follow.getId())
+                .followerName(requestMember.getName())
+                .followStatus(follow.getFollowStatus())
+                .build());
     }
 
     private FollowResponseDto createFollowResponseDto(FollowStatus followStatus, int followerCount, String message) {
