@@ -1,6 +1,6 @@
 package ssafy.c205.ott.domain.notification.dto.response;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import ssafy.c205.ott.domain.notification.entity.NotificationType;
@@ -14,5 +14,5 @@ public class NotificationResponseDto {
     private NotificationType notificationType;
     private String message;
     private LocalDateTime createdAt;
-    private JsonNode additionalData;
+    Map<String, Object> additionalData;
 }
