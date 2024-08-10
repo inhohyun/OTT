@@ -105,7 +105,7 @@ const UserPage = () => {
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col items-center h-[80%] w-[80%] bg-white">
         <div className="w-full h-full flex flex-col items-center justify-start">
           <div className="w-full flex justify-center mt-8">
             <img
