@@ -10,6 +10,7 @@ const ClothesEditForm = ({
   onSave,
   onCancel,
   setItemDetails,
+  categories
 }) => {
   const [imageFiles, setImageFiles] = useState(itemDetails.imageUrls || []);
 
@@ -117,6 +118,10 @@ const ClothesEditForm = ({
     ));
   };
 
+  const matchingCategory = categories.find(
+    (category) => category.name === itemDetails.category
+  );
+
   return (
     <div
       className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full relative overflow-y-auto max-h-full"
@@ -171,7 +176,7 @@ const ClothesEditForm = ({
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
         <AddClothesCategorySelector
-          selectedCategory={itemDetails.category}
+          selectedCategory={matchingCategory?.categoryId || null}
           onCategoryChange={(categoryId) => 
             setItemDetails((prev) => ({ ...prev, category: categoryId }))
           }

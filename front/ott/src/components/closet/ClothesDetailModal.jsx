@@ -10,6 +10,7 @@ const ClothesDetailModal = ({
   clothingItem,
   onEdit,
   onDelete,
+  categories,
 }) => {
   const [itemDetails, setItemDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -37,17 +38,19 @@ const ClothesDetailModal = ({
 
   const handleSave = async () => {
     try {
-      // formData 객체를 생성
-      const formData = new FormData();
+      const matchingCategory = categories.find(
+        (category) => category.name === itemDetails.category
+      );
   
-      // 필요한 모든 필드를 formData 객체에 추가
+      const formData = new FormData();
       formData.append('brand', itemDetails.brand);
       formData.append('purchase', itemDetails.purchase);
       formData.append('size', itemDetails.size);
       formData.append('color', itemDetails.color);
       formData.append('gender', itemDetails.gender);
-      formData.append('category', itemDetails.category);
-  
+      formData.append('categoryId', matchingCategory ? matchingCategory.categoryId : null);
+      formData.append('memberId', 1);
+      
       if (itemDetails.frontImg) {
         formData.append('frontImg', itemDetails.frontImg);
       }
@@ -55,16 +58,12 @@ const ClothesDetailModal = ({
         formData.append('backImg', itemDetails.backImg);
       }
   
-      // updateClothes API를 호출하여 서버에 업데이트 요청
       await updateClothes(itemDetails.clothesId, formData);
   
-      // onEdit 함수를 호출해 부모 컴포넌트 상태 업데이트
       onEdit(itemDetails);
-  
-      // 편집 모드 종료
       setIsEditing(false);
     } catch (error) {
-      console.error('변경 사항 저장 중 오류 발생:', error);
+      console.error('Error saving changes:', error);
     }
   };
   
@@ -84,6 +83,7 @@ const ClothesDetailModal = ({
             onSave={handleSave}
             onCancel={handleCancel}
             setItemDetails={setItemDetails}
+            categories={categories}
           />
         ) : (
           <ClothesDetailsView

@@ -41,7 +41,7 @@ const ClosetPage = () => {
 
         const categoryList = await getCategoryList(closetId);
         const fetchedCategories = categoryList.data.map((category) => ({
-          categoryId: category.id,
+          categoryId: category.categoryId,
           name: category.name,
         }));
 
@@ -144,11 +144,14 @@ const ClosetPage = () => {
         item.id === updatedClothes.id ? updatedClothes : item
       )
     );
+
+    setSelectedClothing(updatedClothes)
   };
   
   const filteredCategories = categories.filter(
-    (category) => category !== '전체' && category !== '즐겨찾기'
+    (category) => category.name !== '전체' && category.name !== '즐겨찾기'
   );
+  console.log(filteredCategories)
 
   return (
     <div
