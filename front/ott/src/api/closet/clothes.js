@@ -1,4 +1,3 @@
-import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 
 // closet id 가져오기
