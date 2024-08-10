@@ -48,4 +48,9 @@ public class NotificationController {
 
         return ApiResponse.success(notificationWriteService.createWebRtcNotification(webRtcNotificationDto));
     }
+
+    @GetMapping("/{memberId}/send")
+    public ApiResponse<NotificationResponseDto> sendNotification(@PathVariable Long memberId){
+        return ApiResponse.success(notificationReadService.sendNotification(memberId));
+    }
 }
