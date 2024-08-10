@@ -4,49 +4,73 @@ import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
 import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
-import { getClothesList, getClosetId } from '../../api/closet/clothes';
+import { getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 
 const ClosetPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [selectedCategory, setSelectedCategory] = useState(-100);
   const [categories, setCategories] = useState([]);
   const [clothes, setClothes] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedClothing, setSelectedClothing] = useState(null);
+  const [closetId, setClosetId] = useState(null);
 
   useEffect(() => {
-    fetchClothes();
-    fetchCategories();
+    fetchClosetIdAndCategories();
   }, []);
+
+  useEffect(() => {
+    if (closetId !== null) {
+      fetchClothesByCategory(selectedCategory)
+    }
+  }, [selectedCategory, closetId]);
 
   const memberId = 1;
 
-  const fetchClothes = async () => {
-    try {
-      const clothesList = await getClothesList(memberId);
-      setClothes(clothesList);
-    } catch (error) {
-      console.error('Failed to fetch clothes:', error);
-    }
-  };
-
-  const fetchCategories = async () => {
+  const fetchClosetIdAndCategories = async () => {
     try {
       const closetResponse = await getClosetId(memberId);
       const closetId = closetResponse.data.data[0].id;
+      setClosetId(closetId);
+
       const categoryList = await getCategoryList(closetId);
       const fetchedCategories = categoryList.data.map(
-        (category) => category.name
+        (category) => ({
+          categoryId: category.id,
+          name: category.name,
+        })
       );
-      setCategories(['전체', '즐겨찾기', ...fetchedCategories]);
+      setCategories([
+        { categoryId: -100, name: '전체' },
+        { categoryId: -200, name: '즐겨찾기' },
+        ...fetchedCategories,
+      ]);
     } catch (error) {
-      console.error('카테고리 목록 가져오기 실패:', error);
+      console.error('카테고리 목록 가져오기 실패:', error)
     }
-  };
+  }
 
-  const handleCategoryChange = (newCategory) => {
-    setSelectedCategory(newCategory);
+  const fetchClothesByCategory = async (categoryId) => {
+    try {
+      let clothesList;
+      if (categoryId === -100) {
+        // 전체
+        clothesList = await getClothesList(memberId);
+      } else if (categoryId === -200) {
+        // 즐겨찾기
+        clothesList = await getBookmarkedClothes(memberId);
+      } else {
+        clothesList = await getClothesByCategory(memberId, categoryId, closetId);
+      }
+      setClothes(clothesList);
+    } catch (error) {
+      console.error('옷 목록 가져오기 실패', error);
+    }
+  }
+
+  const handleCategoryChange = (newCategoryId) => {
+    setSelectedCategory(newCategoryId);
   };
 
   const handleAddCategory = (newCategory) => {
@@ -85,7 +109,7 @@ const ClosetPage = () => {
 
   const handleNewClothes = (newClothes) => {
     setClothes((prevClothes) => [...prevClothes, newClothes]);
-    fetchClothes();
+    fetchClothesByCategory(selectedCategory);
   };
 
   const handleToggleLike = (id) => {
@@ -100,14 +124,7 @@ const ClosetPage = () => {
     setSelectedClothing(clothingItem);
     setIsDetailModalOpen(true);
   };
-
-  const filteredClothes =
-    selectedCategory === '전체'
-      ? clothes
-      : selectedCategory === '즐겨찾기'
-        ? clothes.filter((item) => item.isLiked)
-        : clothes.filter((item) => item.category === selectedCategory);
-
+  
   const filteredCategories = categories.filter(
     (category) => category !== '전체' && category !== '즐겨찾기'
   );
@@ -126,7 +143,7 @@ const ClosetPage = () => {
         onDeleteCategory={handleDeleteCategory}
       />
       <ClothesGrid
-        clothes={filteredClothes}
+        clothes={clothes}
         onToggleLike={handleToggleLike}
         onClothesClick={handleClothesClick}
       />

@@ -119,3 +119,17 @@ export const getClothesByCategory = async (memberId, categoryId, closetId) => {
     throw error;
   }
 };
+
+// 북마크된 옷 조회
+export const getBookmarkedClothes = async (memberId) => {
+  try {
+    const response = await axiosInstance.get(`/api/clothes/bookmark`, {
+      params: { memberId }
+    });
+    console.log('북마크된 옷 목록 조회 성공: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('북마크된 옷 목록 조회 실패: ', error);
+    throw error;
+  }
+}
