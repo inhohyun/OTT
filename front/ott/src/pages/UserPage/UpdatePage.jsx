@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,19 +9,30 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
-import { updateUserInfo } from '../../api/user/user'; // 서버 호출 부분 주석 해제
-import BodyTypeModal from '../../components/userPage/BodyTypeModal'; // BodyTypeModal 컴포넌트 임포트
+import { updateUserInfo } from '../../api/user/user';
+import BodyTypeModal from '../../components/userPage/BodyTypeModal';
 
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { uid, userInfo } = location.state;
+  const { uid, userInfo } = location.state || { uid: null, userInfo: {} };
 
   const redirectProfile = () => {
     navigate('/userPage');
   };
 
-  const [bodyType, setBodyType] = useState('');
+  // State 초기화
+  const [userInfoState, setUserInfoState] = useState({
+    name: userInfo.name || '',
+    phone: userInfo.phone || '',
+    nickname: userInfo.nickname || '',
+    height: userInfo.height || '',
+    weight: userInfo.weight || '',
+    gender: userInfo.gender || '',
+    introduction: userInfo.introduction || '',
+  });
+
+  const [bodyType, setBodyType] = useState(userInfo.bodyType || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(
     userInfo.publicStatus !== 'PUBLIC'
@@ -30,6 +41,8 @@ const UpdatePage = () => {
     userInfo.profileImage || mainIcon
   );
   const [profileImageFile, setProfileImageFile] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   const openModal = () => setIsModalOpen(true);
   const onClose = () => setIsModalOpen(false);
@@ -54,17 +67,18 @@ const UpdatePage = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim() === '') {
-      return;
-    }
+    if (searchText.trim() === '') return;
+
     if (tags.includes(searchText.trim())) {
       setErrorMessage('이미 존재하는 태그입니다.');
       return;
     }
+
     if (tags.length >= 5) {
       setErrorMessage('태그는 최대 5개까지 추가할 수 있습니다.');
       return;
     }
+
     const newTags = [...tags, searchText.trim()];
     setTags(newTags);
     setSearchText('');
@@ -88,30 +102,35 @@ const UpdatePage = () => {
   };
 
   const triggerFileInput = () => {
-    document.getElementById('profileImageInput').click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
-  // 저장 클릭시 동작
+  // 저장 클릭 시 동작
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedUserInfo = {
-      memberId: uid, // 사용자 정보 관련 부분 주석 해제
-      nickname: userInfoState.nickname, // 사용자 정보 관련 부분 주석 해제
-      phoneNumber: userInfoState.phone, // 사용자 정보 관련 부분 주석 해제
-      introduction: userInfoState.introduction || '', // 사용자 정보 관련 부분 주석 해제
-      height: parseFloat(userInfoState.height), // 사용자 정보 관련 부분 주석 해제
-      weight: parseFloat(userInfoState.weight), // 사용자 정보 관련 부분 주석 해제
-      gender: userInfoState.gender || null, // 사용자 정보 관련 부분 주석 해제
+      memberId: uid,
+      nickname: userInfoState.nickname,
+      phoneNumber: userInfoState.phone,
+      introduction: userInfoState.introduction || '',
+      height: parseFloat(userInfoState.height),
+      weight: parseFloat(userInfoState.weight),
+      gender: userInfoState.gender || null,
       bodyType: bodyType || null,
       publicStatus: isChecked ? 'PRIVATE' : 'PUBLIC',
       memberTags: tags.length > 0 ? tags : null,
     };
 
     try {
-      await updateUserInfo(uid, updatedUserInfo); // 서버 호출 부분 주석 해제
+      await updateUserInfo(uid, updatedUserInfo);
       redirectProfile();
     } catch (error) {
       console.error('Error updating user info:', error);
+      setErrorMessage(
+        '정보 업데이트 중 오류가 발생했습니다. 다시 시도해 주세요.'
+      );
     }
   };
 
@@ -136,14 +155,15 @@ const UpdatePage = () => {
               className="absolute bottom-3 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
             >
-              {/* <FontAwesomeIcon
+              <FontAwesomeIcon
                 icon={faCamera}
                 className="text-purple-600 text-xs"
-              /> */}
+              />
             </div>
             <input
               type="file"
               id="profileImageInput"
+              ref={fileInputRef}
               className="hidden"
               accept="image/*"
               onChange={handleProfileImageChange}
@@ -158,9 +178,8 @@ const UpdatePage = () => {
           />
         </div>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
-          <form className="space-y-6 mb-" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* 사용자 정보 입력 필드들 */}
-
             <div className="flex items-center mb-5">
               <label
                 htmlFor="name"
@@ -182,6 +201,7 @@ const UpdatePage = () => {
                 readOnly
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="phone"
@@ -201,6 +221,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="nickname"
@@ -225,6 +246,7 @@ const UpdatePage = () => {
                 />
               </div>
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="height"
@@ -244,6 +266,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="weight"
@@ -287,6 +310,7 @@ const UpdatePage = () => {
                 />
               </div>
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="tags"
@@ -324,9 +348,11 @@ const UpdatePage = () => {
                 ))}
               </div>
             </div>
+
             {errorMessage && (
               <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
             )}
+
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
