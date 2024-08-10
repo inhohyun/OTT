@@ -186,6 +186,8 @@ const UserPage = () => {
         </div>
         <div className="w-full mt-6 h-full">
           <NavBar
+            followerCount={userInfo.followerCount}
+            followingCount={userInfo.followingCount}
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
           />
