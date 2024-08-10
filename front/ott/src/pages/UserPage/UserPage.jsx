@@ -105,33 +105,31 @@ const UserPage = () => {
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex flex-col items-center">
-        <div className="w-[80%] h-[80%] flex flex-col items-center justify-start  bg-white">
-          <div className="w-full flex justify-center mt-8">
-            <img
-              className="w-[70px] h-[70px] rounded-full"
-              alt="User Icon"
-              src={mainIcon}
-            />
-          </div>
-          <div className="w-full flex flex-col items-center justify-center mt-6">
-            <div className="flex items-center justify-center w-full relative">
-              <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
-                {isPublic && isMe && (
-                  <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
-                )}
-                <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
-                  {name}
-                </p>
-                {isMe && (
-                  <img
-                    src={settingIcon}
-                    alt="수정"
-                    className="w-6 h-6 ml-2 cursor-pointer"
-                    onClick={handleSettingsClick}
-                  />
-                )}
-              </div>
+      <div className="w-[80%] h-[80%] flex flex-col items-center justify-start  bg-white">
+        <div className="w-full flex justify-center mt-8">
+          <img
+            className="w-[70px] h-[70px] rounded-full"
+            alt="User Icon"
+            src={mainIcon}
+          />
+        </div>
+        <div className="w-full flex flex-col items-center justify-center mt-6">
+          <div className="flex items-center justify-center w-full relative">
+            <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
+              {isPublic && isMe && (
+                <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
+              )}
+              <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
+                {name}
+              </p>
+              {isMe && (
+                <img
+                  src={settingIcon}
+                  alt="수정"
+                  className="w-6 h-6 ml-2 cursor-pointer"
+                  onClick={handleSettingsClick}
+                />
+              )}
             </div>
           </div>
           <div className="w-full flex items-center justify-center mt-2">
