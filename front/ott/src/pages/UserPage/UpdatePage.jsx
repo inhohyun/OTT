@@ -133,12 +133,12 @@ const UpdatePage = () => {
               src={profileImage}
             />
             <div
-              className="absolute bottom-2 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
+              className="absolute bottom-3 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
             >
               <FontAwesomeIcon
                 icon={faCamera}
-                className="text-purple-600 text-xs"
+                className="text-purple-500 text-xs"
               />
             </div>
             <input
