@@ -34,13 +34,9 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카테고리 조회"),
     })
     @GetMapping("/{closetId}")
-    public ResponseEntity<?> getCategories(@PathVariable Long closetId) {
-        return ResponseEntity.ok().body(categoryService.getCategories(closetId));
+    public ApiResponse<List<CategoryDto>> getCategories(@PathVariable Long closetId) {
+        return ApiResponse.success(categoryService.getCategories(closetId));
     }
-//    @GetMapping("/{closetId}")
-//    public ApiResponse<List<CategoryDto>> getCategories(@PathVariable Long closetId) {
-//        return ApiResponse.success(categoryService.getCategories(closetId));
-//    }
 
     @Operation(summary = "카테고리 수정", description = "<big>카테고리를</big> 수정합니다.")
     @ApiResponses(value = {
