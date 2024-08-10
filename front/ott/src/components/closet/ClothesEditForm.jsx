@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import AddClothesCategorySelector from './AddClothesCategorySelector'; 
+
 
 const ClothesEditForm = ({
   itemDetails,
   onSave,
   onCancel,
-  categories,
   setItemDetails,
-  errors,
 }) => {
   const [imageFiles, setImageFiles] = useState(itemDetails.imageUrls || []);
 
@@ -134,9 +134,6 @@ const ClothesEditForm = ({
           className="w-full p-2 border rounded-lg"
           placeholder="브랜드를 입력하세요"
         />
-        {errors.brand && (
-          <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
-        )}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">구매처</label>
@@ -148,9 +145,6 @@ const ClothesEditForm = ({
           className="w-full p-2 border rounded-lg"
           placeholder="구매처를 입력하세요"
         />
-        {errors.purchase && (
-          <p className="text-red-500 text-sm mt-1">{errors.purchase}</p>
-        )}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">사이즈</label>
@@ -162,9 +156,6 @@ const ClothesEditForm = ({
           className="w-full p-2 border rounded-lg"
           placeholder="사이즈를 입력하세요"
         />
-        {errors.size && (
-          <p className="text-red-500 text-sm mt-1">{errors.size}</p>
-        )}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">색상</label>
@@ -176,20 +167,14 @@ const ClothesEditForm = ({
           className="w-full p-2 border rounded-lg"
           placeholder="색상을 입력하세요"
         />
-        {errors.color && (
-          <p className="text-red-500 text-sm mt-1">{errors.color}</p>
-        )}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
-        <Select
-          value={categories.find((opt) => opt === itemDetails.category) || ''}
-          onChange={(opt) => handleSelectChange(opt, 'category')}
-          options={categories.map((cat) => ({
-            value: cat,
-            label: cat,
-          }))}
-          styles={customStyles}
+        <AddClothesCategorySelector
+          selectedCategory={itemDetails.category}
+          onCategoryChange={(categoryId) => 
+            setItemDetails((prev) => ({ ...prev, category: categoryId }))
+          }
         />
       </div>
       <div className="mb-4">

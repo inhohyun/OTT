@@ -13,7 +13,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGrid = ({ clothes, onClothesClick }) => {
+const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12); // 한 번에 보여줄 항목 수
   const [visibleImages, setVisibleImages] = useState([]); // 보이는 이미지 상태 (앞면/뒷면)
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
@@ -78,18 +78,18 @@ const ClothesGrid = ({ clothes, onClothesClick }) => {
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
           await unbookmarkClothes(clothesId);
-          setVisibleImages((prevImages) =>
-            prevImages.map((item) =>
-              item.id === key
-                ? { ...item, bookmarkStatus: 'UNBOOKMARKED' }
+          setClothes((prevClothes) =>
+            prevClothes.map((item) =>
+              item.key === key
+                ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
                 : item
             )
           );
         } else {
           await bookmarkClothes(clothesId);
-          setVisibleImages((prevImages) =>
-            prevImages.map((item) =>
-              item.id === key
+          setClothes((prevClothes) =>
+            prevClothes.map((item) =>
+              item.key === key
                 ? { ...item, bookmarkStatus: 'BOOKMARKING' }
                 : item
             )

@@ -13,8 +13,6 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
   const [detailedItem, setDetailedItem] = useState(itemDetails); // 상세 아이템 상태 관리
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
-  console.log(itemDetails);
-
   useEffect(() => {
     const fetchItemDetails = async () => {
       try {
@@ -128,8 +126,8 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
         <p>성별: {getGenderText(detailedItem.gender)}</p>
         <p>판매 여부: {getSalesStatusText(detailedItem.salesStatus)}</p>
         <p>공개 여부: {getPublicStatusText(detailedItem.publicStatus)}</p>
-        <p>즐겨찾기: {detailedItem.isLiked ? '예' : '아니오'}</p>
-      </div>
+        <p>즐겨찾기: {detailedItem.bookmarkStatus === 'BOOKMARKING' ? '예' : '아니오'}</p>
+        </div>
     </>
   );
 };

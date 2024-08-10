@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getClothesItemData } from '../../api/closet/clothes';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
+import { updateClothes, getClothesItemData } from '../../api/closet/clothes';
+
 
 const ClothesDetailModal = ({
   isOpen,
@@ -9,17 +10,17 @@ const ClothesDetailModal = ({
   clothingItem,
   onEdit,
   onDelete,
-  categories,
 }) => {
-  const [itemDetails, setItemDetails] = useState(clothingItem);
+  const [itemDetails, setItemDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [errors, setErrors] = useState({});
+
 
   useEffect(() => {
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
           const data = await getClothesItemData(clothingItem.clothesId);
+          console.log(data)
           setItemDetails(data);
         } catch (error) {
           console.error('Failed to fetch item details:', error);
@@ -29,18 +30,44 @@ const ClothesDetailModal = ({
     }
   }, [clothingItem]);
 
-  useEffect(() => {
-    setItemDetails(clothingItem);
-  }, [clothingItem]);
-
   const handleToggleEdit = () => {
-    setIsEditing(!isEditing);
+    console.log(itemDetails)
+    setIsEditing(true); 
   };
 
   const handleSave = async () => {
-    onEdit(itemDetails);
-    setIsEditing(false);
+    try {
+      // formData 객체를 생성
+      const formData = new FormData();
+  
+      // 필요한 모든 필드를 formData 객체에 추가
+      formData.append('brand', itemDetails.brand);
+      formData.append('purchase', itemDetails.purchase);
+      formData.append('size', itemDetails.size);
+      formData.append('color', itemDetails.color);
+      formData.append('gender', itemDetails.gender);
+      formData.append('category', itemDetails.category);
+  
+      if (itemDetails.frontImg) {
+        formData.append('frontImg', itemDetails.frontImg);
+      }
+      if (itemDetails.backImg) {
+        formData.append('backImg', itemDetails.backImg);
+      }
+  
+      // updateClothes API를 호출하여 서버에 업데이트 요청
+      await updateClothes(itemDetails.clothesId, formData);
+  
+      // onEdit 함수를 호출해 부모 컴포넌트 상태 업데이트
+      onEdit(itemDetails);
+  
+      // 편집 모드 종료
+      setIsEditing(false);
+    } catch (error) {
+      console.error('변경 사항 저장 중 오류 발생:', error);
+    }
   };
+  
 
   const handleCancel = () => {
     setIsEditing(false);
@@ -56,9 +83,7 @@ const ClothesDetailModal = ({
             itemDetails={itemDetails}
             onSave={handleSave}
             onCancel={handleCancel}
-            categories={categories}
             setItemDetails={setItemDetails}
-            errors={errors}
           />
         ) : (
           <ClothesDetailsView
