@@ -103,7 +103,7 @@ const UpdatePage = () => {
       weight: parseFloat(userInfoState.weight),
       gender: userInfoState.gender || null,
       bodyType: bodyType || null,
-      publicStatus: isChecked ? 'PUBLIC' : 'PRIVATE',
+      publicStatus: isChecked ? 'PRIVATE' : 'PUBLIC',
       memberTags: tags.length > 0 ? tags : null,
     };
 
@@ -166,6 +166,7 @@ const UpdatePage = () => {
               >
                 이름
               </label>
+
               <input
                 type="text"
                 id="name"
@@ -176,6 +177,7 @@ const UpdatePage = () => {
                 onChange={(e) =>
                   setUserInfoState({ ...userInfoState, name: e.target.value })
                 }
+                readOnly
               />
             </div>
             <div className="flex items-center mb-5">
