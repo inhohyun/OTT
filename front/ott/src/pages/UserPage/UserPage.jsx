@@ -140,7 +140,7 @@ const UserPage = () => {
                 <button
                   className={`w-[80%] px-4 py-2 rounded ${
                     isFollowing
-                      ? 'bg-violet-600 text-white'
+                      ? 'bg-violet-500 text-white'
                       : 'bg-white text-[rgba(0,0,0,0.5)]'
                   }`}
                   onClick={handleFollowButtonClick}
@@ -153,7 +153,7 @@ const UserPage = () => {
             <div className="flex justify-center items-center w-full">
               {!isMe ? (
                 <div className="flex">
-                  <div className="flex justify-center items-center w-10 h-10 rounded-full bg-white mr-2">
+                  <div className="flex justify-center items-center w-10 h-10 rounded-md bg-white mr-2">
                     <img
                       src={closetIcon}
                       alt="Closet Icon"
@@ -161,7 +161,7 @@ const UserPage = () => {
                       onClick={handleClosetIconClick}
                     />
                   </div>
-                  <div className="flex justify-center items-center w-10 h-10 rounded-full bg-white">
+                  <div className="flex justify-center items-center w-10 h-10 rounded-md bg-white">
                     <img
                       src={rtcIcon}
                       alt="RTC Icon"
