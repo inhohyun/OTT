@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,8 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
@@ -73,15 +76,14 @@ public class LookbookServiceImpl implements LookbookService {
         if (om.isPresent()) {
             member = om.get();
         } else {
-            log.error("멤버를 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                lookbookCreateDto.getMemberId() + "의 사용자를 찾을 수 없습니다.");
         }
-        log.info("member : {}", member.toString());
         Lookbook saveLookbook = lookbookRepository.save(Lookbook
             .builder()
             .member(member)
             .build());
 
-        log.info("savelookbook : {}", saveLookbook.toString());
         for (String tag : lookbookCreateDto.getTags()) {
             Tag tagEntity = tagRepository.findByName(tag);
             if (tagEntity == null) {
@@ -106,11 +108,9 @@ public class LookbookServiceImpl implements LookbookService {
             lookbookTags.add(lookbookTag);
             lookbookTagRepository.save(lookbookTag);
         }
-        log.info("s3전");
         //옷 사진 추가하기
         //옷 정보 넣기
         String s3URL = amazonS3Util.saveFile(file);
-        log.info("s3URL : {}", s3URL);
 
         List<LookbookItem> lookbookItems = new ArrayList<>();
         for (String clothId : lookbookCreateDto.getClothes()) {
@@ -165,6 +165,7 @@ public class LookbookServiceImpl implements LookbookService {
         if (odl.isPresent()) {
             lookbook = odl.get();
             // 조회수 + 1
+            LocalDateTime time = lookbook.getCreatedAt();
             Lookbook saveLookbook = lookbookRepository.save(Lookbook
                 .builder()
                 .id(lookbook.getId())
@@ -180,7 +181,6 @@ public class LookbookServiceImpl implements LookbookService {
                 .build());
 
             // 옷 사진들을 넣어줌
-            log.info("lookbook : {}", lookbook.toString());
             List<ClothesImageDto> clothesImagePathDtos = new ArrayList<>();
             List<LookbookItem> lookbookItemList = lookbook.getLookbookItemList();
             List<ClothesImageDto> salesClothesDtos = new ArrayList<>();
@@ -248,7 +248,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .nickname(saveLookbook.getMember().getNickname())
                 .viewCount(saveLookbook.getHitCount())
                 .salesClothes(salesClothesDtos)
-                .createdAt(saveLookbook.getCreatedAt())
+                .createdAt(time)
                 .tags(tags)
                 .thumnail(lookbook.getLookbookImages().get(0).getImageUrl())
                 .cntFavorite(cnt)
@@ -256,9 +256,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .cntComment(commentService.countComment(lookbookId))
                 .build();
         } else {
-
-            log.error("{}아이디를 갖은 룩북을 찾지 못했습니다.", lookbookId);
-            return null;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, lookbookId + "의 룩북을 찾지 못했습니다.");
         }
     }
 
@@ -414,7 +412,6 @@ public class LookbookServiceImpl implements LookbookService {
         if (om.isPresent()) {
             member = om.get();
         } else {
-            log.error("사용자를 찾을 수 없음 ");
             return false;
         }
         Optional<Lookbook> ol = lookbookRepository.findById(
@@ -551,19 +548,15 @@ public class LookbookServiceImpl implements LookbookService {
         }
         // Hashmap value값을 기반으로 sort
         List<Long> keys = new ArrayList<>(map.keySet());
-        log.info("keys : {}", keys.toString());
         Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
-        log.info("sort 완료");
 
         // sort된 key값(lookbookid)로 룩북 정보를 가져와 리스트에 저장
         List<TagLookbookDto> lookbooks = new ArrayList<>();
         for (Long key : keys) {
-            log.info("Key : {}", key);
             Optional<Lookbook> ol = lookbookRepository.findById(key);
             if (ol.isPresent()) {
                 Lookbook lookbook = ol.get();
                 //룩북의 소유주가 회원탈퇴면 건너뛰기
-                //Todo : Query문으로 처리 하는걸로 수정 예정
                 if (lookbook.getMember().getActiveStatus().equals(
                     ssafy.c205.ott.domain.account.entity.ActiveStatus.INACTIVE)) {
                     continue;
@@ -574,7 +567,6 @@ public class LookbookServiceImpl implements LookbookService {
                 if (favorite != null) {
                     isFavorite = true;
                 }
-                log.info("Lookbook : {}", lookbook.toString());
                 lookbooks.add(TagLookbookDto
                     .builder()
                     .lookbookId(lookbook.getId())
@@ -589,10 +581,6 @@ public class LookbookServiceImpl implements LookbookService {
 
             }
         }
-        for (TagLookbookDto lookbook : lookbooks) {
-            log.info("Lookbook : {}", lookbook.toString());
-        }
-        log.info("Return 전");
         return lookbooks;
     }
 
@@ -646,14 +634,11 @@ public class LookbookServiceImpl implements LookbookService {
             ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE);
         if (om.isPresent()) {
             Member member = om.get();
-            log.info("{}", member.getId());
             List<Follow> followings = member.getFollowings();
-            log.info("Following 수 : 1 / 내 값 : {}", followings.size());
             //팔로잉 사람들의 룩북을 최신순으로 가져와 리스트에 추가
             for (Follow follow : followings) {
                 log.info(follow.toString());
                 //해당 룩북의 사용자가 회원 탈퇴면 넣지 않음
-                //Todo : Query문으로 받아오는 걸로 변경하면 좋을듯
                 if (follow.getToMember().getActiveStatus().equals(
                     ssafy.c205.ott.domain.account.entity.ActiveStatus.INACTIVE)) {
                     continue;
@@ -662,10 +647,7 @@ public class LookbookServiceImpl implements LookbookService {
                 List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatusOrderByCreatedAtDesc(
                     follow.getToMember().getId(),
                     PublicStatus.PUBLIC, ActiveStatus.ACTIVE);
-                log.info("룩북 불러오기 완료");
-                log.info("lookbooks : {}", lookbooks.size());
                 for (Lookbook lookbook : lookbooks) {
-                    log.info("lookbook id : {}", lookbook.getId());
                     followingLooks.add(FollowLookbookDto
                         .builder()
                         .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))

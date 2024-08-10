@@ -208,14 +208,9 @@ public class LookbookController {
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@ModelAttribute LookbookSearchDto lookbookSearchDto) {
         List<TagLookbookDto> findByTags = lookbookService.findByTag(lookbookSearchDto);
-        log.info("Return 후 컨트롤러");
-        for (TagLookbookDto findByTag : findByTags) {
-            log.info(findByTag.toString());
-        }
         if (findByTags == null) {
             return new ResponseEntity<String>("태그가 포함된 게시물을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
         } else {
-            log.info("Controller Return Before");
             return ResponseEntity.ok().body(findByTags);
         }
     }
