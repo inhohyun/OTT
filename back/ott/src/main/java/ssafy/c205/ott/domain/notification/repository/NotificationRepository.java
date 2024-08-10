@@ -8,5 +8,5 @@ import ssafy.c205.ott.domain.notification.entity.NotificationStatus;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByMemberIdAndNotificationStatusOrderByCreatedAtDesc(Long memberId, NotificationStatus notificationStatus);
-    Optional<Notification> findFirstByMemberIdAndNotificationStatusAndOrderByCreatedAtAsc(Long memberId, NotificationStatus status);
+    Optional<Notification> findFirstByMemberIdAndNotificationStatusOrderByCreatedAtAsc(Long memberId, NotificationStatus status);
 }
