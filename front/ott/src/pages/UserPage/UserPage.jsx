@@ -134,7 +134,7 @@ const UserPage = () => {
           </div>
         </div>
         <div className="w-full flex items-center justify-center mt-2">
-          <div className="w-[60%] flex justify-between p-2">
+          <div className="w-[50%] flex justify-between p-2">
             {!isMe && (
               <div className="flex justify-center items-center w-full">
                 <button
