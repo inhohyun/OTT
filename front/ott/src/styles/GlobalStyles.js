@@ -2,6 +2,13 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
+@font-face {
+  font-family: 'dohyeon';
+  src: url('../assets/fonts/BMDOHYEON_ttf.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
   * {
     margin: 0;
     padding: 0;
