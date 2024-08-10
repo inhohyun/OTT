@@ -26,7 +26,7 @@ public class NotificationController {
     private final NotificationWriteService notificationWriteService;
     private final NotificationReadService notificationReadService;
 
-    @PostMapping("/{memberId}")
+    @GetMapping("/{memberId}")
     public ApiResponse<List<NotificationResponseDto>> searchNotification(@PathVariable("memberId") Long memberId) {
         return ApiResponse.success(notificationReadService.searchNotification(memberId));
     }
