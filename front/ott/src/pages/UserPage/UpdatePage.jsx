@@ -4,18 +4,18 @@ import backgroundImage from '../../assets/images/background_image_main.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
-  faSearch,
   faCamera,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
-// import { updateUserInfo } from '../../api/user/user'; // 서버 호출 부분 주석 처리
+import { updateUserInfo } from '../../api/user/user'; // 서버 호출 부분 주석 해제
 import BodyTypeModal from '../../components/userPage/BodyTypeModal'; // BodyTypeModal 컴포넌트 임포트
 
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const { uid, userInfo } = location.state; // 사용자 정보 관련 부분 주석 처리
+  const { uid, userInfo } = location.state; // 사용자 정보 관련 부분 주석 해제
 
   const redirectProfile = () => {
     navigate('/userPage');
@@ -24,14 +24,12 @@ const UpdatePage = () => {
   const [bodyType, setBodyType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(
-    // userInfo.publicStatus === 'PUBLIC' // 사용자 정보 관련 부분 주석 처리
-    false // 기본값 설정
+    userInfo.publicStatus === 'PUBLIC' // 사용자 정보 관련 부분 주석 해제
   );
   const [profileImage, setProfileImage] = useState(
-    // userInfo.profileImage || mainIcon // 사용자 정보 관련 부분 주석 처리
-    mainIcon // 기본값 설정
+    userInfo.profileImage || mainIcon // 사용자 정보 관련 부분 주석 해제
   );
-  // const [userInfoState, setUserInfoState] = useState(userInfo); // 사용자 정보 관련 부분 주석 처리
+  const [userInfoState, setUserInfoState] = useState(userInfo); // 사용자 정보 관련 부분 주석 해제
   const [profileImageFile, setProfileImageFile] = useState(null);
 
   const openModal = () => setIsModalOpen(true);
@@ -48,8 +46,7 @@ const UpdatePage = () => {
 
   const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState(
-    // userInfo.tags || [] // 사용자 정보 관련 부분 주석 처리
-    [] // 기본값 설정
+    userInfo.tags || [] // 사용자 정보 관련 부분 주석 해제
   );
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -101,20 +98,20 @@ const UpdatePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedUserInfo = {
-      // memberId: uid, // 사용자 정보 관련 부분 주석 처리
-      // nickname: userInfoState.nickname, // 사용자 정보 관련 부분 주석 처리
-      // phoneNumber: userInfoState.phone, // 사용자 정보 관련 부분 주석 처리
-      // introduction: userInfoState.introduction || '', // 사용자 정보 관련 부분 주석 처리
-      // height: parseFloat(userInfoState.height), // 사용자 정보 관련 부분 주석 처리
-      // weight: parseFloat(userInfoState.weight), // 사용자 정보 관련 부분 주석 처리
-      // gender: userInfoState.gender || null, // 사용자 정보 관련 부분 주석 처리
+      memberId: uid, // 사용자 정보 관련 부분 주석 해제
+      nickname: userInfoState.nickname, // 사용자 정보 관련 부분 주석 해제
+      phoneNumber: userInfoState.phone, // 사용자 정보 관련 부분 주석 해제
+      introduction: userInfoState.introduction || '', // 사용자 정보 관련 부분 주석 해제
+      height: parseFloat(userInfoState.height), // 사용자 정보 관련 부분 주석 해제
+      weight: parseFloat(userInfoState.weight), // 사용자 정보 관련 부분 주석 해제
+      gender: userInfoState.gender || null, // 사용자 정보 관련 부분 주석 해제
       bodyType: bodyType || null,
       publicStatus: isChecked ? 'PRIVATE' : 'PUBLIC',
       memberTags: tags.length > 0 ? tags : null,
     };
 
     try {
-      // await updateUserInfo(uid, updatedUserInfo); // 서버 호출 부분 주석 처리
+      await updateUserInfo(uid, updatedUserInfo); // 서버 호출 부분 주석 해제
       redirectProfile();
     } catch (error) {
       console.error('Error updating user info:', error);
@@ -142,10 +139,10 @@ const UpdatePage = () => {
               className="absolute bottom-3 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
             >
-              {/* <FontAwesomeIcon
+              <FontAwesomeIcon
                 icon={faCamera}
                 className="text-purple-600 text-xs"
-              /> */}
+              />
             </div>
             <input
               type="file"
@@ -157,7 +154,7 @@ const UpdatePage = () => {
           </div>
         </div>
 
-        <div className="flex mr-[40px] mt-[16px]">
+        <div className="flex mt-[16px]">
           <Switch
             isChecked={isChecked}
             handleCheckboxChange={handleCheckboxChange}
@@ -165,8 +162,8 @@ const UpdatePage = () => {
         </div>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
           <form className="space-y-6 mb-" onSubmit={handleSubmit}>
-            {/* 사용자 정보 입력 필드들 주석 처리 */}
-            {/* 
+            {/* 사용자 정보 입력 필드들 */}
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="name"
@@ -269,7 +266,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
-            */}
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="bodyType"
@@ -300,26 +297,13 @@ const UpdatePage = () => {
               >
                 태그
               </label>
-              <div className="w-3/4 flex flex-wrap">
-                {tags.map((tag, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-2 mr-2"
-                  >
-                    <span>{tag}</span>
-                    <FontAwesomeIcon
-                      icon={faSearch}
-                      className="ml-2 text-violet-400 cursor-pointer"
-                      onClick={() => handleTagRemove(tag)}
-                    />
-                  </div>
-                ))}
+              <div className="w-3/4 flex flex-wrap items-center">
                 <input
                   type="text"
                   id="tagInput"
                   placeholder="태그 추가"
                   maxLength="10"
-                  className="w-full p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400 text-center"
+                  className="flex-1 p-3 mb-2 rounded-full border border-violet-300 box-border focus:border-violet-400 text-center"
                   value={searchText}
                   onChange={handleSearchChange}
                   onKeyPress={(e) => {
@@ -328,11 +312,24 @@ const UpdatePage = () => {
                     }
                   }}
                 />
+                {tags.map((tag, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-2 ml-2"
+                  >
+                    <span>{tag}</span>
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="ml-2 text-violet-400 cursor-pointer"
+                      onClick={() => handleTagRemove(tag)}
+                    />
+                  </div>
+                ))}
               </div>
-              {errorMessage && (
-                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-              )}
             </div>
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+            )}
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
