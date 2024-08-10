@@ -102,4 +102,20 @@ public class Member extends BaseEntity {
     public void updateProfileImage(String ProfileImageUrl) {
         this.profileImageUrl = ProfileImageUrl;
     }
+
+    public double distance(Member member) {
+        return Math.sqrt(Math.pow((member.getHeight() - this.height), 2) + Math.pow(
+            (member.getWeight() - this.weight), 2));
+    }
+
+    public void update(float height, float weight) {
+        this.height = height;
+        this.weight = weight;
+    }
+
+    public Member(float weight, float height, Long id) {
+        this.weight = weight;
+        this.height = height;
+        this.id = id;
+    }
 }

@@ -50,25 +50,20 @@ public class RecommendServiceImpl implements RecommendService {
     @Override
     public void recommendByHeightWeight() {
         List<Member> members = memberRepository.findByActiveStatus(ActiveStatus.ACTIVE);
-        List<User> users = new ArrayList<>();
-        for (Member member : members) {
-            users.add(User.builder().memberId(member.getId()).height(member.getHeight())
-                .weight(member.getWeight()).build());
-        }
 
         //K-Means를 통해 그룹화
-        KMeans kMeans = new KMeans(10, users);
+        KMeans kMeans = new KMeans(10, members);
         kMeans.performClustering();
 
         //데이터베이스에 반영
         groupRepository.truncateMemberGroup();
 
-        List<List<User>> clusters = kMeans.getClusters();
+        List<List<Member>> clusters = kMeans.getClusters();
         int idx = 0;
-        for (List<User> cluster : clusters) {
-            for (User user : cluster) {
+        for (List<Member> cluster : clusters) {
+            for (Member member : cluster) {
                 groupRepository.save(MemberGroup.builder().groupId(idx).member(
-                    memberRepository.findByIdAndActiveStatus(user.getMemberId(),
+                    memberRepository.findByIdAndActiveStatus(member.getId(),
                         ActiveStatus.ACTIVE).get()).build());
             }
             idx++;
