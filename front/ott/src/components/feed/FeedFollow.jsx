@@ -155,11 +155,13 @@ import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 import useUserStore from '../../data/lookbook/userStore';
+import CustomSpinner from '../common/CustomSpinner';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedFollower, setSelectedFollower] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const scrollRefs = useRef([]);
 
@@ -179,6 +181,8 @@ const FeedFollow = () => {
         scrollRefs.current = data.map(() => React.createRef());
       } catch (error) {
         console.error('Failed to fetch follow feed', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -206,9 +210,12 @@ const FeedFollow = () => {
   };
 
   if (!Array.isArray(followersData) || !followersData.length) {
-    return <p>Loading...</p>; // Optionally display a loading message
+    return <CustomSpinner />; // Optionally display a loading message
   }
 
+  if (isLoading) {
+    <CustomSpinner />;
+  }
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
       <style>{`

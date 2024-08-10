@@ -15,8 +15,8 @@ const FeedNoFollow = ({ setActiveComponent }) => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto mt-[10vh]"
-      style={{ width: '70%' }}
+      className="flex flex-col items-center justify-center rounded-2xl shadow-lg max-w-lg mx-auto mt-[14vh]"
+      style={{ width: '65%' }}
     >
       <div className="w-full bg-violet-200 bg-opacity-60 rounded-t-2xl p-4 relative">
         <div
@@ -41,16 +41,16 @@ const FeedNoFollow = ({ setActiveComponent }) => {
             스타일 추천을 받아보세요!
           </p>
         </div>
-        <div className="flex justify-around w-full">
+        <div className="flex justify-center gap-2 w-full">
           <button
-            className="bg-violet-200 text-violet-700 font-semibold py-2 px-4 rounded-full shadow-md font-dohyeon"
+            className="bg-violet-200 text-violet-700 font-semibold py-3 px-4 rounded-full shadow-md font-dohyeon"
             style={{ fontFamily: 'dohyeon' }}
             onClick={handleRecommendationClick}
           >
             추천받기
           </button>
           <button
-            className="bg-violet-200 text-violet-700 font-semibold py-2 px-4 rounded-full shadow-md font-dohyeon"
+            className="bg-violet-200 text-violet-700 font-semibold py-3 px-4 rounded-full shadow-md font-dohyeon"
             style={{ fontFamily: 'dohyeon' }}
             onClick={handleSearchClick}
           >

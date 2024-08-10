@@ -14,6 +14,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-famil: 'dohyeon';
   }
   
   html, body, #root {
@@ -113,9 +114,7 @@ const GlobalStyle = createGlobalStyle`
       max-width: 100%;
     }
 
-    body {
-      padding: 10px;
-    }
+
   }
 `;
 

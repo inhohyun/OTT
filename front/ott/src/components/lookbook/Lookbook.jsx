@@ -271,48 +271,38 @@ import LookbookDetail from './LookbookDetail';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
 import commenticon from '../../assets/icons/commenticon.png';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-import { lookbookDetail } from '../../api/lookbook/lookbookdetail';
 import detailStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 
 const Lookbook = ({ data, onDelete, onClose }) => {
-  // Receive onDelete prop
+  const [isDetailVisible, setIsDetailVisible] = useState(false); // 컴포넌트 내부 상태로 관리
   const nav = useNavigate();
-  const {
-    showDetail,
-    hideDetail,
-    isDetailVisible,
-    selectedLookbook,
-    // fetchLookbooks,
-  } = detailStore();
-  // const [liked, setLiked] = useState(data.like);
-
+  const { showDetail, hideDetail, selectedLookbook } = detailStore();
   const userId = useUserStore((state) => state.userId);
 
-  const handleShowDetail = async () => {
-    try {
-      const lookbookData = await lookbookDetail(data.lookbookId);
-      // const lookbookData = await lookbookDetail(data.lookbookId, userId);
-      console.log('룩북 상세보기', lookbookData);
-      showDetail({ ...lookbookData, id: data.lookbookId });
-    } catch (error) {
-      console.error(error);
-    }
+  const handleShowDetail = () => {
+    showDetail(data);
+    setIsDetailVisible(true); // 디테일 모달 열기
+  };
+
+  const handleCloseDetail = () => {
+    hideDetail();
+    setIsDetailVisible(false); // 디테일 모달 닫기
   };
 
   const calcTimeAgo = (createdAt) => {
     if (!createdAt) return 'Invalid date';
     const now = new Date();
     const createdDate = new Date(createdAt.replace(' ', 'T'));
-    const diffInSeconds = (now - createdDate) / 1000; // Difference in seconds
+    const diffInSeconds = (now - createdDate) / 1000;
 
     const diffInMinutes = diffInSeconds / 60;
     const diffInHours = diffInMinutes / 60;
     const diffInDays = diffInHours / 24;
-    const diffInMonths = diffInDays / 30; // Approximate month
-    const diffInYears = diffInDays / 365; // Approximate year
+    const diffInMonths = diffInDays / 30;
+    const diffInYears = diffInDays / 365;
 
     if (diffInSeconds < 60) {
       return `${Math.floor(diffInSeconds)}초 전`;
@@ -330,17 +320,17 @@ const Lookbook = ({ data, onDelete, onClose }) => {
   };
 
   const handleEditLookbook = () => {
-    console.log('선택된룩북', selectedLookbook);
-    hideDetail(); // Close the modal
-    nav(`/update-lookbook/${selectedLookbook.id}`, {
+    hideDetail();
+    setIsDetailVisible(false);
+    nav(`/update-lookbook/${selectedLookbook.lookbookId}`, {
       state: { lookbook: selectedLookbook },
-    }); // Navigate with ID in the URL
+    });
   };
 
   return (
     <>
       <div
-        onClick={handleShowDetail} // api 연결 전
+        onClick={handleShowDetail}
         className="w-[120px] h-[160px] rounded-[5px] overflow-hidden shadow-lg bg-white m-2 flex-shrink-0 cursor-pointer"
       >
         <div className="px-2 py-1 flex justify-between items-center">
@@ -362,12 +352,11 @@ const Lookbook = ({ data, onDelete, onClose }) => {
           <div className="flex items-center space-x-1">
             <div className="flex items-center">
               <img
-                src={data.like ? fillhearticon : hearticon}
+                src={data.favorite ? fillhearticon : hearticon}
                 className="w-4 mr-1 mt-1"
               />
-              {/* <img src={hearticon} alt="hearticon" className="w-4 " /> */}
               <span className="text-gray-600 text-[10px] mt-1">
-                {data.cntLike}
+                {data.cntFavorite}
               </span>
             </div>
             <div className="flex items-center">
@@ -385,11 +374,11 @@ const Lookbook = ({ data, onDelete, onClose }) => {
       </div>
       {isDetailVisible && selectedLookbook && (
         <LookbookDetail
-          lookbook={selectedLookbook}
+          currentLookbook={selectedLookbook}
           onClose={onClose}
           onEdit={handleEditLookbook}
-          lookbookId={selectedLookbook.id}
-          onDelete={onDelete} // Pass onDelete to LookbookDetail
+          lookbookId={selectedLookbook.lookbookId}
+          onDelete={() => onDelete(selectedLookbook.lookbookId)}
         />
       )}
     </>
