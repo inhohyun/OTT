@@ -189,4 +189,13 @@ public class MemberController {
         return ApiResponse.success(memberReadService.followRequestListSearch(MemberSsoDto.builder().sso(
                 currentMember.getUsername()).build()));
     }
+
+    @Operation(summary = "유저의 팔로잉 수", description = "<big>유저 팔로잉 수를</big> 조회합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로잉 수"),
+    })
+    @GetMapping("/{memberId}/followingsCount/")
+    public ApiResponse<Integer> getFollowingsCount(@PathVariable Long memberId) {
+        return ApiResponse.success(memberReadService.getFollowingsCount(MemberRequestDto.builder().id(memberId).build()));
+    }
 }

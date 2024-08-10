@@ -15,8 +15,8 @@ import ssafy.c205.ott.common.exception.S3FileNotExistException;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.ai.dto.AiRequestDto;
 import ssafy.c205.ott.domain.ai.exception.AiBadRequestException;
-import ssafy.c205.ott.domain.notification.util.NotificationMessage;
-import ssafy.c205.ott.domain.notification.service.NotificationService;
+import ssafy.c205.ott.domain.notification.dto.request.AiNotificationDto;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class AiService {
     @Value("${gpu.server.url}")
     private String GPU_SERVER_BASE_URL;
 
-    private final NotificationService notificationService;
+    private final NotificationWriteService notificationWriteService;
     private final AmazonS3Util amazonS3Util;
 
     public String ping() {
@@ -83,13 +83,12 @@ public class AiService {
         // GPU 서버로부터 받은 base64 인코딩된 이미지 데이터 그대로 반환
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("images", response.getBody().get("images"));
-        log.info(responseBody.toString());
 
         // 모델 사진 삭제
         amazonS3Util.deleteFile(aiRequestDto.getModelImagePath());
 
         // AI 이미지 완성 알림
-        notificationService.createNotification(NotificationMessage.AI_COMPLETE, aiRequestDto.getMemberId());
+        notificationWriteService.createAiNotification(AiNotificationDto.builder().memberId(aiRequestDto.getMemberId()).build());
 
         return ResponseEntity.ok(responseBody);
     }
