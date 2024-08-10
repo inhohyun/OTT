@@ -2,6 +2,8 @@ package ssafy.c205.ott.domain.notification.service;
 
 import static ssafy.c205.ott.domain.notification.util.NotificationMessage.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +17,9 @@ import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.request.WebRtcNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.response.DeleteNotificationSuccessDto;
 import ssafy.c205.ott.domain.notification.dto.response.NotificationSuccessDto;
-import ssafy.c205.ott.domain.notification.entity.AiNotification;
-import ssafy.c205.ott.domain.notification.entity.CommentNotification;
-import ssafy.c205.ott.domain.notification.entity.FollowNotification;
 import ssafy.c205.ott.domain.notification.entity.Notification;
 import ssafy.c205.ott.domain.notification.entity.NotificationStatus;
 import ssafy.c205.ott.domain.notification.entity.NotificationType;
-import ssafy.c205.ott.domain.notification.entity.WebRtcNotification;
 import ssafy.c205.ott.domain.notification.repository.NotificationRepository;
 
 @Service
@@ -33,15 +31,16 @@ public class NotificationWriteService {
     private final MemberReadService memberReadService;
 
     public NotificationSuccessDto createCommentNotification(CommentNotificationDto commentNotificationDto) {
-        Notification commentNotification = CommentNotification.builder()
-                .message(commentNotificationDto.getCommentAuthorName() + COMMENT.getMessage())
-                .notificationType(commentNotificationDto.getNotificationType())
-                .notificationStatus(NotificationStatus.UNREAD)
-                .memberId(commentNotificationDto.getMemberId())
-                .lookbookId(commentNotificationDto.getLookbookId())
-                .commentId(commentNotificationDto.getCommentId())
-                .commentAuthorId(commentNotificationDto.getCommentAuthorId())
-                .build();
+        Map<String, Object> additionalData = new HashMap<>();
+        additionalData.put("lookbookId", commentNotificationDto.getLookbookId());
+        additionalData.put("commentId", commentNotificationDto.getCommentId());
+        additionalData.put("commentAuthorId", commentNotificationDto.getCommentAuthorId());
+
+        Notification commentNotification = buildNotification(
+                commentNotificationDto.getCommentAuthorName() + COMMENT.getMessage(),
+                commentNotificationDto.getNotificationType(),
+                commentNotificationDto.getMemberId(), additionalData);
+
         Notification notification = notificationRepository.save(commentNotification);
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
@@ -50,14 +49,13 @@ public class NotificationWriteService {
         String message = followNotificationDto.getFollowerName() +
                 (followNotificationDto.getFollowStatus() == FollowStatus.FOLLOWING ? FOLLOW.getMessage() : FOLLOW_REQUEST.getMessage());
 
-        Notification followNotification = FollowNotification.builder()
-                .message(message)
-                .notificationType(followNotificationDto.getNotificationType())
-                .notificationStatus(NotificationStatus.UNREAD)
-                .memberId(followNotificationDto.getMemberId())
-                .followerId(followNotificationDto.getFollowerId())
-                .followId(followNotificationDto.getFollowId())
-                .build();
+        Map<String, Object> additionalData = new HashMap<>();
+        additionalData.put("followerId", followNotificationDto.getFollowerId());
+        additionalData.put("followId", followNotificationDto.getFollowId());
+
+        Notification followNotification = buildNotification(message, followNotificationDto.getNotificationType(),
+                followNotificationDto.getMemberId(), additionalData);
+
         Notification notification = notificationRepository.save(followNotification);
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
@@ -65,25 +63,19 @@ public class NotificationWriteService {
     public NotificationSuccessDto createWebRtcNotification(WebRtcNotificationDto webRtcNotificationDto) {
         MemberNotificationDto memberInfo = memberReadService.myInfoSearch(MemberSsoDto.builder().sso(webRtcNotificationDto.getRtcRequestMemberSso()).build());
 
-        Notification webRtcNotification = WebRtcNotification.builder()
-                .message(memberInfo.getMemberName() + COMMENT.getMessage())
-                .notificationType(webRtcNotificationDto.getNotificationType())
-                .notificationStatus(NotificationStatus.UNREAD)
-                .memberId(webRtcNotificationDto.getMemberId())
-                .rtcRequestMemberId(memberInfo.getMemberId())
-                .sessionId(webRtcNotificationDto.getSessionId())
-                .build();
+        Map<String, Object> additionalData = new HashMap<>();
+        additionalData.put("rtcRequestMemberId", memberInfo.getMemberId());
+        additionalData.put("sessionId", webRtcNotificationDto.getSessionId());
+
+        Notification webRtcNotification = buildNotification(memberInfo.getMemberName() + COMMENT.getMessage(), webRtcNotificationDto.getNotificationType(), webRtcNotificationDto.getMemberId(), additionalData);
+
         Notification notification = notificationRepository.save(webRtcNotification);
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
     public NotificationSuccessDto createAiNotification(AiNotificationDto aiNotificationDto){
-        Notification aiNotification = AiNotification.builder()
-                .message(AI_COMPLETE.getMessage())
-                .notificationType(NotificationType.AI)
-                .notificationStatus(NotificationStatus.UNREAD)
-                .memberId(aiNotificationDto.getMemberId())
-                .build();
+        Notification aiNotification = buildNotification(AI_COMPLETE.getMessage(), NotificationType.AI, aiNotificationDto.getMemberId(), null);
+
         Notification notification = notificationRepository.save(aiNotification);
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
@@ -91,5 +83,15 @@ public class NotificationWriteService {
     public DeleteNotificationSuccessDto deleteNotification(Long notificationId){
         notificationRepository.deleteById(notificationId);
         return DeleteNotificationSuccessDto.builder().build();
+    }
+
+    private Notification buildNotification(String message, NotificationType notificationType, Long memberId, Map<String, Object> additionalData) {
+        return Notification.builder()
+                .message(message)
+                .notificationType(notificationType)
+                .notificationStatus(NotificationStatus.UNREAD)
+                .memberId(memberId)
+                .additionalData(additionalData)
+                .build();
     }
 }
