@@ -4,6 +4,7 @@ import {
   bodyType,
   getTagRecommend,
 } from '../../api/lookbook/recommend'; // Adjust the import path
+import useLookbookStore from '../../data/lookbook/detailStore';
 import Lookbook from '../lookbook/Lookbook';
 import LookbookDetail from '../lookbook/LookbookDetail';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
@@ -18,11 +19,12 @@ const Recommend = () => {
   const [bodyTypeRecommend, setBodyTypeRecommend] = useState([]);
   const [styleRecommend, setStyleRecommend] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { hideDetail } = useLookbookStore();
 
   const memberId = 1;
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
       const heightWeightData = await heightWeight(memberId);
       const bodyTypeData = await bodyType(memberId);
       const styleData = await getTagRecommend(memberId);
@@ -30,8 +32,13 @@ const Recommend = () => {
       setHeightWeightRecommend(heightWeightData);
       setBodyTypeRecommend(bodyTypeData);
       setStyleRecommend(styleData);
-    };
-    setIsLoading(false);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [memberId]);
 
@@ -65,8 +72,13 @@ const Recommend = () => {
     setSelectedCategory(category);
   };
 
-  const closeDetailedView = () => {
+  const closeDetailedView = async () => {
+    // console.log('모달 닫기한다고');
+    hideDetail();
+    await fetchData();
+    // console.log('리렌더링');
     setSelectedCategory(null);
+    setSelectedLookbook(null);
   };
 
   // Filtered lookbooks by API data
@@ -140,6 +152,7 @@ const Recommend = () => {
                         <Lookbook
                           data={lookbook}
                           onClick={() => setSelectedLookbook(lookbook)}
+                          onClose={closeDetailedView}
                         />
                       </div>
                     );

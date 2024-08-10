@@ -63,6 +63,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
 
   const currentUser = 'csh';
 
+  // const currentUser = 'kimssafy';
   const toggleLike = () => {
     if (liked) {
       try {
@@ -175,7 +176,11 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
       >
         <button
           className="absolute top-4 right-4 p-0 bg-transparent border-none"
-          onClick={onClose}
+          onClick={() => {
+            console.log('닫기 버튼 클릭');
+            console.log(onClose);
+            onClose();
+          }}
         >
           <img src={cancel} alt="cancel_icon" className="w-4 h-4" />
         </button>
