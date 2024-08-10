@@ -138,9 +138,9 @@ const UserPage = () => {
             {!isMe && (
               <div className="flex justify-center items-center w-full">
                 <button
-                  className={`w-[80%] px-4 py-2 border rounded ${
+                  className={`w-[80%] px-4 py-2 rounded ${
                     isFollowing
-                      ? 'bg-violet-600 text-white border-violet-600'
+                      ? 'bg-violet-600 text-white'
                       : 'bg-white text-[rgba(0,0,0,0.5)]'
                   }`}
                   onClick={handleFollowButtonClick}
