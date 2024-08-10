@@ -105,72 +105,74 @@ const UserPage = () => {
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="w-full h-full flex flex-col items-center justify-start">
-        <div className="w-full flex justify-center mt-8">
-          <img
-            className="w-[70px] h-[70px] rounded-full"
-            alt="User Icon"
-            src={mainIcon}
-          />
-        </div>
-        <div className="w-full flex flex-col items-center justify-center mt-6">
-          <div className="flex items-center justify-center w-full relative">
-            <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
-              {isPublic && isMe && (
-                <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
-              )}
-              <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
-                {name}
-              </p>
-              {isMe && (
-                <img
-                  src={settingIcon}
-                  alt="수정"
-                  className="w-6 h-6 ml-2 cursor-pointer"
-                  onClick={handleSettingsClick}
-                />
-              )}
+      <div className="flex flex-col items-center w-full">
+        <div className="w-full h-full flex flex-col items-center justify-start">
+          <div className="w-full flex justify-center mt-8">
+            <img
+              className="w-[70px] h-[70px] rounded-full"
+              alt="User Icon"
+              src={mainIcon}
+            />
+          </div>
+          <div className="w-full flex flex-col items-center justify-center mt-6">
+            <div className="flex items-center justify-center w-full relative">
+              <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
+                {isPublic && isMe && (
+                  <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
+                )}
+                <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
+                  {name}
+                </p>
+                {isMe && (
+                  <img
+                    src={settingIcon}
+                    alt="수정"
+                    className="w-6 h-6 ml-2 cursor-pointer"
+                    onClick={handleSettingsClick}
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full flex items-center justify-center mt-2">
-          <div className="w-[50%] flex justify-between p-2">
-            {!isMe && (
-              <div className="flex justify-center items-center w-full">
-                <button
-                  className={`w-[80%] px-4 py-2 rounded ${
-                    isFollowing
-                      ? 'bg-violet-500 text-white'
-                      : 'bg-white text-[rgba(0,0,0,0.5)]'
-                  }`}
-                  onClick={handleFollowButtonClick}
-                  style={{ fontFamily: 'dohyeon' }}
-                >
-                  {isFollowing ? '팔로잉' : '팔로우'}
-                </button>
-              </div>
-            )}
-            <div className="flex justify-center items-center w-full">
-              {!isMe ? (
-                <div className="flex">
-                  <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white mr-2">
-                    <img
-                      src={closetIcon}
-                      alt="Closet Icon"
-                      className="w-5 h-5 cursor-pointer"
-                      onClick={handleClosetIconClick}
-                    />
-                  </div>
-                  <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white">
-                    <img
-                      src={rtcIcon}
-                      alt="RTC Icon"
-                      className="w-5 h-5 cursor-pointer"
-                      onClick={handleRtcIconClick}
-                    />
-                  </div>
+          <div className="w-full flex items-center justify-center mt-2">
+            <div className="w-[50%] flex justify-between p-2">
+              {!isMe && (
+                <div className="flex justify-center items-center w-full">
+                  <button
+                    className={`w-[80%] px-4 py-2 rounded ${
+                      isFollowing
+                        ? 'bg-violet-500 text-white'
+                        : 'bg-white text-[rgba(0,0,0,0.5)]'
+                    }`}
+                    onClick={handleFollowButtonClick}
+                    style={{ fontFamily: 'dohyeon' }}
+                  >
+                    {isFollowing ? '팔로잉' : '팔로우'}
+                  </button>
                 </div>
-              ) : null}
+              )}
+              <div className="flex justify-center items-center w-full">
+                {!isMe ? (
+                  <div className="flex">
+                    <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white mr-2">
+                      <img
+                        src={closetIcon}
+                        alt="Closet Icon"
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={handleClosetIconClick}
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white">
+                      <img
+                        src={rtcIcon}
+                        alt="RTC Icon"
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={handleRtcIconClick}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
