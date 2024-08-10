@@ -155,6 +155,7 @@ const CategoryDropdown = ({
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
+        placeholder="카테고리를 선택하세요"
       />
       <div
         onClick={() => setIsModalOpen(true)}
