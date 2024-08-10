@@ -33,13 +33,15 @@ const CategoryDropdown = ({
     try {
       const memberId = 1;
       const closetResponse = await getClosetId(memberId);
-      console.log(closetResponse);
       const closetId = closetResponse.data.data[0].id;
-      console.log(closetId);
       setClosetId(closetId);
       const categoryList = await getCategoryList(closetId);
-      console.log(categoryList);
-      setCategories(categoryList.data);
+      const fetchedCategories = categoryList.data;
+      const defaultCategories = [
+        { categoryId: -100, name: '전체' },
+        { categoryId: -200, name: '즐겨찾기' },
+      ]
+      setCategories([...defaultCategories, ...fetchedCategories]);
     } catch (error) {
       console.error('카테고리 목록 불러오는 중 오류 발생:', error);
     }
