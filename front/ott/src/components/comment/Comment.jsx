@@ -36,12 +36,12 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
         }))
       );
     }
-  }, []);
+  }, [comments]);
 
   const fetchComments = async () => {
     try {
       const status = 'comment';
-      const commentsData = await lookbookComment(lookbook, status);
+      const commentsData = await lookbookComment(lookbookId, status);
       // console.log('룩북아이디', lookbookId);
       setCommentList(
         commentsData.map((comment) => ({
@@ -86,7 +86,7 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
           await replyCreate(formData, lookbookId, replyTo);
           setNewComment('');
           setReplyTo(null);
-          fetchComments();
+          await fetchComments();
         } catch (error) {
           console.error(error);
         }
@@ -188,7 +188,7 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     setCommentList(updatedComments);
   };
 
-  const handleSaveEditReply = (commentId, replyId) => {
+  const handleSaveEditReply = async (commentId, replyId) => {
     const formData = new FormData();
     formData.append('memberId', 1);
     // formData.append('memberId',userId);
@@ -198,16 +198,16 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     try {
       replyUpdate(formData, lookbookId, replyId);
       setNewComment('');
-      fetchComments();
+      await fetchComments();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDeleteReply = (commentId, replyId) => {
+  const handleDeleteReply = async (commentId, replyId) => {
     try {
       replyDelete(lookbookId, replyId);
-      fetchComments();
+      await fetchComments();
     } catch (error) {
       console.error(error);
     }

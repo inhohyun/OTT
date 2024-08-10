@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import useCanvasItems from '../../hooks/useCanvasItems';
@@ -28,6 +29,7 @@ const CreateLookbook = () => {
 
   const categoryRef = useRef(null);
   const userId = useUserStore((state) => state.userId);
+  const nav = useNavigate();
 
   // 옷장 id 조회
   useEffect(() => {
@@ -159,6 +161,7 @@ const CreateLookbook = () => {
           try {
             lookbookCreate(formData);
             console.log('룩북 저장 성공');
+            nav(-1);
           } catch (error) {
             console.error(error);
           } finally {

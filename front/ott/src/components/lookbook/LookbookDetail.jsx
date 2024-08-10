@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import cancel from '../../assets/icons/blackdeleteicon.png';
 import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
@@ -11,6 +11,7 @@ import lookicon from '../../assets/icons/lookicon.png';
 import {
   lookbookDislike,
   lookbookLike,
+  lookbookDetail,
 } from '../../api/lookbook/lookbookdetail';
 import { lookbookComment } from '../../api/lookbook/comments';
 import { lookbookDelete } from '../../api/lookbook/lookbook';
@@ -18,37 +19,59 @@ import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 
-const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
+const LookbookDetail = ({ onClose, onEdit, lookbookId, onDelete }) => {
+  const [lookbook, setLookbook] = useState(null); // Lookbook 상태를 추가
   const [showSellComments, setShowSellComments] = useState(false);
-  const [liked, setLiked] = useState(lookbook.favorite);
-  const [cntFavorite, setCntFavorite] = useState(lookbook.cntFavorite);
+  const [liked, setLiked] = useState(false); // 초기 값은 false로 설정
+  const [cntFavorite, setCntFavorite] = useState(0); // 초기 값은 0으로 설정
   const [followed, setFollowed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentSides, setCurrentSides] = useState({});
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedClothingItem, setSelectedClothingItem] = useState(null); //판매용 댓글 옷 상세보기
+  const [selectedClothingItem, setSelectedClothingItem] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
   const userId = useUserStore((state) => state.userId);
+  const hasFetchedComments = useRef(false);
 
   useEffect(() => {
-    setLiked(lookbook.favorite);
-    setCntFavorite(lookbook.cntFavorite);
-  }, [lookbook]);
-
-  useEffect(() => {
-    const fetchComments = async () => {
+    console.log(lookbookId, '룩북아이디');
+    const fetchLookbookDetail = async () => {
       try {
-        const status = showSellComments ? 'DM' : 'comment';
-        const commentsData = await lookbookComment(lookbook, status);
-        setComments(commentsData);
+        const data = await lookbookDetail(lookbookId); // API 호출
+        setLookbook(data); // 받아온 데이터를 상태로 설정
+        setLiked(data.favorite);
+        setCntFavorite(data.cntFavorite);
       } catch (error) {
-        console.error('Failed to fetch comments:', error);
+        console.error('Error fetching lookbook detail:', error);
       }
     };
 
-    fetchComments();
-  }, [showSellComments, lookbook]);
+    fetchLookbookDetail();
+  }, [lookbookId]);
+
+  useEffect(() => {
+    console.log('현재룩북', lookbookId);
+    if (lookbookId && !hasFetchedComments.current) {
+      const fetchComments = async () => {
+        try {
+          const status = showSellComments ? 'DM' : 'comment';
+          const commentsData = await lookbookComment(lookbookId, status);
+          console.log('댓글 호출');
+          setComments(commentsData);
+        } catch (error) {
+          console.error('Failed to fetch comments:', error);
+        }
+      };
+
+      fetchComments();
+      hasFetchedComments.current = true;
+    }
+  }, [lookbook, showSellComments]);
+
+  if (!lookbook) {
+    return null; // 데이터가 아직 로드되지 않았다면 아무것도 렌더링하지 않음
+  }
 
   const tags = Array.isArray(lookbook?.tags) ? lookbook.tags : [];
   const salesClothes = Array.isArray(lookbook?.salesClothes)
@@ -63,7 +86,6 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
 
   const currentUser = 'csh';
 
-  // const currentUser = 'kimssafy';
   const toggleLike = () => {
     if (liked) {
       try {
@@ -116,15 +138,12 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
 
       await fetchMyLookbooks(); // 또 호출을 해야할까.....?
       hideDetail();
-      // console.log('삭제하려는 룩북', lookbook);
-
       onClose();
     } catch (error) {
       console.error(error);
     }
   };
 
-  // salesClothes를 clothesId로 그룹화
   const groupedClothes = salesClothes.reduce((acc, item) => {
     const { clothesId } = item;
     if (!acc[clothesId]) {
@@ -176,11 +195,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
       >
         <button
           className="absolute top-4 right-4 p-0 bg-transparent border-none"
-          onClick={() => {
-            console.log('닫기 버튼 클릭');
-            console.log(onClose);
-            onClose();
-          }}
+          onClick={onClose}
         >
           <img src={cancel} alt="cancel_icon" className="w-4 h-4" />
         </button>
@@ -219,7 +234,6 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onEdit={onEdit}
-            // onDelete={() => onDelete(lookbook.id)}
             onDelete={handleDelete}
           />
         </div>
@@ -254,7 +268,6 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
           )}
           <div className="flex flex-wrap gap-4">
             {Object.keys(groupedClothes).map((clothesId) => {
-              // console.log('판매중인 옷', groupedClothes[clothesId]);
               const images = groupedClothes[clothesId];
               const currentItem = images[0];
 
@@ -317,14 +330,14 @@ const LookbookDetail = ({ onClose, onEdit, lookbook, onDelete }) => {
             {showSellComments ? (
               <SellComment
                 comments={comments}
-                lookbookId={lookbook.id}
+                lookbookId={lookbookId}
                 lookbook={lookbook}
                 userId={userId}
               />
             ) : (
               <Comment
                 comments={comments}
-                lookbookId={lookbook.id}
+                lookbookId={lookbookId}
                 lookbook={lookbook}
                 userId={userId}
               />

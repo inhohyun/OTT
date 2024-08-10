@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 // import axios from 'axios';
@@ -61,6 +62,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   const categoryRef = useRef(null);
 
   const userId = useUserStore((state) => state.userId);
+
+  const nav = useNavigate();
 
   // 옷장 id 조회
   useEffect(() => {
@@ -209,6 +212,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
             const data = lookbookUpdate(formData, lookbookid.id);
             console.log('룩북 수정 성공', data);
             console.log('clothes', selectedImages);
+            nav(-1);
           } catch (error) {
             console.error('Error:', error);
           } finally {

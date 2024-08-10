@@ -18,15 +18,15 @@ import axiosInstance from '../axiosInstance';
 // 댓글 조회 api
 export const lookbookComment = async (lookbookId, status) => {
   try {
-    // console.log('댓글룩북:', lookbookId);
-    const response = await axiosInstance.get(`api/comment/${lookbookId.id}`, {
+    console.log('댓글룩북:', lookbookId);
+    const response = await axiosInstance.get(`api/comment/${lookbookId}`, {
       params: { status: status },
     });
     console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
-    throw error;
+    // throw error;
   }
 };
 
