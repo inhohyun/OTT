@@ -1,6 +1,7 @@
 import React from 'react';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
+  // TODO : 게시글, 팔로워, 팔로잉 수를 서버에서 받아와야 함
   const postNumber = 100;
   const follwerNumber = 100;
   const followingNumber = 100;

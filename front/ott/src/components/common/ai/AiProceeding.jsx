@@ -6,8 +6,9 @@ import useStore from '@/data/ai/aiStore';
 import { sendfittingData } from '@/api/ai/ai';
 
 const AiProceeding = () => {
+  // 프로그래스 바 상태 관리
   const percentage = useStore((state) => state.percentage);
-  const setPercentage = useStore((state) => state.setPercentage);
+  const startInterval = useStore((state) => state.startInterval);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
 
   // 서버에 보낼 데이터
@@ -15,11 +16,7 @@ const AiProceeding = () => {
   const filter = useStore((state) => state.filter);
   const modelImage = useStore((state) => state.modelImage);
   const selectClothesURL = useStore((state) => state.selectedClothesURL); // TODO : 선택된 URL에 따른 경로로 변동
-  const duration = 50; // TODO: AI 모델 결과에 따라, 이후 수정 예정
   const sample = useStore((state) => state.sample);
-  const targetPercentage = 99; // 목표 퍼센트는 99
-  const increment = targetPercentage / duration;
-  const interval = 1000; // 1초마다 업데이트
 
   // 이미지 결과
   const resultImages = useStore((state) => state.resultImages);
@@ -37,19 +34,12 @@ const AiProceeding = () => {
       hasModalOpenedRef.current = false;
     }
 
-    const intervalId = setInterval(() => {
-      setPercentage((prev) => {
-        const nextPercentage = prev + increment;
-        if (nextPercentage >= targetPercentage) {
-          clearInterval(intervalId);
-          return 99;
-        }
-        return nextPercentage;
-      });
-    }, interval);
+    startInterval(); // 프로그레스 바 업데이트 시작
 
-    return () => clearInterval(intervalId);
-  }, [setPercentage]);
+    return () => {
+      // 컴포넌트가 언마운트될 때 인터벌을 멈추지 않도록 설정
+    };
+  }, [startInterval]);
 
   useEffect(() => {
     // 서버로 데이터를 전송하는 로직 추가
@@ -70,7 +60,7 @@ const AiProceeding = () => {
           category
         );
 
-        // console.log('서버에서 받은 이미지', response);
+        // 서버에서 받은 이미지 처리
         setResultImages(response.data.images);
         sessionStorage.setItem('hasModalOpened', 'false'); // 넘어간 이후 모달은 최초 모달임을 표시
         setCurrentStep('AiResult');
@@ -82,7 +72,7 @@ const AiProceeding = () => {
 
     if (!hasModalOpenedRef.current) {
       console.log('모달 서버 호출 테스트');
-      //TODO :  memberId와 clothImagePath를 서버에서 받아오는 값으로 변경
+      // TODO : memberId와 clothImagePath를 서버에서 받아오는 값으로 변경
       // sendData(
       //   1,
       //   modelImage,
