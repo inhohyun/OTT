@@ -153,19 +153,19 @@ const UserPage = () => {
             <div className="flex justify-center items-center w-full">
               {!isMe ? (
                 <div className="flex">
-                  <div className="flex justify-center items-center w-10 h-10 rounded-md bg-white mr-2">
+                  <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white mr-2">
                     <img
                       src={closetIcon}
                       alt="Closet Icon"
-                      className="w-6 h-6 cursor-pointer"
+                      className="w-4 h-4 cursor-pointer"
                       onClick={handleClosetIconClick}
                     />
                   </div>
-                  <div className="flex justify-center items-center w-10 h-10 rounded-md bg-white">
+                  <div className="flex justify-center items-center w-8 h-8 rounded-md bg-white">
                     <img
                       src={rtcIcon}
                       alt="RTC Icon"
-                      className="w-6 h-6 cursor-pointer"
+                      className="w-4 h-4 cursor-pointer"
                       onClick={handleRtcIconClick}
                     />
                   </div>
