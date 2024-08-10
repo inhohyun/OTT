@@ -14,16 +14,8 @@ import ssafy.c205.ott.domain.account.entity.FollowStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FollowNotification extends Notification {
-
-    @Column(nullable = false)
     private Long followerId;
-
-    @Column(nullable = false)
     private Long followId;
-
-    @Column(nullable = false)
     private String followerName;
-
-    @Column(nullable = false)
     private FollowStatus followStatus;
 }

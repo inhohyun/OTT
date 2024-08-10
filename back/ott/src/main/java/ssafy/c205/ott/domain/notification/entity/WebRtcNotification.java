@@ -13,13 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WebRtcNotification extends Notification {
-
-    @Column(nullable = false)
     private Long rtcRequestMemberId;
-
-    @Column(nullable = false)
     private String sessionId;
-
-    @Column(nullable = false)
     private String rtcRequestMemberName;
 }

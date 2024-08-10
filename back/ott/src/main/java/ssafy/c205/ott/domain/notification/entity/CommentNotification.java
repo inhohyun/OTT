@@ -13,16 +13,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentNotification extends Notification {
-
-    @Column(nullable = false)
     private Long lookbookId;
-
-    @Column(nullable = false)
     private Long commentId;
-
-    @Column(nullable = false)
     private Long commentAuthorId;
-
-    @Column(nullable = false)
     private String commentAuthorName;
 }
