@@ -14,10 +14,10 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const fetchCategories = async () => {
     try {
       const memberId = 1;
-      const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
-      setClosetId(closetId);
-      const categoryList = await getCategoryList(closetId);
+      // const closetResponse = await getClosetId(memberId);
+      // const closetId = closetResponse.data.data[0].id;
+      // setClosetId(closetId);
+      const categoryList = await getCategoryList(1);
       setCategories(categoryList.data);
     } catch (error) {
       console.error('카테고리 목록 조회 실패:', error);
