@@ -46,7 +46,7 @@ export const getClothesList = async (memberId) => {
     const response = await axiosInstance.get(`/api/clothes/${memberId}/list`);
     return response.data.map((item, index) => ({
       ...item,
-      key: item.id || index,
+      key: item.clothesId || index,
     }));
   } catch (error) {
     console.error('옷 목록 가져오기 실패:', error);
