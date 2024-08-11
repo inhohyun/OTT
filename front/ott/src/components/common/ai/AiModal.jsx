@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
