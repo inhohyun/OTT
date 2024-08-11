@@ -38,8 +38,8 @@ const CreateLookbook = () => {
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
-        setClosetId(response.data[0].id);
-        console.log('옷장 아이디', response.data[0].id);
+        setClosetId(response[0].id);
+        console.log('옷장 아이디', response[0].id);
       } catch (error) {
         console.error(error);
       }
