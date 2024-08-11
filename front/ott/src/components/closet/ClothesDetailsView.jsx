@@ -6,9 +6,11 @@ import {
   faChevronRight,
   faEdit,
   faTimes,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import { deleteClothes } from '../../api/closet/clothes';
 
-const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
+const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 이미지 인덱스 상태 관리
   const [detailedItem, setDetailedItem] = useState(itemDetails); // 상세 아이템 상태 관리
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
@@ -29,6 +31,21 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
 
     fetchItemDetails();
   }, [itemDetails.clothesId]);
+
+  // 옷 삭제하는 함수
+  const handleDelete = async (event) => {
+    event.stopPropagation()
+
+    const confirmDelete = window.confirm('정말 이 옷을 삭제하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        await deleteClothes(detailedItem.clothesId);
+        onDelete(detailedItem.clothesId); // Callback to handle deletion in parent component
+      } catch (error) {
+        console.error('옷 삭제 중 오류 발생:', error);
+      }
+    }
+  };
 
   // 성별에 따른 텍스트 반환 함수
   const getGenderText = (gender) => {
@@ -66,6 +83,12 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
           className="text-gray-600 hover:text-gray-800 cursor-pointer"
         >
           <FontAwesomeIcon icon={faEdit} size="lg" /> {/* 편집 아이콘 */}
+        </div>
+        <div
+          onClick={handleDelete}
+          className="text-gray-600 hover:text-gray-800 cursor-pointer"
+        >
+          <FontAwesomeIcon icon={faTrashAlt} size="lg" /> {/* 삭제 아이콘 */}
         </div>
         <div
           onClick={onClose}

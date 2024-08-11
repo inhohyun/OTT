@@ -4,7 +4,7 @@ import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
 import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
-import { getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
+import { addClothes, getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 
 const ClosetPage = () => {
@@ -121,9 +121,15 @@ const ClosetPage = () => {
     );
   };
 
-  const handleNewClothes = (newClothes) => {
-    setClothes((prevClothes) => [...prevClothes, newClothes]);
-    fetchClothesByCategory(selectedCategory);
+  const handleNewClothes = async (newClothesData) => {
+    try {
+      const newItem = await addClothes(newClothesData);
+      newItem.key = newItem.clothesId;
+      const updatedClothesList = await getClothesList();
+      setClothes([...updatedClothesList, newItem]);
+    } catch (error) {
+      console.error('Error adding clothes:', error);
+    }
   };
 
   const handleToggleLike = (id) => {

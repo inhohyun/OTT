@@ -134,18 +134,18 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
             scrollbarWidth: 'none',
           }}
         >
-          {clothes.slice(0, visibleItems).map((item) => {
-            console.log('Clothes Item:', item)
+          {clothes.slice(0, visibleItems).map((item, index) => {
+            const uniqueKey = item.key !== undefined ? item.key : index;
             const isFrontVisible = visibleImages.find(
-              (image) => image.id === item.key
+              (image) => image.id === uniqueKey
             )?.isFront;
 
-            const frontImage = item.img?.[0];
-            const backImage = item.img?.[1];
+            const frontImage = item.img?.[0] || '';
+            const backImage = item.img?.[1] || '';
 
             return (
               <div
-                key={item.key}
+                key={uniqueKey}
                 className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center cursor-pointer"
                 style={{ minWidth: '100px', height: '190px' }}
                 onClick={() => onClothesClick(item)}

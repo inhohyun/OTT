@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
-import { updateClothes, getClothesItemData } from '../../api/closet/clothes';
+import { updateClothes, getClothesItemData, deleteClothes } from '../../api/closet/clothes';
 
 
 const ClothesDetailModal = ({
@@ -69,6 +69,16 @@ const ClothesDetailModal = ({
       console.error('Error saving changes:', error);
     }
   };
+
+  const handleDelete = async () => {
+    try {
+      await deleteClothes(itemDetails.clothesId);
+      onDelete(itemDetails.clothesId);
+      onClose();
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
   
 
   const handleCancel = () => {
@@ -93,6 +103,7 @@ const ClothesDetailModal = ({
             itemDetails={itemDetails}
             onEdit={handleToggleEdit}
             onClose={onClose}
+            onDelete={handleDelete}
           />
         )}
       </div>
