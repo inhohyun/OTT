@@ -46,16 +46,19 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 4, label: '4장' },
   ];
   const [clothes, setClothes] = useState([]);
+  useEffect(() => {
+    const fetchBookmarkedClothes = async () => {
+      try {
+        const response = await getBookmarkedClothes(memberId);
+        console.log('북마크된 옷', response);
+        setClothes(response);
+      } catch (error) {
+        console.error('즐겨찾기 옷 조회 실패:', error);
+      }
+    };
 
-  useEffect(async () => {
-    try {
-      const response = await getBookmarkedClothes(memberId);
-      console.log('북마크된 옷', response);
-      setClothes(response);
-    } catch (error) {
-      console.error('즐겨찾기 옷 조회 실패:', error);
-    }
-  }, []);
+    fetchBookmarkedClothes();
+  }, [memberId]); // memberId가 변경될 때마다 실행되도록 의존성 배열에 추가
 
   const customStyles = {
     control: (provided, state) => ({
