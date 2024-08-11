@@ -5,6 +5,7 @@ import Comment from '../comment/Comment';
 import SellComment from '../comment/SellComment';
 import DetailViewer from './DetailViewer';
 import Modal from './Modal';
+import ProfileImg from './ProfileImg';
 import ClothesDetailModal from '../closet/ClothesDetailModal';
 import hearticon from '../../assets/icons/hearticon.png';
 import fillhearticon from '../../assets/icons/fillhearticon.png';
@@ -20,6 +21,7 @@ import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import { postFollow, unFollow } from '../../api/user/user';
+import { data } from 'autoprefixer';
 
 const LookbookDetail = ({
   onClose,
@@ -249,13 +251,22 @@ const LookbookDetail = ({
         >
           <img src={cancel} alt="cancel_icon" className="w-4 h-4" />
         </button>
-        <div className="flex items-center mb-4">
-          <div className="flex-grow">
-            <h2 className={`text-xl font-bold`}>{lookbook.nickname}</h2>
-            <p className="text-sm text-gray-500">
-              {/* {lookbook.createdAt.split('T')[0]} */}
-            </p>
+        <div className="flex items-center mb-2">
+          <div className="flex items-center flex-grow">
+            <div className="w-10 h-10 mr-2 rounded-full border border-solid  border-slate-500  overflow-hidden">
+              <img
+                src={ProfileImg(data.profileimg)}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold">{lookbook.nickname}</h2>
+              <p className="text-[10px] text-gray-500">
+                {lookbook.createdAt.split('T')[0]}
+              </p>
+            </div>
           </div>
+
           {userId !== currentLookbook.memberId && (
             <button
               className={`text-sm px-3 py-3 rounded-lg me-3 ${
@@ -287,7 +298,7 @@ const LookbookDetail = ({
             onDelete={handleDelete}
           />
         </div>
-        <div className="w-full border-solid border-t-2 border-slate-500 mt-4"></div>
+        <div className="w-full border-solid border-t-2 border-slate-500 mt-3"></div>
         <div className="mb-4 flex mt-2 relative">
           <DetailViewer
             images={images}
