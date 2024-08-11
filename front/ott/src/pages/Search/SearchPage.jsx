@@ -136,6 +136,7 @@ const SearchPage = () => {
       );
 
       setResults(matchedResults);
+      console.log('스타일 검색 결과 : ', matchedResults);
     } else {
       const nickname = searchQuery;
       const offset = 1;
