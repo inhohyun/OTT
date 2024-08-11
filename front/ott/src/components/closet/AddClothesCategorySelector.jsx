@@ -23,6 +23,7 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
       const closetid = closetResponse.data[0].id;
       setClosetId(closetid);
       const categoryList = await getCategoryList(closetId);
+      console.log('[*]카테고리 목록', categoryList.data);
       setCategories(categoryList.data);
     } catch (error) {
       console.error('카테고리 목록 조회 실패:', error);
