@@ -38,20 +38,21 @@ const CreateLookbook = () => {
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
+        // setClosetId(response.data[0].id);
         setClosetId(response[0].id);
         console.log(response, '옷장id');
-        console.log('옷장아이디', response[0].id);
+        // console.log('옷장아이디', response.data[0].id);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchClosetId();
-  }, [userId]);
+  }, []);
 
-  useEffect(() => {
-    console.log('옷장 아이디', closetId);
-  }, [closetId]);
+  // useEffect(() => {
+  //   console.log('옷장 아이디', closetId);
+  // }, [closetId]);
 
   // 카테고리 조회
   useEffect(() => {
