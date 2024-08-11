@@ -20,7 +20,7 @@ export const addClothes = async (formData) => {
       },
     });
     console.log('Successfully added clothes:', response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error adding clothes:', error);
     throw error;
