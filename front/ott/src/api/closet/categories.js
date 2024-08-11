@@ -4,7 +4,7 @@ import axiosInstance from '../axiosInstance';
 export const getCategoryList = async (closetId) => {
   try {
     console.log('closetId:', closetId);
-    const response = await axiosInstance.get(`/api/category/${closetId}`);
+    const response = await axiosInstance.get(`/api/category/${1}`);
     console.log('카테고리 목록 조회 성공:', response.data);
     return response;
   } catch (error) {
@@ -40,7 +40,7 @@ export const addCategory = async (closetId, name) => {
       name: name,
     };
     const response = await axiosInstance.post(
-      `/api/category/${closetId}`,
+      `/api/category/${1}`,
       requestBody
     );
     console.log('카테고리 추가 성공', response.data);
