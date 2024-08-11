@@ -19,7 +19,7 @@ export const addClothes = async (formData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log('Successfully added clothes:', response.data);
+    console.log('Successfully added clothes:', response);
     return response.data;
   } catch (error) {
     console.error('Error adding clothes:', error);
