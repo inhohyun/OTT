@@ -46,6 +46,7 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 4, label: '4장' },
   ];
   const [clothes, setClothes] = useState([]);
+  // 옷들을 저장
   useEffect(() => {
     const fetchBookmarkedClothes = async () => {
       try {
@@ -58,7 +59,7 @@ const Modal = ({ isOpen, onClose }) => {
     };
 
     fetchBookmarkedClothes();
-  }, [memberId]); // memberId가 변경될 때마다 실행되도록 의존성 배열에 추가
+  }, []);
 
   const customStyles = {
     control: (provided, state) => ({
