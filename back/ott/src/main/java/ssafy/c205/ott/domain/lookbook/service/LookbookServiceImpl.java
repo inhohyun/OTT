@@ -19,6 +19,7 @@ import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.entity.Follow;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.entity.ItemImage;
@@ -63,6 +64,7 @@ public class LookbookServiceImpl implements LookbookService {
     private final AmazonS3Util amazonS3Util;
     private final LookbookImageRepository lookbookImageRepository;
     private final CommentService commentService;
+    private final FollowRepository followRepository;
 
     @Override
     public void createLookbook(LookbookDto lookbookCreateDto, MultipartFile file) {
@@ -241,6 +243,9 @@ public class LookbookServiceImpl implements LookbookService {
                 isFavorite = true;
             }
 
+            boolean isFollow = followRepository.existsByToMemberIdAndFromMemberId(
+                saveLookbook.getMember().getId(), memberId);
+
             return LookbookDetailDto
                 .builder()
                 .content(saveLookbook.getContent())
@@ -254,6 +259,8 @@ public class LookbookServiceImpl implements LookbookService {
                 .cntFavorite(cnt)
                 .isFavorite(isFavorite)
                 .cntComment(commentService.countComment(lookbookId))
+                .profileImg(saveLookbook.getMember().getProfileImageUrl())
+                .isFollow(isFollow)
                 .build();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, lookbookId + "의 룩북을 찾지 못했습니다.");
@@ -614,6 +621,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .img(lookbook.getLookbookImages().get(0).getImageUrl())
                 .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                 .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                .createdAt(lookbook.getCreatedAt())
                 .tags(lookbook.getLookbookTags().stream()
                     .map(lookbookTag -> lookbookTag.getTag().getName()).toArray(String[]::new))
                 .isFavorite(isFavorite)

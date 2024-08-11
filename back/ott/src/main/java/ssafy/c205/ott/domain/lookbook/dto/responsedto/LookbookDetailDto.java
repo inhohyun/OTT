@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 public class LookbookDetailDto {
+
     private long viewCount;
     private String content;
     private String nickname;
@@ -23,9 +24,15 @@ public class LookbookDetailDto {
     private int cntFavorite;
     private int cntComment;
     private boolean isFavorite;
+    private String profileImg;
+    private boolean isFollow;
 
     @Builder
-    public LookbookDetailDto(long viewCount, String content, String nickname, List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes, LocalDateTime createdAt, String thumnail, int cntFavorite,int cntComment, boolean isFavorite) {
+    public LookbookDetailDto(long viewCount, String content, String nickname,
+        List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes,
+        LocalDateTime createdAt, String thumnail, int cntFavorite, int cntComment,
+        boolean isFavorite,
+        String profileImg, boolean isFollow) {
         this.viewCount = viewCount;
         this.content = content;
         this.nickname = nickname;
@@ -35,8 +42,10 @@ public class LookbookDetailDto {
         this.createdAt = createdAt;
         this.thumnail = thumnail;
         this.cntFavorite = cntFavorite;
-        this.isFavorite = isFavorite;
         this.cntComment = cntComment;
+        this.isFavorite = isFavorite;
+        this.profileImg = profileImg;
+        this.isFollow = isFollow;
     }
 
     public LookbookDetailDto() {
