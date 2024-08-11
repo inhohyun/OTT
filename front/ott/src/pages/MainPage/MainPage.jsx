@@ -37,9 +37,7 @@ const MainPage = () => {
   const [hasFollow, setHasFollow] = useState(false);
 
   const setUserId = useUserStore((state) => state.setUserId);
-
-  // const memberId = 1;
-
+  const memberId = useUserStore((state) => state.userId);
   const renderComponent = () => {
     switch (activeComponent) {
       case 'recommendation':
