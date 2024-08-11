@@ -129,7 +129,7 @@ export const getBookmarkedClothes = async (memberId) => {
       params: { memberId },
     });
     console.log('북마크된 옷 목록 조회 성공: ', response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('북마크된 옷 목록 조회 실패: ', error);
     throw error;
