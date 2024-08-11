@@ -40,7 +40,7 @@ const ClosetPage = () => {
 
       const categoryList = await getCategoryList(closetId);
       const fetchedCategories = categoryList.data.map((category) => ({
-        categoryId: category.id,
+        categoryId: category.categoryId,
         name: category.name,
       }));
       setCategories([
