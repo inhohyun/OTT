@@ -39,6 +39,7 @@ const SearchPage = () => {
     setLastSearchQuery(searchQuery); // 마지막 검색 쿼리 업데이트
 
     if (isChecked) {
+      console.log('스타일 검색');
       // 태그 검색을 위한 모의 검색 함수
       const styleData = [
         {
