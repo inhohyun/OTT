@@ -7,7 +7,7 @@ import AiProceeding from './AiProceeding';
 import AiResult from './AiResult';
 import useStore from '@/data/ai/aiStore';
 
-import useUserStore from '@/data/user/userStore';
+import useUserStore from '@/data/lookbook/userStore';
 
 import { getBookmarkedClothes } from '@/api/closet/clothes';
 const Modal = ({ isOpen, onClose }) => {
