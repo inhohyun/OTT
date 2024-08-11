@@ -3,7 +3,9 @@ import axiosInstance from '../axiosInstance';
 // closet id 가져오기
 export const getClosetId = async (memberId) => {
   try {
+    console.log('closetId memberId:', memberId);
     const response = await axiosInstance.get(`api/closet/${memberId}`);
+    console.log('closetId 가져오기 성공:', response);
     return response;
   } catch (error) {
     console.error('옷장 id 가져오기 실패:', error);

@@ -19,6 +19,7 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
       // const memberId = 1;
 
       const closetResponse = await getClosetId(memberId);
+      console.log('memberId', memberId);
       const closetid = closetResponse.data[0].id;
       setClosetId(closetid);
       const categoryList = await getCategoryList(closetId);
