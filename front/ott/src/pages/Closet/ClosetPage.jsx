@@ -123,10 +123,18 @@ const ClosetPage = () => {
 
   const handleNewClothes = async (newClothesData) => {
     try {
-      const newItem = await addClothes(newClothesData);
-      newItem.key = newItem.clothesId;
-      const updatedClothesList = await getClothesList();
-      setClothes([...updatedClothesList, newItem]);
+      const response = await addClothes(newClothesData);
+      
+      if (typeof response === 'string' && response.includes('옷 저장을 완료했습니다')) {
+        const updatedClothesList = await getClothesList(memberId);
+        
+        const newItem = updatedClothesList[updatedClothesList.length - 1];
+        newItem.key = newItem.clothesId;
+  
+        setClothes(updatedClothesList);
+      } else {
+        console.error('Unexpected response format:', response);
+      }
     } catch (error) {
       console.error('Error adding clothes:', error);
     }
