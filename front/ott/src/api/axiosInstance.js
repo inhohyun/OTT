@@ -7,7 +7,7 @@ import {
 
 // 환경 변수에서 API 기본 URL 가져오기
 
-const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
+const baseURL = 'https://i11c205.p.ssafy.io';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
