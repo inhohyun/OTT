@@ -11,25 +11,22 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const memberId = useUserStore((state) => state.userId);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        // const memberId = 1;
+        const closetResponse = await getClosetId(memberId);
+        console.log('memberId', memberId);
+        const closetid = closetResponse.data[0].id;
+        setClosetId(closetid);
+        const categoryList = await getCategoryList(closetId);
+        console.log('[*]카테고리 목록', categoryList.data);
+        setCategories(categoryList.data);
+      } catch (error) {
+        console.error('카테고리 목록 조회 실패:', error);
+      }
+    };
     fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      // const memberId = 1;
-
-      const closetResponse = await getClosetId(memberId);
-      console.log('memberId', memberId);
-      const closetid = closetResponse.data[0].id;
-      setClosetId(closetid);
-      const categoryList = await getCategoryList(closetId);
-      console.log('[*]카테고리 목록', categoryList.data);
-      setCategories(categoryList.data);
-    } catch (error) {
-      console.error('카테고리 목록 조회 실패:', error);
-    }
-  };
-
+  }, [closetId]);
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
