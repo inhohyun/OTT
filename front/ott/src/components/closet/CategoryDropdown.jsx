@@ -26,7 +26,7 @@ const CategoryDropdown = ({
   // 옷장 ID
   const [closetId, setClosetId] = useState(null);
 
-  const memberId = useUserStore((state) => state.userId);
+  const userId = useUserStore((state) => state.userId);
 
   useEffect(() => {
     fetchCategories();
@@ -34,7 +34,7 @@ const CategoryDropdown = ({
 
   const fetchCategories = async () => {
     try {
-      const memberId = memberId;
+      const memberId = userId;
       const closetResponse = await getClosetId(memberId);
       const closetId = closetResponse.data[0].id;
       setClosetId(closetId);
