@@ -22,14 +22,15 @@ public class ItemResponseDto {
     private SalesStatus salesStatus;
     private String category;
     private Long categoryId;
-    private String[] imageUrls;
+    private String frontImg;
+    private String backImg;
     private Long clothesId;
     private BookmarkStatus bookmarkStatus;
 
     @Builder
     public ItemResponseDto(String size, String brand, String purchase, PublicStatus publicStatus,
-        String color, Sex gender, SalesStatus salesStatus, String category, String[] imageUrls,
-        Long clothesId, BookmarkStatus bookmarkStatus, Long categoryId) {
+        String color, Sex gender, SalesStatus salesStatus, String category, Long categoryId,
+        String frontImg, String backImg, Long clothesId, BookmarkStatus bookmarkStatus) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
@@ -38,10 +39,11 @@ public class ItemResponseDto {
         this.gender = gender;
         this.salesStatus = salesStatus;
         this.category = category;
-        this.imageUrls = imageUrls;
+        this.categoryId = categoryId;
+        this.frontImg = frontImg;
+        this.backImg = backImg;
         this.clothesId = clothesId;
         this.bookmarkStatus = bookmarkStatus;
-        this.categoryId = categoryId;
     }
 
     private ItemResponseDto() {

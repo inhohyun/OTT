@@ -237,9 +237,15 @@ public class ItemServiceImpl implements ItemService {
         if (oi.isPresent()) {
             Item item = oi.get();
             //이미지 URL가져오기
-            String[] images = new String[item.getItemImages().size()];
-            for (int i = 0; i < item.getItemImages().size(); i++) {
-                images[i] = item.getItemImages().get(i).getItemImagePath();
+            String frontImg = null;
+            String backImg = null;
+
+            List<ItemImage> itemImages = item.getItemImages();
+            if (itemImages.size() == 2) {
+                frontImg = itemImages.get(0).getItemImagePath();
+                backImg = itemImages.get(1).getItemImagePath();
+            } else {
+                frontImg = itemImages.get(0).getItemImagePath();
             }
             //카테고리 가져오기
             //return
@@ -253,9 +259,10 @@ public class ItemServiceImpl implements ItemService {
                 .salesStatus(item.getSalesStatus())
                 .category(item.getItemCategories().get(0).getCategory().getName())
                 .categoryId(item.getItemCategories().get(0).getCategory().getId())
+                .frontImg(frontImg)
+                .backImg(backImg)
                 .brand(item.getBrand())
                 .color(item.getColor())
-                .imageUrls(images)
                 .bookmarkStatus(item.getBookmarkStatus())
                 .build();
         } else {
