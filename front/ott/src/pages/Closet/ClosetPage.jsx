@@ -212,6 +212,8 @@ const ClosetPage = () => {
           clothingItem={selectedClothing}
           onEdit={handleEditClothes}
           categories={filteredCategories}
+          setClothes={setClothes}
+          memberId={memberId}
         />
       )}
     </div>

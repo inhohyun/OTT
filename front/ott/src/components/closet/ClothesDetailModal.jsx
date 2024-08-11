@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
-import { updateClothes, getClothesItemData, deleteClothes } from '../../api/closet/clothes';
+import { updateClothes, getClothesItemData, deleteClothes, getClothesList } from '../../api/closet/clothes';
 
 
 const ClothesDetailModal = ({
@@ -10,6 +10,8 @@ const ClothesDetailModal = ({
   clothingItem,
   onEdit,
   categories,
+  memberId,
+  setClothes
 }) => {
   const [itemDetails, setItemDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -47,18 +49,6 @@ const ClothesDetailModal = ({
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
       formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
       formData.append('memberId', 1);
-      
-      if (itemDetails.frontImg && typeof itemDetails.frontImg !== 'string') {
-        formData.append('frontImg', itemDetails.frontImg);
-      } else if (typeof itemDetails.frontImg === 'string') {
-        formData.append('frontImg', itemDetails.frontImg);
-      }
-
-      if (itemDetails.backImg && typeof itemDetails.backImg !== 'string') {
-        formData.append('backImg', itemDetails.backImg);
-      } else if (typeof itemDetails.backImg === 'string') {
-        formData.append('backImg', itemDetails.backImg);
-      }
   
       await updateClothes(itemDetails.clothesId, formData);
   
@@ -72,6 +62,8 @@ const ClothesDetailModal = ({
   const handleDelete = async () => {
     try {
       await deleteClothes(itemDetails.clothesId);
+      const updatedClothesList = await getClothesList(memberId);
+      setClothes(updatedClothesList)
       onClose();
     } catch (error) {
       console.error('Error deleting item:', error);
