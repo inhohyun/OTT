@@ -204,6 +204,8 @@ public class ItemServiceImpl implements ItemService {
                 itemImageRepository.delete(itemImage);
             }
 
+            itemCategoryRepository.delete(item.getItemCategories().get(0));
+
             //옷 삭제하기
             itemRepository.delete(item);
         } else {
