@@ -3,7 +3,8 @@ import axiosInstance from '../axiosInstance';
 // 카테고리 조회
 export const getCategoryList = async (closetId) => {
   try {
-    const response = await axiosInstance.get(`/api/category/${1}`);
+    console.log('closetId:', closetId);
+    const response = await axiosInstance.get(`/api/category/${closetId}`);
     console.log('카테고리 목록 조회 성공:', response.data);
     return response.data;
   } catch (error) {
