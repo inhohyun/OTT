@@ -40,7 +40,7 @@ export const addCategory = async (closetId, name) => {
       name: name,
     };
     const response = await axiosInstance.post(
-      `/api/category/${1}`,
+      `/api/category/${closetId}`,
       requestBody
     );
     console.log('카테고리 추가 성공', response.data);

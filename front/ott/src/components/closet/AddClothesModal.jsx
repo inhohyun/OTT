@@ -7,8 +7,10 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { addClothes } from '../../api/closet/clothes';
 import iconImage from '/icon-192x192.png';
 import axios from 'axios';
+import useUserStore from '../../data/lookbook/userStore';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
+  const memberId = useUserStore((state) => state.userId);
   const [formData, setFormData] = useState({
     categoryId: null,
     frontImg: '',
@@ -20,7 +22,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
     publicStatus: 'PRIVATE',
     salesStatus: 'NOT_SALE',
     gender: '',
-    memberId: 1,
+    memberId: memberId,
   });
 
   const [errors, setErrors] = useState({});
@@ -111,7 +113,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
       publicStatus: 'PRIVATE',
       salesStatus: 'NOT_SALE',
       gender: '',
-      memberId: 1,
+      memberId: memberId,
     });
     setPreviewImages({ frontImg: '', backImg: '' });
     setErrors({});

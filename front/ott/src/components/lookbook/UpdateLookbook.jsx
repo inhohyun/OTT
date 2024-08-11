@@ -72,7 +72,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
-        setClosetId(response.data[0].id);
+        setClosetId(response[0].id);
       } catch (error) {
         console.error(error);
       }
@@ -91,7 +91,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     const fetchCategory = async () => {
       try {
         const response = await getCategory(closetId);
-        setCategories(response.data);
+        setCategories(response);
       } catch (error) {
         console.error(error);
       }
@@ -133,9 +133,9 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     // }
 
     const fetchClothes = async () => {
-      const closetid = 1;
+      const closetid = closetId;
       try {
-        const response = await getClothes(1, selectedCategory, closetid);
+        const response = await getClothes(userId, selectedCategory, closetid);
         if (Array.isArray(response)) {
           const clothesData = response.map((item) => ({
             id: item.clothId,
