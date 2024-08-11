@@ -4,6 +4,7 @@ import CustomPersonSearchResult from '../../components/webRTC/CustomPersonSearch
 import VideoChat from './VideoChatPage';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import PersonData from './PersonData'; // 모의 데이터 가져오기
+import { getUserListNickname } from '../../api/user/user';
 
 const WebRTCPage = () => {
   // 상태 선언
@@ -29,11 +30,46 @@ const WebRTCPage = () => {
     setLastSearchQuery(searchQuery); 
 
     // 모의 데이터에서 검색어를 포함하는 항목 필터링
-    const filteredResults = PersonData.filter((item) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredResults = PersonData.filter((item) =>
+      // item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
+    getUserListNickname(searchQuery.toLowerCase())
+      .then(filteredResults => {
+        setResults(filteredResults);
+      })
+      .catch(error => {
+        // 에러 처리
+        console.error('Error fetching filtered results:', error);
+      })
+      .finally(() => {
+        // 마지막 검색어 업데이트
+        setLastSearchQuery(searchQuery); 
+      });
 
-    setResults(filteredResults);
+    
+    // .then(response => {
+    //   const data = response.data.data;
+
+    //   // 데이터 처리 로직
+    //   const processedData = data.map(user => ({
+    //     id: user.id,
+    //     name: user.name,
+    //     nickname: user.nickname,
+    //     profileImageUrl: user.profileImageUrl,
+    //   }));
+
+    //   console.log('Filtered results:', processedData);
+    // })
+    // .catch(error => {
+    //   // 에러 처리
+    //   console.error('Error fetching filtered results:', error);
+    // })
+    // .finally(() => {
+    //   // 항상 실행될 코드
+    //   console.log('Filtering complete.');
+    // });
+ 
+    // setResults(filteredResults);
   };
 
   // 화상 채팅 시작 버튼 클릭 시 호출
