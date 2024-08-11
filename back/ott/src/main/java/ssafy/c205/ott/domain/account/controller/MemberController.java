@@ -194,7 +194,7 @@ public class MemberController {
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 팔로잉 수"),
     })
-    @GetMapping("/{memberId}/followingsCount/")
+    @GetMapping("/{memberId}/followingsCount")
     public ApiResponse<Integer> getFollowingsCount(@PathVariable Long memberId) {
         return ApiResponse.success(memberReadService.getFollowingsCount(MemberRequestDto.builder().id(memberId).build()));
     }
