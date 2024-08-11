@@ -18,15 +18,16 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
         console.log('memberId', memberId);
         const closetid = closetResponse.data[0].id;
         setClosetId(closetid);
+        console.log('옷 추가때 옷장 아이디', closetId);
         const categoryList = await getCategoryList(closetId);
-        console.log('[*]카테고리 목록', categoryList);
-        setCategories(categoryList);
+        console.log('[*]카테고리 목록', categoryList.data);
+        setCategories(categoryList.data);
       } catch (error) {
         console.error('카테고리 목록 조회 실패:', error);
       }
     };
     fetchCategories();
-  }, [closetId]);
+  }, []);
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
