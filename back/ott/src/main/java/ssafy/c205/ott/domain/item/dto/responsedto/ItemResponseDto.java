@@ -21,6 +21,7 @@ public class ItemResponseDto {
     private Sex gender;
     private SalesStatus salesStatus;
     private String category;
+    private Long categoryId;
     private String[] imageUrls;
     private Long clothesId;
     private BookmarkStatus bookmarkStatus;
@@ -28,7 +29,7 @@ public class ItemResponseDto {
     @Builder
     public ItemResponseDto(String size, String brand, String purchase, PublicStatus publicStatus,
         String color, Sex gender, SalesStatus salesStatus, String category, String[] imageUrls,
-        Long clothesId, BookmarkStatus bookmarkStatus) {
+        Long clothesId, BookmarkStatus bookmarkStatus, Long categoryId) {
         this.size = size;
         this.brand = brand;
         this.purchase = purchase;
@@ -40,6 +41,7 @@ public class ItemResponseDto {
         this.imageUrls = imageUrls;
         this.clothesId = clothesId;
         this.bookmarkStatus = bookmarkStatus;
+        this.categoryId = categoryId;
     }
 
     private ItemResponseDto() {
