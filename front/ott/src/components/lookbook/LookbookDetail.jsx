@@ -19,7 +19,7 @@ import { lookbookDelete } from '../../api/lookbook/lookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
-import { getUserInfo } from '../../api/user/user';
+import { postFollow, unFollow } from '../../api/user/user';
 
 const LookbookDetail = ({
   onClose,
@@ -40,7 +40,9 @@ const LookbookDetail = ({
   const [selectedClothingItem, setSelectedClothingItem] = useState(null);
   const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
-  const userId = useUserStore((state) => state.userId);
+  // const userId = useUserStore((state) => state.userId);
+  // const userId = 1;
+  const userId = 2;
   const hasFetchedComments = useRef(false);
 
   const nav = useNavigate();
@@ -55,6 +57,7 @@ const LookbookDetail = ({
         setLookbook(data); // 받아온 데이터를 상태로 설정
         setLiked(data.favorite);
         setCntFavorite(data.cntFavorite);
+        setFollowed(data.follow);
       } catch (error) {
         console.error('Error fetching lookbook detail:', error);
       }
@@ -117,8 +120,6 @@ const LookbookDetail = ({
     ...(images ? images.map((item) => item.imagePath.path) : []),
   ];
 
-  const currentUser = 'csh';
-
   const toggleLike = () => {
     if (liked) {
       try {
@@ -139,7 +140,23 @@ const LookbookDetail = ({
     }
   };
 
-  const toggleFollow = () => setFollowed(!followed);
+  const toggleFollow = () => {
+    if (followed) {
+      try {
+        unFollow(currentLookbook.memberId);
+        setFollowed(false);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        unFollow(currentLookbook.memberId);
+        setFollowed(true);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const handlePreviousImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -239,7 +256,7 @@ const LookbookDetail = ({
               {/* {lookbook.createdAt.split('T')[0]} */}
             </p>
           </div>
-          {currentUser !== lookbook.nickname && (
+          {userId !== currentLookbook.memberId && (
             <button
               className={`text-sm px-3 py-3 rounded-lg me-3 ${
                 followed
@@ -252,7 +269,7 @@ const LookbookDetail = ({
               {followed ? '팔로잉' : '팔로우'}
             </button>
           )}
-          {currentUser === lookbook.nickname && (
+          {userId === currentLookbook.memberId && (
             <div className="flex">
               <button
                 className="text-sm py-3 px-3 me-3 rounded-lg bg-violet-300 text-white"

@@ -19,7 +19,8 @@ const MyLookbook = () => {
   const scrollRefs = useRef({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const userId = useUserStore((state) => state.userId);
+  // const userId = useUserStore((state) => state.userId);
+  const userId = 1;
 
   useEffect(() => {
     const fetchInitialLookbooks = async () => {

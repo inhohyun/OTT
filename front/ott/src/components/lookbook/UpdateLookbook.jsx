@@ -67,12 +67,12 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   // 옷장 id 조회
   useEffect(() => {
-    // const uid = 1;
-    const uid = userId;
+    const uid = 1;
+    // const uid = userId;
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
-        setClosetId(response.data[0].id);
+        setClosetId(response[0].id);
       } catch (error) {
         console.error(error);
       }
@@ -91,7 +91,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     const fetchCategory = async () => {
       try {
         const response = await getCategory(closetId);
-        setCategories(response.data);
+        setCategories(response);
       } catch (error) {
         console.error(error);
       }
@@ -201,8 +201,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
-          // formData.append('memberId', 1);
-          formData.append('memberId', userId);
+          formData.append('memberId', 1);
+          // formData.append('memberId', userId);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);

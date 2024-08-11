@@ -22,10 +22,10 @@ const Recommend = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { hideDetail } = useLookbookStore();
 
-  // const memberId = 1;
+  const memberId = 1;
 
   const userId = useUserStore((state) => state.userId);
-  const memberId = userId;
+  // const memberId = userId;
 
   const fetchData = async () => {
     try {

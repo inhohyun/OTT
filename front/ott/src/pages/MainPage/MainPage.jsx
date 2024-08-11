@@ -38,7 +38,7 @@ const MainPage = () => {
 
   const setUserId = useUserStore((state) => state.setUserId);
 
-  // const memberId = 1;
+  const memberId = 1;
 
   const renderComponent = () => {
     switch (activeComponent) {

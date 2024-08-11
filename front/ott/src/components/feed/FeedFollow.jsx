@@ -165,12 +165,13 @@ const FeedFollow = () => {
 
   const scrollRefs = useRef([]);
 
-  const userId = useUserStore((state) => state.userId);
+  // const userId = useUserStore((state) => state.userId);
+  const userId = 1;
 
   useEffect(() => {
     const fetchFollowFeed = async () => {
       try {
-        const data = await followFeed();
+        const data = await followFeed(userId);
         setFollowersData(data);
         setVisibleLookbooks(
           data.reduce(
