@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ssafy.c205.ott.common.ApiResponse;
+import ssafy.c205.ott.common.oauth.exception.ExpiredRefreshToken;
+import ssafy.c205.ott.common.oauth.exception.InvalidRefreshToken;
+import ssafy.c205.ott.common.oauth.exception.NotFoundRefreshTokenException;
 import ssafy.c205.ott.domain.account.exception.*;
 
 @RestControllerAdvice
@@ -18,7 +21,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FollowRequestNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleFollowNotFoundException(FollowRequestNotFoundException e) {
+    public ResponseEntity<ApiResponse<Void>> handleFollowRequestNotFoundException(FollowRequestNotFoundException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(NotFoundRefreshTokenException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotFoundRefreshTokenException(NotFoundRefreshTokenException e) {
         ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
@@ -44,6 +53,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AlreadyUnfollowException.class)
     public ResponseEntity<ApiResponse<Void>> handleAlreadyUnfollowException(AlreadyUnfollowException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(ExpiredRefreshToken.class)
+    public ResponseEntity<ApiResponse<Void>> handleExpiredRefreshToken(ExpiredRefreshToken e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(InvalidRefreshToken.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidRefreshToken(InvalidRefreshToken e) {
         ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
