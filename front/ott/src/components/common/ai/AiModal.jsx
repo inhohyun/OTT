@@ -7,6 +7,9 @@ import AiProceeding from './AiProceeding';
 import AiResult from './AiResult';
 import useStore from '@/data/ai/aiStore';
 
+import useUserStore from '@/data/user/userStore';
+
+import { getBookmarkedClothes } from '@/api/closet/clothes';
 const Modal = ({ isOpen, onClose }) => {
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
@@ -25,11 +28,12 @@ const Modal = ({ isOpen, onClose }) => {
     (state) => state.setSelectedClothesURL
   );
 
-  const clothes = useStore((state) => state.clothes);
+  // const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
 
+  // zustand에 있는 memberId 가져오기
+  const memberId = useUserStore((state) => state.userId);
   // 모달이 열릴 때 Zustand 상태를 콘솔에 출력
-
   const categories = [
     { value: '상의', label: '상의' },
     { value: '하의', label: '하의' },
@@ -41,6 +45,17 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 3, label: '3장' },
     { value: 4, label: '4장' },
   ];
+  const [clothes, setClothes] = useState([]);
+
+  useEffect(async () => {
+    try {
+      const response = await getBookmarkedClothes(memberId);
+      console.log('북마크된 옷', response);
+      setClothes(response);
+    } catch (error) {
+      console.error('즐겨찾기 옷 조회 실패:', error);
+    }
+  }, []);
 
   const customStyles = {
     control: (provided, state) => ({
@@ -93,11 +108,11 @@ const Modal = ({ isOpen, onClose }) => {
       reader.readAsDataURL(file);
     }
   };
-
-  const filteredClothes =
-    filter === 'all'
-      ? clothes
-      : clothes.filter((clothing) => clothing.category === filter);
+  // 옷 필터 주석처리
+  // const filteredClothes =
+  //   filter === 'all'
+  //     ? clothes
+  //     : clothes.filter((clothing) => clothing.category === filter);
 
   return (
     <div className="modal-overlay custom-scrollbar mb-[65px]" onClick={onClose}>
@@ -164,7 +179,7 @@ const Modal = ({ isOpen, onClose }) => {
               />
             </div>
             <ClothesGridSingleLine
-              clothes={filteredClothes}
+              clothes={clothes}
               onToggleLike={toggleLike}
               onClothingClick={handleClothingClick}
             />
