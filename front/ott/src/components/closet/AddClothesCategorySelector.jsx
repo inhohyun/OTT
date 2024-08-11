@@ -8,6 +8,8 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
   const [closetId, setClosetId] = useState(null);
 
+  const memberId = useUserStore((state) => state.userId);
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -15,7 +17,7 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const fetchCategories = async () => {
     try {
       // const memberId = 1;
-      const memberId = useUserStore((state) => state.userId);
+
       const closetResponse = await getClosetId(memberId);
       const closetid = closetResponse.data[0].id;
       setClosetId(closetid);
