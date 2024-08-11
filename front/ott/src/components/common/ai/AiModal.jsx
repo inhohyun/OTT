@@ -46,6 +46,7 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 4, label: '4장' },
   ];
   const [clothes, setClothes] = useState([]);
+  console.log('memberId: ', memberId);
   useEffect(() => {
     const fetchBookmarkedClothes = async () => {
       try {
