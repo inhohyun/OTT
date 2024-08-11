@@ -38,17 +38,15 @@ const ClothesDetailModal = ({
 
   const handleSave = async () => {
     try {
-      const matchingCategory = categories.find(
-        (category) => category.name === itemDetails.category
-      );
-  
       const formData = new FormData();
       formData.append('brand', itemDetails.brand);
       formData.append('purchase', itemDetails.purchase);
       formData.append('size', itemDetails.size);
       formData.append('color', itemDetails.color);
-      formData.append('gender', itemDetails.gender);
-      formData.append('categoryId', matchingCategory ? matchingCategory.categoryId : null);
+      formData.append('gender', itemDetails.gender || '');
+      formData.append('categoryId', itemDetails.categoryId || '');
+      formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
+      formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
       formData.append('memberId', 1);
       
       if (itemDetails.frontImg) {

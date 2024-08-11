@@ -3,7 +3,7 @@ import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
-import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
+import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
 import { getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 
@@ -36,6 +36,7 @@ const ClosetPage = () => {
     const fetchClosetIdAndCategories = async () => {
       try {
         const closetResponse = await getClosetId(memberId);
+        console.log(closetResponse)
         const closetId = closetResponse.data.data[0].id;
         setClosetId(closetId);
 
@@ -134,6 +135,7 @@ const ClosetPage = () => {
   };
 
   const handleClothesClick = (clothingItem) => {
+    console.log(clothingItem.clothesId)
     setSelectedClothing(clothingItem);
     setIsDetailModalOpen(true);
   };
