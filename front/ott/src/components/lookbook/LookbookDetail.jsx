@@ -50,7 +50,7 @@ const LookbookDetail = ({
     console.log(lookbookId, '룩북아이디');
     const fetchLookbookDetail = async () => {
       try {
-        const data = await lookbookDetail(lookbookId); // API 호출
+        const data = await lookbookDetail(lookbookId, userId); // API 호출
         console.log('룩북디테일', data);
         setLookbook(data); // 받아온 데이터를 상태로 설정
         setLiked(data.favorite);
@@ -122,7 +122,7 @@ const LookbookDetail = ({
   const toggleLike = () => {
     if (liked) {
       try {
-        lookbookDislike(lookbookId);
+        lookbookDislike(lookbookId, userId);
         setLiked(false);
         setCntFavorite((prevCntLike) => prevCntLike - 1);
       } catch (error) {
@@ -130,7 +130,7 @@ const LookbookDetail = ({
       }
     } else {
       try {
-        lookbookLike(lookbookId);
+        lookbookLike(lookbookId, userId);
         setLiked(true);
         setCntFavorite((prevCntLike) => prevCntLike + 1);
       } catch (error) {

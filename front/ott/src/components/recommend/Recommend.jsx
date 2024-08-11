@@ -12,6 +12,7 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 import LookbookList from '../lookbook/LookbookList';
 import CustomSpinner from '../common/CustomSpinner';
+import useUserStore from '../../data/lookbook/userStore';
 
 const Recommend = () => {
   const categories = ['키·몸무게', '체형', '선호 스타일'];
@@ -21,7 +22,10 @@ const Recommend = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { hideDetail } = useLookbookStore();
 
-  const memberId = 1;
+  // const memberId = 1;
+
+  const userId = useUserStore((state) => state.userId);
+  const memberId = userId;
 
   const fetchData = async () => {
     try {

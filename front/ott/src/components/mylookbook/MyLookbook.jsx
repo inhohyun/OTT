@@ -117,12 +117,12 @@ const MyLookbook = () => {
     setSelectedTag(null);
   };
 
-  if (!Array.isArray(lookbooks) || !lookbooks.length) {
-    return <EmptyLookbook />;
-  }
-
   if (isLoading) {
     return <CustomSpinner />;
+  }
+
+  if (!lookbooks.length) {
+    return <EmptyLookbook />;
   }
 
   return (
