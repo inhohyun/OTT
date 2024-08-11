@@ -52,7 +52,7 @@ const ClothesDetailModal = ({
   
       await updateClothes(itemDetails.clothesId, formData);
   
-      onEdit(itemDetails);
+      // onEdit(itemDetails);
       setIsEditing(false);
     } catch (error) {
       console.error('Error saving changes:', error);
