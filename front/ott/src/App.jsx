@@ -42,7 +42,7 @@ function App() {
               <Route path="/UpdatePage" element={<UpdatePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
-              <Route path="/video-chat/:username" element={<VideoChat />} />
+              <Route path="/video-chat" element={<VideoChat />} />
               <Route path="/lookbookcreate" element={<LookbookCreate />} />
               <Route
                 path="/update-lookbook/:id"
