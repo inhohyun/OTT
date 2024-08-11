@@ -108,9 +108,12 @@ export const deleteClothes = async (clothesId) => {
 // 카테고리별 옷 조회
 export const getClothesByCategory = async (memberId, categoryId, closetId) => {
   try {
-    const response = await axiosInstance.get(`/api/clothes/${memberId}/${categoryId}`, {
-      params: { closet_id: closetId },
-    });
+    const response = await axiosInstance.get(
+      `/api/clothes/${memberId}/${categoryId}`,
+      {
+        params: { closet_id: closetId },
+      }
+    );
     console.log('카테고리별 조회 성공');
     return response.data;
   } catch (error) {
@@ -123,12 +126,12 @@ export const getClothesByCategory = async (memberId, categoryId, closetId) => {
 export const getBookmarkedClothes = async (memberId) => {
   try {
     const response = await axiosInstance.get(`/api/clothes/bookmark`, {
-      params: { memberId }
+      params: { memberId },
     });
-    console.log('북마크된 옷 목록 조회 성공: ', response.data);
+    console.log('북마크된 옷 목록 조회 성공: ', response);
     return response.data;
   } catch (error) {
     console.error('북마크된 옷 목록 조회 실패: ', error);
     throw error;
   }
-}
+};
