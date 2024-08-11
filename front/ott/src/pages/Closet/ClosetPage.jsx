@@ -4,7 +4,12 @@ import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
 import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
-import { getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
+import {
+  getClothesList,
+  getClosetId,
+  getClothesByCategory,
+  getBookmarkedClothes,
+} from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 
 const ClosetPage = () => {
@@ -22,7 +27,7 @@ const ClosetPage = () => {
 
   useEffect(() => {
     if (closetId !== null) {
-      fetchClothesByCategory(selectedCategory)
+      fetchClothesByCategory(selectedCategory);
     }
   }, [selectedCategory, closetId]);
 
@@ -30,26 +35,24 @@ const ClosetPage = () => {
 
   const fetchClosetIdAndCategories = async () => {
     try {
-      const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
-      setClosetId(closetId);
+      // const closetResponse = await getClosetId(memberId);
+      // const closetId = closetResponse.data.data[0].id;
+      // setClosetId(closetId);
 
-      const categoryList = await getCategoryList(closetId);
-      const fetchedCategories = categoryList.data.map(
-        (category) => ({
-          categoryId: category.id,
-          name: category.name,
-        })
-      );
+      const categoryList = await getCategoryList(1);
+      const fetchedCategories = categoryList.data.map((category) => ({
+        categoryId: category.id,
+        name: category.name,
+      }));
       setCategories([
         { categoryId: -100, name: '전체' },
         { categoryId: -200, name: '즐겨찾기' },
         ...fetchedCategories,
       ]);
     } catch (error) {
-      console.error('카테고리 목록 가져오기 실패:', error)
+      console.error('카테고리 목록 가져오기 실패:', error);
     }
-  }
+  };
 
   const fetchClothesByCategory = async (categoryId) => {
     try {
@@ -61,13 +64,17 @@ const ClosetPage = () => {
         // 즐겨찾기
         clothesList = await getBookmarkedClothes(memberId);
       } else {
-        clothesList = await getClothesByCategory(memberId, categoryId, closetId);
+        clothesList = await getClothesByCategory(
+          memberId,
+          categoryId,
+          closetId
+        );
       }
       setClothes(clothesList);
     } catch (error) {
       console.error('옷 목록 가져오기 실패', error);
     }
-  }
+  };
 
   const handleCategoryChange = (newCategoryId) => {
     setSelectedCategory(newCategoryId);
@@ -124,7 +131,7 @@ const ClosetPage = () => {
     setSelectedClothing(clothingItem);
     setIsDetailModalOpen(true);
   };
-  
+
   const filteredCategories = categories.filter(
     (category) => category !== '전체' && category !== '즐겨찾기'
   );
