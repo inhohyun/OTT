@@ -35,10 +35,10 @@ const ClosetPage = () => {
     console.log('옷장 페이지에서의 memberId:', memberId);
     try {
       const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
+      const closetId = closetResponse.data[0].id;
       setClosetId(closetId);
 
-      const categoryList = await getCategoryList(1);
+      const categoryList = await getCategoryList(closetId);
       const fetchedCategories = categoryList.data.map((category) => ({
         categoryId: category.id,
         name: category.name,
