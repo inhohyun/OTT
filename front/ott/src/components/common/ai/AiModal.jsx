@@ -167,7 +167,7 @@ const Modal = ({ isOpen, onClose }) => {
                 className="flex-grow"
               />
             </div>
-            <h4>저장된 옷</h4>
+            <h4>착용할 부위</h4>
             <div className="mb-4 dropdown-wrapper">
               <Select
                 options={categories}
@@ -182,6 +182,7 @@ const Modal = ({ isOpen, onClose }) => {
                 className="flex-grow"
               />
             </div>
+            <h4>옷 선택</h4>
             <ClothesGridSingleLine
               clothes={clothes}
               onToggleLike={toggleLike}
