@@ -14,9 +14,6 @@ import axiosInstance from '../axiosInstance';
 // };
 
 // 내 룩북 조회 api
-
-import axiosInstance from '../axiosInstance';
-
 export const fetchMyLookbooks = async (userId) => {
   try {
     const response = await axiosInstance.get('api/lookbook/mylookbook', {
