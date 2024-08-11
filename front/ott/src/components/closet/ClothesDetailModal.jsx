@@ -51,6 +51,15 @@ const ClothesDetailModal = ({
       formData.append('memberId', 1);
   
       await updateClothes(itemDetails.clothesId, formData);
+      const updatedClothesList = await getClothesList(memberId);
+      setClothes(updatedClothesList);
+
+      const updatedItemDetails = updatedClothesList.find(
+        (item) => item.clothesId === itemDetails.clothesId
+      );
+      if (updatedItemDetails) {
+        setItemDetails(updatedItemDetails);
+      }
   
       // onEdit(itemDetails);
       setIsEditing(false);
@@ -62,8 +71,9 @@ const ClothesDetailModal = ({
   const handleDelete = async () => {
     try {
       await deleteClothes(itemDetails.clothesId);
-      const updatedClothesList = await getClothesList(memberId);
-      setClothes(updatedClothesList)
+      setClothes((prevClothes) =>
+        prevClothes.filter((item) => item.clothesId !== itemDetails.clothesId)
+      );
       onClose();
     } catch (error) {
       console.error('Error deleting item:', error);
