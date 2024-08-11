@@ -17,8 +17,8 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
       // const memberId = 1;
       const memberId = useUserStore((state) => state.userId);
       const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data[0].id;
-      setClosetId(closetId);
+      const closetid = closetResponse.data[0].id;
+      setClosetId(closetid);
       const categoryList = await getCategoryList(closetId);
       setCategories(categoryList.data);
     } catch (error) {
