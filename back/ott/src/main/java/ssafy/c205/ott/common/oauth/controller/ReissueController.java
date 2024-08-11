@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ssafy.c205.ott.common.ApiResponse;
-import ssafy.c205.ott.common.oauth.dto.ReissueAccessTokenSuccessDto;
 import ssafy.c205.ott.common.oauth.exception.ExpiredRefreshToken;
 import ssafy.c205.ott.common.oauth.exception.InvalidRefreshToken;
 import ssafy.c205.ott.common.oauth.exception.NotFoundRefreshTokenException;
@@ -33,7 +31,7 @@ public class ReissueController {
     private final CookieService cookieService;
 
     @GetMapping("/api/reissue")
-    public ApiResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
 
         log.info("reissue 진입");
@@ -97,7 +95,7 @@ public class ReissueController {
         response.setHeader("access", newAccess);
         response.addHeader(HttpHeaders.SET_COOKIE, cookieService.createCookie("refresh", newRefresh).toString());
 
-        return ApiResponse.success(new ReissueAccessTokenSuccessDto());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
