@@ -150,7 +150,7 @@ const LookbookDetail = ({
       }
     } else {
       try {
-        unFollow(currentLookbook.memberId);
+        postFollow(currentLookbook.memberId);
         setFollowed(true);
       } catch (error) {
         console.error(error);
