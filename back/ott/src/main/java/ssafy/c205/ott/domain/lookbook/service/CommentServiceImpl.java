@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.CommentStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
@@ -38,9 +39,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void createComment(String postId, CommentMessageDto commentMessageDto) {
 
-        Member member = null;
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(
-            commentMessageDto.getMemberId(), ActiveStatus.ACTIVE);
+        Member member = memberRepository.findByIdAndActiveStatus(
+                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
         Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
         Lookbook lookbook = null;
@@ -49,13 +49,6 @@ public class CommentServiceImpl implements CommentService {
             lookbook = ol.get();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, postId + "의 룩북을 조회하지 못했습니다.");
-        }
-
-        if (om.isPresent()) {
-            member = om.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                commentMessageDto.getMemberId() + "의 멤버를 찾지 못했습니다.");
         }
 
         Comment c = commentRepository.save(Comment
@@ -80,19 +73,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createReply(String postId, String commentId, CommentMessageDto commentMessageDto) {
-        Member member = null;
         Lookbook lookbook = null;
         Comment parent = null;
 
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(
-            commentMessageDto.getMemberId(), ActiveStatus.ACTIVE);
-
-        if (om.isPresent()) {
-            member = om.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                commentMessageDto.getMemberId() + "의 멤버를 찾지 못했습니다.");
-        }
+        Member member = memberRepository.findByIdAndActiveStatus(
+                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
         Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
         if (ol.isPresent()) {
