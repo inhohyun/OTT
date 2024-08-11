@@ -11,7 +11,7 @@ import {
   getBookmarkedClothes,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
-
+import { useUserStore } from '@@/data/lookbook/userStore';
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(-100);
   const [categories, setCategories] = useState([]);
@@ -20,7 +20,7 @@ const ClosetPage = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [closetId, setClosetId] = useState(null);
-
+  const memberId = useUserStore((state) => state.userId);
   useEffect(() => {
     fetchClosetIdAndCategories();
   }, []);
@@ -31,13 +31,12 @@ const ClosetPage = () => {
     }
   }, [selectedCategory, closetId]);
 
-  const memberId = 1;
-
   const fetchClosetIdAndCategories = async () => {
+    console.log('옷장 페이지에서의 memberId:', memberId);
     try {
-      // const closetResponse = await getClosetId(memberId);
-      // const closetId = closetResponse.data.data[0].id;
-      // setClosetId(closetId);
+      const closetResponse = await getClosetId(memberId);
+      const closetId = closetResponse.data.data[0].id;
+      setClosetId(closetId);
 
       const categoryList = await getCategoryList(1);
       const fetchedCategories = categoryList.data.map((category) => ({

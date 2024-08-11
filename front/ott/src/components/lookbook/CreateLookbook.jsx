@@ -33,7 +33,7 @@ const CreateLookbook = () => {
 
   // 옷장 id 조회
   useEffect(() => {
-    const uid = 1;
+    // const uid = 1;
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
@@ -55,7 +55,7 @@ const CreateLookbook = () => {
     if (closetId === null) return;
     const fetchCategory = async () => {
       try {
-        const response = await getCategory(1);
+        const response = await getCategory(closetId);
         console.log('카테고리', response);
         // setCategories(response.data);
         setCategories(response.data);
