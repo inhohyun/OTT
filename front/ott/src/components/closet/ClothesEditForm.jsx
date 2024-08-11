@@ -12,7 +12,18 @@ const ClothesEditForm = ({
   setItemDetails,
   categories
 }) => {
-  const [imageFiles, setImageFiles] = useState(itemDetails.imageUrls || []);
+
+  const [imageFiles, setImageFiles] = useState({
+    frontImg: itemDetails.frontImg || '',
+    backImg: itemDetails.backImg || '',
+  });
+
+  useEffect(() => {
+    setImageFiles({
+      frontImg: itemDetails.frontImg || '',
+      backImg: itemDetails.backImg || '',
+    });
+  }, [itemDetails]);
 
   const customStyles = {
     control: (provided, state) => ({
@@ -55,8 +66,12 @@ const ClothesEditForm = ({
   };
 
   // 이미지 선택 처리 함수
-  const handleImageSelection = (index) => {
-    document.getElementById(`image-file-input-${index}`).click();
+  const handleImageSelection = (e, side) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFiles((prev) => ({ ...prev, [side]: file }));
+      setItemDetails((prev) => ({ ...prev, [side]: file }));
+    }
   };
 
   // 파일 변경 처리 함수
@@ -76,47 +91,50 @@ const ClothesEditForm = ({
   };
 
   // 이미지 입력 요소 렌더링 함수
-  const renderImageInputs = () => {
-    const labels = ['앞면', '뒷면'];
-    return labels.map((label, index) => (
-      <div key={index} className="relative">
-        <label className="block text-gray-700 mb-2 text-center">{label}</label>
-        <div
-          className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
-          onClick={() => handleImageSelection(index)}
-        >
-          {imageFiles[index] ? (
-            <img
-              src={
-                typeof imageFiles[index] === 'string'
-                  ? imageFiles[index]
-                  : URL.createObjectURL(imageFiles[index])
-              }
-              alt={`${label} 이미지`}
-              className="object-cover h-full w-full rounded-lg"
-            />
-          ) : (
-            <span className="text-gray-400">이미지 추가</span>
+  const renderImageInputs = () => (
+    <>
+      {['frontImg', 'backImg'].map((side, index) => (
+        <div key={side} className="relative">
+          <label className="block text-gray-700 mb-2 text-center">
+            {index === 0 ? '앞면' : '뒷면'}
+          </label>
+          <div
+            className="border-2 border-dashed rounded-lg h-40 flex items-center justify-center cursor-pointer"
+            onClick={() => document.getElementById(`${side}-file-input`).click()}
+          >
+            {imageFiles[side] ? (
+              <img
+                src={
+                  typeof imageFiles[side] === 'string'
+                    ? imageFiles[side]
+                    : URL.createObjectURL(imageFiles[side])
+                }
+                alt={`${side} 이미지`}
+                className="object-cover h-full w-full rounded-lg"
+              />
+            ) : (
+              <span className="text-gray-400">이미지 추가</span>
+            )}
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            id={`${side}-file-input`}
+            onChange={(e) => handleImageSelection(e, side)}
+            className="hidden"
+          />
+          {imageFiles[side] && (
+            <div
+              className="absolute top-1 right-1 cursor-pointer"
+              onClick={() => clearImage(index)}
+            >
+              <FontAwesomeIcon icon={faTrashAlt} className="text-red-600" />
+            </div>
           )}
         </div>
-        <input
-          type="file"
-          accept="image/*"
-          id={`image-file-input-${index}`}
-          onChange={(e) => handleFileChange(e, index)}
-          className="hidden"
-        />
-        {imageFiles[index] && (
-          <div
-            className="absolute top-1 right-1 cursor-pointer"
-            onClick={() => clearImage(index)}
-          >
-            <FontAwesomeIcon icon={faTrashAlt} className="text-red-600" />
-          </div>
-        )}
-      </div>
-    ));
-  };
+      ))}
+    </>
+  );
 
   const matchingCategory = categories.find(
     (category) => category.name === itemDetails.category
@@ -178,7 +196,7 @@ const ClothesEditForm = ({
         <AddClothesCategorySelector
           selectedCategory={matchingCategory?.categoryId || null}
           onCategoryChange={(categoryId) => 
-            setItemDetails((prev) => ({ ...prev, category: categoryId }))
+            setItemDetails((prev) => ({ ...prev, categoryId }))
           }
         />
       </div>

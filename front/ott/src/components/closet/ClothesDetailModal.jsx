@@ -44,15 +44,20 @@ const ClothesDetailModal = ({
       formData.append('size', itemDetails.size);
       formData.append('color', itemDetails.color);
       formData.append('gender', itemDetails.gender || '');
-      formData.append('categoryId', itemDetails.categoryId || '');
+      formData.append('categoryId', itemDetails.categoryId);
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
       formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
       formData.append('memberId', 1);
       
-      if (itemDetails.frontImg) {
+      if (itemDetails.frontImg && typeof itemDetails.frontImg !== 'string') {
+        formData.append('frontImg', itemDetails.frontImg);
+      } else if (typeof itemDetails.frontImg === 'string') {
         formData.append('frontImg', itemDetails.frontImg);
       }
-      if (itemDetails.backImg) {
+
+      if (itemDetails.backImg && typeof itemDetails.backImg !== 'string') {
+        formData.append('backImg', itemDetails.backImg);
+      } else if (typeof itemDetails.backImg === 'string') {
         formData.append('backImg', itemDetails.backImg);
       }
   

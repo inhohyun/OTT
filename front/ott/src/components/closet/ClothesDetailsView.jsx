@@ -13,6 +13,8 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
   const [detailedItem, setDetailedItem] = useState(itemDetails); // 상세 아이템 상태 관리
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
+  const images = [detailedItem.frontImg, detailedItem.backImg].filter(Boolean);
+
   useEffect(() => {
     const fetchItemDetails = async () => {
       try {
@@ -78,34 +80,30 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
           {detailedItem.name || '상세 정보'} {/* 옷 이름 또는 상세 정보 */}
         </h2>
         <div className="relative mb-4">
-          {detailedItem.imageUrls && detailedItem.imageUrls.length > 0 ? (
+          {images.length > 0 ? (
             <div>
               <img
-                src={detailedItem.imageUrls[currentImageIndex]}
+                src={images[currentImageIndex]}
                 alt={`옷 이미지 ${currentImageIndex + 1}`}
-                className="w-full my-2"
+                className="w-full my-2 object-cover rounded-lg"
               />
-              {detailedItem.imageUrls.length > 1 && (
+              {images.length > 1 && (
                 <>
                   <div
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full cursor-pointer"
                     onClick={() =>
                       setCurrentImageIndex(
-                        (currentImageIndex -
-                          1 +
-                          detailedItem.imageUrls.length) %
-                          detailedItem.imageUrls.length
+                        (currentImageIndex - 1 + images.length) % images.length
                       )
                     }
                   >
-                    <FontAwesomeIcon icon={faChevronLeft} />{' '}
-                    {/* 이전 이미지로 이동 */}
+                    <FontAwesomeIcon icon={faChevronLeft} />
                   </div>
                   <div
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full cursor-pointer"
                     onClick={() =>
                       setCurrentImageIndex(
-                        (currentImageIndex + 1) % detailedItem.imageUrls.length
+                        (currentImageIndex + 1) % images.length
                       )
                     }
                   >

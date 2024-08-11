@@ -4,7 +4,6 @@ import axiosInstance from '../axiosInstance';
 export const getCategoryList = async (closetId) => {
   try {
     const response = await axiosInstance.get(`/api/category/${closetId}`);
-    console.log(response)
     console.log('카테고리 목록 조회 성공:', response.data);
     return response.data;
   } catch (error) {

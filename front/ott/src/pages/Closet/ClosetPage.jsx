@@ -153,7 +153,6 @@ const ClosetPage = () => {
   const filteredCategories = categories.filter(
     (category) => category.name !== '전체' && category.name !== '즐겨찾기'
   );
-  console.log(filteredCategories)
 
   return (
     <div

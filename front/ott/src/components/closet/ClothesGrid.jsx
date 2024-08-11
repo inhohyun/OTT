@@ -135,6 +135,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
           }}
         >
           {clothes.slice(0, visibleItems).map((item) => {
+            console.log('Clothes Item:', item)
             const isFrontVisible = visibleImages.find(
               (image) => image.id === item.key
             )?.isFront;
