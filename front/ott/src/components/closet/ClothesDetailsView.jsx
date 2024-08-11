@@ -8,7 +8,6 @@ import {
   faTimes,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { deleteClothes } from '../../api/closet/clothes';
 
 const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 이미지 인덱스 상태 관리
@@ -34,13 +33,12 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
 
   // 옷 삭제하는 함수
   const handleDelete = async (event) => {
-    event.stopPropagation()
+    event.stopPropagation();
 
     const confirmDelete = window.confirm('정말 이 옷을 삭제하시겠습니까?');
     if (confirmDelete) {
       try {
-        await deleteClothes(detailedItem.clothesId);
-        onDelete(detailedItem.clothesId); // Callback to handle deletion in parent component
+        await onDelete(detailedItem.clothesId);
       } catch (error) {
         console.error('옷 삭제 중 오류 발생:', error);
       }

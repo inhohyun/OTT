@@ -9,7 +9,6 @@ const ClothesDetailModal = ({
   onClose,
   clothingItem,
   onEdit,
-  onDelete,
   categories,
 }) => {
   const [itemDetails, setItemDetails] = useState(null);
@@ -73,14 +72,12 @@ const ClothesDetailModal = ({
   const handleDelete = async () => {
     try {
       await deleteClothes(itemDetails.clothesId);
-      onDelete(itemDetails.clothesId);
       onClose();
     } catch (error) {
       console.error('Error deleting item:', error);
     }
   };
   
-
   const handleCancel = () => {
     setIsEditing(false);
   };

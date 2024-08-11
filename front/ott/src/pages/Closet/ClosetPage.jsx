@@ -203,7 +203,6 @@ const ClosetPage = () => {
           onClose={() => setIsDetailModalOpen(false)}
           clothingItem={selectedClothing}
           onEdit={handleEditClothes}
-          // onDelete={handleDeleteClothes}
           categories={filteredCategories}
         />
       )}

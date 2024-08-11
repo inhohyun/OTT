@@ -4,7 +4,6 @@ import Select from 'react-select';
 import AddClothesCategorySelector from './AddClothesCategorySelector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { addClothes } from '../../api/closet/clothes';
 import iconImage from '/icon-192x192.png';
 import axios from 'axios';
 
@@ -46,64 +45,52 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
   const validateInputs = () => {
     const newErrors = {};
     if (!formData.frontImg) newErrors.frontImg = '앞면 이미지를 선택하세요.';
-    if (!(formData.brand || '').trim())
-      newErrors.brand = '브랜드를 입력하세요.';
-    if (!(formData.purchase || '').trim())
-      newErrors.purchase = '구매처를 입력하세요.';
-    if (!(formData.size || '').trim()) newErrors.size = '사이즈를 입력하세요.';
-    if (!(formData.color || '').trim()) newErrors.color = '색상을 입력하세요.';
-    if (!(formData.gender || '').trim())
-      newErrors.gender = '성별을 선택하세요.';
+    if (!formData.brand.trim()) newErrors.brand = '브랜드를 입력하세요.';
+    if (!formData.purchase.trim()) newErrors.purchase = '구매처를 입력하세요.';
+    if (!formData.size.trim()) newErrors.size = '사이즈를 입력하세요.';
+    if (!formData.color.trim()) newErrors.color = '색상을 입력하세요.';
+    if (!formData.gender) newErrors.gender = '성별을 선택하세요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleAddClothes = () => {
-    console.log('Add Clothes button clicked');
+  const handleAddClothes = async () => {
+    if (!validateInputs()) {
+      return;
+    }
 
-    if (validateInputs()) {
-      const data = new FormData();
-      data.append('categoryId', formData.categoryId); // Use categoryId directly
-      data.append('brand', formData.brand);
-      data.append('purchase', formData.purchase);
-      data.append('size', formData.size);
-      data.append('color', formData.color);
-      data.append('publicStatus', formData.publicStatus);
-      data.append('salesStatus', formData.salesStatus);
-      data.append('gender', formData.gender);
-      data.append('memberId', formData.memberId);
+    const data = new FormData();
+    data.append('categoryId', formData.categoryId);
+    data.append('brand', formData.brand);
+    data.append('purchase', formData.purchase);
+    data.append('size', formData.size);
+    data.append('color', formData.color);
+    data.append('publicStatus', formData.publicStatus);
+    data.append('salesStatus', formData.salesStatus);
+    data.append('gender', formData.gender);
+    data.append('memberId', formData.memberId);
 
-      if (formData.frontImg) {
-        data.append('frontImg', formData.frontImg);
-      }
-      if (formData.backImg) {
-        data.append('backImg', formData.backImg);
-      }
+    if (formData.frontImg) {
+      data.append('frontImg', formData.frontImg);
+    }
+    if (formData.backImg) {
+      data.append('backImg', formData.backImg);
+    }
 
-      for (let [key, value] of data.entries()) {
-        console.log(`${key}:`, value);
-      }
-
-      addClothes(data)
-        .then((response) => {
-          console.log('Successfully added clothes:', response);
-          onAddClothes(response.data);
-          clearInputs();
-          onClose();
-        })
-        .catch((error) => {
-          console.error('Error adding clothes:', error);
-        });
-    } else {
-      console.log('Validation failed:', errors);
+    try {
+      await onAddClothes(data);
+      clearInputs();
+      onClose();
+    } catch (error) {
+      console.error('Error adding clothes:', error);
     }
   };
 
   const clearInputs = () => {
     setFormData({
       categoryId: null,
-      frontImg: null,
-      backImg: null,
+      frontImg: '',
+      backImg: '',
       brand: '',
       purchase: '',
       size: '',
@@ -121,7 +108,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
     document.getElementById(`${type}-file-input`).click();
   };
 
-  const handleFileChange = (e, type) => {
+  const handleFileChange = async (e, type) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const imageUrl = URL.createObjectURL(file);
@@ -130,33 +117,27 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
       setPreviewImages((prev) => ({ ...prev, [`${type}Img`]: imageUrl }));
       setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: true }));
 
-      let formdata = new FormData();
-      formdata.append('file', file);
+      const formData = new FormData();
+      formData.append('file', file);
 
-      axios
-        .post('https://i11c205.p.ssafy.io/rembg', formdata, {
-          responseType: 'blob', // 중요: 응답을 Blob으로 받음
-        })
-        .then((response) => {
-          const blob = response.data;
-          const processedImageUrl = URL.createObjectURL(blob);
-
-          // setFormData((prev) => ({ ...prev, [`${type}Img`]: blob }));
-          setPreviewImages((prev) => ({
-            ...prev,
-            [`${type}Img`]: processedImageUrl,
-          }));
-          setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
-          const file = new File([blob], `${type}.png`, { type: 'image/png' });
-          setFormData((prev) => ({
-            ...prev,
-            [`${type}Img`]: file,
-          }));
-        })
-        .catch((error) => {
-          console.error('Error fetching the image:', error);
-          setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
+      try {
+        const response = await axios.post('https://i11c205.p.ssafy.io/rembg', formData, {
+          responseType: 'blob',
         });
+        const blob = response.data;
+        const processedImageUrl = URL.createObjectURL(blob);
+
+        const processedFile = new File([blob], `${type}.png`, { type: 'image/png' });
+        setFormData((prev) => ({ ...prev, [`${type}Img`]: processedFile }));
+        setPreviewImages((prev) => ({
+          ...prev,
+          [`${type}Img`]: processedImageUrl,
+        }));
+      } catch (error) {
+        console.error('Error processing the image:', error);
+      } finally {
+        setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
+      }
     }
   };
 
@@ -177,7 +158,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
   };
 
   const handleCategoryChange = (categoryId) => {
-    console.log('Category ID passed:', categoryId);
     setFormData((prev) => ({ ...prev, categoryId: categoryId }));
   };
 
@@ -208,8 +188,8 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
             selectedCategory={formData.categoryId}
             onCategoryChange={handleCategoryChange}
           />
-          {errors.category && (
-            <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+          {errors.categoryId && (
+            <p className="text-red-500 text-sm mt-1">{errors.categoryId}</p>
           )}
         </div>
         <div className="grid grid-cols-2 gap-4 mb-4">
