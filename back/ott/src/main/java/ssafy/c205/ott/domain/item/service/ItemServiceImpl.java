@@ -252,6 +252,7 @@ public class ItemServiceImpl implements ItemService {
                 .publicStatus(item.getPublicStatus())
                 .salesStatus(item.getSalesStatus())
                 .category(item.getItemCategories().get(0).getCategory().getName())
+                .categoryId(item.getItemCategories().get(0).getCategory().getId())
                 .brand(item.getBrand())
                 .color(item.getColor())
                 .imageUrls(images)
