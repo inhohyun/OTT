@@ -24,7 +24,7 @@ const UserPage = () => {
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
-  const { id = memberId } = location.state || {}; // id 꺼내기, 기본값을 memberId로 설정
+  const { id } = location.state || {}; // id 꺼내기, 기본값을 memberId로 설정
 
   const fetchUserData = async (sendId) => {
     try {
@@ -58,7 +58,11 @@ const UserPage = () => {
 
   useEffect(() => {
     console.log('서버에 보내기 전 id : ', id);
-    fetchUserData(id);
+    if (id === undefined || id === null) {
+      fetchUserData(memberId);
+    } else {
+      fetchUserData(id);
+    }
   }, [id]); // id가 변경될 때마다 호출되도록 의존성 배열에 추가
 
   if (!userInfo) {
