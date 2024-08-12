@@ -3,15 +3,14 @@ import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
 import { updateClothes, getClothesItemData, deleteClothes, getClothesList } from '../../api/closet/clothes';
 
-
 const ClothesDetailModal = ({
   isOpen,
   onClose,
   clothingItem,
   onEdit,
   categories,
+  setClothes,
   memberId,
-  setClothes
 }) => {
   const [itemDetails, setItemDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +20,7 @@ const ClothesDetailModal = ({
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
+          console.log(clothingItem)
           const data = await getClothesItemData(clothingItem.clothesId);
           console.log(data)
           setItemDetails(data);
@@ -48,7 +48,7 @@ const ClothesDetailModal = ({
       formData.append('categoryId', itemDetails.categoryId);
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
       formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
-      formData.append('memberId', 1);
+      formData.append('memberId', memberId);
   
       await updateClothes(itemDetails.clothesId, formData);
       const updatedClothesList = await getClothesList(memberId);

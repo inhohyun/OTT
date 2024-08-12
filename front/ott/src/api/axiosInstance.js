@@ -7,7 +7,11 @@ import axios from 'axios';
 
 // 환경 변수에서 API 기본 URL 가져오기
 
+<<<<<<< HEAD
 const baseURL = 'http://localhost:8080';
+=======
+const baseURL = "http://localhost:8080";
+>>>>>>> f8d26c4eb2af8cb3649e86cfc2ea9cb188464035
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({

@@ -6,6 +6,7 @@ import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
 import { getCategoryList, deleteCategory } from '../../api/closet/categories';
 import { getClosetId } from '../../api/closet/clothes';
+import useUserStore from '../../data/lookbook/userStore';
 
 const CategoryDropdown = ({
   selectedCategory,

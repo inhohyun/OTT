@@ -38,7 +38,7 @@ const MainPage = () => {
 
   const setUserId = useUserStore((state) => state.setUserId);
 
-  const memberId = 1;
+  const memberId = useUserStore((state) => state.userId);
   useEffect(() => {
     const fetchFollowCount = async () => {
       // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
