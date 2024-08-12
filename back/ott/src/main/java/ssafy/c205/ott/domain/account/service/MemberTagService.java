@@ -25,19 +25,24 @@ public class MemberTagService {
 
     @Transactional
     public UpdateMemberSuccessDto updateMemberTags(Long id, MemberTagRequestDto memberTagRequestDto) {
-        memberValidator.validateSelfRequest(MemberRequestDto.builder().id(memberTagRequestDto.getMemberId()).currentId(id).build());
+        memberValidator.validateSelfRequest(MemberRequestDto.builder()
+                .id(memberTagRequestDto.getMemberId())
+                .currentId(id)
+                .build());
+
         Member member = memberRepository.findById(memberTagRequestDto.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
 
         // 기존 태그 삭제
         memberTagRepository.deleteByMemberId(memberTagRequestDto.getMemberId());
 
+        // 새로운 태그 추가
         List<MemberTag> memberTags = memberTagRequestDto.getTag().stream()
-                .peek(tag -> tagService.addTag(tag.getName()))
-                .map(tag -> new MemberTag(member, tag))
+                .peek(tagService::addTag) // Lambda can be replaced with method reference
+                .map(tagName -> new MemberTag(member, tagService.getTag(tagName)))
                 .toList();
-
         memberTagRepository.saveAll(memberTags);
+
         return UpdateMemberSuccessDto.builder().memberId(member.getId()).build();
     }
 }
