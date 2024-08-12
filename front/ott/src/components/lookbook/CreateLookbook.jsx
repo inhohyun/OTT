@@ -38,8 +38,8 @@ const CreateLookbook = () => {
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
-        // setClosetId(response.data[0].id);
-        setClosetId(response[0].id);
+        setClosetId(response.data[0].id);
+        // setClosetId(response[0].id);
         console.log(response, '옷장id');
         // console.log('옷장아이디', response.data[0].id);
       } catch (error) {
@@ -61,8 +61,8 @@ const CreateLookbook = () => {
       try {
         const response = await getCategory(closetId);
         console.log('카테고리', response);
-        // setCategories(response.data);
-        setCategories(response);
+        setCategories(response.data);
+        // setCategories(response);
       } catch (error) {
         console.error(error);
       }
@@ -114,6 +114,7 @@ const CreateLookbook = () => {
             id: item.clothId,
             image: item.img[0],
           }));
+          // console.log(clothesData);
           setClothes(clothesData);
         } else {
           console.log('응답 데이터가 배열이 아닙니다:', response.data);
