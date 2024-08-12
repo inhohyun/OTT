@@ -7,7 +7,7 @@ import axios from 'axios';
 const reissueAccessToken = async () => {
   try {
     // Access Token 재발급 요청
-    const response = await axios.get('http://localhost:8080/api/reissue', {
+    const response = await axios.get('https://i11c205.p.ssafy.io/api/reissue', {
       withCredentials: true, // 쿠키를 포함하여 요청
     });
 
