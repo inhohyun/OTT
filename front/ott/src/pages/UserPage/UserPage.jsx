@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
@@ -26,7 +26,8 @@ const UserPage = () => {
   const [isMe, setIsMe] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
-  const [targetId, setTargetId] = useState(null);
+  const [targetId, setTargetId] = useState(location.state.id);
+  const location = useLocation();
   useEffect(() => {
     console.log('targetId:', targetId);
     const fetchUserData = async (targetId) => {
@@ -38,9 +39,6 @@ const UserPage = () => {
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
         setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
-
-        // targetId 저장
-        setTargetId(userInfoResponse.data.id);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
