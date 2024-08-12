@@ -33,15 +33,24 @@ const Header = () => {
 
     const intervalId = setInterval(async () => {
       try {
-        const latestNotification = await getLatestNotification(memberId);
-        if (latestNotification) {
-          console.log(latestNotification)
-          setNotifications((prevNotifications) => [
-            latestNotification,
-            ...prevNotifications,
-          ]);
-          setLatestNotification(latestNotification);
-          setShowModal(true);
+        const latestNotificationResponse = await getLatestNotification(memberId);
+        if (latestNotificationResponse && latestNotificationResponse.data.length > 0) {
+          const latestNotification = latestNotificationResponse.data[0];
+
+          const isNewNotification = !notifications.find(
+            (notification) => notification.notificationId === latestNotification.notificationId
+          );
+
+          if (isNewNotification) {
+            setNotifications((prevNotifications) => [
+              latestNotification,
+              ...prevNotifications,
+            ]);
+            setLatestNotification(latestNotification);
+            setShowModal(true);
+          }
+        } else {
+          console.log('새로운 알림이 없습니다');
         }
       } catch (error) {
         console.error('최신 알림 받아오는데 에러 발생:', error);
@@ -49,7 +58,7 @@ const Header = () => {
     }, 10000); // 10초마다
 
     return () => clearInterval(intervalId);
-  }, [memberId]);
+  }, [memberId, notifications]);
 
   const handleNotificationClick = async () => {
     setShowModal(true);
