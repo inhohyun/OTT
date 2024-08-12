@@ -15,7 +15,7 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
       try {
         // const memberId = 1;
         const closetResponse = await getClosetId(memberId);
-        console.log('memberId', memberId);
+        console.log('closetResponse', closetResponse);
         const closetid = closetResponse.data[0].id;
         setClosetId(closetid);
         console.log('옷 추가때 옷장 아이디', closetId);
