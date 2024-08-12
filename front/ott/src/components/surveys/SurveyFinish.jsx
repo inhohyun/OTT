@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default function SurveyFinish({ formData }) {
   const navigate = useNavigate();
-  // const [memberId, setMemberId] = useState(null);
+  const [memberId, setMemberId] = useState(null);
 
   const genderMap = {
     남성: 'MAN',
@@ -19,19 +19,19 @@ export default function SurveyFinish({ formData }) {
     '통통': 'CHUBBY',
   };
 
-  // useEffect(() => {
-  //   const fetchMemberId = async () => {
-  //     try {
-  //       const response = await getUid();
-  //       console.log(response);
-  //       setMemberId(response.data.id);
-  //     } catch (error) {
-  //       console.error('memberId 가져오는 중 에러 발생:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchMemberId = async () => {
+      try {
+        const response = await getUid();
+        console.log(response);
+        setMemberId(response.data.id);
+      } catch (error) {
+        console.error('memberId 가져오는 중 에러 발생:', error);
+      }
+    };
 
-  //   fetchMemberId();
-  // }, []);
+    fetchMemberId();
+  }, []);
 
   const handleComplete = async () => {
     try {
@@ -41,7 +41,7 @@ export default function SurveyFinish({ formData }) {
 
       // api 명세서 데이터 구조에 맞게 변환
       const dataToSend = {
-        memberId: formData.memberId,
+        memberId: memberId,
         nickname: formData.nickname,
         name: formData.name,
         phoneNumber: formData.phone,
