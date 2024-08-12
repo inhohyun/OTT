@@ -34,7 +34,7 @@ const Header = () => {
     const intervalId = setInterval(async () => {
       try {
         const latestNotificationResponse = await getLatestNotification(memberId);
-        if (latestNotificationResponse && latestNotificationResponse.data.length > 0) {
+        if (latestNotificationResponse && latestNotificationResponse.data) {
           const latestNotification = latestNotificationResponse.data[0];
 
           const isNewNotification = !notifications.find(
