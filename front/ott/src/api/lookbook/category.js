@@ -25,8 +25,8 @@ export const getClothes = async (userId, categoryId, closetId) => {
       `api/clothes/${userId}/${categoryId}`,
       { params: { closet_id: closetId } }
     );
-    console.log('카테고리 옷', response.data);
-    return response.data;
+    console.log('카테고리 옷', response);
+    return response;
   } catch (error) {
     console.error(error);
   }
