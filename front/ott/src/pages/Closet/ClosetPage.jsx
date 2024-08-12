@@ -6,6 +6,7 @@ import AddClothesModal from '../../components/closet/AddClothesModal';
 import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
 import { addClothes, getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
+import useUserStore from '../../data/lookbook/userStore';
 
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(-100);
@@ -16,7 +17,7 @@ const ClosetPage = () => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [closetId, setClosetId] = useState(null);
 
-  const memberId = 1;
+  const memberId = useUserStore((state) => state.userId);
 
   useEffect(() => {
     const fetchInitialClothesList = async () => {
@@ -37,11 +38,11 @@ const ClosetPage = () => {
       try {
         const closetResponse = await getClosetId(memberId);
         console.log(closetResponse)
-        const closetId = closetResponse.data.data[0].id;
+        const closetId = closetResponse.data[0].id;
         setClosetId(closetId);
 
         const categoryList = await getCategoryList(closetId);
-        const fetchedCategories = categoryList.data.map((category) => ({
+        const fetchedCategories = categoryList.map((category) => ({
           categoryId: category.categoryId,
           name: category.name,
         }));

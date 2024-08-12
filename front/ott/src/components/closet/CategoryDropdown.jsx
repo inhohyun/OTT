@@ -6,6 +6,7 @@ import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
 import { getCategoryList, deleteCategory } from '../../api/closet/categories';
 import { getClosetId } from '../../api/closet/clothes';
+import useUserStore from '../../data/lookbook/userStore';
 
 const CategoryDropdown = ({
   selectedCategory,
@@ -29,14 +30,14 @@ const CategoryDropdown = ({
     fetchCategories();
   }, []);
 
+  const memberId = useUserStore((state) => state.userId);
   const fetchCategories = async () => {
     try {
-      const memberId = 1;
       const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
+      const closetId = closetResponse.data[0].id;
       setClosetId(closetId);
       const categoryList = await getCategoryList(closetId);
-      const fetchedCategories = categoryList.data;
+      const fetchedCategories = categoryList;
       const defaultCategories = [
         { categoryId: -100, name: '전체' },
         { categoryId: -200, name: '즐겨찾기' },

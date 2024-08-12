@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { getCategoryList } from '../../api/closet/categories';
 import { getClosetId } from '../../api/closet/clothes';
+import useUserStore from '../../data/lookbook/userStore';
 
 const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
@@ -10,15 +11,15 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   useEffect(() => {
     fetchCategories();
   }, []);
-
+  const memberId = useUserStore((state) => state.userId);
   const fetchCategories = async () => {
     try {
-      const memberId = 1;
+      
       const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
+      const closetId = closetResponse.data[0].id;
       setClosetId(closetId);
       const categoryList = await getCategoryList(closetId);
-      setCategories(categoryList.data);
+      setCategories(categoryList);
     } catch (error) {
       console.error('카테고리 목록 조회 실패:', error);
     }

@@ -19,7 +19,7 @@ export const addClothes = async (formData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log('Successfully added clothes:', response.data);
+    console.log('Successfully added clothes:', response);
     return response.data;
   } catch (error) {
     console.error('Error adding clothes:', error);
@@ -31,7 +31,7 @@ export const addClothes = async (formData) => {
 export const getClothesItemData = async (clothesId) => {
   try {
     const response = await axiosInstance.get(`/api/clothes/${clothesId}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('옷 정보 가져오기 실패:', error);
     throw error;
@@ -42,7 +42,8 @@ export const getClothesItemData = async (clothesId) => {
 export const getClothesList = async (memberId) => {
   try {
     const response = await axiosInstance.get(`/api/clothes/${memberId}/list`);
-    return response.data.map((item, index) => ({
+    console.log(response)
+    return response.map((item, index) => ({
       ...item,
       key: item.id || index,
     }));
@@ -111,8 +112,11 @@ export const getClothesByCategory = async (memberId, categoryId, closetId) => {
     const response = await axiosInstance.get(`/api/clothes/${memberId}/${categoryId}`, {
       params: { closet_id: closetId },
     });
+    console.log(memberId)
+    console.log(categoryId)
     console.log('카테고리별 조회 성공');
-    return response.data;
+    console.log(response)
+    return response;
   } catch (error) {
     console.error('카테고리별 조회 실패');
     throw error;
@@ -125,8 +129,8 @@ export const getBookmarkedClothes = async (memberId) => {
     const response = await axiosInstance.get(`/api/clothes/bookmark`, {
       params: { memberId }
     });
-    console.log('북마크된 옷 목록 조회 성공: ', response.data);
-    return response.data;
+    console.log('북마크된 옷 목록 조회 성공: ', response);
+    return response;
   } catch (error) {
     console.error('북마크된 옷 목록 조회 실패: ', error);
     throw error;
