@@ -24,7 +24,7 @@ const UserPage = () => {
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
-  const { id } = location.state || { id: memberId }; // id 꺼내기
+  const { id = memberId } = location.state || {}; // id 꺼내기, 기본값을 memberId로 설정
 
   const fetchUserData = async (sendId) => {
     try {
@@ -47,6 +47,9 @@ const UserPage = () => {
         case 'WAIT':
           setFollowStatus('요청됨');
           break;
+        default:
+          setFollowStatus('팔로우');
+          break;
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
@@ -56,7 +59,8 @@ const UserPage = () => {
   useEffect(() => {
     console.log('서버에 보내기 전 id : ', id);
     fetchUserData(id);
-  }, []);
+  }, [id]); // id가 변경될 때마다 호출되도록 의존성 배열에 추가
+
   if (!userInfo) {
     return <div>Loading...</div>;
   }
@@ -79,25 +83,23 @@ const UserPage = () => {
       renderComponent = null;
   }
 
-  //팔로우 요청 함수
-  const fetchFollowUser = async (sendId) => {
+  // 팔로우/언팔로우 요청 함수
+  const toggleFollowStatus = async (sendId) => {
     try {
-      const response = await followUser(sendId);
-      console.log('팔로우한 response : ', response);
-      return response;
+      let response;
+      if (followStatus === '팔로잉' || followStatus === '요청됨') {
+        response = await unfollowUser(sendId);
+        setFollowStatus('팔로우');
+      } else {
+        response = await followUser(sendId);
+        setFollowStatus(isPublic ? '팔로잉' : '요청됨');
+      }
+      console.log('response : ', response);
     } catch (error) {
-      console.error('Error following user:', error);
+      console.error('Error toggling follow status:', error);
     }
   };
-  const fetchUnfollowUser = async (sendId) => {
-    try {
-      const response = await unfollowUser(sendId);
-      console.log('언팔로우한 response : ', response);
-      return response;
-    } catch (error) {
-      console.error('Error unfollowing user:', error);
-    }
-  };
+
   const handleClosetIconClick = () => {
     navigate('/closet');
   };
@@ -105,26 +107,7 @@ const UserPage = () => {
   const handleRtcIconClick = () => {};
 
   const handleFollowButtonClick = () => {
-    switch (followStatus) {
-      case '팔로잉':
-        setFollowStatus('팔로우');
-        //TODO : 팔로잉 상태에서 버튼 클릭시 이벤트
-        fetchUnfollowUser(id);
-        break;
-      case '요청됨':
-        setFollowStatus('팔로우');
-        // TODO : 요청됨 상태에서 버튼 클릭시 이벤트
-        fetchUnfollowUser(id);
-        break;
-      case '팔로우':
-        if (!isPublic) {
-          setFollowStatus('요청됨');
-        } else {
-          setFollowStatus('팔로잉');
-        }
-        fetchFollowUser(id);
-        break;
-    }
+    toggleFollowStatus(id);
   };
 
   const handleSettingsClick = () => {
@@ -210,17 +193,18 @@ const UserPage = () => {
         </div>
         <div
           className={`flex justify-center mt-1 ${
-            tags.length > 3 ? 'flex-wrap' : ''
+            tags && tags.length > 3 ? 'flex-wrap' : ''
           } space-x-2`}
         >
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-30 mt-2"
-            >
-              {tag}
-            </span>
-          ))}
+          {tags &&
+            tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-30 mt-2"
+              >
+                {tag}
+              </span>
+            ))}
         </div>
         <div className="w-full mt-6 h-full">
           <NavBar
