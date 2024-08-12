@@ -38,11 +38,12 @@ const ClosetPage = () => {
     const fetchClosetIdAndCategories = async () => {
       try {
         const closetResponse = await getClosetId(memberId);
-        console.log(closetResponse);
+        console.log('closetResponse', closetResponse);
         const closetId = closetResponse.data[0].id;
         setClosetId(closetId);
 
         const categoryList = await getCategoryList(closetResponse.data[0].id);
+        console.log('categoryList', categoryList);
         const fetchedCategories = categoryList.map((category) => ({
           categoryId: category.categoryId,
           name: category.name,
