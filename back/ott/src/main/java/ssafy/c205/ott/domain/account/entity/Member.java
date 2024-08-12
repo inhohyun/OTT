@@ -1,16 +1,14 @@
 package ssafy.c205.ott.domain.account.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.processing.Pattern;
 import ssafy.c205.ott.common.entity.BaseEntity;
 import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
-import ssafy.c205.ott.domain.closet.entity.Closet;
 
 @Entity
 @Getter
