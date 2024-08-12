@@ -40,7 +40,7 @@ const MainPage = () => {
 
   const memberId = useUserStore((state) => state.userId);
   useEffect(() => {
-    const ㄷ = async () => {
+    const fetchFollowCount = async () => {
       // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
       try {
         console.log('메인페이지에서 보내는 memberId:', memberId);
@@ -93,24 +93,6 @@ const MainPage = () => {
 
     fetchUserData();
   }, [memberId]);
-
-  useEffect(() => {
-    const fetchFollowCount = async () => {
-      // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
-      try {
-        const response = await getFollowingCount(memberId);
-        // console.log('API Response:', response); // 이 로그가 찍히는지 확인
-        if (response.data !== 0) {
-          setHasFollow(true);
-        } else {
-          setHasFollow(false);
-        }
-      } catch (error) {
-        console.error('Error fetching follow count:', error);
-      }
-    };
-    fetchFollowCount();
-  }, []); // 의존성을 빈 배열로 설정
 
   return (
     <div
