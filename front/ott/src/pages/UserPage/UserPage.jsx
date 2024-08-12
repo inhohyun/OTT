@@ -10,7 +10,12 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-import { getUid, getUserInfo } from '../../api/user/user';
+import {
+  getUid,
+  getUserInfo,
+  followUser,
+  unfollowUser,
+} from '../../api/user/user';
 
 const UserPage = () => {
   // targetId를 props로 받음
@@ -23,6 +28,7 @@ const UserPage = () => {
   const navigate = useNavigate();
   const [targetId, setTargetId] = useState(null);
   useEffect(() => {
+    console.log('targetId:', targetId);
     const fetchUserData = async (targetId) => {
       try {
         const userInfoResponse = await getUserInfo(targetId);
@@ -83,6 +89,25 @@ const UserPage = () => {
       renderComponent = null;
   }
 
+  //팔로우 요청 함수
+  const fetchFollowUser = async (targetId) => {
+    try {
+      const response = await followUser(targetId);
+      console.log('팔로우한 response : ', response);
+      return response;
+    } catch (error) {
+      console.error('Error following user:', error);
+    }
+  };
+  const fetchUnfollowUser = async (targetId) => {
+    try {
+      const response = await unfollowUser(targetId);
+      console.log('언팔로우한 response : ', response);
+      return response;
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+    }
+  };
   const handleClosetIconClick = () => {
     navigate('/closet');
   };
@@ -93,6 +118,7 @@ const UserPage = () => {
     if (followStatus === '팔로우') {
       setFollowStatus('요청됨');
       // 팔로우 요청 로직 추가
+      fetchFollowUser(targetId);
     } else if (followStatus === '요청됨') {
       setFollowStatus('팔로우');
       // 팔로우 요청 취소 로직 추가
@@ -102,6 +128,7 @@ const UserPage = () => {
   const handleUnfollowButtonClick = () => {
     setFollowStatus('팔로우');
     // 언팔로우 로직 추가
+    fetchUnfollowUser(targetId);
   };
 
   const handleSettingsClick = () => {
@@ -155,7 +182,7 @@ const UserPage = () => {
                     followStatus === '팔로잉'
                       ? 'bg-violet-200 text-black-500 border-violet-300'
                       : followStatus === '요청됨'
-                        ? 'bg-yellow-200 text-black-500 border-yellow-300'
+                        ? 'bg-blue-200 text-black-500 border-blue-300'
                         : 'bg-transparent text-[rgba(0,0,0,0.5)]'
                   }`}
                   onClick={

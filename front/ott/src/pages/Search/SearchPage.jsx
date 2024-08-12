@@ -5,7 +5,8 @@ import PersonSearchResult from '../../components/search/PersonSearchResult';
 import StyleSearchResult from '../../components/search/StyleSearchResult';
 import { searchPeople } from '../../api/search/searchPeople';
 import { searchStyle } from '../../api/search/searchStyle';
-import { useUserStore } from '../../data/lookbook/userStore';
+import useUserStore from '../../data/lookbook/userStore';
+
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [lastSearchQuery, setLastSearchQuery] = useState(''); // 마지막 검색 쿼리 저장

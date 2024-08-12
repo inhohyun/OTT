@@ -60,3 +60,16 @@ export const followUser = async (targetId) => {
     throw error;
   }
 };
+
+// 다른 사용자 언팔로우
+export const unfollowUser = async (targetId) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/members/unfollow/${targetId}`
+    );
+    return response;
+  } catch (error) {
+    console.error('Error unfollowing user:', error);
+    throw error;
+  }
+};
