@@ -124,7 +124,7 @@ public class MemberReadService {
     }
 
     private boolean isSelf(MemberRequestDto memberRequestDto, Member member) {
-        return member.getId().longValue() == memberRequestDto.getCurrentId().longValue();
+        return member.getId().longValue() == memberRequestDto.getId().longValue();
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {
