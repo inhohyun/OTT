@@ -141,7 +141,8 @@ public class MemberReadService {
         return FollowStatus.FOLLOWING;
     }
 
-    private List<Tag> getTags(Member member) {
+    @Transactional
+    public List<Tag> getTags(Member member) {
         return member.getMemberTags().stream()
                 .map(MemberTag::getTag)
                 .toList();
