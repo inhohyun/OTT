@@ -40,7 +40,9 @@ export const getUid = async () => {
 // 팔로잉 수 조회 api
 export const getFollowingCount = async (memberId) => {
   try {
-    const response = await axiosInstance.get(`api/members/${memberId}/`);
+    const response = await axiosInstance.get(
+      `api/members/${memberId}/followingsCount`
+    );
     console.log('팔로우수', response);
     return response.data;
   } catch (error) {
