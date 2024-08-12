@@ -46,7 +46,7 @@ public class MemberReadService {
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
         log.info("memberId" + memberRequestDto.getId());
         log.info("CurrentId" + memberRequestDto.getCurrentId());
-        Member member = findActiveMemberById(memberRequestDto.getId());
+        Member member = findActiveMemberById(memberRequestDto.getCurrentId());
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
         int followingCount = member.getFollowings().size();
         int followerCount = member.getFollowers().size();
