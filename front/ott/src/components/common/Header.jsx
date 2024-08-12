@@ -4,11 +4,13 @@ import iconImage from '/icon-rectangle.png';
 import closetImage from '../../assets/icons/closet_icon.png';
 import notificationImage from '../../assets/icons/notification_icon.png';
 import Notification from './Notification';
+import LatestNotificationModal from './LatestNotificationModal';
 import { getNotificationsList, getLatestNotification } from '../../api/notification/notification';
 import useUserStore from '../../data/lookbook/userStore';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showLatestModal, setShowLatestModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [latestNotification, setLatestNotification] = useState(null);
   const [memberId, setMemberId] = useState(null);
@@ -33,22 +35,33 @@ const Header = () => {
 
     const intervalId = setInterval(async () => {
       try {
-        const latestNotification = await getLatestNotification(memberId);
-        if (latestNotification) {
-          setNotifications((prevNotifications) => [
-            latestNotification,
-            ...prevNotifications,
-          ]);
-          setLatestNotification(latestNotification);
-          setShowModal(true);
+        const latestNotificationResponse = await getLatestNotification(memberId);
+        if (latestNotificationResponse && latestNotificationResponse.data.length > 0) {
+          const latestNotification = latestNotificationResponse.data[0];
+
+          const isNewNotification = !notifications.find(
+            (notification) => notification.notificationId === latestNotification.notificationId
+          );
+
+          if (isNewNotification) {
+            setNotifications((prevNotifications) => [
+              latestNotification,
+              ...prevNotifications,
+            ]);
+            setLatestNotification(latestNotification);
+            setShowLatestModal(true); // 최신 알림 모달 보이기
+          }
+        } else {
+          console.log('새로운 알림이 없습니다');
         }
       } catch (error) {
-        console.error('Error fetching latest notification:', error);
+        console.error('최신 알림 불러오는 중 오류 발생:', error);
       }
     }, 10000); // 10초마다
 
     return () => clearInterval(intervalId);
-  }, [memberId]);
+  }, [memberId, notifications]);
+
 
   const handleNotificationClick = async () => {
     setShowModal(true);
@@ -65,6 +78,11 @@ const Header = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setLatestNotification(null);
+  };
+
+  const handleCloseLatestModal = () => {
+    setShowLatestModal(false);
     setLatestNotification(null);
   };
 
@@ -100,14 +118,17 @@ const Header = () => {
           />
         </div>
       </header>
-      {latestNotification && (
         <Notification
           show={showModal}
           onClose={handleCloseModal}
-          notifications={latestNotification ? [latestNotification, ...notifications] : notifications}
+          notifications={notifications}
           setNotifications={setNotifications}
         />
-      )}
+        <LatestNotificationModal
+        show={showLatestModal}
+        onClose={handleCloseLatestModal}
+        notification={latestNotification}
+      />
     </>
   );
 };
