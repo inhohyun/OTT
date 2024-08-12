@@ -48,7 +48,7 @@ const MainPage = () => {
         if (memberId !== null && memberId !== undefined) {
           const response = await getFollowingCount(memberId);
           // console.log('API Response:', response); // 이 로그가 찍히는지 확인
-          if (response.data.data !== 0) {
+          if (response !== 0) {
             setHasFollow(true);
           } else {
             setHasFollow(false);
