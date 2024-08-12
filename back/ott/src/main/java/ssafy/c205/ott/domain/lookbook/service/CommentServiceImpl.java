@@ -2,8 +2,6 @@ package ssafy.c205.ott.domain.lookbook.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,13 +14,15 @@ import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentSelectDto;
-import ssafy.c205.ott.domain.notification.dto.request.CommentNotificationDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentChildrenDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.CommentSelectResponseDto;
 import ssafy.c205.ott.domain.lookbook.entity.Comment;
 import ssafy.c205.ott.domain.lookbook.entity.Lookbook;
+import ssafy.c205.ott.domain.lookbook.exception.CommentNotFoundException;
+import ssafy.c205.ott.domain.lookbook.exception.LookbookNotFoundException;
 import ssafy.c205.ott.domain.lookbook.repository.CommentRepository;
 import ssafy.c205.ott.domain.lookbook.repository.LookbookRepository;
+import ssafy.c205.ott.domain.notification.dto.request.CommentNotificationDto;
 import ssafy.c205.ott.domain.notification.entity.NotificationType;
 import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
@@ -40,16 +40,11 @@ public class CommentServiceImpl implements CommentService {
     public void createComment(String postId, CommentMessageDto commentMessageDto) {
 
         Member member = memberRepository.findByIdAndActiveStatus(
-                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE)
+            .orElseThrow(MemberNotFoundException::new);
 
-        Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
-        Lookbook lookbook = null;
-
-        if (ol.isPresent()) {
-            lookbook = ol.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, postId + "의 룩북을 조회하지 못했습니다.");
-        }
+        Lookbook lookbook = lookbookRepository.findById(Long.parseLong(postId)).orElseThrow(
+            LookbookNotFoundException::new);
 
         Comment c = commentRepository.save(Comment
             .builder()
@@ -73,25 +68,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createReply(String postId, String commentId, CommentMessageDto commentMessageDto) {
-        Lookbook lookbook = null;
-        Comment parent = null;
-
         Member member = memberRepository.findByIdAndActiveStatus(
-                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+                commentMessageDto.getMemberId(), ActiveStatus.ACTIVE)
+            .orElseThrow(MemberNotFoundException::new);
 
-        Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
-        if (ol.isPresent()) {
-            lookbook = ol.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, postId + "의 룩북을 찾지 못했습니다.");
-        }
-
-        Optional<Comment> oc = commentRepository.findById(Long.parseLong(commentId));
-        if (oc.isPresent()) {
-            parent = oc.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, commentId + "의 댓글을 찾지 못했습니다.");
-        }
+        Lookbook lookbook = lookbookRepository.findById(Long.parseLong(postId))
+            .orElseThrow(LookbookNotFoundException::new);
+        Comment parent = commentRepository.findById(Long.parseLong(commentId)).orElseThrow(
+            CommentNotFoundException::new);
 
         // 대댓글 저장
         Comment replyComment = Comment
@@ -124,17 +108,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentSelectResponseDto> selectComment(String postId,
         CommentSelectDto commentSelectDto) {
-        Lookbook lookbook = null;
         List<CommentSelectResponseDto> responseDtos = new ArrayList<>();
 
         //해당 룩북 조회
-        Optional<Lookbook> ol = lookbookRepository.findById(Long.parseLong(postId));
-        if (ol.isPresent()) {
-            lookbook = ol.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, postId + "의 룩북을 찾지 못했습니다.");
-        }
-
+        Lookbook lookbook = lookbookRepository.findById(Long.parseLong(postId))
+            .orElseThrow(LookbookNotFoundException::new);
         List<Comment> comments = commentRepository.findByLookbookIdAndCommentStatusAndParentIsNull(
             lookbook.getId(),
             commentSelectDto.getStatus().equals("DM") ? CommentStatus.DM
@@ -178,13 +156,9 @@ public class CommentServiceImpl implements CommentService {
     public void updateComment(String postId, String commentId,
         CommentMessageDto commentMessageDto) {
         // 댓글 가져오기
-        Comment comment = null;
-        Optional<Comment> oc = commentRepository.findById(Long.parseLong(commentId));
-        if (oc.isPresent()) {
-            comment = oc.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, commentId + "의 댓글을 찾지 못했습니다.");
-        }
+        Comment comment = commentRepository.findById(Long.parseLong(commentId))
+            .orElseThrow(CommentNotFoundException::new);
+
         // 데이터 업데이트
         commentRepository.save(Comment
             .builder()
@@ -201,15 +175,9 @@ public class CommentServiceImpl implements CommentService {
     //댓글 삭제
     @Override
     public void deleteComment(String postId, String commentId) {
-        Comment comment = null;
         //댓글 불러오기
-        Optional<Comment> oc = commentRepository.findById(Long.parseLong(commentId));
-        if (oc.isPresent()) {       //댓글이 존재하면 저장
-            comment = oc.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                commentId + "의 댓글을 조회하지 못했습니다.");
-        }
+        Comment comment = commentRepository.findById(Long.parseLong(commentId))
+            .orElseThrow(CommentNotFoundException::new);
 
         //댓글 삭제하기 => 상태를 Delete 상태로 변경하기
         commentRepository.save(Comment
