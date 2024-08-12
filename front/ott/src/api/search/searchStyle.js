@@ -1,13 +1,9 @@
 import axiosInstance from '../axiosInstance';
 
-export const searchStyle = async (style, offset, limit) => {
+export const searchStyle = async (tags, memberId) => {
   try {
     const response = await axiosInstance.get('api/lookbook/search', {
-      params: {
-        style,
-        offset,
-        limit,
-      },
+      params: { tags, memberId },
     });
     return response;
   } catch (error) {

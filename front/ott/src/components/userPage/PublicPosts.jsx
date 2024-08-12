@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Lookbook from '../lookbook/Lookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
+import { getPublicLookbookList } from '../../api/user/userLookbook';
 
 const PublicPosts = () => {
   const lookbooks = Array.from({ length: 10 }, (_, index) => ({
@@ -16,7 +17,17 @@ const PublicPosts = () => {
       (_, i) => ({ id: i, text: 'Comment' })
     ),
   }));
-
+  useEffect(() => {
+    const getPublicLookbooks = async () => {
+      try {
+        const response = await getPublicLookbookList();
+        console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
+      } catch (error) {
+        console.error('Failed to get public lookbooks:', error);
+      }
+    };
+    getPublicLookbooks();
+  }, []);
   const containerRef = useRef(null);
 
   const scrollLeft = (ref) => {

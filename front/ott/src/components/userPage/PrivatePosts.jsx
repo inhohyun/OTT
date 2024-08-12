@@ -1,7 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Lookbook from '../lookbook/Lookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
+import { getPrivateLookbookList } from '../../api/user/userLookbook';
 import React from 'react';
 
 const PrivatePosts = () => {
@@ -17,7 +18,17 @@ const PrivatePosts = () => {
       (_, i) => ({ id: i, text: 'Comment' })
     ),
   }));
-
+  useEffect(() => {
+    const getPrivateLookbooks = async () => {
+      try {
+        const response = await getPrivateLookbookList();
+        console.log('가져온 비공개 룩북, Lookbook에 보내기', response);
+      } catch (error) {
+        console.error('Failed to get private lookbooks:', error);
+      }
+    };
+    getPrivateLookbooks();
+  }, []);
   // Reference for scroll container
   const containerRef = useRef(null);
 
