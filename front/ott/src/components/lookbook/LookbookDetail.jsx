@@ -42,8 +42,8 @@ const LookbookDetail = ({
   const [selectedClothingItem, setSelectedClothingItem] = useState(null);
   const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
-  // const userId = useUserStore((state) => state.userId);
-  const userId = 1;
+  const userId = useUserStore((state) => state.userId);
+  // const userId = 1;
   // const userId = 2;
   const hasFetchedComments = useRef(false);
 

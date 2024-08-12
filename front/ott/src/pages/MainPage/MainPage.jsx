@@ -37,8 +37,9 @@ const MainPage = () => {
   const [hasFollow, setHasFollow] = useState(false);
 
   const setUserId = useUserStore((state) => state.setUserId);
+  const memberId = useUserStore((state) => state.userId);
 
-  const memberId = 1;
+  // const memberId = 1;
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -71,7 +72,7 @@ const MainPage = () => {
     };
 
     fetchUserData();
-  }, [setUserId]);
+  }, [userId]);
 
   useEffect(() => {
     const fetchFollowCount = async () => {

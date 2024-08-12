@@ -165,8 +165,8 @@ const FeedFollow = () => {
 
   const scrollRefs = useRef([]);
 
-  // const userId = useUserStore((state) => state.userId);
-  const userId = 1;
+  const userId = useUserStore((state) => state.userId);
+  // const userId = 1;
 
   useEffect(() => {
     const fetchFollowFeed = async () => {
