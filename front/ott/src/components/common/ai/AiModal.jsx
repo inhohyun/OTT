@@ -23,7 +23,7 @@ const Modal = ({ isOpen, onClose }) => {
   const modelImage = useStore((state) => state.modelImage);
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
-  const selectClothesURL = useStore((state) => state.selectedClothesURL);
+
   const setSelectedClothesURL = useStore(
     (state) => state.setSelectedClothesURL
   );
@@ -89,6 +89,11 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handleClothingClick = (clothing) => {
     console.log('사용자가 클릭한 ai 옷장 옷', clothing);
+    console.log(
+      '사용자가 클릭한 ai 옷장 옷에서 꺼낸 데이터',
+      clothing.data[0].img
+    );
+    setSelectedClothesURL(clothing.data[0].img);
     setSelectedClothing(clothing);
   };
 

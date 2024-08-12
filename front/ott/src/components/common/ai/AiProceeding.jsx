@@ -3,8 +3,8 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import mainIcon from '@/assets/icons/main.logo.png';
 import useStore from '@/data/ai/aiStore';
+import useUserStore from '../../../data/lookbook/userStore';
 import { sendfittingData } from '@/api/ai/ai';
-
 const AiProceeding = () => {
   // 프로그래스 바 상태 관리
   const percentage = useStore((state) => state.percentage);
@@ -25,6 +25,7 @@ const AiProceeding = () => {
   // Ref를 통해 모달이 이전에 열렸는지 여부를 추적
   const hasModalOpenedRef = useRef(false);
 
+  const memberId = useUserStore((state) => state.userId);
   useEffect(() => {
     // 페이지 로드 시 sessionStorage에서 값을 읽어옴
     const hasModalOpened = sessionStorage.getItem('hasModalOpened');
@@ -72,11 +73,19 @@ const AiProceeding = () => {
 
     if (!hasModalOpenedRef.current) {
       console.log('모달 서버 호출 테스트');
-      // TODO : memberId와 clothImagePath를 서버에서 받아오는 값으로 변경
+      // FIXME : 하드코딩한 버전
       // sendData(
       //   1,
       //   modelImage,
       //   'https://s3-bucket-ott.s3.ap-northeast-2.amazonaws.com/pant.jpg',
+      //   sample,
+      //   filter === '상의' ? 0 : 1
+      // );
+      // FIXME : 하드코딩 제거한 버전
+      // sendData(
+      //   memberId,
+      //   modelImage,
+      //   selectClothesURL
       //   sample,
       //   filter === '상의' ? 0 : 1
       // );
