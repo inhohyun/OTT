@@ -44,7 +44,7 @@ const UserPage = () => {
           case 'NOT_FOLLOWING':
             setFollowStatus('팔로우');
             break;
-          default:
+          case 'WAIT':
             setFollowStatus('요청됨');
             break;
         }
@@ -110,14 +110,19 @@ const UserPage = () => {
       case '팔로잉':
         setFollowStatus('팔로우');
         //TODO : 팔로잉 상태에서 버튼 클릭시 이벤트
+        fetchUnfollowUser(id);
         break;
       case '요청됨':
         setFollowStatus('팔로우');
         // TODO : 요청됨 상태에서 버튼 클릭시 이벤트
-
+        fetchUnfollowUser(id);
         break;
       case '팔로우':
-        setFollowStatus('요청됨');
+        if (!isPublic) {
+          setFollowStatus('요청됨');
+        } else {
+          setFollowStatus('팔로잉');
+        }
         fetchFollowUser(id);
         break;
     }

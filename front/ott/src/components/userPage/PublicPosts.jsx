@@ -1,27 +1,32 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Lookbook from '../lookbook/Lookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
 import { getPublicLookbookList } from '../../api/user/userLookbook';
+import useLookbookStore from '../../data/lookbook/detailStore';
+import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 
 const PublicPosts = () => {
-  const lookbooks = Array.from({ length: 10 }, (_, index) => ({
-    nickname: `Creator ${index + 1}`,
-    createdAt: new Date().toISOString(),
-    images: [{ imagePath: { path: 'https://via.placeholder.com/150' } }],
-    name: `Lookbook ${index + 1}`,
-    likes: Math.floor(Math.random() * 100),
-    comments: Array.from(
-      { length: Math.floor(Math.random() * 10) },
-      (_, i) => ({ id: i, text: 'Comment' })
-    ),
-  }));
+  const [lookbooks, setLookbooks] = useState([]);
+  const { deleteLookbook, hideDetail } = useLookbookStore();
+  // const lookbooks = Array.from({ length: 10 }, (_, index) => ({
+  //   nickname: `Creator ${index + 1}`,
+  //   createdAt: new Date().toISOString(),
+  //   images: [{ imagePath: { path: 'https://via.placeholder.com/150' } }],
+  //   name: `Lookbook ${index + 1}`,
+  //   likes: Math.floor(Math.random() * 100),
+  //   comments: Array.from(
+  //     { length: Math.floor(Math.random() * 10) },
+  //     (_, i) => ({ id: i, text: 'Comment' })
+  //   ),
+  // }));
   useEffect(() => {
     const getPublicLookbooks = async () => {
       try {
         const response = await getPublicLookbookList();
         console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
+        setLookbooks(response.data);
       } catch (error) {
         console.error('Failed to get public lookbooks:', error);
       }
@@ -39,6 +44,24 @@ const PublicPosts = () => {
   const scrollRight = (ref) => {
     if (ref.current) {
       ref.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
+
+  const handleDelete = (deletedLookbookId) => {
+    deleteLookbook(deletedLookbookId);
+    // handleCloseDetail();
+    hideDetail();
+  };
+
+  const handleCloseDetail = async () => {
+    console.log('[*]모달 닫기');
+    hideDetail();
+    const lookbooksData = await fetchMyLookbooks(userId);
+    console.log('[*] 내룩북 불러오기');
+    if (Array.isArray(lookbooksData)) {
+      setLookbooks(lookbooksData);
+    } else {
+      console.error('Fetched data is not an array:', lookbooksData);
     }
   };
 
