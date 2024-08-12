@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberTagRequestDto;
+import ssafy.c205.ott.domain.account.dto.response.UpdateMemberSuccessDto;
 import ssafy.c205.ott.domain.account.entity.Member;
 import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
@@ -23,7 +24,7 @@ public class MemberTagService {
     private final TagService tagService;
 
     @Transactional
-    public void updateMemberTags(Long id, MemberTagRequestDto memberTagRequestDto) {
+    public UpdateMemberSuccessDto updateMemberTags(Long id, MemberTagRequestDto memberTagRequestDto) {
         memberValidator.validateSelfRequest(MemberRequestDto.builder().id(memberTagRequestDto.getMemberId()).currentId(id).build());
         Member member = memberRepository.findById(memberTagRequestDto.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -37,5 +38,6 @@ public class MemberTagService {
                 .toList();
 
         memberTagRepository.saveAll(memberTags);
+        return UpdateMemberSuccessDto.builder().memberId(member.getId()).build();
     }
 }
