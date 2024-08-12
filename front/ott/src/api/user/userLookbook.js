@@ -4,7 +4,7 @@ import axiosInstance from '../axiosInstance';
 export const getPublicLookbookList = async (memberId) => {
   try {
     const response = await axiosInstance.get(`/api/lookbook/public`, {
-      params: { memberId },
+      params: { memberId: memberId },
     });
 
     return response;
@@ -16,9 +16,9 @@ export const getPublicLookbookList = async (memberId) => {
 
 export const getPrivateLookbookList = async (memberId) => {
   try {
-    const response = await axiosInstance.get(
-      `/api/lookbook/${memberId}/private`
-    );
+    const response = await axiosInstance.get(`/api/lookbook/private`, {
+      params: { memberId: memberId },
+    });
 
     return response;
   } catch (error) {
