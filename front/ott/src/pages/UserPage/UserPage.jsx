@@ -10,12 +10,7 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-import {
-  getUid,
-  getUserInfo,
-  followUser,
-  unfollowUser,
-} from '../../api/user/user';
+import { getUserInfo, followUser, unfollowUser } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
 const UserPage = () => {
   // targetId를 props로 받음
@@ -27,19 +22,21 @@ const UserPage = () => {
   const navigate = useNavigate();
   // memberId 가져오기
   const memberId = useUserStore((state) => state.userId);
+
   const location = useLocation();
-  const [targetId, setTargetId] = useState(location.state?.id || memberId);
+  const { id } = location.state || { id: 0 }; // id 꺼내기
+
+  //초기엔 targetId는 memberId로 설정
+  const [targetId, setTargetId] = useState(memberId);
   useEffect(() => {
     const fetchUserData = async (targetId) => {
       try {
-        console.log('유저 정보를 불러올 때  targetId: ', targetId);
-        console.log('유저 정보를 불러올 때  memberId: ', memberId);
         const userInfoResponse = await getUserInfo(targetId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
 
         // 유저 정보 안에있는 id를 targetId로 설정
-        setTargetId(userInfo.id);
+        setTargetId(userInfoResponse.data.id);
 
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
@@ -61,23 +58,11 @@ const UserPage = () => {
         console.error('Error fetching user info:', error);
       }
     };
-
+    // 현재 접근한 사람의 id를 가져옴
+    console.log('가져온 다른사람 id : ', id);
+    setTargetId(id);
     // 유저 정보 호출
-    if (targetId) {
-      fetchUserData(targetId);
-    } else {
-      const fetchCurrentUserData = async () => {
-        try {
-          const uidResponse = await getUid();
-          const id = uidResponse.data.id;
-          setUid(id);
-          fetchUserData(id);
-        } catch (error) {
-          console.error('Error fetching current user info:', error);
-        }
-      };
-      fetchCurrentUserData();
-    }
+    fetchUserData(targetId);
   }, []);
 
   if (!userInfo) {
