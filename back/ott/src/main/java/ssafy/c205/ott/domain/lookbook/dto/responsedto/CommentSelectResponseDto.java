@@ -16,4 +16,5 @@ public class CommentSelectResponseDto {
     private LocalDateTime createdAt;
     private List<CommentChildrenDto> children;
     private Long commentId;
+    private Long memberId;
 }

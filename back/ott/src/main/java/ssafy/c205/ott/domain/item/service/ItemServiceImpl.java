@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
         MultipartFile backImg) {
         Member member = memberRepository.findByIdAndActiveStatus(itemCreateDto.getMemberId(),
-                ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+            ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
         //빈 객체 생성
         Item saveItem = itemRepository.save(Item.builder().member(member).build());
@@ -88,7 +88,7 @@ public class ItemServiceImpl implements ItemService {
         Long closetId = closets.get(0).getId();
 
         Category category = categoryRepository.findById(itemCreateDto.getCategoryId()).orElseThrow(
-                CategoryNotFoundException::new);
+            CategoryNotFoundException::new);
 
         List<ItemCategory> categories = new ArrayList<>();
         categories.add(ItemCategory.builder().category(category).item(saveItem).build());
@@ -155,7 +155,7 @@ public class ItemServiceImpl implements ItemService {
             Long closetId = closets.get(0).getId();
 
             Category category = categoryRepository.findById(itemUpdateDto.getCategoryId())
-                    .orElseThrow(CategoryNotFoundException::new);
+                .orElseThrow(CategoryNotFoundException::new);
 
             List<ItemCategory> categories = new ArrayList<>();
             ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
@@ -171,7 +171,7 @@ public class ItemServiceImpl implements ItemService {
 
             categories.add(saveCategory);
             Member member = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
-                    ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+                ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
             itemRepository.save(Item
                 .builder()

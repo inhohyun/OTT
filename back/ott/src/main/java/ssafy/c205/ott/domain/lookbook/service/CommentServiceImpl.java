@@ -153,17 +153,19 @@ public class CommentServiceImpl implements CommentService {
                     .createdAt(child.getCreatedAt())
                     .msg(child.getMessage())
                     .nickname(child.getMember().getNickname())
+                    .memberId(child.getMember().getId())
                     .build());
             }
 
             //객체 생성
             CommentSelectResponseDto commentSelectResponseDto = CommentSelectResponseDto
                 .builder()
-                .nickname(lookbook.getMember().getNickname())
+                .nickname(comment.getMember().getNickname())
                 .msg(comment.getMessage())
                 .createdAt(comment.getCreatedAt())
                 .children(childrenDtos)
                 .commentId(comment.getId())
+                .memberId(comment.getMember().getId())
                 .build();
 
             //responseDto에 추가
