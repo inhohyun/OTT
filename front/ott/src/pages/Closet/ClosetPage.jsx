@@ -39,10 +39,10 @@ const ClosetPage = () => {
       try {
         const closetResponse = await getClosetId(memberId);
         console.log(closetResponse);
-        const closetId = closetResponse.data.data[0].id;
+        const closetId = closetResponse.data[0].id;
         setClosetId(closetId);
 
-        const categoryList = await getCategoryList(closetId);
+        const categoryList = await getCategoryList(closetResponse.data[0].id);
         const fetchedCategories = categoryList.map((category) => ({
           categoryId: category.categoryId,
           name: category.name,
