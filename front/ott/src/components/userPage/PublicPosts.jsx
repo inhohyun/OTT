@@ -6,10 +6,13 @@ import React from 'react';
 import { getPublicLookbookList } from '../../api/user/userLookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
+import useUserStore from '../../data/lookbook/userStore';
 
 const PublicPosts = () => {
   const [lookbooks, setLookbooks] = useState([]);
   const { deleteLookbook, hideDetail } = useLookbookStore();
+  const memberId = useUserStore((state) => state.userId);
+
   // const lookbooks = Array.from({ length: 10 }, (_, index) => ({
   //   nickname: `Creator ${index + 1}`,
   //   createdAt: new Date().toISOString(),
@@ -24,7 +27,7 @@ const PublicPosts = () => {
   useEffect(() => {
     const getPublicLookbooks = async () => {
       try {
-        const response = await getPublicLookbookList();
+        const response = await getPublicLookbookList(memberId);
         console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
         setLookbooks(response.data);
       } catch (error) {

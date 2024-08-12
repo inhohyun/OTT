@@ -6,10 +6,12 @@ import { getPrivateLookbookList } from '../../api/user/userLookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import React from 'react';
+import useUserStore from '../../data/lookbook/userStore';
 
 const PrivatePosts = () => {
   const [lookbooks, setLookbooks] = useState([]);
   const { deleteLookbook, hideDetail } = useLookbookStore();
+  const memberId = useUserStore((state) => state.userId);
   // Create an array with the length of 10 for rendering multiple Lookbook components
   // const lookbooks = Array.from({ length: 10 }, (_, index) => ({
   //   nickname: `Creator ${index + 1}`,
@@ -25,7 +27,7 @@ const PrivatePosts = () => {
   useEffect(() => {
     const getPrivateLookbooks = async () => {
       try {
-        const response = await getPrivateLookbookList();
+        const response = await getPrivateLookbookList(memberId);
         console.log('가져온 비공개 룩북, Lookbook에 보내기', response);
         setLookbooks(response.data);
       } catch (error) {
