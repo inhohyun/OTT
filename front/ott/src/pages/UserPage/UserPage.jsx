@@ -26,11 +26,11 @@ const UserPage = () => {
   const [isMe, setIsMe] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
-
+  // memberId 가져오기
+  const memberId = useUserStore((state) => state.userId);
   const location = useLocation();
-  const [targetId, setTargetId] = useState(location.state?.id || 1);
+  const [targetId, setTargetId] = useState(location.state?.id || memberId);
   useEffect(() => {
-    console.log('targetId:', targetId);
     const fetchUserData = async (targetId) => {
       try {
         const userInfoResponse = await getUserInfo(targetId);
