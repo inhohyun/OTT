@@ -76,7 +76,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
               onClick={() => handleItemClick(item)} // Handle click event
             >
               <img
-                src={isFrontVisible ? item.img[0] : item.img[1]}
+                src={item.img[0]}
                 alt={`${item.category}`}
                 className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
               />
