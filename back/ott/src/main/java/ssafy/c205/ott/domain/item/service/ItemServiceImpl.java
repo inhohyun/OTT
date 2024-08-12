@@ -13,11 +13,12 @@ import ssafy.c205.ott.common.entity.ItemCategory;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.category.entity.Category;
+import ssafy.c205.ott.domain.category.exception.CategoryNotFoundException;
 import ssafy.c205.ott.domain.category.repository.CategoryRepository;
 import ssafy.c205.ott.domain.closet.dto.ClosetDto;
-import ssafy.c205.ott.domain.closet.repository.ClosetRepository;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
@@ -43,20 +44,14 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImageRepository itemImageRepository;
     private final ClosetService closetService;
     private final CategoryRepository categoryRepository;
-    private final ClosetRepository closetRepository;
     private final ItemCategoryRepository itemCategoryRepository;
 
     @Override
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
         MultipartFile backImg) {
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(itemCreateDto.getMemberId(),
-            ActiveStatus.ACTIVE);
-        Member member = null;
-        if (om.isPresent()) {
-            member = om.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾지 못했습니다.");
-        }
+        Member member = memberRepository.findByIdAndActiveStatus(itemCreateDto.getMemberId(),
+                ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+
         //빈 객체 생성
         Item saveItem = itemRepository.save(Item.builder().member(member).build());
 
@@ -92,13 +87,9 @@ public class ItemServiceImpl implements ItemService {
         List<ClosetDto> closets = closetService.findByMemberId(itemCreateDto.getMemberId());
         Long closetId = closets.get(0).getId();
 
-        Optional<Category> oc = categoryRepository.findById(itemCreateDto.getCategoryId());
-        Category category = null;
-        if (oc.isPresent()) {
-            category = oc.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다.");
-        }
+        Category category = categoryRepository.findById(itemCreateDto.getCategoryId()).orElseThrow(
+                CategoryNotFoundException::new);
+
         List<ItemCategory> categories = new ArrayList<>();
         categories.add(ItemCategory.builder().category(category).item(saveItem).build());
         itemCategoryRepository.save(
@@ -163,13 +154,9 @@ public class ItemServiceImpl implements ItemService {
             List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
             Long closetId = closets.get(0).getId();
 
-            Optional<Category> oc = categoryRepository.findById(itemUpdateDto.getCategoryId());
-            Category category = null;
-            if (oc.isPresent()) {
-                category = oc.get();
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리가 존재하지 않습니다.");
-            }
+            Category category = categoryRepository.findById(itemUpdateDto.getCategoryId())
+                    .orElseThrow(CategoryNotFoundException::new);
+
             List<ItemCategory> categories = new ArrayList<>();
             ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
                 itemUpdateDto.getMemberId(), itemUpdateDto.getCategoryId()).get(0);
@@ -183,27 +170,23 @@ public class ItemServiceImpl implements ItemService {
                     .build());
 
             categories.add(saveCategory);
-            Optional<Member> om = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
-                ActiveStatus.ACTIVE);
-            if (om.isPresent()) {
-                Member member = om.get();
-                itemRepository.save(Item
-                    .builder()
-                    .id(item.getId())
-                    .sex(itemUpdateDto.getGender())
-                    .brand(itemUpdateDto.getBrand())
-                    .member(member).itemImages(itemImages)
-                    .size(itemUpdateDto.getSize())
-                    .purchase(itemUpdateDto.getPurchase())
-                    .itemCategories(categories)
-                    .bookmarkStatus(item.getBookmarkStatus())
-                    .publicStatus(itemUpdateDto.getPublicStatus())
-                    .salesStatus(itemUpdateDto.getSalesStatus())
-                    .color(itemUpdateDto.getColor())
-                    .build());
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 멤버를 찾을 수 없습니다.");
-            }
+            Member member = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
+                    ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+
+            itemRepository.save(Item
+                .builder()
+                .id(item.getId())
+                .sex(itemUpdateDto.getGender())
+                .brand(itemUpdateDto.getBrand())
+                .member(member).itemImages(itemImages)
+                .size(itemUpdateDto.getSize())
+                .purchase(itemUpdateDto.getPurchase())
+                .itemCategories(categories)
+                .bookmarkStatus(item.getBookmarkStatus())
+                .publicStatus(itemUpdateDto.getPublicStatus())
+                .salesStatus(itemUpdateDto.getSalesStatus())
+                .color(itemUpdateDto.getColor())
+                .build());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 옷을 찾을 수 없습니다.");
         }
@@ -220,8 +203,8 @@ public class ItemServiceImpl implements ItemService {
                 amazonS3Util.deleteFile(itemImage.getItemImagePath());
                 itemImageRepository.delete(itemImage);
             }
-            //카테고리 삭제
-            categoryRepository.delete(item.getItemCategories().get(0).getCategory());
+
+            itemCategoryRepository.delete(item.getItemCategories().get(0));
 
             //옷 삭제하기
             itemRepository.delete(item);

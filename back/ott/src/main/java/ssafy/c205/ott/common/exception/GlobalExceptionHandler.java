@@ -9,6 +9,9 @@ import ssafy.c205.ott.common.oauth.exception.ExpiredRefreshToken;
 import ssafy.c205.ott.common.oauth.exception.InvalidRefreshToken;
 import ssafy.c205.ott.common.oauth.exception.NotFoundRefreshTokenException;
 import ssafy.c205.ott.domain.account.exception.*;
+import ssafy.c205.ott.domain.category.exception.CategoryAlreadyUseException;
+import ssafy.c205.ott.domain.category.exception.CategoryNameDuplicationException;
+import ssafy.c205.ott.domain.category.exception.CategoryNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,6 +31,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundRefreshTokenException.class)
     public ResponseEntity<ApiResponse<Void>> handleNotFoundRefreshTokenException(NotFoundRefreshTokenException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCategoryNotFoundException(CategoryNotFoundException e) {
         ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
@@ -57,6 +66,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(NotSelfRequestException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotSelfRequestException(NotSelfRequestException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(ExpiredRefreshToken.class)
     public ResponseEntity<ApiResponse<Void>> handleExpiredRefreshToken(ExpiredRefreshToken e) {
         ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
@@ -65,6 +80,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRefreshToken.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidRefreshToken(InvalidRefreshToken e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(CategoryAlreadyUseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCategoryAlreadyUseException(CategoryAlreadyUseException e) {
+        ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(CategoryNameDuplicationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCategoryNameDuplicationException(CategoryNameDuplicationException e) {
         ApiResponse<Void> response = ApiResponse.error(e.getStatus(), e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
