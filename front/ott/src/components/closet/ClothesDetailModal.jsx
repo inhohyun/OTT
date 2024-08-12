@@ -1,25 +1,28 @@
 import { useState, useEffect } from 'react';
-import { getClothesItemData } from '../../api/closet/clothes';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
+import { updateClothes, getClothesItemData, deleteClothes, getClothesList } from '../../api/closet/clothes';
 
 const ClothesDetailModal = ({
   isOpen,
   onClose,
   clothingItem,
   onEdit,
-  onDelete,
   categories,
+  setClothes,
+  memberId,
 }) => {
-  const [itemDetails, setItemDetails] = useState(clothingItem);
+  const [itemDetails, setItemDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [errors, setErrors] = useState({});
+
 
   useEffect(() => {
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
+          console.log(clothingItem)
           const data = await getClothesItemData(clothingItem.clothesId);
+          console.log(data)
           setItemDetails(data);
         } catch (error) {
           console.error('Failed to fetch item details:', error);
@@ -29,19 +32,54 @@ const ClothesDetailModal = ({
     }
   }, [clothingItem]);
 
-  useEffect(() => {
-    setItemDetails(clothingItem);
-  }, [clothingItem]);
-
   const handleToggleEdit = () => {
-    setIsEditing(!isEditing);
+    console.log(itemDetails)
+    setIsEditing(true); 
   };
 
   const handleSave = async () => {
-    onEdit(itemDetails);
-    setIsEditing(false);
+    try {
+      const formData = new FormData();
+      formData.append('brand', itemDetails.brand);
+      formData.append('purchase', itemDetails.purchase);
+      formData.append('size', itemDetails.size);
+      formData.append('color', itemDetails.color);
+      formData.append('gender', itemDetails.gender || '');
+      formData.append('categoryId', itemDetails.categoryId);
+      formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
+      formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
+      formData.append('memberId', memberId);
+  
+      await updateClothes(itemDetails.clothesId, formData);
+      const updatedClothesList = await getClothesList(memberId);
+      setClothes(updatedClothesList);
+
+      const updatedItemDetails = updatedClothesList.find(
+        (item) => item.clothesId === itemDetails.clothesId
+      );
+      if (updatedItemDetails) {
+        setItemDetails(updatedItemDetails);
+      }
+  
+      // onEdit(itemDetails);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving changes:', error);
+    }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteClothes(itemDetails.clothesId);
+      setClothes((prevClothes) =>
+        prevClothes.filter((item) => item.clothesId !== itemDetails.clothesId)
+      );
+      onClose();
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+  
   const handleCancel = () => {
     setIsEditing(false);
   };
@@ -56,15 +94,15 @@ const ClothesDetailModal = ({
             itemDetails={itemDetails}
             onSave={handleSave}
             onCancel={handleCancel}
-            categories={categories}
             setItemDetails={setItemDetails}
-            errors={errors}
+            categories={categories}
           />
         ) : (
           <ClothesDetailsView
             itemDetails={itemDetails}
             onEdit={handleToggleEdit}
             onClose={onClose}
+            onDelete={handleDelete}
           />
         )}
       </div>

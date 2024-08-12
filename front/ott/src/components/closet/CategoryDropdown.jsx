@@ -14,9 +14,11 @@ const CategoryDropdown = ({
   onAddCategory,
   onEditCategory,
   onDeleteCategory,
+  categories,
+  closetId,
 }) => {
   // 카테고리 목록 상태
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   // 카테고리 추가 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 카테고리 수정 모달 상태
@@ -24,7 +26,7 @@ const CategoryDropdown = ({
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
   // 옷장 ID
-  const [closetId, setClosetId] = useState(null);
+  // const [closetId, setClosetId] = useState(null);
 
   const userId = useUserStore((state) => state.userId);
 
@@ -182,7 +184,6 @@ const CategoryDropdown = ({
           category={editingCategory}
           onSave={handleEditCategorySave}
           existingCategories={categories}
-          closetId={closetId}
         />
       )}
     </div>

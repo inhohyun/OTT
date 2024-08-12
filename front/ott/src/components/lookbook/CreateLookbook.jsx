@@ -33,8 +33,8 @@ const CreateLookbook = () => {
 
   // 옷장 id 조회
   useEffect(() => {
-    // const uid = 1;
-    const uid = userId;
+    const uid = 1;
+    // const uid = userId;
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
@@ -46,11 +46,11 @@ const CreateLookbook = () => {
     };
 
     fetchClosetId();
-  }, [userId]);
+  }, []);
 
-  useEffect(() => {
-    console.log('옷장 아이디', closetId);
-  }, [closetId]);
+  // useEffect(() => {
+  //   console.log('옷장 아이디', closetId);
+  // }, [closetId]);
 
   // 카테고리 조회
   useEffect(() => {
@@ -102,10 +102,11 @@ const CreateLookbook = () => {
     // }
 
     const fetchClothes = async () => {
-      // const closetid = 1;
-      const closetid = closetId;
+      const closetid = 1;
+      // const closetid = closetId;
       try {
-        const response = await getClothes(userId, selectedCategory, closetid);
+        // const response = await getClothes(userId, selectedCategory, closetid);
+        const response = await getClothes(1, selectedCategory, closetid);
         if (Array.isArray(response)) {
           const clothesData = response.map((item) => ({
             id: item.clothId,
@@ -153,8 +154,8 @@ const CreateLookbook = () => {
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
-          formData.append('memberId', userId);
-          // formData.append('memberId', 1);
+          // formData.append('memberId', userId);
+          formData.append('memberId', 1);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
