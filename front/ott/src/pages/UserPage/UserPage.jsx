@@ -12,6 +12,7 @@ import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
 import { getUserInfo, followUser, unfollowUser } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
+
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
@@ -25,6 +26,7 @@ const UserPage = () => {
   const location = useLocation();
   const { id } = location.state || { id: memberId }; // id 꺼내기
 
+  console.log('id : ', id);
   useEffect(() => {
     const fetchUserData = async (sendId) => {
       try {
