@@ -133,17 +133,16 @@ const ClosetPage = () => {
     try {
       const response = await addClothes(newClothesData);
 
-      if (response && response.clothesId) {
-        // 응답으로부터 새로운 옷 아이템을 직접 생성
-        const newItem = {
-          ...newClothesData,
-          id: response.clothesId,
-          key: response.clothesId, // 키로 사용
-          isLiked: false, // 초기 상태 설정
-        };
+      if (
+        typeof response === 'string' &&
+        response.includes('옷 저장을 완료했습니다')
+      ) {
+        const updatedClothesList = await getClothesList(memberId);
 
-        // 기존 clothes 상태에 새로운 아이템을 추가
-        setClothes((prevClothes) => [...prevClothes, newItem]);
+        const newItem = updatedClothesList[updatedClothesList.length - 1];
+        newItem.key = newItem.clothesId;
+
+        setClothes(updatedClothesList);
       } else {
         console.error('Unexpected response format:', response);
       }
