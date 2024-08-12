@@ -37,6 +37,7 @@ const Header = () => {
       try {
         const latestNotification = await getLatestNotification(memberId);
         if (latestNotification) {
+          console.log(latestNotification)
           setNotifications((prevNotifications) => [
             latestNotification,
             ...prevNotifications,
