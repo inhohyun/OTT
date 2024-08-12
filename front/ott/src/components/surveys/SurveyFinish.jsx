@@ -41,7 +41,7 @@ export default function SurveyFinish({ formData }) {
 
       // api 명세서 데이터 구조에 맞게 변환
       const dataToSend = {
-        memberId: memberId,
+        memberId: formData.memberId,
         nickname: formData.nickname,
         name: formData.name,
         phoneNumber: formData.phone,
