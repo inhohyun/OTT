@@ -31,6 +31,8 @@ public class NotificationReadService {
     public NotificationResponseDto sendNotification(Long memberId) {
         Notification notification = notificationRepository.findFirstByMemberIdAndNotificationStatusOrderByCreatedAtAsc(memberId,
                 NotificationStatus.UNREAD).orElseThrow(NotificationNotFoundException::new);
+        notification.updateNotificationStatus(NotificationStatus.READ);
+        notificationRepository.save(notification);
         return buildNotificationResponseDto(notification);
     }
 
