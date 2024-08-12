@@ -24,14 +24,14 @@ const UserPage = () => {
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
-  const { id } = location.state || { id: 0 }; // id 꺼내기
+  const { id } = location.state || { id: memberId }; // id 꺼내기
 
   //초기엔 targetId는 memberId로 설정
-  const [targetId, setTargetId] = useState(memberId);
+  const [targetId, setTargetId] = useState(id);
   useEffect(() => {
-    const fetchUserData = async (targetId) => {
+    const fetchUserData = async (sendId) => {
       try {
-        const userInfoResponse = await getUserInfo(targetId);
+        const userInfoResponse = await getUserInfo(sendId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
 
