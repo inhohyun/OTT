@@ -119,7 +119,6 @@ class MemberWriteServiceTest {
                 .gender(Gender.MAN)
                 .bodyType(BodyType.MUSCULAR)
                 .publicStatus(PublicStatus.PUBLIC)
-                .memberTags(null)
                 .build();
 
         // when
@@ -135,7 +134,6 @@ class MemberWriteServiceTest {
         assertThat(updatedMember.getGender()).isEqualTo(memberUpdateRequestDto.getGender());
         assertThat(updatedMember.getBodyType()).isEqualTo(memberUpdateRequestDto.getBodyType());
         assertThat(updatedMember.getPublicStatus()).isEqualTo(memberUpdateRequestDto.getPublicStatus());
-        assertThat(updatedMember.getMemberTags()).isEqualTo(memberUpdateRequestDto.getMemberTags());
     }
 
     @Test
