@@ -52,7 +52,7 @@ const Header = () => {
     return () => clearInterval(intervalId);
   }, [memberId]);
 
-  const handleNotificationClick = () => {
+  const handleNotificationClick = async () => {
     setShowModal(true);
 
     try {
