@@ -26,7 +26,7 @@ const CategoryDropdown = ({
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
   // 옷장 ID
-  // const [closetId, setClosetId] = useState(null);
+  const [closetId, setClosetId] = useState(null);
 
   const userId = useUserStore((state) => state.userId);
 
@@ -41,7 +41,7 @@ const CategoryDropdown = ({
       const closetId = closetResponse.data[0].id;
       setClosetId(closetId);
       const categoryList = await getCategoryList(closetId);
-      console.log('categoryList', categoryList);
+
       const fetchedCategories = categoryList.data;
       const defaultCategories = [
         { categoryId: -100, name: '전체' },
