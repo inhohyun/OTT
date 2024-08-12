@@ -20,7 +20,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgSFJ5MHlYX0xPZDZaaWk0ZWZ2ajN3aDVxam9UallCZ2p3ZnlYWURwMC1PNCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIzNDM5MTQ5LCJleHAiOjE3MjM0Mzk3NDl9.EHRYwP84Q9xN1vzkK21Hsa2uuv1HLenoJdU5Q7Ayrmw';
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgSFJ5MHlYX0xPZDZaaWk0ZWZ2ajN3aDVxam9UallCZ2p3ZnlYWURwMC1PNCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIzNDQ0Njk2LCJleHAiOjE3MjM1MDQ2OTZ9.d7pz-GnAxpc87AKbIgNP0NvWRNshrbJjly19dFIHWNk';
     if (token) {
       // 액세스 토큰이 있으면 헤더에 추가
       config.headers.access = `${token}`;
