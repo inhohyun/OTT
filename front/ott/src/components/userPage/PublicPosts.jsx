@@ -29,7 +29,7 @@ const PublicPosts = () => {
       try {
         const response = await getPublicLookbookList(memberId);
         console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
-        setLookbooks(response.data);
+        setLookbooks(response);
       } catch (error) {
         console.error('Failed to get public lookbooks:', error);
       }

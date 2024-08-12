@@ -29,7 +29,7 @@ const PrivatePosts = () => {
       try {
         const response = await getPrivateLookbookList(memberId);
         console.log('가져온 비공개 룩북, Lookbook에 보내기', response);
-        setLookbooks(response.data);
+        setLookbooks(response);
       } catch (error) {
         console.error('Failed to get private lookbooks:', error);
       }
