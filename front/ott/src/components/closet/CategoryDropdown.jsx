@@ -13,9 +13,11 @@ const CategoryDropdown = ({
   onAddCategory,
   onEditCategory,
   onDeleteCategory,
+  categories,
+  closetId,
 }) => {
   // 카테고리 목록 상태
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   // 카테고리 추가 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 카테고리 수정 모달 상태
@@ -23,29 +25,29 @@ const CategoryDropdown = ({
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
   // 옷장 ID
-  const [closetId, setClosetId] = useState(null);
+  // const [closetId, setClosetId] = useState(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const memberId = 1;
-      const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
-      setClosetId(closetId);
-      const categoryList = await getCategoryList(closetId);
-      const fetchedCategories = categoryList.data;
-      const defaultCategories = [
-        { categoryId: -100, name: '전체' },
-        { categoryId: -200, name: '즐겨찾기' },
-      ]
-      setCategories([...defaultCategories, ...fetchedCategories]);
-    } catch (error) {
-      console.error('카테고리 목록 불러오는 중 오류 발생:', error);
-    }
-  };
+  // const fetchCategories = async () => {
+  //   try {
+  //     const memberId = 1;
+  //     const closetResponse = await getClosetId(memberId);
+  //     const closetId = closetResponse.data.data[0].id;
+  //     setClosetId(closetId);
+  //     const categoryList = await getCategoryList(closetId);
+  //     const fetchedCategories = categoryList.data;
+  //     const defaultCategories = [
+  //       { categoryId: -100, name: '전체' },
+  //       { categoryId: -200, name: '즐겨찾기' },
+  //     ]
+  //     setCategories([...defaultCategories, ...fetchedCategories]);
+  //   } catch (error) {
+  //     console.error('카테고리 목록 불러오는 중 오류 발생:', error);
+  //   }
+  // };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -179,7 +181,6 @@ const CategoryDropdown = ({
           category={editingCategory}
           onSave={handleEditCategorySave}
           existingCategories={categories}
-          closetId={closetId}
         />
       )}
     </div>

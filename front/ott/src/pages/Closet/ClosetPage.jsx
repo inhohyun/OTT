@@ -4,8 +4,15 @@ import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
 import ClothesDetailModal from '../../components/closet/ClothesDetailModal';
-import { addClothes, getClothesList, getClosetId, getClothesByCategory, getBookmarkedClothes } from '../../api/closet/clothes';
+import {
+  addClothes,
+  getClothesList,
+  getClosetId,
+  getClothesByCategory,
+  getBookmarkedClothes,
+} from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
+import useUserStore from '../../data/lookbook/userStore';
 
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(-100);
@@ -16,7 +23,7 @@ const ClosetPage = () => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [closetId, setClosetId] = useState(null);
 
-  const memberId = 1;
+  const memberId = useUserStore((state) => state.userId);
 
   useEffect(() => {
     const fetchInitialClothesList = async () => {
@@ -31,13 +38,12 @@ const ClosetPage = () => {
     fetchInitialClothesList();
   }, [memberId]);
 
-
   useEffect(() => {
     const fetchClosetIdAndCategories = async () => {
       try {
         const closetResponse = await getClosetId(memberId);
-        console.log(closetResponse)
-        const closetId = closetResponse.data.data[0].id;
+        console.log(closetResponse);
+        const closetId = closetResponse.data[0].id;
         setClosetId(closetId);
 
         const categoryList = await getCategoryList(closetId);
@@ -61,7 +67,7 @@ const ClosetPage = () => {
 
   useEffect(() => {
     if (closetId !== null) {
-      fetchClothesByCategory(selectedCategory)
+      fetchClothesByCategory(selectedCategory);
     }
   }, [selectedCategory, closetId]);
 
@@ -75,13 +81,17 @@ const ClosetPage = () => {
         // 즐겨찾기
         clothesList = await getBookmarkedClothes(memberId);
       } else {
-        clothesList = await getClothesByCategory(memberId, categoryId, closetId);
+        clothesList = await getClothesByCategory(
+          memberId,
+          categoryId,
+          closetId
+        );
       }
       setClothes(clothesList);
     } catch (error) {
       console.error('옷 목록 가져오기 실패', error);
     }
-  }
+  };
 
   const handleCategoryChange = (newCategoryId) => {
     setSelectedCategory(newCategoryId);
@@ -124,13 +134,16 @@ const ClosetPage = () => {
   const handleNewClothes = async (newClothesData) => {
     try {
       const response = await addClothes(newClothesData);
-      
-      if (typeof response === 'string' && response.includes('옷 저장을 완료했습니다')) {
+
+      if (
+        typeof response === 'string' &&
+        response.includes('옷 저장을 완료했습니다')
+      ) {
         const updatedClothesList = await getClothesList(memberId);
-        
+
         const newItem = updatedClothesList[updatedClothesList.length - 1];
         newItem.key = newItem.clothesId;
-  
+
         setClothes(updatedClothesList);
       } else {
         console.error('Unexpected response format:', response);
@@ -149,21 +162,21 @@ const ClosetPage = () => {
   };
 
   const handleClothesClick = (clothingItem) => {
-    console.log(clothingItem.clothesId)
+    console.log(clothingItem.clothesId);
     setSelectedClothing(clothingItem);
     setIsDetailModalOpen(true);
   };
 
   const handleEditClothes = (updatedClothes) => {
-    setClothes((prevClothes) => 
-      prevClothes.map((item) => 
+    setClothes((prevClothes) =>
+      prevClothes.map((item) =>
         item.id === updatedClothes.id ? updatedClothes : item
       )
     );
 
-    setSelectedClothing(updatedClothes)
+    setSelectedClothing(updatedClothes);
   };
-  
+
   const filteredCategories = categories.filter(
     (category) => category.name !== '전체' && category.name !== '즐겨찾기'
   );
@@ -177,6 +190,7 @@ const ClosetPage = () => {
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
         categories={categories}
+        closetId={closetId}
         onAddCategory={handleAddCategory}
         onEditCategory={handleEditCategory}
         onDeleteCategory={handleDeleteCategory}
