@@ -13,7 +13,6 @@ export default function SurveyIng() {
   const [formData, setFormData] = useState({});
 
   const handleNext = function (e) {
-    e.preventDefault();
     if (step < totalSteps) {
       setStep(step + 1);
     } else {

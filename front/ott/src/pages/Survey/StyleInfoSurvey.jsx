@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
-export default function StyleInfoSurvey({ formData, setFormData, handleNext, handlePrev }) {
+export default function StyleInfoSurvey({
+  formData,
+  setFormData,
+  handleNext,
+  handlePrev,
+}) {
   const [searchText, setSearchText] = useState('');
   const [tags, setTags] = useState([]);
 
@@ -9,7 +14,6 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
     if (searchText.trim() !== '' && tags.length < 5) {
       const newTags = [...tags, searchText.trim()];
       setTags(newTags);
@@ -19,12 +23,14 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
   };
 
   const handleTagRemove = (tag) => {
-    setTags(tags.filter(t => t !== tag));
+    setTags(tags.filter((t) => t !== tag));
   };
 
   return (
     <>
-      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">선호하는 스타일</h2>
+      <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">
+        선호하는 스타일
+      </h2>
       <p className="text-center text-gray-600 mb-5">(최대 5개)</p>
       <form onSubmit={handleSearchSubmit} className="space-y-6">
         <div className="relative mb-10 flex justify-between items-center">
@@ -38,8 +44,11 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
           />
         </div>
         <div className="flex flex-wrap gap-2 mb-10">
-          {tags.map(tag => (
-            <div key={tag} className="flex items-center bg-violet-400 text-white px-3 py-1 rounded-full">
+          {tags.map((tag) => (
+            <div
+              key={tag}
+              className="flex items-center bg-violet-400 text-white px-3 py-1 rounded-full"
+            >
               <span>{tag}</span>
               <button
                 type="button"
@@ -52,22 +61,22 @@ export default function StyleInfoSurvey({ formData, setFormData, handleNext, han
           ))}
         </div>
       </form>
-        <div className="flex justify-between w-4/5 max-w-md mx-auto">
-          <button
-            type="button"
-            className="bg-gray-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-gray-500"
-            onClick={handlePrev}
-          >
-            이전
-          </button>
-          <button
-            type="submit"
-            className="bg-violet-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-300"
-            onClick={handleNext}
-          >
-            다음
-          </button>
-        </div>
+      <div className="flex justify-between w-4/5 max-w-md mx-auto">
+        <button
+          type="button"
+          className="bg-gray-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-gray-500"
+          onClick={handlePrev}
+        >
+          이전
+        </button>
+        <button
+          type="submit"
+          className="bg-violet-400 text-white py-2 px-5 rounded-full mt-5 cursor-pointer text-lg hover:bg-violet-300"
+          onClick={handleNext}
+        >
+          다음
+        </button>
+      </div>
     </>
   );
 }
