@@ -9,7 +9,6 @@ import axios from 'axios';
 import useUserStore from '../../data/lookbook/userStore';
 
 const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
-  x;
   const memberId = useUserStore((state) => state.userId);
   const [formData, setFormData] = useState({
     categoryId: null,
