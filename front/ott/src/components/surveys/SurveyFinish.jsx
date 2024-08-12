@@ -1,14 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
 import finishIcon from '../../assets/images/survey/survey_finish.png';
+import { getUid, updateUserInfo } from '../../api/user/user';
+import { useState, useEffect } from 'react';
 
 export default function SurveyFinish({ formData }) {
   const navigate = useNavigate();
-  console.log(formData);
+  // const [memberId, setMemberId] = useState(null);
 
   const genderMap = {
-    남성: 'M',
-    여성: 'W',
+    남성: 'MAN',
+    여성: 'WOMAN',
   };
 
   const bodyTypeMap = {
@@ -18,6 +19,20 @@ export default function SurveyFinish({ formData }) {
     '통통': 'CHUBBY',
   };
 
+  // useEffect(() => {
+  //   const fetchMemberId = async () => {
+  //     try {
+  //       const response = await getUid();
+  //       console.log(response);
+  //       setMemberId(response.data.id);
+  //     } catch (error) {
+  //       console.error('memberId 가져오는 중 에러 발생:', error);
+  //     }
+  //   };
+
+  //   fetchMemberId();
+  // }, []);
+
   const handleComplete = async () => {
     try {
       // 한글 데이터 영어 번역
@@ -26,6 +41,7 @@ export default function SurveyFinish({ formData }) {
 
       // api 명세서 데이터 구조에 맞게 변환
       const dataToSend = {
+        memberId: formData.memberId,
         nickname: formData.nickname,
         name: formData.name,
         phoneNumber: formData.phone,
@@ -34,18 +50,20 @@ export default function SurveyFinish({ formData }) {
         weight: parseFloat(formData.weight),
         gender: translatedGender,
         bodyType: translatedBodyType,
-        memberTags: formData.tags.map((tag) => ({ name: tag })),
+        publicStatus: 'PUBLIC',
       };
 
+      console.log(dataToSend);
+
       // axios put 요청
-      // await axios.put('http://your-backend-endpoint/api/member', dataToSend);
+      await updateUserInfo(memberId, dataToSend);
 
       // 백엔드로 넘겨진 데이터 확인
-      console.log('Data sent to backend:', dataToSend);
+      console.log('백엔드로 전해진 데이터:', dataToSend);
 
       navigate('/mainpage');
     } catch (error) {
-      console.error('Error sending data:', error);
+      console.error('설문 데이터 전송 중 에러 발생:', error);
     }
   };
 

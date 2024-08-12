@@ -266,7 +266,8 @@ const LookbookDetail = ({
               </p>
             </div>
           </div>
-
+          {console.log('룩북 소유주', currentLookbook.memberId)}
+          {console.log('지금 보고 있는 사람', userId)}
           {userId !== currentLookbook.memberId && (
             <button
               className={`text-sm px-3 py-3 rounded-lg me-3 ${

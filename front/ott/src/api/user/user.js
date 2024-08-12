@@ -73,3 +73,22 @@ export const unfollowUser = async (targetId) => {
     throw error;
   }
 };
+
+// 유저 취향 태그 등록 api
+export const addMemberTags = async (memberId, tags) => {
+  try {
+    const requestBody = {
+      memberId: memberId,
+      tag: tags,
+    };
+
+    const response = await axiosInstance.post(
+      `api/members/${memberId}/memberTags`,
+      requestBody
+    );
+    return response;
+  } catch (error) {
+    console.error('태그 추가 중 오류 발생', error);
+    throw error;
+  }
+};
