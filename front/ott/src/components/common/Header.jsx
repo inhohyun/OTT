@@ -5,7 +5,10 @@ import closetImage from '../../assets/icons/closet_icon.png';
 import notificationImage from '../../assets/icons/notification_icon.png';
 import Notification from './Notification';
 import LatestNotificationModal from './LatestNotificationModal';
-import { getNotificationsList, getLatestNotification } from '../../api/notification/notification';
+import {
+  getNotificationsList,
+  getLatestNotification,
+} from '../../api/notification/notification';
 import useUserStore from '../../data/lookbook/userStore';
 
 const Header = () => {
@@ -14,7 +17,7 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [latestNotification, setLatestNotification] = useState(null);
   const [memberId, setMemberId] = useState(null);
-  const uid = useUserStore((state) => state.userId)
+  const uid = useUserStore((state) => state.userId);
 
   const navigate = useNavigate();
 
@@ -28,19 +31,21 @@ const Header = () => {
     };
 
     fetchMemberId();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!memberId) return;
 
     const intervalId = setInterval(async () => {
       try {
-        const latestNotificationResponse = await getLatestNotification(memberId);
-        if (latestNotificationResponse && latestNotificationResponse.data.length > 0) {
+        const latestNotificationResponse =
+          await getLatestNotification(memberId);
+        if (latestNotificationResponse && latestNotificationResponse.data) {
           const latestNotification = latestNotificationResponse.data[0];
 
           const isNewNotification = !notifications.find(
-            (notification) => notification.notificationId === latestNotification.notificationId
+            (notification) =>
+              notification.notificationId === latestNotification.notificationId
           );
 
           if (isNewNotification) {
@@ -61,7 +66,6 @@ const Header = () => {
 
     return () => clearInterval(intervalId);
   }, [memberId, notifications]);
-
 
   const handleNotificationClick = async () => {
     setShowModal(true);
@@ -118,13 +122,13 @@ const Header = () => {
           />
         </div>
       </header>
-        <Notification
-          show={showModal}
-          onClose={handleCloseModal}
-          notifications={notifications}
-          setNotifications={setNotifications}
-        />
-        <LatestNotificationModal
+      <Notification
+        show={showModal}
+        onClose={handleCloseModal}
+        notifications={notifications}
+        setNotifications={setNotifications}
+      />
+      <LatestNotificationModal
         show={showLatestModal}
         onClose={handleCloseLatestModal}
         notification={latestNotification}
