@@ -121,7 +121,7 @@ const Header = () => {
         <Notification
           show={showModal}
           onClose={handleCloseModal}
-          notifications={latestNotification ? [latestNotification, ...notifications] : notifications}
+          notifications={notifications}
           setNotifications={setNotifications}
         />
         <LatestNotificationModal
