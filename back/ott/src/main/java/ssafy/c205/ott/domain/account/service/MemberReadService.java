@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
 import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
 import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
@@ -51,7 +50,7 @@ public class MemberReadService {
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
         int followingCount = member.getFollowings().size();
         int followerCount = member.getFollowers().size();
-        List<Tag> tags = getTags(member);
+        List<String> tags = getTags(member);
 
         if (memberValidator.isCurrentUser(memberRequestDto)) {
             return buildMyInfoDto(member, followStatus, followingCount, followerCount, tags);
@@ -141,14 +140,13 @@ public class MemberReadService {
         return FollowStatus.FOLLOWING;
     }
 
-    @Transactional
-    public List<Tag> getTags(Member member) {
+    private List<String> getTags(Member member) {
         return member.getMemberTags().stream()
-                .map(MemberTag::getTag)
+                .map(memberTag -> memberTag.getTag().getName())  // Tag의 name 필드만 추출
                 .toList();
     }
 
-    private MemberInfoDto buildMyInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<Tag> tags) {
+    private MemberInfoDto buildMyInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<String> tags) {
         return MemberInfoDto.builder()
                 .id(member.getId())
                 .name(member.getName())
@@ -168,7 +166,7 @@ public class MemberReadService {
                 .build();
     }
 
-    private MemberInfoDto buildOtherInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<Tag> tags) {
+    private MemberInfoDto buildOtherInfoDto(Member member, FollowStatus followStatus, int followingCount, int followerCount, List<String> tags) {
         return MemberInfoDto.builder()
                 .id(member.getId())
                 .name(member.getName())
