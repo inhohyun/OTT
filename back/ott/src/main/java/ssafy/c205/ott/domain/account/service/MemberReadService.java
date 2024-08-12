@@ -128,7 +128,7 @@ public class MemberReadService {
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {
-        Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(member.getId(), memberRequestDto.getId());
+        Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(memberRequestDto.getId(), member.getId());
         if (findFollow.isEmpty()) {
             return FollowStatus.NOT_FOLLOWING;
         }
