@@ -41,6 +41,7 @@ const CategoryDropdown = ({
       const closetId = closetResponse.data[0].id;
       setClosetId(closetId);
       const categoryList = await getCategoryList(closetId);
+      console.log('categoryList', categoryList);
       const fetchedCategories = categoryList.data;
       const defaultCategories = [
         { categoryId: -100, name: '전체' },
