@@ -51,6 +51,11 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     setNotifications(notifications.filter((_, i) => i !== index));
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+  };
+
   return (
     <div
       id="modal-overlay"
@@ -92,13 +97,16 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                 }}
               >
                 <p className="text-base mb-4" style={{ fontSize: '14px' }}>
-                  {notification.who}님이 {notification.what}
+                  {notification.message}
+                </p>
+                <p className="text-xs mb-2 text-stone-500">
+                  {notification.notificationType}
                 </p>
                 <p
                   className="text-xs text-stone-500 absolute right-2 bottom-2"
                   style={{ fontSize: '12px' }}
                 >
-                  {notification.when}
+                  {formatDate(notification.createdAt)}
                 </p>
               </div>
             ))}
@@ -115,5 +123,4 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     </div>
   );
 };
-
 export default Notification;
