@@ -46,7 +46,7 @@ public class MemberReadService {
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
         log.info("memberId" + memberRequestDto.getId());
         log.info("CurrentId" + memberRequestDto.getCurrentId());
-        Member member = findActiveMemberById(memberRequestDto.getCurrentId());
+        Member member = findActiveMemberById(memberRequestDto.getId());
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
         int followingCount = member.getFollowings().size();
         int followerCount = member.getFollowers().size();
@@ -116,15 +116,15 @@ public class MemberReadService {
     }
 
     private FollowStatus determineFollowStatus(MemberRequestDto memberRequestDto, Member member) {
-        if (isSelf(memberRequestDto, member)) {
+        if (isSelf(memberRequestDto)) {
             return FollowStatus.SELF;
         } else {
             return getFollowStatus(memberRequestDto, member);
         }
     }
 
-    private boolean isSelf(MemberRequestDto memberRequestDto, Member member) {
-        return member.getId().longValue() == memberRequestDto.getId().longValue();
+    private boolean isSelf(MemberRequestDto memberRequestDto) {
+        return memberRequestDto.getCurrentId().longValue() == memberRequestDto.getId().longValue();
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {
