@@ -55,7 +55,7 @@ const MainPage = () => {
       }
     };
     fetchFollowCount();
-  }, []); // 의존성을 빈 배열로 설정
+  }, [memberId]); // 의존성을 빈 배열로 설정
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -92,9 +92,10 @@ const MainPage = () => {
 
   useEffect(() => {
     const fetchFollowCount = async () => {
-      if (!memberId) return; // memberId가 설정되지 않았다면 함수 종료
+      // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
       try {
         const response = await getFollowingCount(memberId);
+        // console.log('API Response:', response); // 이 로그가 찍히는지 확인
         if (response.data !== 0) {
           setHasFollow(true);
         } else {
@@ -105,7 +106,7 @@ const MainPage = () => {
       }
     };
     fetchFollowCount();
-  }, [memberId]); // memberId를 의존성 배열에 추가
+  }, []); // 의존성을 빈 배열로 설정
 
   return (
     <div
