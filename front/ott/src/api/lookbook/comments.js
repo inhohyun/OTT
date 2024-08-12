@@ -22,8 +22,8 @@ export const lookbookComment = async (lookbookId, status) => {
     const response = await axiosInstance.get(`api/comment/${lookbookId}`, {
       params: { status: status },
     });
-    console.log(response.data);
-    return response.data;
+    console.log(response);
+    return response;
   } catch (error) {
     console.error(error);
     // throw error;
