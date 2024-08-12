@@ -22,7 +22,6 @@ const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
   const [userInfo, setUserInfo] = useState(null);
-  const [uid, setUid] = useState(null);
   const [isMe, setIsMe] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
@@ -38,6 +37,9 @@ const UserPage = () => {
         const userInfoResponse = await getUserInfo(targetId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
+
+        // 유저 정보 안에있는 id를 targetId로 설정
+        setTargetId(userInfo.id);
 
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
@@ -60,8 +62,8 @@ const UserPage = () => {
       }
     };
 
+    // 유저 정보 호출
     if (targetId) {
-      setUid(targetId);
       fetchUserData(targetId);
     } else {
       const fetchCurrentUserData = async () => {
@@ -70,16 +72,13 @@ const UserPage = () => {
           const id = uidResponse.data.id;
           setUid(id);
           fetchUserData(id);
-
-          // targetId 저장 - 본인인 경우 targetId와 uid가 같음
-          setTargetId(id);
         } catch (error) {
           console.error('Error fetching current user info:', error);
         }
       };
       fetchCurrentUserData();
     }
-  }, [targetId]);
+  }, []);
 
   if (!userInfo) {
     return <div>Loading...</div>;
@@ -94,10 +93,10 @@ const UserPage = () => {
       renderComponent = <Posts isMe={isMe} isPublic={isPublic} />;
       break;
     case 'followers':
-      renderComponent = <Followers uid={uid} />;
+      renderComponent = <Followers uid={memberId} />;
       break;
     case 'following':
-      renderComponent = <Following uid={uid} />;
+      renderComponent = <Following uid={memberId} />;
       break;
     default:
       renderComponent = null;
@@ -147,9 +146,9 @@ const UserPage = () => {
   };
 
   const handleSettingsClick = () => {
-    console.log('이동하려는 회원 id', uid);
-    if (uid) {
-      navigate(`/updatePage`, { state: { uid, userInfo } });
+    console.log('이동하려는 회원 id', memberId);
+    if (memberId) {
+      navigate(`/updatePage`, { state: { memberId, userInfo } });
     } else {
       console.error('ID is not available');
     }

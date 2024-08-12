@@ -15,7 +15,10 @@ import BodyTypeModal from '../../components/userPage/BodyTypeModal';
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { uid, userInfo } = location.state || { uid: null, userInfo: {} };
+  const { memberId, userInfo } = location.state || {
+    memberId: null,
+    userInfo: {},
+  };
 
   const redirectProfile = () => {
     navigate('/userPage');
@@ -111,7 +114,7 @@ const UpdatePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedUserInfo = {
-      memberId: uid,
+      memberId: memberId,
       nickname: userInfoState.nickname,
       phoneNumber: userInfoState.phone,
       introduction: userInfoState.introduction || '',
@@ -124,7 +127,7 @@ const UpdatePage = () => {
     };
 
     try {
-      await updateUserInfo(uid, updatedUserInfo);
+      await updateUserInfo(memberId, updatedUserInfo);
       redirectProfile();
     } catch (error) {
       console.error('Error updating user info:', error);
