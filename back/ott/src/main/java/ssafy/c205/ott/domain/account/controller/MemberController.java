@@ -9,13 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.common.ApiResponse;
 import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
-import ssafy.c205.ott.domain.account.dto.request.FollowRequestDto;
-import ssafy.c205.ott.domain.account.dto.request.MemberRequestDto;
-import ssafy.c205.ott.domain.account.dto.request.MemberSsoDto;
-import ssafy.c205.ott.domain.account.dto.request.MemberUpdateRequestDto;
-import ssafy.c205.ott.domain.account.dto.request.UploadProfileImageRequestDto;
+import ssafy.c205.ott.domain.account.dto.request.*;
 import ssafy.c205.ott.domain.account.dto.response.*;
 import ssafy.c205.ott.domain.account.service.MemberReadService;
+import ssafy.c205.ott.domain.account.service.MemberTagService;
 import ssafy.c205.ott.domain.account.service.MemberValidator;
 import ssafy.c205.ott.domain.account.service.MemberWriteService;
 
@@ -31,6 +28,7 @@ public class MemberController {
     private final MemberReadService memberReadService;
     private final MemberWriteService memberWriteService;
     private final MemberValidator memberValidator;
+    private final MemberTagService memberTagService;
 
     @Operation(summary = "자신의 id 가져오기", description = "<big>자신의 id를</big> 조회 합니다.")
     @ApiResponses(value = {
@@ -197,5 +195,14 @@ public class MemberController {
     @GetMapping("/{memberId}/followingsCount")
     public ApiResponse<Integer> getFollowingsCount(@PathVariable Long memberId) {
         return ApiResponse.success(memberReadService.getFollowingsCount(MemberRequestDto.builder().id(memberId).build()));
+    }
+
+    @Operation(summary = "유저 취향 태그", description = "<big>유저 취향 태그를</big> 등록합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 취향 태그"),
+    })
+    @PostMapping("/{memberId}/memberTags")
+    public ApiResponse<UpdateMemberSuccessDto> updateMemberTag(@PathVariable Long memberId, @RequestBody MemberTagRequestDto memberTagRequestDto) {
+        return ApiResponse.success(memberTagService.updateMemberTags(memberId, memberTagRequestDto));
     }
 }
