@@ -3,7 +3,7 @@ import axiosInstance from '../axiosInstance';
 export const getClosetId = async (memberId) => {
   try {
     const response = await axiosInstance.get(`api/closet/${memberId}`);
-    console.log(response.data);
+    console.log(response.data, '옷장');
     return response.data;
   } catch (error) {
     console.error(error);

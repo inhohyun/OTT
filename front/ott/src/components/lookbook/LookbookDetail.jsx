@@ -43,9 +43,11 @@ const LookbookDetail = ({
   const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
   // const userId = useUserStore((state) => state.userId);
-  // const userId = 1;
-  const userId = 2;
+  const userId = 1;
+  // const userId = 2;
   const hasFetchedComments = useRef(false);
+
+  console.log(currentLookbook, '현재룩북 멤버');
 
   const nav = useNavigate();
 
@@ -215,6 +217,10 @@ const LookbookDetail = ({
     setSelectedClothingItem(null);
   };
 
+  const goUserPage = () => {
+    nav('/userPage', { state: { id: currentLookbook.memberId } });
+  };
+
   return (
     <div
       className="fixed inset-0 bg-opacity-70 flex justify-center items-center z-50"
@@ -257,6 +263,7 @@ const LookbookDetail = ({
               <img
                 src={ProfileImg(data.profileimg)}
                 className="w-full h-full object-cover"
+                onClick={goUserPage}
               />
             </div>
             <div>
@@ -267,7 +274,7 @@ const LookbookDetail = ({
             </div>
           </div>
 
-          {userId !== currentLookbook.memberId && (
+          {userId !== lookbook.memberId && (
             <button
               className={`text-sm px-3 py-3 rounded-lg me-3 ${
                 followed
@@ -280,7 +287,7 @@ const LookbookDetail = ({
               {followed ? '팔로잉' : '팔로우'}
             </button>
           )}
-          {userId === currentLookbook.memberId && (
+          {userId === lookbook.memberId && (
             <div className="flex">
               <button
                 className="text-sm py-3 px-3 me-3 rounded-lg bg-violet-300 text-white"
