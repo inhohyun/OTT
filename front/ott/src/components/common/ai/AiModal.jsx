@@ -88,6 +88,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleClothingClick = (clothing) => {
+    console.log('사용자가 클릭한 ai 옷장 옷', clothing);
     setSelectedClothing(clothing);
   };
 
