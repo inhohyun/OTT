@@ -4,21 +4,36 @@ import SearchInput from '../../components/search/SearchInput';
 import PersonSearchResult from '../../components/search/PersonSearchResult';
 import StyleSearchResult from '../../components/search/StyleSearchResult';
 import { searchPeople } from '../../api/search/searchPeople';
+import { searchStyle } from '../../api/search/searchStyle';
+import useUserStore from '../../data/lookbook/userStore';
+
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [lastSearchQuery, setLastSearchQuery] = useState(''); // 마지막 검색 쿼리 저장
   const [isChecked, setIsChecked] = useState(false);
   const [results, setResults] = useState([]);
 
+  //memberId
+  const memberId = useUserStore((state) => state.userId);
   const searchPeopleMethod = async (nickname, offset, limit) => {
     try {
       const response = await searchPeople(nickname, offset, limit);
-      console.log('검색한 response : ', response);
+      console.log('검색한 response.data : ', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
   };
+  const searchStyleMethod = async (tags, memberId) => {
+    try {
+      const response = await searchStyle(tags, memberId);
+      console.log('검색한 response.data : ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
     const { value } = e.target;
@@ -126,9 +141,10 @@ const SearchPage = () => {
           comments: 1200,
         },
       ];
-
+      const searchStyleResult = await searchStyleMethod(searchQuery, memberId);
+      console.log('스타일 검색 결과 : ', searchStyleResult);
       // 검색어와 일치하는 스타일 데이터 필터링
-      const matchedResults = styleData.filter((item) =>
+      const matchedResults = searchStyleResult.data.filter((item) =>
         item.tags.some((tag) =>
           tag.toLowerCase().includes(searchQuery.toLowerCase())
         )
@@ -141,20 +157,16 @@ const SearchPage = () => {
       const limit = 10;
       const searchResult = await searchPeopleMethod(nickname, offset, limit);
 
-      const mockPeopleResults = [
-        { title: 'ofekim0', description: 'Description for person 1' },
-        { title: 'eunwoo_c', description: 'Description for person 2' },
-        { title: 'songkang_b', description: 'Description for person 3' },
-        { title: 'byeonwooseok', description: 'Description for person 4' },
-        { title: '_wonbin_', description: 'Description for person 5' },
-        { title: 'junny_cha', description: 'Description for person 6' },
-      ];
-      //여기서 에러가 뜨는 이유
-      const filteredResults = searchResult.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      // const mockPeopleResults = [
+      //   { title: 'ofekim0', description: 'Description for person 1' },
+      //   { title: 'eunwoo_c', description: 'Description for person 2' },
+      //   { title: 'songkang_b', description: 'Description for person 3' },
+      //   { title: 'byeonwooseok', description: 'Description for person 4' },
+      //   { title: '_wonbin_', description: 'Description for person 5' },
+      //   { title: 'junny_cha', description: 'Description for person 6' },
+      // ];
 
-      setResults(filteredResults);
+      setResults(searchResult);
     }
   };
 

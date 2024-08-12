@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
 import EditCategoryModal from './EditCategoryModal';
-import { getCategoryList, deleteCategory } from '../../api/closet/categories';
-import { getClosetId } from '../../api/closet/clothes';
+// import { getCategoryList, deleteCategory } from '../../api/closet/categories';
+// import { getClosetId } from '../../api/closet/clothes';
+// import useUserStore from '../../data/lookbook/userStore';
 
 const CategoryDropdown = ({
   selectedCategory,
@@ -13,37 +14,45 @@ const CategoryDropdown = ({
   onAddCategory,
   onEditCategory,
   onDeleteCategory,
+  categories,
+  closetId,
+  setCategories,
 }) => {
   // 카테고리 목록 상태
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   // 카테고리 추가 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 카테고리 수정 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // 수정 상태인 카테고리
   const [editingCategory, setEditingCategory] = useState(null);
-  // 옷장 ID
-  const [closetId, setClosetId] = useState(null);
+  // // 옷장 ID
+  // const [closetId, setClosetId] = useState(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  // const userId = useUserStore((state) => state.userId);
 
-  const fetchCategories = async () => {
-    try {
-      const memberId = 1;
-      const closetResponse = await getClosetId(memberId);
-      console.log(closetResponse);
-      const closetId = closetResponse.data.data[0].id;
-      console.log(closetId);
-      setClosetId(closetId);
-      const categoryList = await getCategoryList(closetId);
-      console.log(categoryList);
-      setCategories(categoryList.data);
-    } catch (error) {
-      console.error('카테고리 목록 불러오는 중 오류 발생:', error);
-    }
-  };
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, []);
+
+  // const fetchCategories = async () => {
+  //   try {
+  //     // const memberId = userId;
+  //     // const closetResponse = await getClosetId(memberId);
+  //     // const cId = closetResponse.data[0].id;
+  //     // setClosetId(cId);
+  //     const categoryList = await getCategoryList(closetId);
+
+  //     const fetchedCategories = categoryList.data;
+  //     const defaultCategories = [
+  //       { categoryId: -100, name: '전체' },
+  //       { categoryId: -200, name: '즐겨찾기' },
+  //     ];
+  //     setCategories([...defaultCategories, ...fetchedCategories]);
+  //   } catch (error) {
+  //     console.error('카테고리 목록 불러오는 중 오류 발생:', error);
+  //   }
+  // };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -65,30 +74,30 @@ const CategoryDropdown = ({
   };
 
   // 카테고리 추가 함수
-  const handleAddCategory = (newCategory) => {
-    setCategories((prevCategories) => [...prevCategories, newCategory]);
-    onAddCategory(newCategory);
-    fetchCategories();
-  };
+  // const handleAddCategory = (newCategory) => {
+  //   setCategories((prevCategories) => [...prevCategories, newCategory]);
+  //   onAddCategory(newCategory);
+  //   fetchCategories();
+  // };
 
   // 카테고리 삭제 함수
-  const handleDeleteCategory = async (category, e) => {
-    e.stopPropagation(); // 드롭다운 닫힘 방지
-    if (
-      window.confirm(`정말 "${category.name}" 카테고리를 삭제하시겠습니까?`)
-    ) {
-      try {
-        await deleteCategory(category.categoryId);
-        setCategories((prevCategories) =>
-          prevCategories.filter((cat) => cat.categoryId !== category.categoryId)
-        );
-        onDeleteCategory(category);
-        console.log('카테고리 삭제 성공');
-      } catch (error) {
-        console.error('카테고리 삭제 실패:', error);
-      }
-    }
-  };
+  // const handleDeleteCategory = async (category, e) => {
+  //   e.stopPropagation(); // 드롭다운 닫힘 방지
+  //   if (
+  //     window.confirm(`정말 "${category.name}" 카테고리를 삭제하시겠습니까?`)
+  //   ) {
+  //     try {
+  //       await deleteCategory(category.categoryId);
+  //       setCategories((prevCategories) =>
+  //         prevCategories.filter((cat) => cat.categoryId !== category.categoryId)
+  //       );
+  //       onDeleteCategory(category);
+  //       console.log('카테고리 삭제 성공');
+  //     } catch (error) {
+  //       console.error('카테고리 삭제 실패:', error);
+  //     }
+  //   }
+  // };
 
   // 수정하고자 하는 카테고리 클릭
   const handleEditCategoryClick = (category, e) => {
@@ -99,10 +108,16 @@ const CategoryDropdown = ({
 
   // 수정한 카테고리 저장
   const handleEditCategorySave = (newCategoryName) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((cat) =>
+        cat.categoryId === editingCategory.categoryId
+          ? { ...cat, name: newCategoryName }
+          : cat
+      )
+    );
     onEditCategory(editingCategory, newCategoryName);
-    setEditingCategory(null); // 수정하는 카테고리 선택 초기화
+    setEditingCategory(null);
     setIsEditModalOpen(false);
-    fetchCategories();
   };
 
   // 카테고리 수정 취소
@@ -129,7 +144,7 @@ const CategoryDropdown = ({
                   <FontAwesomeIcon
                     icon={faTrash}
                     className="cursor-pointer text-gray-500 hover:text-gray-700"
-                    onClick={(e) => handleDeleteCategory(category, e)}
+                    onClick={(e) => onDeleteCategory(category, e)}
                   />
                 </div>
               )}
@@ -149,6 +164,7 @@ const CategoryDropdown = ({
         onChange={(option) => onCategoryChange(option.value)}
         styles={customStyles}
         className="flex-grow"
+        placeholder="카테고리를 선택하세요"
       />
       <div
         onClick={() => setIsModalOpen(true)}
@@ -159,7 +175,7 @@ const CategoryDropdown = ({
       <AddCategory
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onAddCategory={handleAddCategory}
+        onAddCategory={onAddCategory}
         existingCategories={categories}
         closetId={closetId}
       />
@@ -170,7 +186,6 @@ const CategoryDropdown = ({
           category={editingCategory}
           onSave={handleEditCategorySave}
           existingCategories={categories}
-          closetId={closetId}
         />
       )}
     </div>

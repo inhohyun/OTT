@@ -1,9 +1,13 @@
 import React from 'react';
 
-const NavBar = ({ activeComponent, setActiveComponent }) => {
+const NavBar = ({
+  activeComponent,
+  setActiveComponent,
+  followerCount,
+  followingCount,
+}) => {
+  // TODO : 게시글, 팔로워, 팔로잉 수를 서버에서 받아와야 함
   const postNumber = 100;
-  const follwerNumber = 100;
-  const followingNumber = 100;
 
   return (
     <nav className="w-full text-center flex justify-around text-lg mt- font-dohyeon">
@@ -25,7 +29,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         aria-label="팔로워"
         style={{ fontFamily: 'dohyeon' }}
       >
-        {follwerNumber} 팔로워
+        {followerCount} 팔로워
       </button>
       <button
         className={`bg-transparent border-none text-[rgba(0,0,0,0.5)] py-2 px-5 cursor-pointer rounded-full ${
@@ -35,7 +39,7 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
         aria-label="팔로잉"
         style={{ fontFamily: 'dohyeon' }}
       >
-        {followingNumber} 팔로잉
+        {followingCount} 팔로잉
       </button>
     </nav>
   );

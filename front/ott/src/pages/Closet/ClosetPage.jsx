@@ -3,48 +3,95 @@ import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
 import AddClothesModal from '../../components/closet/AddClothesModal';
-// import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
-import { getClothesList, getClosetId } from '../../api/closet/clothes';
+import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
+import {
+  getClothesList,
+  getClosetId,
+  getClothesByCategory,
+  getBookmarkedClothes,
+} from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
-
+import useUserStore from '../../data/lookbook/userStore';
 const ClosetPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [selectedCategory, setSelectedCategory] = useState(-100);
   const [categories, setCategories] = useState([]);
   const [clothes, setClothes] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  // const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  // const [selectedClothing, setSelectedClothing] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedClothing, setSelectedClothing] = useState(null);
+  const [closetId, setClosetId] = useState(null);
+  const memberId = useUserStore((state) => state.userId);
+  useEffect(() => {
+    const fetchInitialClothesList = async () => {
+      try {
+        const clothesList = await getClothesList(memberId);
+        setClothes(clothesList);
+      } catch (error) {
+        console.error('옷 목록 가져오기 실패:', error);
+      }
+    };
+
+    fetchInitialClothesList();
+  }, [memberId]);
 
   useEffect(() => {
-    fetchClothes();
-    fetchCategories();
-  }, []);
+    const fetchClosetIdAndCategories = async () => {
+      try {
+        const closetResponse = await getClosetId(memberId);
+        console.log('closetResponse', closetResponse);
+        const closetId = closetResponse.data[0].id;
+        setClosetId(closetId);
 
-  const memberId = 1;
+        const categoryList = await getCategoryList(closetResponse.data[0].id);
+        console.log('categoryList', categoryList);
+        const fetchedCategories = categoryList.data.map((category) => ({
+          categoryId: category.categoryId,
+          name: category.name,
+        }));
 
-  const fetchClothes = async () => {
+        setCategories([
+          { categoryId: -100, name: '전체' },
+          { categoryId: -200, name: '즐겨찾기' },
+          ...fetchedCategories,
+        ]);
+      } catch (error) {
+        console.error('카테고리 목록 가져오기 실패:', error);
+      }
+    };
+
+    fetchClosetIdAndCategories();
+  }, [memberId]);
+
+  useEffect(() => {
+    if (closetId !== null) {
+      fetchClothesByCategory(selectedCategory);
+    }
+  }, [selectedCategory, closetId]);
+
+  const fetchClothesByCategory = async (categoryId) => {
     try {
-      const clothesList = await getClothesList(memberId);
+      let clothesList;
+      if (categoryId === -100) {
+        // 전체
+        clothesList = await getClothesList(memberId);
+      } else if (categoryId === -200) {
+        // 즐겨찾기
+        clothesList = await getBookmarkedClothes(memberId);
+      } else {
+        clothesList = await getClothesByCategory(
+          memberId,
+          categoryId,
+          closetId
+        );
+      }
       setClothes(clothesList);
     } catch (error) {
-      console.error('Failed to fetch clothes:', error);
+      console.error('옷 목록 가져오기 실패', error);
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
-      const categoryList = await getCategoryList(closetId);
-      const fetchedCategories = categoryList.data.map(category => category.name);
-      setCategories(['전체', '즐겨찾기', ...fetchedCategories]);
-    } catch (error) {
-      console.error('카테고리 목록 가져오기 실패:', error);
-    }
-  };
-
-  const handleCategoryChange = (newCategory) => {
-    setSelectedCategory(newCategory);
+  const handleCategoryChange = (newCategoryId) => {
+    setSelectedCategory(newCategoryId);
   };
 
   const handleAddCategory = (newCategory) => {
@@ -81,8 +128,26 @@ const ClosetPage = () => {
     );
   };
 
-  const handleAddClothes = () => {
-    fetchClothes();
+  const handleNewClothes = async (newClothesData) => {
+    try {
+      const response = await addClothes(newClothesData);
+
+      if (
+        typeof response === 'string' &&
+        response.includes('옷 저장을 완료했습니다')
+      ) {
+        const updatedClothesList = await getClothesList(memberId);
+
+        const newItem = updatedClothesList[updatedClothesList.length - 1];
+        newItem.key = newItem.clothesId;
+
+        setClothes(updatedClothesList);
+      } else {
+        console.error('Unexpected response format:', response);
+      }
+    } catch (error) {
+      console.error('Error adding clothes:', error);
+    }
   };
 
   const handleToggleLike = (id) => {
@@ -93,12 +158,25 @@ const ClosetPage = () => {
     );
   };
 
-  const filteredClothes =
-    selectedCategory === '전체'
-      ? clothes
-      : selectedCategory === '즐겨찾기'
-      ? clothes.filter((item) => item.isLiked)
-      : clothes.filter((item) => item.category === selectedCategory);
+  const handleClothesClick = (clothingItem) => {
+    console.log(clothingItem.clothesId);
+    setSelectedClothing(clothingItem);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleEditClothes = (updatedClothes) => {
+    setClothes((prevClothes) =>
+      prevClothes.map((item) =>
+        item.id === updatedClothes.id ? updatedClothes : item
+      )
+    );
+
+    setSelectedClothing(updatedClothes);
+  };
+
+  const filteredCategories = categories.filter(
+    (category) => category.name !== '전체' && category.name !== '즐겨찾기'
+  );
 
   return (
     <div
@@ -109,14 +187,16 @@ const ClosetPage = () => {
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
         categories={categories}
+        closetId={closetId}
         onAddCategory={handleAddCategory}
         onEditCategory={handleEditCategory}
         onDeleteCategory={handleDeleteCategory}
       />
       <ClothesGrid
-        clothes={filteredClothes}
+        clothes={clothes}
+        setClothes={setClothes}
         onToggleLike={handleToggleLike}
-        // onClothesClick={handleClothesClick}
+        onClothesClick={handleClothesClick}
       />
       <div className="flex justify-center mt-5">
         <button
@@ -130,21 +210,24 @@ const ClosetPage = () => {
       <AddClothesModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddClothes={handleAddClothes}
-        categories={categories.filter(category => category !== '전체' && category !== '즐겨찾기')}
+        onAddClothes={handleNewClothes}
+        categories={categories.filter(
+          (category) => category !== '전체' && category !== '즐겨찾기'
+        )}
       />
-      {/*
+
       {selectedClothing && (
         <ClothesDetailModal
           isOpen={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
           clothingItem={selectedClothing}
           onEdit={handleEditClothes}
-          onDelete={handleDeleteClothes}
           categories={filteredCategories}
+          setClothes={setClothes}
+          memberId={memberId}
+          setCategories={setCategories}
         />
       )}
-      */}
     </div>
   );
 };

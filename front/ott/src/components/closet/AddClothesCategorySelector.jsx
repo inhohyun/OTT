@@ -2,28 +2,32 @@ import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { getCategoryList } from '../../api/closet/categories';
 import { getClosetId } from '../../api/closet/clothes';
+import useUserStore from '../../data/lookbook/userStore';
 
 const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
   const [closetId, setClosetId] = useState(null);
 
+  const memberId = useUserStore((state) => state.userId);
+
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        // const memberId = 1;
+        const closetResponse = await getClosetId(memberId);
+        console.log('memberId', memberId);
+        const closetid = closetResponse.data[0].id;
+        setClosetId(closetid);
+        console.log('옷 추가때 옷장 아이디', closetId);
+        const categoryList = await getCategoryList(closetId);
+        console.log('[*]카테고리 목록', categoryList.data);
+        setCategories(categoryList.data);
+      } catch (error) {
+        console.error('카테고리 목록 조회 실패:', error);
+      }
+    };
     fetchCategories();
   }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const memberId = 1;
-      const closetResponse = await getClosetId(memberId);
-      const closetId = closetResponse.data.data[0].id;
-      setClosetId(closetId);
-      const categoryList = await getCategoryList(closetId);
-      setCategories(categoryList.data);
-    } catch (error) {
-      console.error('카테고리 목록 조회 실패:', error);
-    }
-  };
-
   const customStyles = {
     control: (provided, state) => ({
       ...provided,

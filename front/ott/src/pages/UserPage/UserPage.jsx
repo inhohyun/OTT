@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
@@ -10,37 +10,52 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-import { getUid, getUserInfo } from '../../api/user/user';
-
+import { getUserInfo, followUser, unfollowUser } from '../../api/user/user';
+import useUserStore from '../../data/lookbook/userStore';
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
   const [userInfo, setUserInfo] = useState(null);
-  const [uid, setUid] = useState(null);
-  const [isMe, setIsMe] = useState(false); // isMe를 상태로 관리
-  const [isPublic, setIsPublic] = useState(false); // isPublic을 상태로 관리
+  const [isMe, setIsMe] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
+  // memberId 가져오기
+  const memberId = useUserStore((state) => state.userId);
+
+  const location = useLocation();
+  const { id } = location.state || { id: memberId }; // id 꺼내기
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserData = async (sendId) => {
       try {
-        const uidResponse = await getUid();
-        const id = uidResponse.data.id;
-        setUid(id);
-
-        const userInfoResponse = await getUserInfo(id);
+        const userInfoResponse = await getUserInfo(sendId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
 
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
         setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
+
+        // 팔로우 상태 업데이트
+        switch (userInfoResponse.data.followStatus) {
+          case 'FOLLOWING':
+            setFollowStatus('팔로잉');
+            break;
+          case 'NOT_FOLLOWING':
+            setFollowStatus('팔로우');
+            break;
+          default:
+            setFollowStatus('요청됨');
+            break;
+        }
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
+    // 현재 접근한 사람의 id를 가져옴
 
-    fetchUserData();
+    // 유저 정보 호출
+    fetchUserData(id);
   }, []);
 
   if (!userInfo) {
@@ -56,15 +71,34 @@ const UserPage = () => {
       renderComponent = <Posts isMe={isMe} isPublic={isPublic} />;
       break;
     case 'followers':
-      renderComponent = <Followers uid={uid} />;
+      renderComponent = <Followers uid={memberId} />;
       break;
     case 'following':
-      renderComponent = <Following uid={uid} />;
+      renderComponent = <Following uid={memberId} />;
       break;
     default:
       renderComponent = null;
   }
 
+  //팔로우 요청 함수
+  const fetchFollowUser = async (sendId) => {
+    try {
+      const response = await followUser(sendId);
+      console.log('팔로우한 response : ', response);
+      return response;
+    } catch (error) {
+      console.error('Error following user:', error);
+    }
+  };
+  const fetchUnfollowUser = async (sendId) => {
+    try {
+      const response = await unfollowUser(sendId);
+      console.log('언팔로우한 response : ', response);
+      return response;
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+    }
+  };
   const handleClosetIconClick = () => {
     navigate('/closet');
   };
@@ -72,13 +106,27 @@ const UserPage = () => {
   const handleRtcIconClick = () => {};
 
   const handleFollowButtonClick = () => {
-    setIsFollowing(!isFollowing);
+    switch (followStatus) {
+      case '팔로잉':
+        setFollowStatus('팔로우');
+        //TODO : 팔로잉 상태에서 버튼 클릭시 이벤트
+        break;
+      case '요청됨':
+        setFollowStatus('팔로우');
+        // TODO : 요청됨 상태에서 버튼 클릭시 이벤트
+
+        break;
+      case '팔로우':
+        setFollowStatus('요청됨');
+        fetchFollowUser(id);
+        break;
+    }
   };
 
   const handleSettingsClick = () => {
-    console.log('이동하려는 회원 id', uid);
-    if (uid) {
-      navigate(`/updatePage`, { state: { uid, userInfo } });
+    console.log('이동하려는 회원 id', memberId);
+    if (memberId) {
+      navigate(`/updatePage`, { state: { memberId, userInfo } });
     } else {
       console.error('ID is not available');
     }
@@ -122,15 +170,17 @@ const UserPage = () => {
             {!isMe && (
               <div className="flex justify-center items-center w-full">
                 <button
-                  className={`w-full px-4 py-2 border rounded ${
-                    isFollowing
+                  className={`w-[70%] px-4 py-2 border rounded ${
+                    followStatus === '팔로잉'
                       ? 'bg-violet-200 text-black-500 border-violet-300'
-                      : 'bg-transparent text-[rgba(0,0,0,0.5)]'
+                      : followStatus === '요청됨'
+                        ? 'bg-blue-200 text-black-500 border-blue-300'
+                        : 'bg-transparent text-[rgba(0,0,0,0.5)]'
                   }`}
                   onClick={handleFollowButtonClick}
                   style={{ fontFamily: 'dohyeon' }}
                 >
-                  {isFollowing ? '팔로잉' : '팔로우'}
+                  {followStatus}
                 </button>
               </div>
             )}

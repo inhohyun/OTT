@@ -8,7 +8,7 @@ const AddCategory = ({
   onClose,
   onAddCategory,
   existingCategories = [],
-  closetId
+  closetId,
 }) => {
   // 새로 추가되는 카테고리 초기값 공백으로 정의
   const [newCategory, setNewCategory] = useState('');
@@ -27,7 +27,8 @@ const AddCategory = ({
 
     // 카테고리 중복 검사
     const categoryExists = existingCategories.some(
-      (category) => category.name.toLowerCase() === trimmedCategory.toLowerCase()
+      (category) =>
+        category.name.toLowerCase() === trimmedCategory.toLowerCase()
     );
     // 같은 이름의 카테고리 존재할 경우
     if (categoryExists) {
@@ -42,8 +43,8 @@ const AddCategory = ({
       // 검사 통과한 카테고리 추가
       const newCategoryObject = {
         id: newCategoryData.categoryId,
-        name: trimmedCategory
-      }
+        name: trimmedCategory,
+      };
       onAddCategory(newCategoryObject);
       // 입력값 초기화
       setNewCategory('');
@@ -66,7 +67,9 @@ const AddCategory = ({
         >
           <FontAwesomeIcon icon={faTimes} />
         </div>
-        <h2 className="text-xl font-bold mb-4 text-center">카테고리 추가하기</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">
+          카테고리 추가하기
+        </h2>
         <input
           type="text"
           className={`w-full p-2 border rounded-lg mb-4 ${
@@ -76,7 +79,7 @@ const AddCategory = ({
           value={newCategory}
           onChange={(e) => {
             setNewCategory(e.target.value);
-            setError(''); 
+            setError('');
           }}
         />
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

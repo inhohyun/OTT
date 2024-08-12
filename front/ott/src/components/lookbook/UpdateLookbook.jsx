@@ -133,7 +133,6 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     // }
 
     const fetchClothes = async () => {
-      // const closetid = 1;
       const closetid = closetId;
       try {
         const response = await getClothes(userId, selectedCategory, closetid);

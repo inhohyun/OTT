@@ -48,26 +48,28 @@ export const getFollowingCount = async (memberId) => {
   }
 };
 
-// 팔로우 요청 api
-export const postFollow = (targetId) => {
-  axiosInstance
-    .post(`api/members/follow/${targetId}`)
-    .then((response) => {
-      console.log('팔로우 성공');
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+// 다른 사용자를 팔로우
+export const followUser = async (targetId) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/members/follow/${targetId}`
+    );
+    return response;
+  } catch (error) {
+    console.error('Error following user:', error);
+    throw error;
+  }
 };
 
-// 팔로우 취소 api
-export const unFollow = (targetId) => {
-  axiosInstance
-    .post(`api/members/unfollow/${targetId}`)
-    .then((response) => {
-      console.log('팔로우 취소');
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+// 다른 사용자 언팔로우
+export const unfollowUser = async (targetId) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/members/unfollow/${targetId}`
+    );
+    return response;
+  } catch (error) {
+    console.error('Error unfollowing user:', error);
+    throw error;
+  }
 };

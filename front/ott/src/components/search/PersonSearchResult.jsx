@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const PersonSearchResult = ({ results, searchQuery }) => {
   const [visibleResults, setVisibleResults] = useState(4);
   const [filteredResults, setFilteredResults] = useState([]);
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const handleClick = (user) => {
+    // console.log('Clicked user:', user.id);
+    navigate('/userpage', { state: { id: user.id } });
+  };
 
   useEffect(() => {
     if (!searchQuery) {
@@ -13,33 +20,34 @@ const PersonSearchResult = ({ results, searchQuery }) => {
     }
 
     // 검색 쿼리에 따른 검색 결과 나열
-    const filtered = results
-      .filter(
-        (result) =>
-          result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          result.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      .sort((a, b) => {
-        const aTitleIndex = a.title
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const aDescIndex = a.description
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const bTitleIndex = b.title
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const bDescIndex = b.description
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
+    //FIXME - 필터링 로직 우선 주석처리
+    // const filtered = results
+    //   .filter(
+    //     (result) =>
+    //       result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //       result.description.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    //   .sort((a, b) => {
+    //     const aTitleIndex = a.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const aDescIndex = a.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bTitleIndex = b.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bDescIndex = b.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
 
-        const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
-        const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
+    //     const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
+    //     const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
 
-        return aIndex - bIndex;
-      });
-
-    setFilteredResults(filtered);
+    //     return aIndex - bIndex;
+    //   });
+    console.log('results:', results);
+    setFilteredResults(results);
   }, [results, searchQuery]);
 
   const handleShowMore = () => {
@@ -66,13 +74,23 @@ const PersonSearchResult = ({ results, searchQuery }) => {
         {filteredResults.slice(0, visibleResults).map((result, index) => (
           <div
             key={index}
-            className="p-2 rounded-lg relative flex items-center"
+            className="p-2 rounded-lg relative flex items-center cursor: 'pointer"
+            onClick={() => handleClick(result)} // 클릭 이벤트 핸들러 추가
           >
-            <FontAwesomeIcon
-              icon={faUserCircle}
-              className="text-gray-400 mr-4"
-              style={{ fontSize: '36px' }}
-            />
+            {result.profileImageUrl ? (
+              <img
+                src={result.profileImageUrl}
+                alt="Profile"
+                className="mr-4"
+                style={{ width: '36px', height: '36px', borderRadius: '50%' }}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faUserCircle}
+                className="text-gray-400 mr-4"
+                style={{ fontSize: '36px' }}
+              />
+            )}
             <div>
               <h3
                 className="text-base font-semibold mb-2"

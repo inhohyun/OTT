@@ -20,7 +20,7 @@ import { lookbookDelete } from '../../api/lookbook/lookbook';
 import useLookbookStore from '../../data/lookbook/detailStore';
 import useUserStore from '../../data/lookbook/userStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
-import { postFollow, unFollow } from '../../api/user/user';
+import { followUser, unfollowUser } from '../../api/user/user';
 import { data } from 'autoprefixer';
 
 const LookbookDetail = ({
@@ -147,14 +147,14 @@ const LookbookDetail = ({
   const toggleFollow = () => {
     if (followed) {
       try {
-        unFollow(currentLookbook.memberId);
+        unfollowUser(currentLookbook.memberId);
         setFollowed(false);
       } catch (error) {
         console.error(error);
       }
     } else {
       try {
-        postFollow(currentLookbook.memberId);
+        followUser(currentLookbook.memberId);
         setFollowed(true);
       } catch (error) {
         console.error(error);
