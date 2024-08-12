@@ -12,6 +12,7 @@ import {
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 import useUserStore from '../../data/lookbook/userStore';
+import { addClothes } from '../../api/closet/clothes';
 const ClosetPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(-100);
   const [categories, setCategories] = useState([]);
