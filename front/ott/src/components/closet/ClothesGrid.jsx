@@ -4,10 +4,7 @@ import bingleicon from '../../assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
-import {
-  bookmarkClothes,
-  unbookmarkClothes,
-} from '../../api/closet/clothes';
+import { bookmarkClothes, unbookmarkClothes } from '../../api/closet/clothes';
 import {
   faChevronLeft,
   faChevronRight,
@@ -19,9 +16,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
 
   useEffect(() => {
-    setVisibleImages(
-      clothes.map((item) => ({ id: item.key, isFront: true }))
-    );
+    setVisibleImages(clothes.map((item) => ({ id: item.key, isFront: true })));
   }, [clothes]);
 
   // 가로 무한 스크롤 처리 함수

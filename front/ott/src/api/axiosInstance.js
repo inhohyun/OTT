@@ -7,11 +7,7 @@ import axios from 'axios';
 
 // 환경 변수에서 API 기본 URL 가져오기
 
-<<<<<<< HEAD
 const baseURL = 'http://localhost:8080';
-=======
-const baseURL = "http://localhost:8080";
->>>>>>> f8d26c4eb2af8cb3649e86cfc2ea9cb188464035
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
@@ -24,7 +20,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgSFJ5MHlYX0xPZDZaaWk0ZWZ2ajN3aDVxam9UallCZ2p3ZnlYWURwMC1PNCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIzNDI4NDA4LCJleHAiOjE3MjM0MjkwMDh9.USvmgrGe6nnDBzGxMQ9fxJY_NyFWh68jUTdctS2pzJw';
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgSFJ5MHlYX0xPZDZaaWk0ZWZ2ajN3aDVxam9UallCZ2p3ZnlYWURwMC1PNCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIzNDMxNTkwLCJleHAiOjE3MjM0OTE1OTB9.C7KAACuuIFdlZbRlvnaECyfBg82_MyJXm0mVW8G0BMA';
     if (token) {
       // 액세스 토큰이 있으면 헤더에 추가
       config.headers.access = `${token}`;
