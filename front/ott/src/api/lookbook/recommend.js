@@ -9,7 +9,7 @@ export const heightWeight = async (memberId) => {
       }
     );
     console.log('키추천', response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error(error);
   }

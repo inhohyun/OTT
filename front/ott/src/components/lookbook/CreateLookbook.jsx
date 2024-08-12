@@ -112,6 +112,7 @@ const CreateLookbook = () => {
             id: item.clothId,
             image: item.img[0],
           }));
+          // console.log(clothesData);
           setClothes(clothesData);
         } else {
           console.log('응답 데이터가 배열이 아닙니다:', response.data);
@@ -169,7 +170,7 @@ const CreateLookbook = () => {
           try {
             lookbookCreate(formData);
             console.log('룩북 저장 성공');
-            // nav(-1);
+            nav(-1);
           } catch (error) {
             console.error(error);
           } finally {

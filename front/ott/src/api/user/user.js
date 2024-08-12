@@ -42,7 +42,7 @@ export const getFollowingCount = async (memberId) => {
   try {
     const response = await axiosInstance.get(`api/members/${memberId}/`);
     console.log('팔로우수', response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error(error);
   }

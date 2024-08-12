@@ -239,7 +239,7 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
         <div className="text-center text-gray-500">댓글이 없습니다</div>
       ) : (
         commentList.map((comment) => {
-          console.log('Comment Nickname:', comment.nickname); // 닉네임 콘솔 출력
+          console.log('Comment memberId:', comment.memberId); // 닉네임 콘솔 출력
           return (
             <div key={comment.id} className="mb-4">
               <div className="flex justify-between items-center">
@@ -257,7 +257,7 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
                     {comment.msg}
                   </div>
                 )}
-                {comment.nickname === currentUser && (
+                {comment.memberId === userId && (
                   <div className="flex space-x-2">
                     {!comment.isEditing && (
                       <>

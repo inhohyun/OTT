@@ -29,7 +29,7 @@ const CanvasArea = ({
         return (
           <div
             key={item.uniqueKey}
-            className="absolute w-24 h-24"
+            className="absolute w-32 h-32"
             style={{ left: item.x, top: item.y }}
           >
             <img

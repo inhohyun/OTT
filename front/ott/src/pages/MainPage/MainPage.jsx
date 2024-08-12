@@ -88,7 +88,7 @@ const MainPage = () => {
     };
 
     fetchUserData();
-  }, [setUserId]);
+  }, [userId]);
 
   useEffect(() => {
     const fetchFollowCount = async () => {
