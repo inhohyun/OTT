@@ -13,7 +13,6 @@ import rtcIcon from '@/assets/icons/webrtcicon.png';
 import { getUserInfo, followUser, unfollowUser } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
 const UserPage = () => {
-  // targetId를 props로 받음
   const [activeComponent, setActiveComponent] = useState('posts');
   const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
   const [userInfo, setUserInfo] = useState(null);
@@ -26,17 +25,12 @@ const UserPage = () => {
   const location = useLocation();
   const { id } = location.state || { id: memberId }; // id 꺼내기
 
-  //초기엔 targetId는 memberId로 설정
-  const [targetId, setTargetId] = useState(id);
   useEffect(() => {
     const fetchUserData = async (sendId) => {
       try {
         const userInfoResponse = await getUserInfo(sendId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
-
-        // 유저 정보 안에있는 id를 targetId로 설정
-        setTargetId(userInfoResponse.data.id);
 
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
@@ -59,10 +53,9 @@ const UserPage = () => {
       }
     };
     // 현재 접근한 사람의 id를 가져옴
-    console.log('가져온 다른사람 id : ', id);
-    setTargetId(id);
+
     // 유저 정보 호출
-    fetchUserData(targetId);
+    fetchUserData(id);
   }, []);
 
   if (!userInfo) {
@@ -88,18 +81,18 @@ const UserPage = () => {
   }
 
   //팔로우 요청 함수
-  const fetchFollowUser = async (targetId) => {
+  const fetchFollowUser = async (sendId) => {
     try {
-      const response = await followUser(targetId);
+      const response = await followUser(sendId);
       console.log('팔로우한 response : ', response);
       return response;
     } catch (error) {
       console.error('Error following user:', error);
     }
   };
-  const fetchUnfollowUser = async (targetId) => {
+  const fetchUnfollowUser = async (sendId) => {
     try {
-      const response = await unfollowUser(targetId);
+      const response = await unfollowUser(sendId);
       console.log('언팔로우한 response : ', response);
       return response;
     } catch (error) {
@@ -125,7 +118,7 @@ const UserPage = () => {
         break;
       case '팔로우':
         setFollowStatus('요청됨');
-        fetchFollowUser(targetId);
+        fetchFollowUser(id);
         break;
     }
   };
