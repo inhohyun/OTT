@@ -33,6 +33,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUserData = async (targetId) => {
       try {
+        console.log('유저 정보를 불러올 때  : ', targetId);
         const userInfoResponse = await getUserInfo(targetId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
@@ -40,6 +41,19 @@ const UserPage = () => {
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
         setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
+
+        // 팔로우 상태 업데이트
+        switch (userInfoResponse.data.followStatus) {
+          case 'FOLLOWING':
+            setFollowStatus('팔로잉');
+            break;
+          case 'NOT_FOLLOWING':
+            setFollowStatus('팔로우');
+            break;
+          default:
+            setFollowStatus('요청됨');
+            break;
+        }
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -114,20 +128,21 @@ const UserPage = () => {
   const handleRtcIconClick = () => {};
 
   const handleFollowButtonClick = () => {
-    if (followStatus === '팔로우') {
-      setFollowStatus('요청됨');
-      // 팔로우 요청 로직 추가
-      fetchFollowUser(targetId);
-    } else if (followStatus === '요청됨') {
-      setFollowStatus('팔로우');
-      // 팔로우 요청 취소 로직 추가
-    }
-  };
+    switch (followStatus) {
+      case '팔로잉':
+        setFollowStatus('팔로우');
+        //TODO : 팔로잉 상태에서 버튼 클릭시 이벤트
+        break;
+      case '요청됨':
+        setFollowStatus('팔로우');
+        // TODO : 요청됨 상태에서 버튼 클릭시 이벤트
 
-  const handleUnfollowButtonClick = () => {
-    setFollowStatus('팔로우');
-    // 언팔로우 로직 추가
-    fetchUnfollowUser(targetId);
+        break;
+      case '팔로우':
+        setFollowStatus('요청됨');
+        fetchFollowUser(targetId);
+        break;
+    }
   };
 
   const handleSettingsClick = () => {
@@ -184,11 +199,7 @@ const UserPage = () => {
                         ? 'bg-blue-200 text-black-500 border-blue-300'
                         : 'bg-transparent text-[rgba(0,0,0,0.5)]'
                   }`}
-                  onClick={
-                    followStatus === '팔로잉'
-                      ? handleUnfollowButtonClick
-                      : handleFollowButtonClick
-                  }
+                  onClick={handleFollowButtonClick}
                   style={{ fontFamily: 'dohyeon' }}
                 >
                   {followStatus}
