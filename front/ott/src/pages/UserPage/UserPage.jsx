@@ -33,7 +33,8 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUserData = async (targetId) => {
       try {
-        console.log('유저 정보를 불러올 때  : ', targetId);
+        console.log('유저 정보를 불러올 때  targetId: ', targetId);
+        console.log('유저 정보를 불러올 때  memberId: ', memberId);
         const userInfoResponse = await getUserInfo(targetId);
         console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
