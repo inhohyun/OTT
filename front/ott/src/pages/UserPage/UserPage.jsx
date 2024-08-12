@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Posts from '@/components/userPage/Posts';
 import Followers from '@/components/userPage/Followers';
@@ -15,18 +15,14 @@ import { getUid, getUserInfo } from '../../api/user/user';
 const UserPage = () => {
   // targetId를 props로 받음
   const [activeComponent, setActiveComponent] = useState('posts');
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
   const [userInfo, setUserInfo] = useState(null);
   const [uid, setUid] = useState(null);
   const [isMe, setIsMe] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = location.state || {}; // state에서 id를 받아옴
-  const targetId = id || null; // id가 없으면 null
-
+  const [targetId, setTargetId] = useState(null);
   useEffect(() => {
-    console.log('targetId : ', targetId);
     const fetchUserData = async (targetId) => {
       try {
         const userInfoResponse = await getUserInfo(targetId);
@@ -36,6 +32,9 @@ const UserPage = () => {
         // isMe와 isPublic 상태 업데이트
         setIsMe(userInfoResponse.data.followStatus === 'SELF');
         setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
+
+        // targetId 저장
+        setTargetId(userInfoResponse.data.id);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -51,6 +50,9 @@ const UserPage = () => {
           const id = uidResponse.data.id;
           setUid(id);
           fetchUserData(id);
+
+          // targetId 저장 - 본인인 경우 targetId와 uid가 같음
+          setTargetId(id);
         } catch (error) {
           console.error('Error fetching current user info:', error);
         }
@@ -88,7 +90,18 @@ const UserPage = () => {
   const handleRtcIconClick = () => {};
 
   const handleFollowButtonClick = () => {
-    setIsFollowing(!isFollowing);
+    if (followStatus === '팔로우') {
+      setFollowStatus('요청됨');
+      // 팔로우 요청 로직 추가
+    } else if (followStatus === '요청됨') {
+      setFollowStatus('팔로우');
+      // 팔로우 요청 취소 로직 추가
+    }
+  };
+
+  const handleUnfollowButtonClick = () => {
+    setFollowStatus('팔로우');
+    // 언팔로우 로직 추가
   };
 
   const handleSettingsClick = () => {
@@ -139,14 +152,20 @@ const UserPage = () => {
               <div className="flex justify-center items-center w-full">
                 <button
                   className={`w-[70%] px-4 py-2 border rounded ${
-                    isFollowing
+                    followStatus === '팔로잉'
                       ? 'bg-violet-200 text-black-500 border-violet-300'
-                      : 'bg-transparent text-[rgba(0,0,0,0.5)]'
+                      : followStatus === '요청됨'
+                        ? 'bg-yellow-200 text-black-500 border-yellow-300'
+                        : 'bg-transparent text-[rgba(0,0,0,0.5)]'
                   }`}
-                  onClick={handleFollowButtonClick}
+                  onClick={
+                    followStatus === '팔로잉'
+                      ? handleUnfollowButtonClick
+                      : handleFollowButtonClick
+                  }
                   style={{ fontFamily: 'dohyeon' }}
                 >
-                  {isFollowing ? '팔로잉' : '팔로우'}
+                  {followStatus}
                 </button>
               </div>
             )}

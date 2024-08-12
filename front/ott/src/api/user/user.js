@@ -47,3 +47,16 @@ export const getFollowingCount = async (memberId) => {
     console.error(error);
   }
 };
+
+// 다른 사용자를 팔로우
+export const followUser = async (targetId) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/members/follow/${targetId}`
+    );
+    return response;
+  } catch (error) {
+    console.error('Error following user:', error);
+    throw error;
+  }
+};
