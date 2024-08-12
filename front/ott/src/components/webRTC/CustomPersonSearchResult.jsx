@@ -46,7 +46,7 @@ const CustomPersonSearchResult = ({
     //     return aIndex - bIndex;
     //   });
 
-    setFilteredResults(filtered);
+    setFilteredResults(results);
   }, [results, searchQuery]);
 
   // "더보기" 버튼 클릭 시 추가 결과 표시
