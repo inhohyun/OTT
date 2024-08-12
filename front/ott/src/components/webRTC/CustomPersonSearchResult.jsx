@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 const CustomPersonSearchResult = ({
   // 검색 결과 데이터 배열
-  results,        
-  // 사용자가 입력한 검색어 
-  searchQuery,     
+  results,
+  // 사용자가 입력한 검색어
+  searchQuery,
 }) => {
   const [visibleResults, setVisibleResults] = useState(4); // 한 번에 결과 4개 표시
   const [filteredResults, setFilteredResults] = useState([]); // 필터링된 결과 저장
@@ -19,32 +19,32 @@ const CustomPersonSearchResult = ({
       return;
     }
 
-    // 검색어와 일치하는 결과 필터링 및 정렬
-    const filtered = results
-      .filter(
-        (result) =>
-          result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          result.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      .sort((a, b) => {
-        const aTitleIndex = a.title
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const aDescIndex = a.description
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const bTitleIndex = b.title
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
-        const bDescIndex = b.description
-          .toLowerCase()
-          .indexOf(searchQuery.toLowerCase());
+    // // 검색어와 일치하는 결과 필터링 및 정렬
+    // const filtered = results
+    //   .filter(
+    //     (result) =>
+    //       result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //       result.description.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    //   .sort((a, b) => {
+    //     const aTitleIndex = a.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const aDescIndex = a.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bTitleIndex = b.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bDescIndex = b.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
 
-        const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
-        const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
+    //     const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
+    //     const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
 
-        return aIndex - bIndex;
-      });
+    //     return aIndex - bIndex;
+    //   });
 
     setFilteredResults(filtered);
   }, [results, searchQuery]);
