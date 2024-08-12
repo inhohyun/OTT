@@ -11,7 +11,7 @@ export const lookbookDetail = async (lookbookId) => {
   }
 };
 
-// 룩북 상세보기 api
+// // 룩북 상세보기 api
 // export const lookbookDetail = async (lookbookId, userId) => {
 //   try {
 //     const response = await axiosInstance.get(`api/lookbook/${lookbookId}`, {
@@ -23,10 +23,10 @@ export const lookbookDetail = async (lookbookId) => {
 //   }
 // };
 
-export const lookbookDislike = (lookbook) => {
+export const lookbookDislike = (lookbookId) => {
   axiosInstance
-    .post(`api/lookbook/${lookbook.id}/dislike`, {
-      lookbookId: lookbook.id,
+    .post(`api/lookbook/${lookbookId}/dislike`, {
+      lookbookId: lookbookId,
       memberId: '1',
     })
     .then((response) => {
@@ -37,12 +37,12 @@ export const lookbookDislike = (lookbook) => {
     });
 };
 
-// 룩북 좋아요 취소 api
+// // 룩북 좋아요 취소 api
 
-// export const lookbookDislike = (lookbook,userId) => {
+// export const lookbookDislike = (lookbookId, userId) => {
 //   axiosInstance
-//     .post(`api/lookbook/${lookbook.id}/dislike`, {
-//       lookbookId: lookbook.id,
+//     .post(`api/lookbook/${lookbookId}/dislike`, {
+//       lookbookId: lookbookId,
 //       memberId: userId,
 //     })
 //     .then((response) => {
@@ -53,10 +53,10 @@ export const lookbookDislike = (lookbook) => {
 //     });
 // };
 
-export const lookbookLike = (lookbook) => {
+export const lookbookLike = (lookbookId) => {
   axiosInstance
-    .post(`api/lookbook/${lookbook.id}/like`, {
-      lookbookId: lookbook.id,
+    .post(`api/lookbook/${lookbookId}/like`, {
+      lookbookId: lookbookId,
       memberId: '1',
     })
     .then((response) => {
@@ -67,11 +67,11 @@ export const lookbookLike = (lookbook) => {
     });
 };
 
-// 룩북 좋아요 api
-// export const lookbookLike = (lookbook,userId) => {
+// // 룩북 좋아요 api
+// export const lookbookLike = (lookbookId, userId) => {
 //   axiosInstance
-//     .post(`api/lookbook/${lookbook.id}/like`, {
-//       lookbookId: lookbook.id,
+//     .post(`api/lookbook/${lookbookId}/like`, {
+//       lookbookId: lookbookId,
 //       memberId: userId,
 //     })
 //     .then((response) => {

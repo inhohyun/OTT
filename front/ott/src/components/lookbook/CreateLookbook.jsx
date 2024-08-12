@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import useCanvasItems from '../../hooks/useCanvasItems';
@@ -28,25 +29,30 @@ const CreateLookbook = () => {
 
   const categoryRef = useRef(null);
   const userId = useUserStore((state) => state.userId);
+  const nav = useNavigate();
 
   // 옷장 id 조회
   useEffect(() => {
     const uid = 1;
+    // const uid = userId;
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
-        setClosetId(response.data[0].id);
+        // setClosetId(response.data[0].id);
+        setClosetId(response[0].id);
+        console.log(response, '옷장id');
+        // console.log('옷장아이디', response.data[0].id);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchClosetId();
-  }, [userId]);
+  }, []);
 
-  useEffect(() => {
-    console.log('옷장 아이디', closetId);
-  }, [closetId]);
+  // useEffect(() => {
+  //   console.log('옷장 아이디', closetId);
+  // }, [closetId]);
 
   // 카테고리 조회
   useEffect(() => {
@@ -55,7 +61,8 @@ const CreateLookbook = () => {
       try {
         const response = await getCategory(closetId);
         console.log('카테고리', response);
-        setCategories([{ id: 'all', name: '전체' }, ...response.data]);
+        // setCategories(response.data);
+        setCategories(response);
       } catch (error) {
         console.error(error);
       }
@@ -63,42 +70,44 @@ const CreateLookbook = () => {
     fetchCategory();
   }, [closetId]);
 
-  // 전체 옷 조회
-  useEffect(() => {
-    const uid = 1;
-    const fetchAllClothes = async () => {
-      try {
-        const response = await getAllClothes(uid);
-        console.log('전체', response);
-        const allClothesData = response.map((item) => {
-          // console.log('아이템', item);
-          return {
-            id: item.clothesId,
-            image: item.img,
-          };
-        });
-        setAllClothes(allClothesData);
-        // console.log(allClothesData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAllClothes();
-  }, [userId]);
+  // // 전체 옷 조회
+  // useEffect(() => {
+  //   const uid = 1;
+  //   const fetchAllClothes = async () => {
+  //     try {
+  //       const response = await getAllClothes(uid);
+  //       console.log('전체', response);
+  //       const allClothesData = response.map((item) => {
+  //         // console.log('아이템', item);
+  //         return {
+  //           id: item.clothesId,
+  //           image: item.img,
+  //         };
+  //       });
+  //       setAllClothes(allClothesData);
+  //       // console.log(allClothesData);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchAllClothes();
+  // }, [userId]);
 
   // 카테고리 별 옷 조회
   useEffect(() => {
     if (!selectedCategory) return;
 
-    if (selectedCategory === 'all') {
-      console.log(allClothes);
-      setClothes(allClothes);
-      return;
-    }
+    // if (selectedCategory === 'all') {
+    //   console.log(allClothes);
+    //   setClothes(allClothes);
+    //   return;
+    // }
 
     const fetchClothes = async () => {
       const closetid = 1;
+      // const closetid = closetId;
       try {
+        // const response = await getClothes(userId, selectedCategory, closetid);
         const response = await getClothes(1, selectedCategory, closetid);
         if (Array.isArray(response)) {
           const clothesData = response.map((item) => ({
@@ -152,12 +161,17 @@ const CreateLookbook = () => {
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
-          formData.append('publicStatus', isPublic ? 'Y' : 'N');
+          formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
           formData.append('img', imageBlob, 'lookbookimage.png');
+
+          // formData.forEach((value, key) => {
+          //   console.log(`${key}:`, value);
+          // });
 
           try {
             lookbookCreate(formData);
             console.log('룩북 저장 성공');
+            // nav(-1);
           } catch (error) {
             console.error(error);
           } finally {
@@ -213,6 +227,7 @@ const CreateLookbook = () => {
   };
 
   const categoryOptions = categories.map((category) => ({
+    // value: category.id,
     value: category.categoryId,
     label: category.name,
   }));

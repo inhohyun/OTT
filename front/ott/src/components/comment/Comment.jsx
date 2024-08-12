@@ -11,7 +11,7 @@ import {
 } from '../../api/lookbook/comments';
 
 const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
-  const currentUser = 'kimssafy'; // Replace with the actual current user nickname
+  const currentUser = 'csh'; // Replace with the actual current user nickname
   const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
@@ -20,11 +20,13 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
   const inputRef = useRef(null); // Ref for the input field
 
   useEffect(() => {
+    // console.log('닉네임', comments.nickname);
     if (comments.length > 0) {
       setCommentList(
         comments.map((comment) => ({
           ...comment,
           id: comment.commentId,
+          nickname: comment.nickname,
           replies: (comment.children || []).map((reply) => ({
             ...reply,
             isEditing: false,
@@ -39,7 +41,7 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
   const fetchComments = async () => {
     try {
       const status = 'comment';
-      const commentsData = await lookbookComment(lookbook, status);
+      const commentsData = await lookbookComment(lookbookId, status);
       // console.log('룩북아이디', lookbookId);
       setCommentList(
         commentsData.map((comment) => ({
@@ -58,12 +60,16 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     }
   };
 
-  const handleAddComment = (e) => {
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  const handleAddComment = async (e) => {
     e.preventDefault();
     if (newComment.trim() !== '') {
       const formData = new FormData();
-      formData.append('memberId', 1); // UID를 1로 설정
-      // formData.append('memberId',userId);
+      // formData.append('memberId', 1); // UID를 1로 설정
+      formData.append('memberId', userId);
       const message =
         replyTo !== null
           ? newComment.split(' ').slice(1).join(' ')
@@ -77,19 +83,20 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
       if (replyTo !== null) {
         // 기존 댓글에 답글 추가
         try {
-          replyCreate(formData, lookbookId, replyTo);
+          await replyCreate(formData, lookbookId, replyTo);
           setNewComment('');
           setReplyTo(null);
-          fetchComments();
+          await fetchComments();
         } catch (error) {
           console.error(error);
         }
       } else {
         // 새로운 댓글 추가
         try {
-          commentCreate(formData, lookbookId);
+          await commentCreate(formData, lookbookId);
           setNewComment('');
-          fetchComments(); // Fetch the latest comments after adding a new one
+          await fetchComments(); // Fetch the latest comments after adding a new one
+          console.log('댓글 조회');
         } catch (error) {
           console.error('댓글 생성 실패:', error);
         }
@@ -127,26 +134,26 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     setCommentList(updatedComments);
   };
 
-  const handleSaveEdit = (commentId) => {
+  const handleSaveEdit = async (commentId) => {
     const formData = new FormData();
-    formData.append('memberId', 1);
-    // formData.append('memberId', userId);
+    // formData.append('memberId', 1);
+    formData.append('memberId', userId);
     formData.append('msg', editingComment);
     formData.append('status', 'comment');
 
     try {
-      commentUpdate(formData, lookbookId, commentId);
+      await commentUpdate(formData, lookbookId, commentId);
       setNewComment('');
-      fetchComments();
+      await fetchComments();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDeleteComment = (commentId) => {
+  const handleDeleteComment = async (commentId) => {
     try {
-      commentDelete(lookbookId, commentId);
-      fetchComments();
+      await commentDelete(lookbookId, commentId);
+      await fetchComments();
     } catch (error) {
       console.error(error);
     }
@@ -181,26 +188,26 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     setCommentList(updatedComments);
   };
 
-  const handleSaveEditReply = (commentId, replyId) => {
+  const handleSaveEditReply = async (commentId, replyId) => {
     const formData = new FormData();
-    formData.append('memberId', 1);
-    // formData.append('memberId',userId);
+    // formData.append('memberId', 1);
+    formData.append('memberId', userId);
     formData.append('msg', editingComment);
     formData.append('status', 'comment');
 
     try {
       replyUpdate(formData, lookbookId, replyId);
       setNewComment('');
-      fetchComments();
+      await fetchComments();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDeleteReply = (commentId, replyId) => {
+  const handleDeleteReply = async (commentId, replyId) => {
     try {
       replyDelete(lookbookId, replyId);
-      fetchComments();
+      await fetchComments();
     } catch (error) {
       console.error(error);
     }
@@ -231,130 +238,136 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
       {commentList.length === 0 ? (
         <div className="text-center text-gray-500">댓글이 없습니다</div>
       ) : (
-        commentList.map((comment) => (
-          <div key={comment.id} className="mb-4">
-            <div className="flex justify-between items-center">
-              {comment.isEditing ? (
-                <input
-                  id="updateInput"
-                  type="text"
-                  value={editingComment}
-                  onChange={(e) => setEditingComment(e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e, comment.id)}
-                  className="text-[14px] bg-gray-100 rounded-md flex-grow"
-                />
-              ) : (
-                <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
-                  {comment.msg}
+        commentList.map((comment) => {
+          console.log('Comment Nickname:', comment.nickname); // 닉네임 콘솔 출력
+          return (
+            <div key={comment.id} className="mb-4">
+              <div className="flex justify-between items-center">
+                {comment.isEditing ? (
+                  <input
+                    id="updateInput"
+                    type="text"
+                    value={editingComment}
+                    onChange={(e) => setEditingComment(e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, comment.id)}
+                    className="text-[14px] bg-gray-100 rounded-md flex-grow"
+                  />
+                ) : (
+                  <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
+                    {comment.msg}
+                  </div>
+                )}
+                {comment.nickname === currentUser && (
+                  <div className="flex space-x-2">
+                    {!comment.isEditing && (
+                      <>
+                        <button
+                          onClick={() => handleEditComment(comment.id)}
+                          className="text-[10px] text-blue-500 ml-2"
+                          style={{ background: 'none', fontFamily: 'dohyeon' }}
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="text-[10px] text-red-500"
+                          style={{ background: 'none', fontFamily: 'dohyeon' }}
+                        >
+                          삭제
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+                <div className="text-[11px] text-slate-500 ml-2 mr-2">
+                  {timeAgo(comment.createdAt)}
                 </div>
-              )}
-              {comment.nickname === currentUser && (
-                <div className="flex space-x-2">
-                  {!comment.isEditing && (
-                    <>
-                      <button
-                        onClick={() => handleEditComment(comment.id)}
-                        className="text-[10px] text-blue-500 ml-2"
-                        style={{ background: 'none', fontFamily: 'dohyeon' }}
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDeleteComment(comment.id)}
-                        className="text-[10px] text-red-500"
-                        style={{ background: 'none', fontFamily: 'dohyeon' }}
-                      >
-                        삭제
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
-              <div className="text-[11px] text-slate-500 ml-2 mr-2">
-                {timeAgo(comment.createdAt)}
               </div>
-            </div>
-            <div className="flex items-center mt-1">
-              {comment.replies.length > 0 && (
+              <div className="flex items-center mt-1">
+                {comment.replies.length > 0 && (
+                  <button
+                    onClick={() => toggleReplies(comment.id)}
+                    className="text-[10px] mr-2"
+                    style={{ fontFamily: 'dohyeon', background: 'none' }}
+                  >
+                    답글 {comment.replies.length}개
+                  </button>
+                )}
                 <button
-                  onClick={() => toggleReplies(comment.id)}
-                  className="text-[10px] mr-2"
-                  style={{ fontFamily: 'dohyeon', background: 'none' }}
+                  onClick={() => handleReply(comment.id, comment.nickname)}
+                  className="text-[10px] text-stone-500"
+                  style={{ background: 'none', fontFamily: 'dohyeon' }}
                 >
-                  답글 {comment.replies.length}개
+                  답글 달기
                 </button>
-              )}
-              <button
-                onClick={() => handleReply(comment.id, comment.nickname)}
-                className="text-[10px] text-stone-500"
-                style={{ background: 'none', fontFamily: 'dohyeon' }}
-              >
-                답글 달기
-              </button>
-            </div>
-            {comment.showReplies && (
-              <div className="ml-4 mt-2">
-                {comment.replies.map((reply) => (
-                  <div key={reply.commentId} className="mb-2">
-                    <div className="flex justify-between items-center">
-                      {reply.isEditing ? (
-                        <input
-                          id="updateReplyInput"
-                          type="text"
-                          value={editingReply}
-                          onChange={(e) => setEditingReply(e.target.value)}
-                          onKeyDown={(e) =>
-                            handleKeyDownReply(e, comment.id, reply.commentId)
-                          }
-                          className="text-[13px] bg-gray-50 rounded-md flex-grow"
-                        />
-                      ) : (
-                        <div className="text-[13px] bg-gray-50 rounded-md flex-grow">
-                          ➥{reply.msg}
+              </div>
+              {comment.showReplies && (
+                <div className="ml-4 mt-2">
+                  {comment.replies.map((reply) => (
+                    <div key={reply.commentId} className="mb-2">
+                      <div className="flex justify-between items-center">
+                        {reply.isEditing ? (
+                          <input
+                            id="updateReplyInput"
+                            type="text"
+                            value={editingReply}
+                            onChange={(e) => setEditingReply(e.target.value)}
+                            onKeyDown={(e) =>
+                              handleKeyDownReply(e, comment.id, reply.commentId)
+                            }
+                            className="text-[13px] bg-gray-50 rounded-md flex-grow"
+                          />
+                        ) : (
+                          <div className="text-[13px] bg-gray-50 rounded-md flex-grow">
+                            ➥{reply.msg}
+                          </div>
+                        )}
+                        {reply.nickname === currentUser && (
+                          <div className="flex space-x-2">
+                            {!reply.isEditing && (
+                              <>
+                                <button
+                                  onClick={() =>
+                                    handleEditReply(comment.id, reply.commentId)
+                                  }
+                                  className="text-[10px] text-blue-500 ml-2"
+                                  style={{
+                                    background: 'none',
+                                    fontFamily: 'dohyeon',
+                                  }}
+                                >
+                                  수정
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleDeleteReply(
+                                      comment.id,
+                                      reply.commentId
+                                    )
+                                  }
+                                  className="text-[10px] text-red-500"
+                                  style={{
+                                    background: 'none',
+                                    fontFamily: 'dohyeon',
+                                  }}
+                                >
+                                  삭제
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        )}
+                        <div className="text-[10px] text-slate-500 ml-2 mr-2">
+                          {timeAgo(reply.createdAt)}
                         </div>
-                      )}
-                      {reply.nickname === currentUser && (
-                        <div className="flex space-x-2">
-                          {!reply.isEditing && (
-                            <>
-                              <button
-                                onClick={() =>
-                                  handleEditReply(comment.id, reply.commentId)
-                                }
-                                className="text-[10px] text-blue-500 ml-2"
-                                style={{
-                                  background: 'none',
-                                  fontFamily: 'dohyeon',
-                                }}
-                              >
-                                수정
-                              </button>
-                              <button
-                                onClick={() =>
-                                  handleDeleteReply(comment.id, reply.commentId)
-                                }
-                                className="text-[10px] text-red-500"
-                                style={{
-                                  background: 'none',
-                                  fontFamily: 'dohyeon',
-                                }}
-                              >
-                                삭제
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
-                      <div className="text-[10px] text-slate-500 ml-2 mr-2">
-                        {timeAgo(reply.createdAt)}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })
       )}
       <form onSubmit={handleAddComment} className="flex items-center mt-4 mr-4">
         <input

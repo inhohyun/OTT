@@ -90,6 +90,24 @@ const MainPage = () => {
     fetchUserData();
   }, [setUserId]);
 
+  useEffect(() => {
+    const fetchFollowCount = async () => {
+      // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
+      try {
+        const response = await getFollowingCount(memberId);
+        // console.log('API Response:', response); // 이 로그가 찍히는지 확인
+        if (response.data.data !== 0) {
+          setHasFollow(true);
+        } else {
+          setHasFollow(false);
+        }
+      } catch (error) {
+        console.error('Error fetching follow count:', error);
+      }
+    };
+    fetchFollowCount();
+  }, []); // 의존성을 빈 배열로 설정
+
   return (
     <div
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center"

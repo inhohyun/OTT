@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import backgroundImage from '../../assets/images/background_image_main.png';
 // import axios from 'axios';
@@ -47,8 +48,9 @@ const clothesData = {
 };
 
 const UpdateLookbook = ({ lookbook, lookbookid }) => {
-  const [isPublic, setIsPublic] = useState(lookbook.isPublic === 'N');
+  const [isPublic, setIsPublic] = useState(lookbook.isPublic !== 'PRIVATE');
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState(lookbook.tags || []);
   const [newTag, setNewTag] = useState('');
   const [description, setDescription] = useState(lookbook.content || '');
@@ -61,13 +63,16 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   const userId = useUserStore((state) => state.userId);
 
+  const nav = useNavigate();
+
   // 옷장 id 조회
   useEffect(() => {
     const uid = 1;
+    // const uid = userId;
     const fetchClosetId = async () => {
       try {
         const response = await getClosetId(uid);
-        setClosetId(response.data[0].id);
+        setClosetId(response[0].id);
       } catch (error) {
         console.error(error);
       }
@@ -86,7 +91,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     const fetchCategory = async () => {
       try {
         const response = await getCategory(closetId);
-        setCategories([{ id: 'all', name: '전체' }, ...response.data]);
+        setCategories(response);
       } catch (error) {
         console.error(error);
       }
@@ -94,38 +99,38 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     fetchCategory();
   }, [closetId]);
 
-  // 전체 옷 조회
-  useEffect(() => {
-    const uid = 1;
-    const fetchAllClothes = async () => {
-      try {
-        const response = await getAllClothes(uid);
-        console.log('전체', response);
-        const allClothesData = response.map((item) => {
-          // console.log('아이템', item);
-          return {
-            id: item.clothesId,
-            image: item.img,
-          };
-        });
-        setAllClothes(allClothesData);
-        // console.log(allClothesData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAllClothes();
-  }, [userId]);
+  // // 전체 옷 조회
+  // useEffect(() => {
+  //   const uid = 1;
+  //   const fetchAllClothes = async () => {
+  //     try {
+  //       const response = await getAllClothes(uid);
+  //       console.log('전체', response);
+  //       const allClothesData = response.map((item) => {
+  //         // console.log('아이템', item);
+  //         return {
+  //           id: item.clothesId,
+  //           image: item.img,
+  //         };
+  //       });
+  //       setAllClothes(allClothesData);
+  //       // console.log(allClothesData);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchAllClothes();
+  // }, [userId]);
 
   // 카테고리 별 옷 조회
   useEffect(() => {
     if (!selectedCategory) return;
 
-    if (selectedCategory === 'all') {
-      console.log(allClothes);
-      setClothes(allClothes);
-      return;
-    }
+    // if (selectedCategory === 'all') {
+    //   console.log(allClothes);
+    //   setClothes(allClothes);
+    //   return;
+    // }
 
     const fetchClothes = async () => {
       const closetid = 1;
@@ -158,17 +163,20 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     handleMouseUpOrLeave,
     handleMouseMove,
   } = useCanvasItems(
-    lookbook.images.map((image, index) => ({
-      ...image,
-      x: 10 + index * 30,
-      y: 10 + index * 30,
-      uniqueKey: `image-${image.clothesId}-${index}`,
-    }))
+    lookbook.images
+      .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
+      .map((image, index) => ({
+        ...image,
+        side: 'FRONT', // side 정보를 'FRONT'로 고정
+        uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
+        x: 10 + index * 30,
+        y: 10 + index * 30,
+      }))
   );
 
   useEffect(() => {
     if (lookbook) {
-      setIsPublic(lookbook.isPublic === 'N');
+      setIsPublic(lookbook.isPublic !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
     }
@@ -194,17 +202,18 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
           formData.append('memberId', 1);
-          // formData.append('memberId',userId)
+          // formData.append('memberId', userId);
           formData.append('content', description);
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
-          formData.append('publicStatus', isPublic ? 'Y' : 'N');
+          formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           try {
             const data = lookbookUpdate(formData, lookbookid.id);
             console.log('룩북 수정 성공', data);
             console.log('clothes', selectedImages);
+            nav(-1);
           } catch (error) {
             console.error('Error:', error);
           } finally {
@@ -259,9 +268,9 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     }),
   };
 
-  const categoryOptions = Object.keys(clothesData).map((categoryName) => ({
-    value: categoryName,
-    label: categoryName,
+  const categoryOptions = categories.map((category) => ({
+    value: category.categoryId,
+    label: category.name,
   }));
 
   return (

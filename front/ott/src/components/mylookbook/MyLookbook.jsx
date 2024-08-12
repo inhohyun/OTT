@@ -8,6 +8,7 @@ import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import useUserStore from '../../data/lookbook/userStore';
 import EmptyLookbook from './EmptyLookbook';
+import CustomSpinner from '../common/CustomSpinner';
 
 const MyLookbook = () => {
   const initialLimit = 10;
@@ -16,31 +17,39 @@ const MyLookbook = () => {
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedTag, setSelectedTag] = useState(null);
   const scrollRefs = useRef({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const userId = useUserStore((state) => state.userId);
+  // const userId = useUserStore((state) => state.userId);
+  const userId = 1;
 
   useEffect(() => {
     const fetchInitialLookbooks = async () => {
-      const lookbooksData = await fetchMyLookbooks(userId);
-      if (Array.isArray(lookbooksData)) {
-        setLookbooks(lookbooksData);
+      try {
+        const lookbooksData = await fetchMyLookbooks(userId);
+        if (Array.isArray(lookbooksData)) {
+          setLookbooks(lookbooksData);
 
-        const tags = Array.from(
-          new Set(lookbooksData.flatMap((lb) => lb.tags || []))
-        );
-        console.log('Tags:', tags);
+          const tags = Array.from(
+            new Set(lookbooksData.flatMap((lb) => lb.tags || []))
+          );
+          console.log('Tags:', tags);
 
-        setVisibleLookbooks(
-          tags.reduce((acc, tag) => ({ ...acc, [tag]: initialLimit }), {})
-        );
+          setVisibleLookbooks(
+            tags.reduce((acc, tag) => ({ ...acc, [tag]: initialLimit }), {})
+          );
 
-        tags.forEach((tag) => {
-          if (!scrollRefs.current[tag]) {
-            scrollRefs.current[tag] = React.createRef();
-          }
-        });
-      } else {
-        console.error('Fetched data is not an array:', lookbooksData);
+          tags.forEach((tag) => {
+            if (!scrollRefs.current[tag]) {
+              scrollRefs.current[tag] = React.createRef();
+            }
+          });
+        } else {
+          console.error('Fetched data is not an array:', lookbooksData);
+        }
+      } catch (error) {
+        console.error('Error fetching lookbooks:', error);
+      } finally {
+        setIsLoading(false); // 로딩 완료 후 isLoading을 false로 설정
       }
     };
 
@@ -49,13 +58,17 @@ const MyLookbook = () => {
 
   const handleDelete = (deletedLookbookId) => {
     deleteLookbook(deletedLookbookId);
+    // handleCloseDetail();
+    hideDetail();
   };
 
   const handleCloseDetail = async () => {
+    console.log('[*]모달 닫기');
     hideDetail();
     const lookbooksData = await fetchMyLookbooks(userId);
+    console.log('[*] 내룩북 불러오기');
     if (Array.isArray(lookbooksData)) {
-      setLookbooks(lookbooksData);
+      await setLookbooks(lookbooksData);
     } else {
       console.error('Fetched data is not an array:', lookbooksData);
     }
@@ -105,7 +118,11 @@ const MyLookbook = () => {
     setSelectedTag(null);
   };
 
-  if (!Array.isArray(lookbooks) || !lookbooks.length) {
+  if (isLoading) {
+    return <CustomSpinner />;
+  }
+
+  if (!lookbooks.length) {
     return <EmptyLookbook />;
   }
 

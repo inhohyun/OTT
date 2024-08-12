@@ -47,3 +47,27 @@ export const getFollowingCount = async (memberId) => {
     console.error(error);
   }
 };
+
+// 팔로우 요청 api
+export const postFollow = (targetId) => {
+  axiosInstance
+    .post(`api/members/follow/${targetId}`)
+    .then((response) => {
+      console.log('팔로우 성공');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+// 팔로우 취소 api
+export const unFollow = (targetId) => {
+  axiosInstance
+    .post(`api/members/unfollow/${targetId}`)
+    .then((response) => {
+      console.log('팔로우 취소');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
