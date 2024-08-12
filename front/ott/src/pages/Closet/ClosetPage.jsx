@@ -224,6 +224,7 @@ const ClosetPage = () => {
           categories={filteredCategories}
           setClothes={setClothes}
           memberId={memberId}
+          setCategories={setCategories}
         />
       )}
     </div>
