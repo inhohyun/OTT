@@ -44,7 +44,7 @@ const ClosetPage = () => {
 
         const categoryList = await getCategoryList(closetResponse.data[0].id);
         console.log('categoryList', categoryList);
-        const fetchedCategories = categoryList.map((category) => ({
+        const fetchedCategories = categoryList.data.map((category) => ({
           categoryId: category.categoryId,
           name: category.name,
         }));
