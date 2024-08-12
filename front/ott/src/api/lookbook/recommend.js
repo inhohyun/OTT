@@ -20,7 +20,7 @@ export const bodyType = async (memberId) => {
     const response = await axiosInstance.get('api/recommend/getBodyRecommend', {
       params: { memberId: memberId },
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error fetching bodyType recommendations:', error);
     throw error;
@@ -32,7 +32,7 @@ export const getTagRecommend = async (memberId) => {
     const response = await axiosInstance.get(`api/recommend/getTagRecommend`, {
       params: { memberId: memberId },
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error(error);
   }

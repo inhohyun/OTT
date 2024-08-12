@@ -40,7 +40,7 @@ const MainPage = () => {
 
   const memberId = useUserStore((state) => state.userId);
   useEffect(() => {
-    const fetchFollowCount = async () => {
+    const ㄷ = async () => {
       // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
       try {
         console.log('메인페이지에서 보내는 memberId:', memberId);
