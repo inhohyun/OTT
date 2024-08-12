@@ -16,7 +16,7 @@ import {
   followUser,
   unfollowUser,
 } from '../../api/user/user';
-
+import useUserStore from '../../data/lookbook/userStore';
 const UserPage = () => {
   // targetId를 props로 받음
   const [activeComponent, setActiveComponent] = useState('posts');
