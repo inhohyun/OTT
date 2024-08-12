@@ -19,7 +19,6 @@ export default function StyleInfoSurvey({
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
     if (searchText.trim() === '') {
       return;
     }
