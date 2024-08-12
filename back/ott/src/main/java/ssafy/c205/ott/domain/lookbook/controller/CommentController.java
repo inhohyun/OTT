@@ -42,6 +42,7 @@ public class CommentController {
     public ResponseEntity<?> createComment(@PathVariable("post_id") String postId, @ModelAttribute
     CommentMessageDto commentMessageDto) {
         commentService.createComment(postId, commentMessageDto);
+        log.info("comment : {}", commentMessageDto.toString());
         return ResponseEntity.ok().body("댓글 작성을 완료했습니다.");
     }
 

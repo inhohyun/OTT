@@ -26,13 +26,14 @@ public class LookbookDetailDto {
     private boolean isFavorite;
     private String profileImg;
     private boolean isFollow;
+    private Long memberId;
 
     @Builder
     public LookbookDetailDto(long viewCount, String content, String nickname,
         List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes,
         LocalDateTime createdAt, String thumnail, int cntFavorite, int cntComment,
         boolean isFavorite,
-        String profileImg, boolean isFollow) {
+        String profileImg, boolean isFollow, Long memberId) {
         this.viewCount = viewCount;
         this.content = content;
         this.nickname = nickname;
@@ -46,6 +47,7 @@ public class LookbookDetailDto {
         this.isFavorite = isFavorite;
         this.profileImg = profileImg;
         this.isFollow = isFollow;
+        this.memberId = memberId;
     }
 
     public LookbookDetailDto() {

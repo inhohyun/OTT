@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.item.service;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,8 @@ import ssafy.c205.ott.domain.item.entity.BookmarkStatus;
 import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.ItemStatus;
+import ssafy.c205.ott.domain.item.exception.ClothesFindException;
+import ssafy.c205.ott.domain.item.exception.ImageNotFoundException;
 import ssafy.c205.ott.domain.item.repository.ItemCategoryRepository;
 import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
 import ssafy.c205.ott.domain.item.repository.ItemRepository;
@@ -50,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
         MultipartFile backImg) {
         Member member = memberRepository.findByIdAndActiveStatus(itemCreateDto.getMemberId(),
-                ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+            ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
         //빈 객체 생성
         Item saveItem = itemRepository.save(Item.builder().member(member).build());
@@ -61,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
         if (frontImg != null) {
             urls.add(amazonS3Util.saveFile(frontImg));
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "앞면 사진이 존재하지 않습니다.");
+            throw new ImageNotFoundException();
         }
 
         if (backImg != null) {
@@ -88,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
         Long closetId = closets.get(0).getId();
 
         Category category = categoryRepository.findById(itemCreateDto.getCategoryId()).orElseThrow(
-                CategoryNotFoundException::new);
+            CategoryNotFoundException::new);
 
         List<ItemCategory> categories = new ArrayList<>();
         categories.add(ItemCategory.builder().category(category).item(saveItem).build());
@@ -120,137 +123,122 @@ public class ItemServiceImpl implements ItemService {
     public void updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
         MultipartFile backImg) {
         //이전 정보 가져오기
-        Optional<Item> oi = itemRepository.findById(clothesId);
-        if (oi.isPresent()) {
-            Item item = oi.get();
-            List<ItemImage> itemImages = item.getItemImages();
-            if (frontImg != null) {
-                amazonS3Util.deleteFile(item.getItemImages().get(0).getItemImagePath());
-                itemImageRepository.delete(item.getItemImages().get(0));
+        Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
+        List<ItemImage> itemImages = item.getItemImages();
+        if (frontImg != null) {
+            amazonS3Util.deleteFile(item.getItemImages().get(0).getItemImagePath());
+            itemImageRepository.delete(item.getItemImages().get(0));
 
-                itemImages.set(0,
-                    ItemImage
-                        .builder()
-                        .itemImagePath(amazonS3Util.saveFile(frontImg))
-                        .item(item)
-                        .itemStatus(ItemStatus.FRONT)
-                        .build());
-            }
-
-            if (backImg != null) {
-                amazonS3Util.deleteFile(item.getItemImages().get(1).getItemImagePath());
-                itemImageRepository.delete(item.getItemImages().get(1));
-
-                itemImages.set(1, ItemImage
+            itemImages.set(0,
+                ItemImage
                     .builder()
-                    .itemImagePath(amazonS3Util.saveFile(backImg))
-                    .itemStatus(ItemStatus.BACK)
+                    .itemImagePath(amazonS3Util.saveFile(frontImg))
                     .item(item)
+                    .itemStatus(ItemStatus.FRONT)
                     .build());
-            }
-
-            //카테고리 변경
-            //closet id 가져오기
-            List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
-            Long closetId = closets.get(0).getId();
-
-            Category category = categoryRepository.findById(itemUpdateDto.getCategoryId())
-                    .orElseThrow(CategoryNotFoundException::new);
-
-            List<ItemCategory> categories = new ArrayList<>();
-            ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
-                itemUpdateDto.getMemberId(), itemUpdateDto.getCategoryId()).get(0);
-
-            ItemCategory saveCategory = itemCategoryRepository.save(
-                ItemCategory
-                    .builder()
-                    .id(itemCategory.getId())
-                    .category(category)
-                    .item(item)
-                    .build());
-
-            categories.add(saveCategory);
-            Member member = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
-                    ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
-
-            itemRepository.save(Item
-                .builder()
-                .id(item.getId())
-                .sex(itemUpdateDto.getGender())
-                .brand(itemUpdateDto.getBrand())
-                .member(member).itemImages(itemImages)
-                .size(itemUpdateDto.getSize())
-                .purchase(itemUpdateDto.getPurchase())
-                .itemCategories(categories)
-                .bookmarkStatus(item.getBookmarkStatus())
-                .publicStatus(itemUpdateDto.getPublicStatus())
-                .salesStatus(itemUpdateDto.getSalesStatus())
-                .color(itemUpdateDto.getColor())
-                .build());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 옷을 찾을 수 없습니다.");
         }
+
+        if (backImg != null) {
+            amazonS3Util.deleteFile(item.getItemImages().get(1).getItemImagePath());
+            itemImageRepository.delete(item.getItemImages().get(1));
+
+            itemImages.set(1, ItemImage
+                .builder()
+                .itemImagePath(amazonS3Util.saveFile(backImg))
+                .itemStatus(ItemStatus.BACK)
+                .item(item)
+                .build());
+        }
+
+        //카테고리 변경
+        //closet id 가져오기
+        List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
+        Long closetId = closets.get(0).getId();
+
+        Category category = categoryRepository.findById(itemUpdateDto.getCategoryId())
+            .orElseThrow(CategoryNotFoundException::new);
+
+        List<ItemCategory> categories = new ArrayList<>();
+        ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
+            itemUpdateDto.getMemberId(), itemUpdateDto.getCategoryId()).get(0);
+
+        ItemCategory saveCategory = itemCategoryRepository.save(
+            ItemCategory
+                .builder()
+                .id(itemCategory.getId())
+                .category(category)
+                .item(item)
+                .build());
+
+        categories.add(saveCategory);
+        Member member = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
+            ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+
+        itemRepository.save(Item
+            .builder()
+            .id(item.getId())
+            .sex(itemUpdateDto.getGender())
+            .brand(itemUpdateDto.getBrand())
+            .member(member).itemImages(itemImages)
+            .size(itemUpdateDto.getSize())
+            .purchase(itemUpdateDto.getPurchase())
+            .itemCategories(categories)
+            .bookmarkStatus(item.getBookmarkStatus())
+            .publicStatus(itemUpdateDto.getPublicStatus())
+            .salesStatus(itemUpdateDto.getSalesStatus())
+            .color(itemUpdateDto.getColor())
+            .build());
     }
 
     @Override
     public void deleteItem(Long clothesId) {
         //아이템 가져오기
-        Optional<Item> oi = itemRepository.findById(clothesId);
-        if (oi.isPresent()) {
-            Item item = oi.get();
-            //옷사진 삭제하기
-            for (ItemImage itemImage : item.getItemImages()) {
-                amazonS3Util.deleteFile(itemImage.getItemImagePath());
-                itemImageRepository.delete(itemImage);
-            }
-
-            itemCategoryRepository.delete(item.getItemCategories().get(0));
-
-            //옷 삭제하기
-            itemRepository.delete(item);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 옷을 찾지 못했습니다.");
+        Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
+        //옷사진 삭제하기
+        for (ItemImage itemImage : item.getItemImages()) {
+            amazonS3Util.deleteFile(itemImage.getItemImagePath());
+            itemImageRepository.delete(itemImage);
         }
+
+        itemCategoryRepository.delete(item.getItemCategories().get(0));
+
+        //옷 삭제하기
+        itemRepository.delete(item);
     }
 
     @Override
     public ItemResponseDto selectItem(Long clothesId) {
         //아이템 불러오기
-        Optional<Item> oi = itemRepository.findById(clothesId);
-        if (oi.isPresent()) {
-            Item item = oi.get();
-            //이미지 URL가져오기
-            String frontImg = null;
-            String backImg = null;
+        Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
+        //이미지 URL가져오기
+        String frontImg = null;
+        String backImg = null;
 
-            List<ItemImage> itemImages = item.getItemImages();
-            if (itemImages.size() == 2) {
-                frontImg = itemImages.get(0).getItemImagePath();
-                backImg = itemImages.get(1).getItemImagePath();
-            } else {
-                frontImg = itemImages.get(0).getItemImagePath();
-            }
-            //카테고리 가져오기
-            //return
-            return ItemResponseDto
-                .builder()
-                .clothesId(item.getId())
-                .gender(item.getSex())
-                .size(item.getSize())
-                .purchase(item.getPurchase())
-                .publicStatus(item.getPublicStatus())
-                .salesStatus(item.getSalesStatus())
-                .category(item.getItemCategories().get(0).getCategory().getName())
-                .categoryId(item.getItemCategories().get(0).getCategory().getId())
-                .frontImg(frontImg)
-                .backImg(backImg)
-                .brand(item.getBrand())
-                .color(item.getColor())
-                .bookmarkStatus(item.getBookmarkStatus())
-                .build();
+        List<ItemImage> itemImages = item.getItemImages();
+        if (itemImages.size() == 2) {
+            frontImg = itemImages.get(0).getItemImagePath();
+            backImg = itemImages.get(1).getItemImagePath();
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 옷을 찾지 못했습니다.");
+            frontImg = itemImages.get(0).getItemImagePath();
         }
+        //카테고리 가져오기
+        //return
+        return ItemResponseDto
+            .builder()
+            .clothesId(item.getId())
+            .gender(item.getSex())
+            .size(item.getSize())
+            .purchase(item.getPurchase())
+            .publicStatus(item.getPublicStatus())
+            .salesStatus(item.getSalesStatus())
+            .category(item.getItemCategories().get(0).getCategory().getName())
+            .categoryId(item.getItemCategories().get(0).getCategory().getId())
+            .frontImg(frontImg)
+            .backImg(backImg)
+            .brand(item.getBrand())
+            .color(item.getColor())
+            .bookmarkStatus(item.getBookmarkStatus())
+            .build();
     }
 
     @Override
@@ -271,52 +259,42 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void bookmarkClothes(Long clothesId) {
-        Optional<Item> oi = itemRepository.findById(clothesId);
-        if (oi.isPresent()) {
-            Item item = oi.get();
-            itemRepository.save(
-                Item
-                    .builder()
-                    .id(item.getId())
-                    .color(item.getColor())
-                    .sex(item.getSex())
-                    .brand(item.getBrand())
-                    .member(item.getMember())
-                    .itemImages(item.getItemImages())
-                    .size(item.getSize())
-                    .purchase(item.getPurchase())
-                    .publicStatus(item.getPublicStatus())
-                    .bookmarkStatus(BookmarkStatus.BOOKMARKING)
-                    .salesStatus(item.getSalesStatus())
-                    .build());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "옷을 찾지 못했습니다.");
-        }
+        Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
+        itemRepository.save(
+            Item
+                .builder()
+                .id(item.getId())
+                .color(item.getColor())
+                .sex(item.getSex())
+                .brand(item.getBrand())
+                .member(item.getMember())
+                .itemImages(item.getItemImages())
+                .size(item.getSize())
+                .purchase(item.getPurchase())
+                .publicStatus(item.getPublicStatus())
+                .bookmarkStatus(BookmarkStatus.BOOKMARKING)
+                .salesStatus(item.getSalesStatus())
+                .build());
     }
 
     @Override
     public void unbookmarkClothes(Long clothesId) {
-        Optional<Item> oi = itemRepository.findById(clothesId);
-        if (oi.isPresent()) {
-            Item item = oi.get();
-            itemRepository.save(
-                Item
-                    .builder()
-                    .id(item.getId())
-                    .color(item.getColor())
-                    .sex(item.getSex())
-                    .brand(item.getBrand())
-                    .member(item.getMember())
-                    .itemImages(item.getItemImages())
-                    .size(item.getSize())
-                    .purchase(item.getPurchase())
-                    .publicStatus(item.getPublicStatus())
-                    .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
-                    .salesStatus(item.getSalesStatus())
-                    .build());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "옷을 찾지 못했습니다.");
-        }
+        Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
+        itemRepository.save(
+            Item
+                .builder()
+                .id(item.getId())
+                .color(item.getColor())
+                .sex(item.getSex())
+                .brand(item.getBrand())
+                .member(item.getMember())
+                .itemImages(item.getItemImages())
+                .size(item.getSize())
+                .purchase(item.getPurchase())
+                .publicStatus(item.getPublicStatus())
+                .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
+                .salesStatus(item.getSalesStatus())
+                .build());
     }
 
     @Override

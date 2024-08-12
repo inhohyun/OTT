@@ -16,6 +16,7 @@ import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookSearchDto;
 import ssafy.c205.ott.domain.lookbook.dto.responsedto.TagLookbookDto;
@@ -63,8 +64,8 @@ public class RecommendServiceImpl implements RecommendService {
         for (List<Member> cluster : clusters) {
             for (Member member : cluster) {
                 groupRepository.save(MemberGroup.builder().groupId(idx).member(
-                    memberRepository.findByIdAndActiveStatus(member.getId(),
-                        ActiveStatus.ACTIVE).get()).build());
+                    memberRepository.findByIdAndActiveStatus(member.getId(), ActiveStatus.ACTIVE)
+                        .get()).build());
             }
             idx++;
         }
@@ -82,22 +83,22 @@ public class RecommendServiceImpl implements RecommendService {
                 ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
             for (Lookbook lookbook : lookbooks) {
                 boolean isFavorite = false;
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
                 Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     memberId);
                 if (favorite != null) {
                     isFavorite = true;
                 }
-                bodyResponseDtos.add(BodyResponseDto
-                    .builder()
-                    .memberId(lookbook.getMember().getId())
-                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
-                    .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
-                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                    .createdAt(lookbook.getCreatedAt())
-                    .nickname(lookbook.getMember().getNickname())
-                    .lookbookId(lookbook.getId())
-                    .isFavorite(isFavorite)
-                    .build());
+                bodyResponseDtos.add(
+                    BodyResponseDto.builder().memberId(lookbook.getMember().getId())
+                        .img(lookbook.getLookbookImages().get(0).getImageUrl()).cntFavorite(
+                            lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                        .createdAt(lookbook.getCreatedAt())
+                        .nickname(lookbook.getMember().getNickname()).lookbookId(lookbook.getId())
+                        .isFavorite(isFavorite).build());
             }
             return bodyResponseDtos;
         }
@@ -129,15 +130,13 @@ public class RecommendServiceImpl implements RecommendService {
 
                 bodyResponseDtos.add(
                     BodyResponseDto.builder().img(lookbook.getLookbookImages().get(0).getImageUrl())
-                        .memberId(memberUid)
-                        .lookbookId(lookbook.getId())
+                        .memberId(memberUid).lookbookId(lookbook.getId())
                         .nickname(lookbook.getMember().getNickname())
                         .createdAt(lookbook.getCreatedAt())
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .cntFavorite(
                             lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
-                        .isFavorite(isFavorite)
-                        .build());
+                        .isFavorite(isFavorite).build());
             }
         }
         return bodyResponseDtos;
@@ -149,12 +148,8 @@ public class RecommendServiceImpl implements RecommendService {
         List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
 
         //현재 사용자 검색
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
-            ActiveStatus.ACTIVE);
-        Member findMember = null;
-        if (om.isPresent()) {
-            findMember = om.get();
-        }
+        Member findMember = memberRepository.findByIdAndActiveStatus(memberId,
+            ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
         //사용자와 같은 체형의 사용자들 검색
         List<Member> members = memberRepository.findByBodyTypeAndActiveStatus(
@@ -169,8 +164,8 @@ public class RecommendServiceImpl implements RecommendService {
 
             //해당 사용자들의 룩북 조회 (공개 + 삭제X)
             List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndPublicStatusAndActiveStatus(
-                member.getId(),
-                PublicStatus.PUBLIC, ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+                member.getId(), PublicStatus.PUBLIC,
+                ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
             //룩북 추가
             for (Lookbook lookbook : lookbooks) {
                 boolean isFavorite = false;
@@ -179,17 +174,13 @@ public class RecommendServiceImpl implements RecommendService {
                 if (myFavor != null) {
                     isFavorite = true;
                 }
-                bodyResponseDtos.add(BodyResponseDto
-                    .builder()
+                bodyResponseDtos.add(BodyResponseDto.builder()
                     .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
                     .img(lookbook.getLookbookImages().get(0).getImageUrl())
                     .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                    .createdAt(lookbook.getCreatedAt())
-                    .nickname(lookbook.getMember().getNickname())
-                    .memberId(lookbook.getMember().getId())
-                    .lookbookId(lookbook.getId())
-                    .isFavorite(isFavorite)
-                    .build());
+                    .createdAt(lookbook.getCreatedAt()).nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId()).lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite).build());
             }
         }
         //체형이 같은사람이 없거나 룩북이 없으면
@@ -199,23 +190,22 @@ public class RecommendServiceImpl implements RecommendService {
 
             //모든 룩북을 가져옴
             for (Lookbook lookbook : lookbooks) {
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
                 boolean isFavorite = false;
                 Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     memberId);
                 if (favorite != null) {
                     isFavorite = true;
                 }
-                bodyResponseDtos.add(BodyResponseDto
-                    .builder()
+                bodyResponseDtos.add(BodyResponseDto.builder()
                     .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
                     .img(lookbook.getLookbookImages().get(0).getImageUrl())
                     .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                    .createdAt(lookbook.getCreatedAt())
-                    .nickname(lookbook.getMember().getNickname())
-                    .memberId(lookbook.getMember().getId())
-                    .lookbookId(lookbook.getId())
-                    .isFavorite(isFavorite)
-                    .build());
+                    .createdAt(lookbook.getCreatedAt()).nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId()).lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite).build());
             }
         }
 
@@ -228,14 +218,8 @@ public class RecommendServiceImpl implements RecommendService {
         List<BodyResponseDto> bodyResponseDtos = new ArrayList<>();
 
         //사용자를 불러온다.
-        Member member = null;
-        Optional<Member> om = memberRepository.findByIdAndActiveStatus(memberId,
-            ActiveStatus.ACTIVE);
-        if (om.isPresent()) {
-            member = om.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, memberId + "의 사용자를 찾지 못했습니다.");
-        }
+        Member member = memberRepository.findByIdAndActiveStatus(memberId, ActiveStatus.ACTIVE)
+            .orElseThrow(MemberNotFoundException::new);
         List<MemberTag> memberTags = memberTagRepository.findByMemberId(memberId);
 
         //사용자의 룩북 태그들 조회(사용자의 좋아요한 게시물이 10개 이상일 때)
@@ -269,36 +253,29 @@ public class RecommendServiceImpl implements RecommendService {
             List<Long> keys = new ArrayList<>(map.keySet());
             Collections.sort(keys, (v1, v2) -> (map.get(v2).compareTo(map.get(v1))));
             for (Long key : keys) {
-                Optional<Member> omMember = memberRepository.findByIdAndActiveStatus(key,
-                    ActiveStatus.ACTIVE);
-                if (omMember.isPresent()) {
-                    Member otherMember = omMember.get();
-                    List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndActiveStatus(
-                        otherMember.getId(),
-                        ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+                Member otherMember = memberRepository.findByIdAndActiveStatus(key,
+                    ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
+                List<Lookbook> lookbooks = lookbookRepository.findByMemberIdAndActiveStatus(
+                    otherMember.getId(),
+                    ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
 
-                    for (Lookbook lookbook : lookbooks) {
-                        log.info("lookbook : {}", lookbook.toString());
-                        boolean isFavorite = false;
-                        Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(
-                            lookbook.getId(), otherMember.getId());
-                        if (myFavor != null) {
-                            isFavorite = true;
-                        }
-
-                        bodyResponseDtos.add(BodyResponseDto
-                            .builder()
-                            .lookbookId(lookbook.getId())
-                            .memberId(otherMember.getId())
-                            .cntFavorite(lookbookService.cntLikeLookbook(
-                                String.valueOf(lookbook.getId())))
-                            .cntComment(
-                                commentService.countComment(String.valueOf(lookbook.getId())))
-                            .img(lookbook.getLookbookImages().get(0).getImageUrl())
-                            .nickname(otherMember.getNickname())
-                            .createdAt(lookbook.getCreatedAt())
-                            .build());
+                for (Lookbook lookbook : lookbooks) {
+                    log.info("lookbook : {}", lookbook.toString());
+                    boolean isFavorite = false;
+                    Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(
+                        lookbook.getId(), otherMember.getId());
+                    if (myFavor != null) {
+                        isFavorite = true;
                     }
+
+                    bodyResponseDtos.add(BodyResponseDto.builder().lookbookId(lookbook.getId())
+                        .memberId(otherMember.getId()).cntFavorite(
+                            lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                        .cntComment(
+                            commentService.countComment(String.valueOf(lookbook.getId())))
+                        .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                        .nickname(otherMember.getNickname()).createdAt(lookbook.getCreatedAt())
+                        .build());
                 }
             }
         } else {
@@ -321,22 +298,15 @@ public class RecommendServiceImpl implements RecommendService {
             for (int i = 0; i < 3; i++) {
                 tags[i] = tagRepository.findById(keys.get(i)).get().getName();
             }
-            List<TagLookbookDto> lookbookDtos = lookbookService.findByTag(LookbookSearchDto
-                .builder()
-                .tags(tags)
-                .build());
+            List<TagLookbookDto> lookbookDtos = lookbookService.findByTag(
+                LookbookSearchDto.builder().tags(tags).build());
             for (TagLookbookDto lookbookDto : lookbookDtos) {
-                bodyResponseDtos.add(BodyResponseDto
-                    .builder()
-                    .createdAt(lookbookDto.getCreatedAt())
-                    .lookbookId(lookbookDto.getLookbookId())
-                    .nickname(lookbookDto.getNickname())
+                bodyResponseDtos.add(BodyResponseDto.builder().createdAt(lookbookDto.getCreatedAt())
+                    .lookbookId(lookbookDto.getLookbookId()).nickname(lookbookDto.getNickname())
                     .cntFavorite(lookbookDto.getCntFavorite())
-                    .cntComment(lookbookDto.getCntComment())
-                    .memberId(lookbookRepository.findById(lookbookDto.getLookbookId()).get()
-                        .getMember().getId())
-                    .img(lookbookDto.getImg())
-                    .build());
+                    .cntComment(lookbookDto.getCntComment()).memberId(
+                        lookbookRepository.findById(lookbookDto.getLookbookId()).get().getMember()
+                            .getId()).img(lookbookDto.getImg()).build());
             }
         }
 
@@ -345,23 +315,22 @@ public class RecommendServiceImpl implements RecommendService {
             List<Lookbook> lookbooks = lookbookRepository.findByActiveStatus(
                 ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
             for (Lookbook lookbook : lookbooks) {
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
                 boolean isFavorite = false;
                 Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     memberId);
                 if (myFavor != null) {
                     isFavorite = true;
                 }
-                bodyResponseDtos.add(BodyResponseDto
-                    .builder()
+                bodyResponseDtos.add(BodyResponseDto.builder()
                     .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
                     .img(lookbook.getLookbookImages().get(0).getImageUrl())
                     .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
-                    .createdAt(lookbook.getCreatedAt())
-                    .nickname(lookbook.getMember().getNickname())
-                    .memberId(lookbook.getMember().getId())
-                    .lookbookId(lookbook.getId())
-                    .isFavorite(isFavorite)
-                    .build());
+                    .createdAt(lookbook.getCreatedAt()).nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId()).lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite).build());
             }
         }
         return bodyResponseDtos;
