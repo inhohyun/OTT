@@ -252,6 +252,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .cntComment(commentService.countComment(lookbookId))
                 .profileImg(saveLookbook.getMember().getProfileImageUrl())
                 .isFollow(isFollow)
+                .memberId(saveLookbook.getMember().getId())
                 .build();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, lookbookId + "의 룩북을 찾지 못했습니다.");

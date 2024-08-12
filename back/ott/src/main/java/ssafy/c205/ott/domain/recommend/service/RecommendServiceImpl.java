@@ -82,6 +82,9 @@ public class RecommendServiceImpl implements RecommendService {
                 ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
             for (Lookbook lookbook : lookbooks) {
                 boolean isFavorite = false;
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
                 Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     memberId);
                 if (favorite != null) {
@@ -199,6 +202,9 @@ public class RecommendServiceImpl implements RecommendService {
 
             //모든 룩북을 가져옴
             for (Lookbook lookbook : lookbooks) {
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
                 boolean isFavorite = false;
                 Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     memberId);
@@ -345,6 +351,9 @@ public class RecommendServiceImpl implements RecommendService {
             List<Lookbook> lookbooks = lookbookRepository.findByActiveStatus(
                 ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
             for (Lookbook lookbook : lookbooks) {
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
                 boolean isFavorite = false;
                 Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
                     memberId);
