@@ -17,9 +17,10 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
         const closetResponse = await getClosetId(memberId);
         console.log('closetResponse', closetResponse);
         const closetid = closetResponse.data[0].id;
-        setClosetId(closetid);
-        console.log('옷 추가때 옷장 아이디', closetId);
-        const categoryList = await getCategoryList(closetId);
+        // setClosetId(closetid);
+        // console.log('옷 추가때 옷장 아이디', closetId);
+        console.log('옷장 아이디', closetid);
+        const categoryList = await getCategoryList(closetid);
         console.log('[*]카테고리 목록', categoryList.data);
         setCategories(categoryList.data);
       } catch (error) {
