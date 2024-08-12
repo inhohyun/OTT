@@ -5,22 +5,20 @@ import closetImage from '../../assets/icons/closet_icon.png';
 import notificationImage from '../../assets/icons/notification_icon.png';
 import Notification from './Notification';
 import { getNotificationsList, getLatestNotification } from '../../api/notification/notification';
-import { getUid } from '../../api/user/user';
-
+import useUserStore from '../../data/lookbook/userStore';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [latestNotification, setLatestNotification] = useState(null);
   const [memberId, setMemberId] = useState(null);
+  const uid = useUserStore((state) => state.userId)
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMemberId = async () => {
       try {
-        const uidResponse = await getUid();
-        const uid = uidResponse.data[0].id;
         setMemberId(uid);
       } catch (error) {
         console.error('member Id 가져오는 중 에러 발생:', error);
