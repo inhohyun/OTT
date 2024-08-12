@@ -43,6 +43,7 @@ const MainPage = () => {
     const fetchFollowCount = async () => {
       // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
       try {
+        console.log('메인페이지에서 보내는:', memberId);
         const response = await getFollowingCount(memberId);
         // console.log('API Response:', response); // 이 로그가 찍히는지 확인
         if (response.data.data !== 0) {
