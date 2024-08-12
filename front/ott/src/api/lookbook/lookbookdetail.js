@@ -13,11 +13,13 @@ import axiosInstance from '../axiosInstance';
 
 // 룩북 상세보기 api
 export const lookbookDetail = async (lookbookId, userId) => {
+  // console.log('룩북id', lookbookId);
   try {
     const response = await axiosInstance.get(`api/lookbook/${lookbookId}`, {
-      params: { uid: userId },
+      params: { memberId: userId },
     });
-    return response.data;
+    console.log(response);
+    return response;
   } catch (error) {
     console.error(error);
   }

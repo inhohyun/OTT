@@ -21,7 +21,8 @@ export const fetchMyLookbooks = async (userId) => {
     const response = await axiosInstance.get('api/lookbook/mylookbook', {
       params: { memberId: userId },
     });
-    return response.data;
+    console.log('내룩북', response);
+    return response;
   } catch (error) {
     console.log(error);
   }
