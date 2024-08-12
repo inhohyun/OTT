@@ -28,7 +28,7 @@ const UserPage = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const [targetId, setTargetId] = useState(location.state.id);
+  const [targetId, setTargetId] = useState(location.state?.id);
   useEffect(() => {
     console.log('targetId:', targetId);
     const fetchUserData = async (targetId) => {
