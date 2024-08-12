@@ -26,40 +26,37 @@ const UserPage = () => {
   const location = useLocation();
   const { id } = location.state || { id: memberId }; // id 꺼내기
 
-  console.log('id : ', id);
-  useEffect(() => {
-    const fetchUserData = async (sendId) => {
-      try {
-        const userInfoResponse = await getUserInfo(sendId);
-        console.log('userInfoResponse : ', userInfoResponse);
-        setUserInfo(userInfoResponse.data);
+  const fetchUserData = async (sendId) => {
+    try {
+      const userInfoResponse = await getUserInfo(sendId);
+      console.log('userInfoResponse : ', userInfoResponse);
+      setUserInfo(userInfoResponse.data);
 
-        // isMe와 isPublic 상태 업데이트
-        setIsMe(userInfoResponse.data.followStatus === 'SELF');
-        setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
+      // isMe와 isPublic 상태 업데이트
+      setIsMe(userInfoResponse.data.followStatus === 'SELF');
+      setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
 
-        // 팔로우 상태 업데이트
-        switch (userInfoResponse.data.followStatus) {
-          case 'FOLLOWING':
-            setFollowStatus('팔로잉');
-            break;
-          case 'NOT_FOLLOWING':
-            setFollowStatus('팔로우');
-            break;
-          case 'WAIT':
-            setFollowStatus('요청됨');
-            break;
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
+      // 팔로우 상태 업데이트
+      switch (userInfoResponse.data.followStatus) {
+        case 'FOLLOWING':
+          setFollowStatus('팔로잉');
+          break;
+        case 'NOT_FOLLOWING':
+          setFollowStatus('팔로우');
+          break;
+        case 'WAIT':
+          setFollowStatus('요청됨');
+          break;
       }
-    };
-    // 현재 접근한 사람의 id를 가져옴
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
 
-    // 유저 정보 호출
+  useEffect(() => {
+    console.log('서버에 보내기 전 id : ', id);
     fetchUserData(id);
   }, []);
-
   if (!userInfo) {
     return <div>Loading...</div>;
   }
