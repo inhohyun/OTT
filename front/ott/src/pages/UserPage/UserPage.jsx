@@ -34,43 +34,42 @@ const UserPage = () => {
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
-  const { id } = location.state; // id 꺼내기
-
-  const fetchUserData = async (sendId) => {
-    try {
-      const userInfoResponse = await getUserInfo(sendId);
-      console.log('userInfoResponse : ', userInfoResponse);
-      setUserInfo(userInfoResponse.data);
-
-      // isMe와 isPublic 상태 업데이트
-      setIsMe(userInfoResponse.data.followStatus === 'SELF');
-
-      // 팔로우 상태 업데이트
-      switch (userInfoResponse.data.followStatus) {
-        case 'FOLLOWING':
-          setFollowStatus('팔로잉');
-          break;
-        case 'NOT_FOLLOWING':
-          setFollowStatus('팔로우');
-          break;
-        case 'WAIT':
-          setFollowStatus('요청됨');
-          break;
-        default:
-          setFollowStatus('팔로우');
-          break;
-      }
-
-      // 팔로우,팔로워 업데이트
-      setFollowerCount(userInfoResponse.data.followerCount);
-      setFollowingCount(userInfoResponse.data.followingCount);
-    } catch (error) {
-      console.error('Error fetching user info:', error);
-    }
-  };
+  const { id } = location.state || {}; // id 꺼내기, 기본값을 memberId로 설정
 
   useEffect(() => {
-    console.log('서버에 보내기 전 id : ', id);
+    const fetchUserData = async (sendId) => {
+      try {
+        const userInfoResponse = await getUserInfo(sendId);
+        console.log('userInfoResponse : ', userInfoResponse);
+        setUserInfo(userInfoResponse.data);
+
+        // isMe와 isPublic 상태 업데이트
+        setIsMe(userInfoResponse.data.followStatus === 'SELF');
+
+        // 팔로우 상태 업데이트
+        switch (userInfoResponse.data.followStatus) {
+          case 'FOLLOWING':
+            setFollowStatus('팔로잉');
+            break;
+          case 'NOT_FOLLOWING':
+            setFollowStatus('팔로우');
+            break;
+          case 'WAIT':
+            setFollowStatus('요청됨');
+            break;
+          default:
+            setFollowStatus('팔로우');
+            break;
+        }
+
+        // 팔로우,팔로워 업데이트
+        setFollowerCount(userInfoResponse.data.followerCount);
+        setFollowingCount(userInfoResponse.data.followingCount);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
     if (id === undefined || id === null) {
       console.log('본인 memberId로 정보 가져오기', memberId);
       fetchUserData(memberId);
@@ -78,21 +77,32 @@ const UserPage = () => {
       console.log('다른 사람 memberId로 정보 가져오기', id);
       fetchUserData(id);
     }
+  }, []);
+
+  // const fetchLookbookCount = async (sendId) => {
+  //   try {
+  //     const response = await getLookbookCount(sendId);
+  //     setPostCount(response.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   useEffect(() => {
+  //     fetchLookbookCount(id);
+  //   }, [id]);
+  // };
+
+  useEffect(() => {
+    const fetchLookbookCount = async (sendId) => {
+      try {
+        const response = await getLookbookCount(sendId);
+        setPostCount(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchLookbookCount(id);
   }, [id]);
-  // id가 변경될 때마다 호출되도록 의존성 배열에 추가
-
-  const fetchLookbookCount = async (sendId) => {
-    try {
-      const response = await getLookbookCount(sendId);
-      setPostCount(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-
-    useEffect(() => {
-      fetchLookbookCount(id);
-    }, [id]);
-  };
   if (!userInfo) {
     return <div>Loading...</div>;
   }
