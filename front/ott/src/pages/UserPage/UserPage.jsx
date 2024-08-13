@@ -122,8 +122,8 @@ const UserPage = () => {
     }
   };
   useEffect(() => {
-    setIsPublic(userInfo.publicStatus === 'PUBLIC');
-  }, [followStatus]);
+    setIsPublic(publicStatus === 'PUBLIC');
+  }, []);
   return (
     <div
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
