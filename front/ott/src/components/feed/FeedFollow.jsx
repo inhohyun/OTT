@@ -156,6 +156,7 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 import useUserStore from '../../data/lookbook/userStore';
 import CustomSpinner from '../common/CustomSpinner';
+import NoFeed from '../../components/feed';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
@@ -211,11 +212,11 @@ const FeedFollow = () => {
   };
 
   if (!Array.isArray(followersData) || !followersData.length) {
-    return <CustomSpinner />; // Optionally display a loading message
+    return <NoFeed />;
   }
 
   if (isLoading) {
-    <CustomSpinner />;
+    return <CustomSpinner />;
   }
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">

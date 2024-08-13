@@ -10,7 +10,12 @@ import settingIcon from '../../assets/icons/Setting_icon.png';
 import NavBar from '@/components/userPage/NavBar';
 import closetIcon from '@/assets/icons/closet_icon.png';
 import rtcIcon from '@/assets/icons/webrtcicon.png';
-import { getUserInfo, followUser, unfollowUser } from '../../api/user/user';
+import {
+  getUserInfo,
+  followUser,
+  unfollowUser,
+  getLookbookCount,
+} from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
 
 const UserPage = () => {
@@ -19,6 +24,9 @@ const UserPage = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [isMe, setIsMe] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
   const navigate = useNavigate();
   // memberId 가져오기
   const memberId = useUserStore((state) => state.userId);
@@ -54,6 +62,10 @@ const UserPage = () => {
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
+
+    // 팔로우,팔로워 업데이트
+    setFollowerCount(userInfoResponse.data.followerCount);
+    setFollowingCount(userInfoResponse.data.followerCount);
   };
 
   useEffect(() => {
@@ -61,6 +73,18 @@ const UserPage = () => {
     fetchUserData(id);
   }, [id]); // id가 변경될 때마다 호출되도록 의존성 배열에 추가
 
+  const fetchLookbookCount = async (sendId) => {
+    try {
+      const response = await getLookbookCount(sendId);
+      setPostCount(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+
+    useEffect(() => {
+      fetchLookbookCount(id);
+    }, [id]);
+  };
   if (!userInfo) {
     return <div>Loading...</div>;
   }
@@ -210,6 +234,9 @@ const UserPage = () => {
           <NavBar
             activeComponent={activeComponent}
             setActiveComponent={setActiveComponent}
+            followerCount={followerCount}
+            followingCount={followingCount}
+            postCount={postCount}
           />
           <div className="mt-4 text-[rgba(0,0,0,0.5)] h-full w-full">
             {renderComponent}

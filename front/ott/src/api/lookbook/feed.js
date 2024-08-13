@@ -18,7 +18,7 @@ export const followFeed = async (userId) => {
     const response = axiosInstance.get('/api/lookbook/followings', {
       params: { memberId: userId },
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error(error);
   }
