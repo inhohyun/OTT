@@ -15,6 +15,8 @@ import {
   getAllClothes,
 } from '../../api/lookbook/category';
 
+import { saveAs } from 'file-saver';
+
 const CreateLookbook = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -133,7 +135,7 @@ const CreateLookbook = () => {
                 const imageResponse = await fetch(item.img[0]);
                 const blob = await imageResponse.blob();
                 const url = URL.createObjectURL(blob);
-    
+
                 return {
                   id: item.clothId,
                   image: url,
@@ -147,7 +149,7 @@ const CreateLookbook = () => {
               }
             })
           );
-    
+
           setClothes(clothesData);
         } else {
           console.log('응답 데이터가 배열이 아닙니다:', response.data);
@@ -156,7 +158,6 @@ const CreateLookbook = () => {
         console.error('옷 데이터 가져오기 실패:', error);
       }
     };
-    
 
     fetchClothes();
   }, [selectedCategory, userId, allClothes]);
@@ -184,40 +185,44 @@ const CreateLookbook = () => {
     setShowDeleteButton(false);
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');
-      html2canvas(canvasArea, { useCORS: true, allowTaint: true, logging: true }).then(
-        (canvas) => {
-          console.log(canvas);
-          canvas.toBlob((imageBlob) => {
-            if (!imageBlob)
-              return console.error('Failed to convert canvas to blob.');
+      html2canvas(canvasArea, {
+        useCORS: true,
+        allowTaint: true,
+        logging: true,
+      }).then((canvas) => {
+        console.log(canvas);
+        canvas.toBlob((imageBlob) => {
+          if (!imageBlob)
+            return console.error('Failed to convert canvas to blob.');
 
-            const selectedImages = canvasItems.map((item) => item.id);
-            const formData = new FormData();
-            formData.append('memberId', userId);
-            // formData.append('memberId', 1);
-            formData.append('content', description);
-            formData.append('clothes', selectedImages);
-            formData.append('tags', tags);
-            formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
-            console.log(imageBlob);
-            formData.append('img', imageBlob, 'lookbookimage.png');
+          saveAs(blob, 'lookbookimage.png');
 
-            // formData.forEach((value, key) => {
-            //   console.log(`${key}:`, value);
-            // });
+          const selectedImages = canvasItems.map((item) => item.id);
+          const formData = new FormData();
+          formData.append('memberId', userId);
+          // formData.append('memberId', 1);
+          formData.append('content', description);
+          formData.append('clothes', selectedImages);
+          formData.append('tags', tags);
+          formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
+          console.log(imageBlob);
+          formData.append('img', imageBlob, 'lookbookimage.png');
 
-            try {
-              lookbookCreate(formData);
-              console.log('룩북 저장 성공');
-              nav('/userPage', { state: { id: userId } });
-            } catch (error) {
-              console.error(error);
-            } finally {
-              setShowDeleteButton(true);
-            }
-          }, 'image/png');
-        }
-      );
+          // formData.forEach((value, key) => {
+          //   console.log(`${key}:`, value);
+          // });
+
+          try {
+            lookbookCreate(formData);
+            console.log('룩북 저장 성공');
+            nav('/userPage', { state: { id: userId } });
+          } catch (error) {
+            console.error(error);
+          } finally {
+            setShowDeleteButton(true);
+          }
+        }, 'image/png');
+      });
     }, 100);
   };
 
