@@ -40,7 +40,7 @@ const CustomPersonSearchResult = ({
     const userName = (await getUserInfo(memberId)).data.nickname;
     // if (!userName) console.log("호스트 회원 이름 조회 실패");
 
-    const sessionId = `session-${nickname}`;
+    const sessionId = `session-${userName}`;
     // const sessionId = 'session-jjh';
 
     await inviteMeeting({ invitedMemberId, sessionId });
