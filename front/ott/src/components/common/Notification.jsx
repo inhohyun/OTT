@@ -95,7 +95,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const joinSession = async (sessionId, rtcRequestMemberId) => {
     console.log('webrtc 알림 클릭');
     const userName = (await getUserInfo(memberId)).data.nickname;
-    navigate(`/video-chat`, { state: { sessionId, userName, rtcRequestMemberId } });
+    navigate(`/video-chat`, { state: { sessionId, userName, otherMemberId : rtcRequestMemberId } });
     onClose(); // 세션에 참여한 후 모달 닫기
   };
 
