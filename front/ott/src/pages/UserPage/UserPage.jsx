@@ -69,7 +69,7 @@ const UserPage = () => {
     return <div>Loading...</div>;
   }
 
-  const { name, tags } = userInfo;
+  const { nickname, name, tags } = userInfo;
 
   let renderComponent;
 
@@ -143,7 +143,7 @@ const UserPage = () => {
                 <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
               )}
               <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
-                {name}
+                {nickname}
               </p>
               {isMe && (
                 <img
