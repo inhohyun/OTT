@@ -8,7 +8,7 @@ export const heightWeight = async (memberId) => {
         params: { memberId: memberId },
       }
     );
-    console.log('키추천', response);
+    // console.log('키추천', response);
     return response;
   } catch (error) {
     console.error(error);
