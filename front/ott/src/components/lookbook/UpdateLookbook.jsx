@@ -48,7 +48,7 @@ const clothesData = {
 };
 
 const UpdateLookbook = ({ lookbook, lookbookid }) => {
-  const [isPublic, setIsPublic] = useState(lookbook.isPublic !== 'PRIVATE');
+  const [isPublic, setIsPublic] = useState(lookbook.publicStatus !== 'PRIVATE');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState(lookbook.tags || []);
@@ -58,6 +58,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   const [closetId, setClosetId] = useState(null);
   const [clothes, setClothes] = useState([]);
   const [allClothes, setAllClothes] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]); // State for selected images
 
   const categoryRef = useRef(null);
 
@@ -176,9 +177,13 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   useEffect(() => {
     if (lookbook) {
-      setIsPublic(lookbook.isPublic !== 'PRIVATE');
+      setIsPublic(lookbook.publicStatus !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
+      const initialSelectedImages = lookbook.images
+        .filter((image) => image.imagePath.itemStatus === 'FRONT')
+        .map((image) => image.clothesId);
+      setSelectedImages(initialSelectedImages);
     }
   }, [lookbook]);
 
