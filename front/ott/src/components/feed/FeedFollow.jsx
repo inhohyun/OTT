@@ -172,6 +172,7 @@ const FeedFollow = () => {
     const fetchFollowFeed = async () => {
       try {
         const data = await followFeed(userId);
+        console.log('Follow feed data:', data);
         setFollowersData(data);
         setVisibleLookbooks(
           data.reduce(
