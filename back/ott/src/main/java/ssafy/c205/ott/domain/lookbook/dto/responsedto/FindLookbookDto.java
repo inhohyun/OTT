@@ -17,16 +17,18 @@ public class FindLookbookDto {
     private int cntFavorite;
     private int cntComment;
     private boolean isFavorite;
+    private Long lookbookId;
 
     @Builder
     public FindLookbookDto(String imageURL, Long memberId, LocalDateTime createdAt, int cntFavorite,
-        int cntComment, boolean isFavorite) {
+        int cntComment, boolean isFavorite, Long lookbookId) {
         this.imageURL = imageURL;
         this.memberId = memberId;
         this.createdAt = createdAt;
         this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
         this.isFavorite = isFavorite;
+        this.lookbookId = lookbookId;
     }
 
     public FindLookbookDto() {

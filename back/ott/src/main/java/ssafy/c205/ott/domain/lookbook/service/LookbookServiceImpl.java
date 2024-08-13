@@ -450,6 +450,7 @@ public class LookbookServiceImpl implements LookbookService {
                         .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .isFavorite(isFavorite)
+                        .lookbookId(lookbook.getId())
                         .build());
                 }
             }
@@ -482,6 +483,7 @@ public class LookbookServiceImpl implements LookbookService {
                         .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                         .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                         .isFavorite(isFavorite)
+                        .lookbookId(lookbook.getId())
                         .build());
                 }
             }
