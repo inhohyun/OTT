@@ -141,9 +141,9 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
               <div
                 key={index}
                 className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative"
-                onTouchStart={(e) => handleTouchStart(index, e)}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
+                // onTouchStart={(e) => handleTouchStart(index, e)}
+                // onTouchMove={handleTouchMove}
+                // onTouchEnd={handleTouchEnd}
                 style={{
                   transform:
                     swipedIndex === index && isSwiping
@@ -155,28 +155,49 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                       : 'transform 0.2s ease',
                 }}
               >
-                <p className="text-base mb-4" style={{ fontSize: '14px' }}>
-                  {handleNotificationType(notification)}
-                </p>
-                <p className="text-xs mb-2 text-stone-500">
-                  {notification.notificationType}
-                </p>
-                <p
-                  className="text-xs text-stone-500 absolute right-2 bottom-2"
-                  style={{ fontSize: '12px' }}
+                {/* 상단: 알림 종류와 시간 */}
+                <div className="flex justify-between">
+                  <p className="text-xs text-stone-500">
+                    {notification.notificationType}
+                  </p>
+                  <p className="text-xs text-stone-500">
+                    {formatDate(notification.createdAt)}
+                  </p>
+                </div>
+
+                {/* 중단: 메시지 */}
+                <div
+                  className="text-center my-4"
+                  onTouchStart={(e) => handleTouchStart(index, e)}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  style={{
+                    transform:
+                      swipedIndex === index && isSwiping
+                        ? `translateX(${moveX - startX}px)`
+                        : 'translateX(0)',
+                    transition:
+                      swipedIndex === index && isSwiping
+                        ? 'none'
+                        : 'transform 0.2s ease',
+                  }}
                 >
-                  {formatDate(notification.createdAt)}
-                </p>
+                  <p className="text-base" style={{ fontSize: '14px' }}>
+                    {handleNotificationType(notification)}
+                  </p>
+                </div>
+
+                {/* 하단: 동작 버튼 중앙에 */}
                 {notification.notificationType === 'FOLLOW' &&
                   notification.additionalData.followStatus === 'WAIT' && (
-                    <div className="flex space-x-2 mt-2">
+                    <div className="flex justify-center space-x-2 mt-2">
                       <button
                         className="bg-violet-400 text-white px-3 py-1 rounded"
                         onClick={() =>
                           handleAccept(notification.additionalData.followerId)
                         }
                       >
-                        Accept
+                        수락
                       </button>
                       <button
                         className="bg-stone-500 text-white px-3 py-1 rounded"
@@ -184,7 +205,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                           handleReject(notification.additionalData.followerId)
                         }
                       >
-                        Reject
+                        거절
                       </button>
                     </div>
                   )}
@@ -203,4 +224,5 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     </div>
   );
 };
+
 export default Notification;
