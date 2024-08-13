@@ -156,7 +156,7 @@ import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 import useUserStore from '../../data/lookbook/userStore';
 import CustomSpinner from '../common/CustomSpinner';
-import NoFeed from '../../components/feed';
+import NoFeed from '../../components/feed/NoFeed';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
