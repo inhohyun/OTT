@@ -62,18 +62,18 @@ const VideoChatPage = () => {
         <div className="text-center my-2">
           <h2 className="text-xl font-bold mb-2">{username}님의 옷장</h2> {/* 사용자 이름 표시 */}
           <div className="flex justify-center mt-[-5%]">
-            <CustomCategoryDropdown
+            {/* <CustomCategoryDropdown
               selectedCategory={selectedCategory}
               onCategoryChange={handleCategoryChange}
               categories={categories}
-            />
+            /> */}
           </div>
         </div>
         <div className="mt-[-5%]">
-          <CustomClothesGrid
+          {/* <CustomClothesGrid
             clothes={filteredClothes}
             onToggleLike={handleToggleLike}
-          />
+          /> */}
         </div>
       </div>
     </div>
