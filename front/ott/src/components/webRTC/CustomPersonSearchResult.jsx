@@ -33,7 +33,7 @@ const CustomPersonSearchResult = ({
   };
 
   // 비디오 채팅 시작
-  const startVideoChat = async (invitedMemberId) => {
+  const startVideoChat = async (targetMemberId) => {
     // const memberId = (await getUid()).data.id;
     // if (!memberId) console.log("호스트 회원 아이디 조회 실패");
 
@@ -43,7 +43,7 @@ const CustomPersonSearchResult = ({
     const sessionId = `session-${userName}`;
     // const sessionId = 'session-jjh';
 
-    await inviteMeeting({ invitedMemberId, sessionId });
+    await inviteMeeting({ targetMemberId, sessionId });
     // 사용자를 비디오 채팅 페이지로 이동시키면서 세션 ID와 토큰을 전달
     navigate(`/video-chat`, { state: { sessionId, userName } });
   };
