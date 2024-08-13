@@ -7,6 +7,7 @@ import FeedNoFollow from '../../components/feed/FeedNoFollow.jsx';
 import { getUid } from '../../api/user/user.js';
 import useUserStore from '../../data/lookbook/userStore.js';
 import { getFollowingCount } from '../../api/user/user.js';
+import { requestPermission } from '@/api/notification/pushNotification.js';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
@@ -86,12 +87,19 @@ const MainPage = () => {
         const id = uidResponse.data.id;
         setUserId(id); // Set the userId in the Zustand store
         console.log('User ID:', id);
+        
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
 
     fetchUserData();
+  }, [setUserId]);
+
+  useEffect(() => {
+    if (memberId) {
+      requestPermission(memberId).catch(error => console.error('Error in requestPermission:', error));
+    }
   }, [memberId]);
 
   return (
