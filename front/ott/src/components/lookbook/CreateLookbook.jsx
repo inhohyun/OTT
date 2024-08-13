@@ -148,38 +148,40 @@ const CreateLookbook = () => {
     setShowDeleteButton(false);
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');
-      html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
-        console.log(canvas);
-        canvas.toBlob((imageBlob) => {
-          if (!imageBlob)
-            return console.error('Failed to convert canvas to blob.');
+      html2canvas(canvasArea, { useCORS: true, allowTaint: true }).then(
+        (canvas) => {
+          console.log(canvas);
+          canvas.toBlob((imageBlob) => {
+            if (!imageBlob)
+              return console.error('Failed to convert canvas to blob.');
 
-          const selectedImages = canvasItems.map((item) => item.id);
-          const formData = new FormData();
-          formData.append('memberId', userId);
-          // formData.append('memberId', 1);
-          formData.append('content', description);
-          formData.append('clothes', selectedImages);
-          formData.append('tags', tags);
-          formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
-          console.log(imageBlob);
-          formData.append('img', imageBlob, 'lookbookimage.png');
+            const selectedImages = canvasItems.map((item) => item.id);
+            const formData = new FormData();
+            formData.append('memberId', userId);
+            // formData.append('memberId', 1);
+            formData.append('content', description);
+            formData.append('clothes', selectedImages);
+            formData.append('tags', tags);
+            formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
+            console.log(imageBlob);
+            formData.append('img', imageBlob, 'lookbookimage.png');
 
-          // formData.forEach((value, key) => {
-          //   console.log(`${key}:`, value);
-          // });
+            // formData.forEach((value, key) => {
+            //   console.log(`${key}:`, value);
+            // });
 
-          try {
-            lookbookCreate(formData);
-            console.log('룩북 저장 성공');
-            nav(-1);
-          } catch (error) {
-            console.error(error);
-          } finally {
-            setShowDeleteButton(true);
-          }
-        }, 'image/png');
-      });
+            try {
+              lookbookCreate(formData);
+              console.log('룩북 저장 성공');
+              nav(-1);
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setShowDeleteButton(true);
+            }
+          }, 'image/png');
+        }
+      );
     }, 100);
   };
 
