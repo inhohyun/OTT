@@ -1,16 +1,14 @@
 package ssafy.c205.ott.domain.account.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.processing.Pattern;
 import ssafy.c205.ott.common.entity.BaseEntity;
 import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
-import ssafy.c205.ott.domain.closet.entity.Closet;
 
 @Entity
 @Getter
@@ -66,6 +64,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberTag> memberTags = new ArrayList<>();
 
+    private String fcmToken;
+
     @Builder
     public Member(String name, String sso, String email, MemberRole role) {
         this.name = name;
@@ -83,7 +83,7 @@ public class Member extends BaseEntity {
 
     public void updateMember(String nickname, String phoneNumber, String introduction,
                              float height, float weight, Gender gender,
-                             BodyType bodyType, PublicStatus publicStatus, List<MemberTag> memberTags) {
+                             BodyType bodyType, PublicStatus publicStatus) {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.introduction = introduction;
@@ -92,7 +92,6 @@ public class Member extends BaseEntity {
         this.gender = gender;
         this.bodyType = bodyType;
         this.publicStatus = publicStatus;
-        this.memberTags = memberTags;
     }
 
     public void deleteMember() {
@@ -101,5 +100,26 @@ public class Member extends BaseEntity {
 
     public void updateProfileImage(String ProfileImageUrl) {
         this.profileImageUrl = ProfileImageUrl;
+    }
+
+
+    public void updateFCMToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public double distance(Member member) {
+        return Math.sqrt(Math.pow((member.getHeight() - this.height), 2) + Math.pow(
+            (member.getWeight() - this.weight), 2));
+    }
+
+    public void update(float height, float weight) {
+        this.height = height;
+        this.weight = weight;
+    }
+
+    public Member(float weight, float height, Long id) {
+        this.weight = weight;
+        this.height = height;
+        this.id = id;
     }
 }

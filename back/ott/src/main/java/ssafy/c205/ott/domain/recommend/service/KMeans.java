@@ -3,67 +3,71 @@ package ssafy.c205.ott.domain.recommend.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import lombok.Getter;
 import ssafy.c205.ott.domain.account.entity.Member;
 
 public class KMeans {
 
     private int k;
-    private List<User> users;
-    private List<User> centroids;
+    private List<Member> members;
+    @Getter
+    private List<Member> centroids;
+    @Getter
+    private List<List<Member>> clusters;
 
-    public KMeans(int k, List<User> users) {
+    public KMeans(int k, List<Member> members) {
         this.k = k;
-        this.users = users;
+        this.members = members;
         this.centroids = new ArrayList<>(k);
     }
 
     private void initializeCentroids() {
         Random rand = new Random();
         for (int i = 0; i < k; i++) {
-            User centroid = users.get(rand.nextInt(users.size()));
+            Member centroid = members.get(rand.nextInt(members.size()));
             centroids.add(
-                new User(centroid.getHeight(), centroid.getWeight(), centroid.getMemberId()));
+                new Member(centroid.getWeight(), centroid.getHeight(), centroid.getId()));
         }
     }
 
-    private List<List<User>> assignUsersToClusters() {
-        List<List<User>> clusters = new ArrayList<>();
+    private List<List<Member>> assignMembersToClusters() {
+        List<List<Member>> clusters = new ArrayList<>();
         for (int i = 0; i < k; i++) {
             clusters.add(new ArrayList<>());
         }
 
-        for (User user : users) {
+        for (Member member : members) {
             double minDistance = Double.MAX_VALUE;
             int nearestCentroidIndex = 0;
 
             for (int i = 0; i < centroids.size(); i++) {
-                double distance = user.distance(centroids.get(i));
+                double distance = member.distance(centroids.get(i));
                 if (distance < minDistance) {
                     minDistance = distance;
                     nearestCentroidIndex = i;
                 }
             }
 
-            clusters.get(nearestCentroidIndex).add(user);
+            clusters.get(nearestCentroidIndex).add(member);
         }
 
         return clusters;
     }
 
-    private void updateCentroids(List<List<User>> clusters) {
+    private void updateCentroids(List<List<Member>> clusters) {
         for (int i = 0; i < k; i++) {
-            List<User> cluster = clusters.get(i);
+            List<Member> cluster = clusters.get(i);
             float sumHeight = 0, sumWeight = 0;
 
-            for (User user : cluster) {
-                sumHeight += user.getHeight();
-                sumWeight += user.getWeight();
+            for (Member member : cluster) {
+                sumHeight += member.getHeight();
+                sumWeight += member.getWeight();
             }
 
             if (cluster.size() > 0) {
                 float newHeight = sumHeight / cluster.size();
                 float newWeight = sumWeight / cluster.size();
-                centroids.get(i).update(newHeight, newWeight, 1L);
+                centroids.get(i).update(newHeight, newWeight);
             }
         }
     }
@@ -73,10 +77,10 @@ public class KMeans {
 
         boolean converged = false;
         while (!converged) {
-            List<List<User>> clusters = assignUsersToClusters();
-            List<User> oldCentroids = new ArrayList<>();
-            for (User centroid : centroids) {
-                oldCentroids.add(new User(centroid.getHeight(), centroid.getWeight(), 1L));
+            clusters = assignMembersToClusters();
+            List<Member> oldCentroids = new ArrayList<>();
+            for (Member centroid : centroids) {
+                oldCentroids.add(new Member(centroid.getWeight(), centroid.getHeight(), centroid.getId()));
             }
 
             updateCentroids(clusters);
@@ -91,7 +95,15 @@ public class KMeans {
             }
         }
     }
-    public List<User> getCentroids() {
-        return centroids;
+
+    public List<Member> findClusterContainingMember(Long memberId) {
+        for (List<Member> cluster : clusters) {
+            for (Member member : cluster) {
+                if (member.getId().equals(memberId)) {
+                    return cluster;
+                }
+            }
+        }
+        return null;  // Return null if member not found in any cluster
     }
 }

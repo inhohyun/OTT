@@ -3,12 +3,15 @@ package ssafy.c205.ott.domain.category.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ssafy.c205.ott.common.entity.ItemCategory;
 import ssafy.c205.ott.domain.category.dto.*;
 import ssafy.c205.ott.domain.category.entity.Category;
+import ssafy.c205.ott.domain.category.exception.CategoryAlreadyUseException;
 import ssafy.c205.ott.domain.category.exception.CategoryNotFoundException;
 import ssafy.c205.ott.domain.category.repository.CategoryRepository;
 import ssafy.c205.ott.domain.closet.entity.Closet;
 import ssafy.c205.ott.domain.closet.repository.ClosetRepository;
+import ssafy.c205.ott.domain.item.repository.ItemCategoryRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +23,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ClosetRepository closetRepository;
     private final CategoryValidator categoryValidator;
+    private final ItemCategoryRepository itemCategoryRepository;
 
     public RegisterCategorySuccessDto registerCategory(CategoryRequestDto categoryRequestDto) {
         categoryValidator.validateCategoryName(categoryRequestDto);
@@ -36,7 +40,8 @@ public class CategoryService {
         List<Category> findClosetCategory = categoryRepository.findByClosetId(closetId);
         return findClosetCategory.stream()
                 .map(category -> CategoryDto.builder()
-                        .id(category.getId())
+                        .closetId(category.getCloset().getId())
+                        .categoryId(category.getId())
                         .name(category.getName())
                         .build()
                 )
@@ -50,10 +55,17 @@ public class CategoryService {
         return UpdateCategorySuccessDto.builder().categoryId(category.getId()).build();
     }
 
-    public DeleteCategorySuccessDto deleteCategory(CategoryRequestDto categoryRequestDto) {
-        Category category = categoryRepository.findByName(categoryRequestDto.getName()).orElseThrow(CategoryNotFoundException::new);
-        categoryRepository.deleteById(category.getId());
-        return new DeleteCategorySuccessDto();
+    public DeleteCategorySuccessDto deleteCategory(Long CategoryId) {
+        Category category = categoryRepository.findById(CategoryId).orElseThrow(CategoryNotFoundException::new);
+
+        List<ItemCategory> itemCategories = itemCategoryRepository.findByCategoryId(category.getId());
+        DeleteCategorySuccessDto deleteCategorySuccessDto = new DeleteCategorySuccessDto();
+        if (itemCategories.isEmpty()) {
+            categoryRepository.deleteById(category.getId());
+            return deleteCategorySuccessDto;
+        }
+        deleteCategorySuccessDto.message = new CategoryAlreadyUseException().getMessage();
+        return deleteCategorySuccessDto;
     }
 
     private Closet findClosetById(long closetId) {

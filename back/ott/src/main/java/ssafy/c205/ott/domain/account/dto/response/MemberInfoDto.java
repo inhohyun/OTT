@@ -30,7 +30,7 @@ public class MemberInfoDto {
     private List<Closet> closets;
     private List<Follow> followings;
     private List<Follow> followers;
-    private List<Tag> tags;
+    private List<String> tags;
     private int followingCount;
     private int followerCount;
     private FollowStatus followStatus;

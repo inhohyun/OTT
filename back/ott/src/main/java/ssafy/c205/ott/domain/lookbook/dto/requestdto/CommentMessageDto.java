@@ -10,13 +10,13 @@ import lombok.ToString;
 @ToString
 public class CommentMessageDto {
 
-    private String uid;
+    private Long memberId;
     private String msg;
     private String status;
 
     @Builder
-    public CommentMessageDto(String uid, String msg, String status) {
-        this.uid = uid;
+    public CommentMessageDto(Long memberId, String msg, String status) {
+        this.memberId = memberId;
         this.msg = msg;
         this.status = status;
     }
