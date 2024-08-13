@@ -11,7 +11,7 @@ export default function SurveyStart() {
 
   return (
     <div
-      className="flex justify-center items-center h-screen w-full bg-cover bg-center"
+      className="flex justify-center items-center w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="rounded-lg p-8 max-w-md text-center">

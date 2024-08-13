@@ -29,7 +29,7 @@ const LoginPage = () => {
 
   return (
     <div
-      className="w-full h-full flex items-center justify-center min-h-screen"
+      className="w-full flex items-center justify-center min-h-screen"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
