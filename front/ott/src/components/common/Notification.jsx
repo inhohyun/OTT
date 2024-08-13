@@ -119,15 +119,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
           </p>
         </div>
         <div>
-          <div className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative">
-            <button
-              type="button"
-              onClick={() => joinSession('session-jjh', 'test')}
-            >
-              joinSession
-            </button>
-          </div>
-
           {notifications.slice(0, visibleNotifications).map((notification, index) => {
             const commonProps = {
               notification,
