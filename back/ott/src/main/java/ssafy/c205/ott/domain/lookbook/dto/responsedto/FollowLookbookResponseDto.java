@@ -11,13 +11,17 @@ public class FollowLookbookResponseDto {
     private String nickname;
     private String imgProfile;
     private List<FollowLookbookDto> followLookbookDtoList;
+    private Long memberId;
+    private String introduction;
 
     @Builder
     public FollowLookbookResponseDto(String nickname, String imgProfile,
-        List<FollowLookbookDto> followLookbookDtoList) {
+        List<FollowLookbookDto> followLookbookDtoList, Long memberId, String introduction) {
         this.nickname = nickname;
         this.imgProfile = imgProfile;
         this.followLookbookDtoList = followLookbookDtoList;
+        this.memberId = memberId;
+        this.introduction = introduction;
     }
 
     public FollowLookbookResponseDto() {}

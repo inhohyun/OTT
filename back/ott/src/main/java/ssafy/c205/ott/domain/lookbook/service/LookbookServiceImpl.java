@@ -621,8 +621,16 @@ public class LookbookServiceImpl implements LookbookService {
                 follow.getToMember().getId(),
                 PublicStatus.PUBLIC, ActiveStatus.ACTIVE);
             for (Lookbook lookbook : lookbooks) {
+                boolean isFavorite = false;
+                Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    member.getId());
+                if (favorite != null) {
+                    isFavorite = true;
+                }
+
                 followingLooks.add(FollowLookbookDto
                     .builder()
+                    .isFavorite(isFavorite)
                     .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                     .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                     .imgThumbnail(lookbook.getLookbookImages().get(0).getImageUrl())
@@ -631,6 +639,8 @@ public class LookbookServiceImpl implements LookbookService {
             }
             findFollowingLookbookDtos.add(FollowLookbookResponseDto
                 .builder()
+                .introduction(member.getIntroduction())
+                .memberId(member.getId())
                 .nickname(member.getNickname())
                 .imgProfile(member.getProfileImageUrl())
                 .followLookbookDtoList(followingLooks)
