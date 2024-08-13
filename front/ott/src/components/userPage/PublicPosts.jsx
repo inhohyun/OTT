@@ -56,16 +56,9 @@ const PublicPosts = () => {
     hideDetail();
   };
 
-  const handleCloseDetail = async () => {
+  const handleCloseDetail = () => {
     console.log('[*]모달 닫기');
     hideDetail();
-    const lookbooksData = await fetchMyLookbooks(userId);
-    console.log('[*] 내룩북 불러오기');
-    if (Array.isArray(lookbooksData)) {
-      setLookbooks(lookbooksData);
-    } else {
-      console.error('Fetched data is not an array:', lookbooksData);
-    }
   };
 
   return (
@@ -99,12 +92,22 @@ const PublicPosts = () => {
             <div className="flex flex-col">
               <div className="flex space-x-4">
                 {lookbooks.slice(0, 5).map((lookbook, index) => (
-                  <Lookbook key={index} data={lookbook} />
+                  <Lookbook
+                    key={index}
+                    data={lookbook}
+                    onDelete={handleDelete}
+                    onClose={handleCloseDetail}
+                  />
                 ))}
               </div>
               <div className="flex space-x-4">
                 {lookbooks.slice(5).map((lookbook, index) => (
-                  <Lookbook key={index + 5} data={lookbook} />
+                  <Lookbook
+                    key={index + 5}
+                    data={lookbook}
+                    onDelete={handleDelete}
+                    onClose={handleCloseDetail}
+                  />
                 ))}
               </div>
             </div>
