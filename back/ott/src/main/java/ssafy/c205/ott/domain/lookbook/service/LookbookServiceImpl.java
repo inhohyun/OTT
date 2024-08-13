@@ -606,7 +606,7 @@ public class LookbookServiceImpl implements LookbookService {
         Member member = memberRepository.findByIdAndActiveStatus(Long.parseLong(memberId),
             ACTIVE).orElseThrow(MemberNotFoundException::new);
 
-        List<Follow> followings = member.getFollowings();
+        List<Follow> followings = followRepository.findByFromMemberId(Long.parseLong(memberId));
 
         //팔로잉 사람들의 룩북을 최신순으로 가져와 리스트에 추가
         for (Follow follow : followings) {
@@ -627,7 +627,6 @@ public class LookbookServiceImpl implements LookbookService {
                 if (favorite != null) {
                     isFavorite = true;
                 }
-
                 followingLooks.add(FollowLookbookDto
                     .builder()
                     .isFavorite(isFavorite)
@@ -646,7 +645,9 @@ public class LookbookServiceImpl implements LookbookService {
                 .followLookbookDtoList(followingLooks)
                 .build());
         }
-
+        for (FollowLookbookResponseDto findFollowingLookbookDto : findFollowingLookbookDtos) {
+            log.info("{}", findFollowingLookbookDto.toString());
+        }
         return findFollowingLookbookDtos;
     }
 }
