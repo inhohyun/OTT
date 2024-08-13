@@ -163,6 +163,7 @@ public class MemberReadService {
                 .followingCount(followingCount)
                 .followerCount(followerCount)
                 .followStatus(followStatus)
+                .surveyCompleted(member.isSurveyCompleted())
                 .build();
     }
 
