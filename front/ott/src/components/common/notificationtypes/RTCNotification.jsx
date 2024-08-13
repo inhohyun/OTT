@@ -46,7 +46,10 @@ const RTCNotification = ({
       <div className="flex justify-center space-x-2 mt-2">
         <button
           className="bg-violet-400 text-white px-3 py-1 rounded"
-          onClick={() => joinSession(notification.additionalData.sessionId)}
+          onClick={(e) => {
+            e.stopPropagation(); // 이벤트 전파를 중지하여 부모의 터치 이벤트와 충돌하지 않도록 함
+            joinSession(notification.additionalData.sessionId);
+          }}
         >
           수락
         </button>
