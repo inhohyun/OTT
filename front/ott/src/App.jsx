@@ -22,7 +22,7 @@ import UserPage from './pages/UserPage/UserPage';
 import OAuthCallback from './pages/OAuth/OAuthCallback';
 import UpdateLookbookPage from './pages/Create/UpdateLookbookPage';
 import { CookiesProvider } from 'react-cookie';
-import "./api/notification/pushNotification.js"; 
+
 function App() {
   return (
     <>

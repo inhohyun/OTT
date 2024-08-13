@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { followRequestAccept, followRequestReject } from '../../api/user/user';
+import useUserStore from '../../data/lookbook/userStore';
 
 const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [visibleNotifications, setVisibleNotifications] = useState(4);
@@ -116,10 +117,10 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
 
   if (!show) return null;
 
-  const joinSession = (sessionId, userName) => {
-    console.log("알림 클릭");
-    console.log(sessionId);
-    console.log(userName);
+  const joinSession = async (sessionId) => {
+    console.log('알림 클릭');
+    const memberId = useUserStore((state) => state.userId);
+    const userName = (await getUserInfo(memberId)).data.nickname;
     navigate(`/video-chat`, { state: { sessionId, userName } });
     onClose();
   };
@@ -146,7 +147,12 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
         <div>
           <div className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative">
             {/* <button type="button" onClick={() => joinSession(sessionId, userName)}>joinSession</button> */}
-            <button type="button" onClick={() => joinSession('session-jjh', 'test')}>joinSession</button>
+            <button
+              type="button"
+              onClick={() => joinSession('session-jjh', 'test')}
+            >
+              joinSession
+            </button>
           </div>
           {notifications
             .slice(0, visibleNotifications)
@@ -222,6 +228,28 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                       </button>
                     </div>
                   )}
+
+                {notification.notificationType === 'RTC' && (
+                  <div className="flex justify-center space-x-2 mt-2">
+                    <button
+                      className="bg-violet-400 text-white px-3 py-1 rounded"
+                      onClick={() =>
+                        // handleAccept(notification.additionalData.followerId)
+                        joinSession(notification.additionalData.sessionId)
+                      }
+                    >
+                      수락
+                    </button>
+                    <button
+                      className="bg-stone-500 text-white px-3 py-1 rounded"
+                      onClick={() =>
+                        handleReject(notification.additionalData.followerId)
+                      }
+                    >
+                      거절
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
         </div>

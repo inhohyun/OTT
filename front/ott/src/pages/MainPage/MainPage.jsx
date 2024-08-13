@@ -7,6 +7,7 @@ import FeedNoFollow from '../../components/feed/FeedNoFollow.jsx';
 import { getUid } from '../../api/user/user.js';
 import useUserStore from '../../data/lookbook/userStore.js';
 import { getFollowingCount } from '../../api/user/user.js';
+import { requestPermission } from '@/api/notification/pushNotification.js';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
@@ -92,6 +93,10 @@ const MainPage = () => {
     };
 
     fetchUserData();
+    if (memberId) {
+      console.log(memberId);
+      requestPermission();
+    }
   }, [memberId]);
 
   return (
