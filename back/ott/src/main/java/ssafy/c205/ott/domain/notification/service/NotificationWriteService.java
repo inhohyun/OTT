@@ -72,7 +72,7 @@ public class NotificationWriteService {
         additionalData.put("rtcRequestMemberId", memberInfo.getMemberId());
         additionalData.put("sessionId", webRtcNotificationDto.getSessionId());
 
-        Notification webRtcNotification = buildNotification(memberInfo.getMemberName() + COMMENT.getMessage(), webRtcNotificationDto.getNotificationType(), webRtcNotificationDto.getMemberId(), additionalData);
+        Notification webRtcNotification = buildNotification(memberInfo.getMemberName() + WEBRTC.getMessage(), webRtcNotificationDto.getNotificationType(), webRtcNotificationDto.getMemberId(), additionalData);
 
         Notification notification = notificationRepository.save(webRtcNotification);
         fcmService.pushNotification(buildPushNotification(notification));
