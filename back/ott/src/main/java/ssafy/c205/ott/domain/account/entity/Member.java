@@ -39,6 +39,7 @@ public class Member extends BaseEntity {
     @Column(length = 100)
     private String introduction;
     private String profileImageUrl;
+    private boolean surveyCompleted;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -55,12 +56,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
-    private List<Follow> followings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
-    private List<Follow> followers = new ArrayList<>();
-
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberTag> memberTags = new ArrayList<>();
 
@@ -74,6 +69,7 @@ public class Member extends BaseEntity {
         this.role = role;
         this.activeStatus = ActiveStatus.ACTIVE;
         this.publicStatus = PublicStatus.PUBLIC;
+        this.surveyCompleted = false;
     }
 
     public void updateNameAndEmail(String email, String name) {
@@ -83,7 +79,7 @@ public class Member extends BaseEntity {
 
     public void updateMember(String nickname, String phoneNumber, String introduction,
                              float height, float weight, Gender gender,
-                             BodyType bodyType, PublicStatus publicStatus) {
+                             BodyType bodyType, PublicStatus publicStatus, boolean surveyCompleted) {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.introduction = introduction;
@@ -92,6 +88,7 @@ public class Member extends BaseEntity {
         this.gender = gender;
         this.bodyType = bodyType;
         this.publicStatus = publicStatus;
+        this.surveyCompleted = surveyCompleted;
     }
 
     public void deleteMember() {
