@@ -13,7 +13,10 @@ const baseURL = 'https://i11c205.p.ssafy.io';
 const axiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 60000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    'Origin': 'https://i11c205.p.ssafy.io', // 여기에 Origin 헤더 추가
+  },
 });
 
 // 요청 인터셉터 설정
