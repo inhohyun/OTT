@@ -1,5 +1,6 @@
 import useLookbookStore from "../../../data/lookbook/detailStore";
 import LookbookDetail from "../../lookbook/LookbookDetail";
+import { useState } from "react";
 
 const CommentNotification = ({
   notification,
