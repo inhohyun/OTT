@@ -46,7 +46,7 @@ public class MemberReadService {
     public MemberInfoDto memberSearch(MemberRequestDto memberRequestDto) {
         log.info("memberId" + memberRequestDto.getId());
         log.info("CurrentId" + memberRequestDto.getCurrentId());
-        Member member = findActiveMemberById(memberRequestDto.getCurrentId());
+        Member member = findActiveMemberById(memberRequestDto.getId());
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
         int followingCount = member.getFollowings().size();
         int followerCount = member.getFollowers().size();
@@ -128,7 +128,7 @@ public class MemberReadService {
     }
 
     private FollowStatus getFollowStatus(MemberRequestDto memberRequestDto, Member member) {
-        Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(memberRequestDto.getId(), member.getId());
+        Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(member.getId(), memberRequestDto.getCurrentId());
         if (findFollow.isEmpty()) {
             return FollowStatus.NOT_FOLLOWING;
         }
