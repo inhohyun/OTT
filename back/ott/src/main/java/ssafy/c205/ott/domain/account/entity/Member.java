@@ -66,6 +66,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberTag> memberTags = new ArrayList<>();
 
+    private String fcmToken;
+
     @Builder
     public Member(String name, String sso, String email, MemberRole role) {
         this.name = name;
@@ -101,5 +103,9 @@ public class Member extends BaseEntity {
 
     public void updateProfileImage(String ProfileImageUrl) {
         this.profileImageUrl = ProfileImageUrl;
+    }
+
+    public void updateFCMToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }
