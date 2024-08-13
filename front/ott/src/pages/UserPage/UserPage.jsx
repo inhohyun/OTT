@@ -17,7 +17,7 @@ const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
   const [userInfo, setUserInfo] = useState(null);
-  const { nickname, tags, publicStatus } = userInfo;
+  const { nickname, tags, publicStatus } = userInfo || {};
 
   const [isMe, setIsMe] = useState(false);
   const isPublic = publicStatus === 'PUBLIC';
