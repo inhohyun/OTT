@@ -186,11 +186,16 @@ const Modal = ({ isOpen, onClose }) => {
               />
             </div>
             <h4>옷 선택</h4>
-            <ClothesGridSingleLine
-              clothes={clothes}
-              onToggleLike={toggleLike}
-              onClothingClick={handleClothingClick}
-            />
+            {clothes.length === 0 ? (
+              <p>입어볼 옷이 없습니다.</p>
+            ) : (
+              <ClothesGridSingleLine
+                clothes={clothes}
+                onToggleLike={toggleLike}
+                onClothingClick={handleClothingClick}
+              />
+            )}
+
             <div className="mt-4">
               <button className="try-on-button" onClick={handlePutOn}>
                 입어보기
