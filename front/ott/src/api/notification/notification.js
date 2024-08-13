@@ -26,7 +26,7 @@ export const getLatestNotification = async (memberId) => {
 const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
 
 export const inviteMeeting = async (data) => {
-    axios.post(`${baseURL}api/notification/meeting`, data)
+    axiosInstance.post(`${baseURL}api/notification/meeting`, data)
     .then(response => {
         if (response && response.data) {
             console.log(response);
