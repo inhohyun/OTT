@@ -50,7 +50,7 @@ const Following = ({ uid }) => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span>{following.name}</span>
+                      <span>{following.nickname}</span>
                     </div>
                   ))}
               </div>
