@@ -37,7 +37,7 @@ public class MemberValidator {
         long targetMemberId = followRequestDto.getTargetMemberId();
         long requestMemberId = followRequestDto.getRequestMemberId();
         validateSelfFollow(targetMemberId, requestMemberId);
-        isAlreadyFollowing(targetMemberId, requestMemberId);
+        isAlreadyFollowingAndWait(targetMemberId, requestMemberId);
     }
 
     public void validateUnfollow(FollowRequestDto followRequestDto) {
@@ -72,6 +72,13 @@ public class MemberValidator {
     }
 
     private void isAlreadyFollowing(long targetMemberId, long requestMemberId) {
+        Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(targetMemberId, requestMemberId);
+        if (findFollow.isPresent() && findFollow.get().getFollowStatus() == FollowStatus.FOLLOWING) {
+            throw new AlreadyFollowException();
+        }
+    }
+
+    private void isAlreadyFollowingAndWait(long targetMemberId, long requestMemberId) {
         Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(targetMemberId, requestMemberId);
         if (findFollow.isPresent() && (findFollow.get().getFollowStatus() == FollowStatus.FOLLOWING || findFollow.get().getFollowStatus() == FollowStatus.WAIT)) {
             throw new AlreadyFollowException();
