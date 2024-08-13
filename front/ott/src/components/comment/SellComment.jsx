@@ -42,7 +42,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
     try {
       const status = 'DM';
       const commentsData = await lookbookComment(lookbookId, status);
-      // console.log('룩북아이디', lookbookId);
+      console.log('[*]판매용 댓글 룩북아이디', lookbookId);
       setCommentList(
         commentsData.map((comment) => ({
           ...comment,
