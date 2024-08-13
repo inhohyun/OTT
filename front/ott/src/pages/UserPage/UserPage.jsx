@@ -72,8 +72,10 @@ const UserPage = () => {
   useEffect(() => {
     console.log('서버에 보내기 전 id : ', id);
     if (id === undefined || id === null) {
+      console.log('본인 memberId로 정보 가져오기', memberId);
       fetchUserData(memberId);
     } else {
+      console.log('다른 사람 memberId로 정보 가져오기', id);
       fetchUserData(id);
     }
   }, [id]);
