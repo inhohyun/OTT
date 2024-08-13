@@ -58,8 +58,6 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   const [closetId, setClosetId] = useState(null);
   const [clothes, setClothes] = useState([]);
   const [allClothes, setAllClothes] = useState([]);
-  const [selectedImages, setSelectedImages] = useState([]); // State for selected images
-
   const categoryRef = useRef(null);
 
   const userId = useUserStore((state) => state.userId);
@@ -180,10 +178,6 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       setIsPublic(lookbook.publicStatus !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
-      const initialSelectedImages = lookbook.images
-        .filter((image) => image.imagePath.itemStatus === 'FRONT')
-        .map((image) => image.clothesId);
-      setSelectedImages(initialSelectedImages);
     }
   }, [lookbook]);
 
@@ -204,7 +198,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
 
-          const selectedImages = canvasItems.map((item) => item.id);
+          const selectedImages = canvasItems.map((item) => item.clothesId);
           const formData = new FormData();
           // formData.append('memberId', 1);
           formData.append('memberId', userId);
