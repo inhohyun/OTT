@@ -20,7 +20,7 @@ const UserPage = () => {
   const { nickname, tags, publicStatus } = userInfo;
 
   const [isMe, setIsMe] = useState(false);
-  const [isPublic, setIsPublic] = useState(publicStatus === 'PUBLIC');
+  const isPublic = publicStatus === 'PUBLIC';
   const navigate = useNavigate();
   // memberId 가져오기
   const memberId = useUserStore((state) => state.userId);
