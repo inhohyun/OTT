@@ -2,72 +2,70 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { followRequestAccept, followRequestReject } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
-import FollowNotification from './notificationtypes/FollowNotification'
-import CommentNotification from './notificationtypes/CommentNotification'
-import RTCNotification from './notificationtypes/RTCNotification'
-import AiNotification from './notificationtypes/AiNotification'
-
+import FollowNotification from './notificationtypes/FollowNotification';
+import CommentNotification from './notificationtypes/CommentNotification';
+import RTCNotification from './notificationtypes/RTCNotification';
+import AiNotification from './notificationtypes/AiNotification';
 
 const Notification = ({ show, onClose, notifications, setNotifications }) => {
-  const [visibleNotifications, setVisibleNotifications] = useState(4);
-  const [startX, setStartX] = useState(null);
-  const [moveX, setMoveX] = useState(null);
-  const [isSwiping, setIsSwiping] = useState(false);
-  const [swipedIndex, setSwipedIndex] = useState(null);
+  const [visibleNotifications, setVisibleNotifications] = useState(4); // 보여줄 알림의 개수를 관리하는 상태
+  const [touchData, setTouchData] = useState({ startX: 0, moveX: 0 }); // 터치 이벤트의 시작과 이동 데이터를 관리하는 상태
+  const [isSwiping, setIsSwiping] = useState(false); // 스와이프 중인지 여부를 관리하는 상태
+  const [swipedIndex, setSwipedIndex] = useState(null); // 스와이프된 알림의 인덱스를 관리하는 상태
   const navigate = useNavigate();
   
   useEffect(() => {
     if (!show) {
-      setVisibleNotifications(4); // 알림 모달 꺼지면 보여주기 상태 초기화
+      setVisibleNotifications(4); // 알림 모달이 닫힐 때, 보여줄 알림의 개수를 초기화
     }
   }, [show]);
 
   if (!show) return null;
 
   const handleShowMore = () => {
-    setVisibleNotifications((prev) => prev + 4); // 알림 4개 더 보여주기
+    setVisibleNotifications((prev) => prev + 4); // 알림을 4개 더 보여줌
   };
 
   const handleOutsideClick = (e) => {
     if (e.target.id === 'modal-overlay') {
-      onClose();
+      onClose(); // 모달 외부 클릭 시 모달을 닫음
     }
   };
 
   const handleTouchStart = (index, e) => {
-    setStartX(e.touches[0].clientX);
-    setSwipedIndex(index);
-    setIsSwiping(true);
+    setTouchData({ startX: e.touches[0].clientX, moveX: 0 }); // 터치 시작 위치를 저장
+    setSwipedIndex(index); // 현재 터치된 알림의 인덱스를 저장
+    setIsSwiping(true); // 스와이프 시작을 표시
   };
 
   const handleTouchMove = (e) => {
     if (!isSwiping) return;
-    setMoveX(e.touches[0].clientX);
+    setTouchData((prev) => ({ ...prev, moveX: e.touches[0].clientX })); // 터치 이동 위치를 저장
   };
 
   const handleTouchEnd = () => {
     if (!isSwiping) return;
-    const diffX = moveX - startX;
+    const diffX = touchData.moveX - touchData.startX; // 터치 시작과 종료 위치의 차이를 계산
     if (diffX > 100) {
-      // 옆으로 밀어서 알림 삭제
+      // 스와이프로 알림 삭제
       handleDeleteNotification(swipedIndex);
     }
-    setIsSwiping(false);
-    setSwipedIndex(null);
+    setSwipedIndex(null); // 스와이프 상태 초기화
+    setIsSwiping(false); // 스와이프 종료
   };
 
   const handleDeleteNotification = (index) => {
-    setNotifications(notifications.filter((_, i) => i !== index));
+    setNotifications(notifications.filter((_, i) => i !== index)); // 알림을 삭제
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`; // 날짜와 시간을 포맷하여 반환
   };
 
   const handleAccept = async (followerId) => {
     try {
-      await followRequestAccept(followerId);
+      await followRequestAccept(followerId); // 팔로우 요청 수락 API 호출
       setNotifications(
         notifications.filter(
           (notification) =>
@@ -81,7 +79,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
 
   const handleReject = async (followerId) => {
     try {
-      await followRequestReject(followerId);
+      await followRequestReject(followerId); // 팔로우 요청 거절 API 호출
       setNotifications(
         notifications.filter(
           (notification) =>
@@ -93,14 +91,12 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     }
   };
 
-  if (!show) return null;
-
   const joinSession = async (sessionId) => {
     console.log('알림 클릭');
     const memberId = useUserStore((state) => state.userId);
     const userName = (await getUserInfo(memberId)).data.nickname;
     navigate(`/video-chat`, { state: { sessionId, userName } });
-    onClose();
+    onClose(); // 세션에 참여한 후 모달 닫기
   };
 
   return (
@@ -119,7 +115,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
             className="text-lg font-bold cursor-pointer w-8 h-8 absolute right-0 top-0"
             style={{ top: '-8px', right: '-24px' }}
           >
-            &times;
+            &times; {/* 모달 닫기 버튼 */}
           </p>
         </div>
         <div>
@@ -133,76 +129,50 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
           </div>
 
           {notifications.slice(0, visibleNotifications).map((notification, index) => {
+            const commonProps = {
+              notification,
+              formatDate,
+              handleTouchStart: (e) => handleTouchStart(index, e),
+              handleTouchMove,
+              handleTouchEnd,
+              isSwiping: swipedIndex === index,
+              moveX: touchData.moveX,
+              startX: touchData.startX,
+            };
             switch (notification.notificationType) {
               case 'FOLLOW':
                 return (
                   <FollowNotification
-                    key={index}
-                    notification={notification}
+                    key={notification.notificationId} 
+                    {...commonProps}
                     handleAccept={handleAccept}
                     handleReject={handleReject}
-                    formatDate={formatDate}
-                    handleTouchStart={handleTouchStart}
-                    handleTouchMove={handleTouchMove}
-                    handleTouchEnd={handleTouchEnd}
-                    isSwiping={isSwiping}
-                    swipedIndex={swipedIndex}
-                    index={index}
-                    moveX={moveX}
-                    startX={startX}
                   />
                 );
               case 'RTC':
                 return (
                   <RTCNotification
-                    key={index}
-                    notification={notification}
+                    key={notification.notificationId} 
+                    {...commonProps}
                     joinSession={joinSession}
-                    formatDate={formatDate}
-                    handleTouchStart={handleTouchStart}
-                    handleTouchMove={handleTouchMove}
-                    handleTouchEnd={handleTouchEnd}
-                    isSwiping={isSwiping}
-                    swipedIndex={swipedIndex}
-                    index={index}
-                    moveX={moveX}
-                    startX={startX}
                   />
                 );
               case 'COMMENT':
                 return (
                   <CommentNotification
-                    key={index}
-                    notification={notification}
-                    formatDate={formatDate}
-                    handleTouchStart={handleTouchStart}
-                    handleTouchMove={handleTouchMove}
-                    handleTouchEnd={handleTouchEnd}
-                    isSwiping={isSwiping}
-                    swipedIndex={swipedIndex}
-                    index={index}
-                    moveX={moveX}
-                    startX={startX}
+                    key={notification.notificationId} 
+                    {...commonProps}
                   />
                 );
               case 'AI':
                 return (
                   <AiNotification
-                    key={index}
-                    notification={notification}
-                    formatDate={formatDate}
-                    handleTouchStart={handleTouchStart}
-                    handleTouchMove={handleTouchMove}
-                    handleTouchEnd={handleTouchEnd}
-                    isSwiping={isSwiping}
-                    swipedIndex={swipedIndex}
-                    index={index}
-                    moveX={moveX}
-                    startX={startX}
+                    key={notification.notificationId} 
+                    {...commonProps}
                   />
                 );
               default:
-                return <div key={index}>알림이 없습니다.</div>;
+                return <div key={notification.notificationId}>알림이 없습니다.</div>;
             }
           })}
         </div>
