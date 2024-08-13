@@ -4,6 +4,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import axios, { HttpStatusCode } from 'axios';
 import useUserStore from '../../data/lookbook/userStore';
+import axiosInstance from '../axiosInstance';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -45,7 +46,7 @@ export async function requestPermission(memberId) {
     if (token) {
       console.log('token: ', token);
       console.log('API 요청을 보냅니다: ', memberId, token);
-      const response = await axios.post(baseUrl + 'api/push/device', { memberId: memberId, token: token });
+      const response = await axiosInstance.post(baseUrl + 'api/push/device', { memberId: memberId, token: token });
       
       if (response.status === HttpStatusCode.Ok) {
         console.log('알림 등록 성공');
