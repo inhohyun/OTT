@@ -13,6 +13,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [isSwiping, setIsSwiping] = useState(false); // 스와이프 중인지 여부를 관리하는 상태
   const [swipedIndex, setSwipedIndex] = useState(null); // 스와이프된 알림의 인덱스를 관리하는 상태
   const navigate = useNavigate();
+  const memberId = useUserStore((state) => state.userId);
   
   useEffect(() => {
     if (!show) {
@@ -93,7 +94,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
 
   const joinSession = async (sessionId) => {
     console.log('알림 클릭');
-    const memberId = useUserStore((state) => state.userId);
     console.log(memberId);
     console.log(await getUserInfo(memberId));
     console.log(await getUserInfo(memberId).data);
