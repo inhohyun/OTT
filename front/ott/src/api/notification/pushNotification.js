@@ -28,7 +28,7 @@ const analytics = getAnalytics(app);
 const messaging = getMessaging(app);
 const baseUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL;
 
-async function requestPermission() {
+export async function requestPermission() {
   console.log('권한 요청 중...');
 
   const permission = await Notification.requestPermission();
@@ -64,5 +64,3 @@ async function requestPermission() {
     // ...
   });
 }
-
-requestPermission();
