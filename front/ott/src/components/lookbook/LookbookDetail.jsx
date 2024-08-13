@@ -542,7 +542,9 @@ import {
 } from '../../api/lookbook/lookbookdetail';
 import { lookbookComment } from '../../api/lookbook/comments';
 import { lookbookDelete } from '../../api/lookbook/lookbook';
+import { postFollow } from '../../api/following/following';
 import useLookbookStore from '../../data/lookbook/detailStore';
+import useUserStore from '../../data/lookbook/userStore';
 
 const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   const [showSellComments, setShowSellComments] = useState(false);
@@ -556,6 +558,8 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
   // const [commentStatus, setCommentStatus] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteLookbook, hideDetail } = useLookbookStore(); // Use Zustand store
+
+  const userId = useUserStore((state) => state.userId);
 
   useEffect(() => {
     setLiked(lookbook.like);
@@ -597,6 +601,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     if (liked) {
       try {
         lookbookDislike(lookbook);
+        // lookbookDislike(lookbook, userId);  // uid 넘겨주기
         setLiked(false);
         setCntLike((prevCntLike) => prevCntLike - 1);
       } catch (error) {
@@ -605,6 +610,7 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
     } else {
       try {
         lookbookLike(lookbook);
+        // lookbookLike(lookbook, userId);
         setLiked(true);
         setCntLike((prevCntLike) => prevCntLike + 1);
       } catch (error) {
@@ -749,7 +755,9 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
           </div>
         </div>
         <div className="mb-4">
-          <h4 className="text-lg font-semibold">판매중인 옷</h4>
+          {salesClothes.length > 0 && (
+            <h4 className="text-lg font-semibold">판매중인 옷</h4>
+          )}
           <div className="flex flex-wrap gap-4">
             {salesClothes.map((item, index) => (
               <div key={index} className="flex items-center space-x-2">
@@ -807,12 +815,14 @@ const LookbookDetail = ({ onClose, onEdit, lookbook }) => {
                 comments={comments}
                 lookbookId={lookbook.id}
                 lookbook={lookbook}
+                userId={userId}
               />
             ) : (
               <Comment
                 comments={comments}
                 lookbookId={lookbook.id}
                 lookbook={lookbook}
+                userId={userId}
               />
             )}
           </div>

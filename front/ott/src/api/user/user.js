@@ -36,3 +36,46 @@ export const getUid = async () => {
     throw error;
   }
 };
+
+// 팔로잉 수 조회 api
+export const getFollowingCount = async (memberId) => {
+  try {
+    const response = await axiosInstance.get(`api/members/${memberId}/`);
+    console.log('팔로우수', response);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getUserListNickname = async (nickname) => {
+  try {
+    console.log(nickname);
+    const endpoint = `api/members/more?nickname=${nickname}`;
+    
+    const response = await axiosInstance.get(endpoint);
+    
+    if (response && response.status === 200 && response.data) {
+      const data = response.data.data;
+
+      if (data) {
+        const processedData = data.map(user => ({
+          id: user.id,
+          name: user.name,
+          nickname: user.nickname,
+          profileImageUrl: user.profileImageUrl,
+        }));
+        console.log(processedData);
+        
+        return processedData;
+      } else {
+        throw new Error('Response data is empty');
+      }
+    } else {
+      throw new Error(`Unexpected response structure or status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error search user:', error);
+    throw error;
+  }
+}

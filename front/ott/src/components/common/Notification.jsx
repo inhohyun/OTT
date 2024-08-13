@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [visibleNotifications, setVisibleNotifications] = useState(4);
@@ -6,7 +7,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [moveX, setMoveX] = useState(null);
   const [isSwiping, setIsSwiping] = useState(false);
   const [swipedIndex, setSwipedIndex] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (!show) {
       setVisibleNotifications(4); // 알림 모달 꺼지면 보여주기 상태 초기화
@@ -51,6 +52,14 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     setNotifications(notifications.filter((_, i) => i !== index));
   };
 
+  const joinSession = (sessionId, userName) => {
+    console.log("알림 클릭");
+    console.log(sessionId);
+    console.log(userName);
+    navigate(`/video-chat`, { state: { sessionId, userName } });
+    onClose();
+  };
+
   return (
     <div
       id="modal-overlay"
@@ -71,6 +80,10 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
           </p>
         </div>
         <div>
+          <div className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative">
+            {/* <button type="button" onClick={() => joinSession(sessionId, userName)}>joinSession</button> */}
+            <button type="button" onClick={() => joinSession('session-jjh', 'test')}>joinSession</button>
+          </div>
           {notifications
             .slice(0, visibleNotifications)
             .map((notification, index) => (

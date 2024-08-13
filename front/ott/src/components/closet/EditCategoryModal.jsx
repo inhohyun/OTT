@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
+import { fixCategory } from '../../api/closet/categories';
 
-const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategories }) => {
+const EditCategoryModal = ({
+  isOpen,
+  onClose,
+  category,
+  onSave,
+  existingCategories,
+  closetId,
+}) => {
   // 새로운 카테고리 이름을 저장할 상태와 오류 메시지 상태
-  const [newCategoryName, setNewCategoryName] = useState(category);
+  const [newCategoryName, setNewCategoryName] = useState(category.name);
   const [error, setError] = useState('');
 
   // 저장 버튼 클릭 시 호출되는 함수
-  const handleSave = () => {
+  const handleSave = async () => {
     // 새로운 카테고리 이름의 앞뒤 공백 제거
     const trimmedName = newCategoryName.trim();
 
@@ -14,17 +22,24 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSave, existingCategori
     if (
       existingCategories.some(
         (existingCategory) =>
-          existingCategory.toLowerCase() === trimmedName.toLowerCase() &&
-          existingCategory !== category
+          existingCategory.name.toLowerCase() === trimmedName.toLowerCase() &&
+          existingCategory.id !== category.closetId
       )
     ) {
       setError('같은 이름의 카테고리가 이미 존재합니다.');
       return;
     }
 
-    // 중복이 없다면 저장 진행
-    onSave(trimmedName);
-    onClose();
+    try {
+      // API 호출하여 카테고리 수정
+      await fixCategory(closetId, category.categoryId, trimmedName);
+      // 저장 성공 시 상위 컴포넌트에 변경 사항 전달
+      onSave(trimmedName);
+      onClose();
+    } catch (error) {
+      console.error('카테고리 수정 중 오류 발생:', error);
+      setError('카테고리 수정 중 오류가 발생했습니다.');
+    }
   };
 
   if (!isOpen) return null;

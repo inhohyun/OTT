@@ -154,6 +154,7 @@ import { followFeed } from '../../api/lookbook/feed';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
+import useUserStore from '../../data/lookbook/userStore';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
@@ -162,21 +163,26 @@ const FeedFollow = () => {
 
   const scrollRefs = useRef([]);
 
+  const userId = useUserStore((state) => state.userId);
+
   useEffect(() => {
-    try {
-      const data = followFeed();
-      setFollowersData(data);
-      setVisibleLookbooks(
-        data.reduce(
-          (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
-          {}
-        )
-      );
-      // 각 팔로워의 스크롤 컨테이너에 대한 참조를 생성합니다.
-      scrollRefs.current = data.map(() => React.createRef());
-    } catch (error) {
-      console.error(error);
-    }
+    const fetchFollowFeed = async () => {
+      try {
+        const data = await followFeed();
+        setFollowersData(data);
+        setVisibleLookbooks(
+          data.reduce(
+            (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
+            {}
+          )
+        );
+        scrollRefs.current = data.map(() => React.createRef());
+      } catch (error) {
+        console.error('Failed to fetch follow feed', error);
+      }
+    };
+
+    fetchFollowFeed();
   }, []);
 
   const scrollLeft = (ref) => {
@@ -198,6 +204,10 @@ const FeedFollow = () => {
   const closeDetailedView = () => {
     setSelectedFollower(null);
   };
+
+  if (!Array.isArray(followersData) || !followersData.length) {
+    return <p>Loading...</p>; // Optionally display a loading message
+  }
 
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">

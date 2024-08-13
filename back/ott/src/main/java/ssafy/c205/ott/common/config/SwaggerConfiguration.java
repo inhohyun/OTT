@@ -53,6 +53,10 @@ public class SwaggerConfiguration {
     }
 
     @Bean
+    public GroupedOpenApi pushNotificationApi() {
+        return GroupedOpenApi.builder().group("OTT-Push").pathsToMatch("/api/push/**").build();
+    }
+
     public GroupedOpenApi categoryApi() {
         return GroupedOpenApi.builder().group("OTT-Category").pathsToMatch("/api/category/**").build();
     }
