@@ -8,11 +8,11 @@ import lombok.ToString;
 @Getter @Setter
 @ToString @Builder
 public class LookbookFavoriteDto {
-    private String uid;
+    private Long memberId;
     private String lookbookId;
 
-    public LookbookFavoriteDto(String uid, String lookbookId) {
-        this.uid = uid;
+    public LookbookFavoriteDto(Long memberId, String lookbookId) {
+        this.memberId = memberId;
         this.lookbookId = lookbookId;
     }
 

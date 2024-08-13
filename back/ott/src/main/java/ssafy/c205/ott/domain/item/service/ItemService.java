@@ -19,11 +19,13 @@ public interface ItemService {
 
     ItemResponseDto selectItem(Long clothesId);
 
-    List<ItemListResponseDto> selectItemList(Long uid);
+    List<ItemListResponseDto> selectItemList(Long memberId);
 
-    void bookmarkLookbook(Long clothesId);
+    void bookmarkClothes(Long clothesId);
 
-    void unbookmarkLookbook(Long clothesId);
+    void unbookmarkClothes(Long clothesId);
 
     List<ItemCategoryResponseDto> selectByCategory(Long categoryId, Long userId, Long closetId);
+
+    List<ItemCategoryResponseDto> selectByBookmark(Long memberId);
 }

@@ -50,7 +50,7 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://locatlhost:3000"));
+                    configuration.setAllowedOriginPatterns(Arrays.asList("https://i11c205.p.ssafy.io","http://localhost:3000"));
                     configuration.setAllowedMethods(Collections.singletonList("*")); //get,put,post 모든 요청에 대한 허가
                     configuration.setAllowCredentials(true); //credential 가져올 수 있도록 설정
                     configuration.setAllowedHeaders(Collections.singletonList("*")); //어떤 헤더를 가져올지 설정
@@ -89,7 +89,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**").permitAll()
+                .requestMatchers("/login","/", "/api/reissue", "/oauth2/authorization/**", "/api/login/**", "/swagger-ui/**", "/api-docs/**").permitAll()
                 .anyRequest().authenticated());
 
         http

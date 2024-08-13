@@ -27,5 +27,4 @@ public class MemberUpdateRequestDto {
     private Gender gender;
     private BodyType bodyType;
     private PublicStatus publicStatus;
-    private List<MemberTag> memberTags;
 }

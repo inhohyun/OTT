@@ -82,8 +82,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "해당 룩북의 상세 데이터"),
     })
     @GetMapping("/{lookbook_id}")
-    public ResponseEntity<?> detailLookbook(@PathVariable("lookbook_id") String lookbookId, @RequestParam("uid") Long uid) {
-        LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId, uid);
+    public ResponseEntity<?> detailLookbook(@PathVariable("lookbook_id") String lookbookId, @RequestParam("memberId") Long memberId) {
+        LookbookDetailDto lookbookDetailDto = lookbookService.detailLookbook(lookbookId, memberId);
         if (lookbookDetailDto == null) {
             log.error("룩북 상세조회 실패");
             return new ResponseEntity<String>("해당 룩북을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
@@ -165,10 +165,10 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "나의 공개된 룩북을 리스트로 반환"),
     })
     @GetMapping("/public")
-    public ResponseEntity<?> publicLookbook(@RequestParam("uid") String uid) {
-        List<FindLookbookDto> publicLookbooks = lookbookService.findPublicLookbooks(uid);
+    public ResponseEntity<?> publicLookbook(@RequestParam("memberId") String memberId) {
+        List<FindLookbookDto> publicLookbooks = lookbookService.findPublicLookbooks(memberId);
         if (publicLookbooks == null) {
-            log.error("{}의 공개된 룩북을 조회하지 못함", uid);
+            log.error("{}의 공개된 룩북을 조회하지 못함", memberId);
             return new ResponseEntity<String>("공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<List<FindLookbookDto>>(publicLookbooks, HttpStatus.OK);
@@ -180,8 +180,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "나의 비공개된 룩북 조회"),
     })
     @GetMapping("/private")
-    public ResponseEntity<?> privateLookbook(@RequestParam("uid") String uid) {
-        List<FindLookbookDto> privateLookbooks = lookbookService.findPrivateLookbooks(uid);
+    public ResponseEntity<?> privateLookbook(@RequestParam("memberId") String memberId) {
+        List<FindLookbookDto> privateLookbooks = lookbookService.findPrivateLookbooks(memberId);
         if (privateLookbooks == null) {
             return new ResponseEntity<String>("비공개된 룩북을 조회하지 못했습니다.", HttpStatus.NOT_FOUND);
         }
@@ -194,9 +194,9 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "팔로잉 룩북 리스트를 반환"),
     })
     @GetMapping("/followings")
-    public ResponseEntity<?> followingLookbook(@RequestParam("uid") String uid) {
+    public ResponseEntity<?> followingLookbook(@RequestParam("memberId") String memberId) {
         List<FollowLookbookResponseDto> followingLookbooks = lookbookService.findFollowingLookbooks(
-            uid);
+            memberId);
         return ResponseEntity.ok().body(followingLookbooks);
     }
 
@@ -208,14 +208,9 @@ public class LookbookController {
     @GetMapping("/search")
     public ResponseEntity<?> searchLookbook(@ModelAttribute LookbookSearchDto lookbookSearchDto) {
         List<TagLookbookDto> findByTags = lookbookService.findByTag(lookbookSearchDto);
-        log.info("Return 후 컨트롤러");
-        for (TagLookbookDto findByTag : findByTags) {
-            log.info(findByTag.toString());
-        }
         if (findByTags == null) {
             return new ResponseEntity<String>("태그가 포함된 게시물을 찾지 못했습니다.", HttpStatus.NOT_FOUND);
         } else {
-            log.info("Controller Return Before");
             return ResponseEntity.ok().body(findByTags);
         }
     }
@@ -225,8 +220,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "해당 사용자의 룩북의 개수를 반환"),
     })
     @GetMapping("/count")
-    public ResponseEntity<?> countLookbook(@RequestParam("uid") String uid) {
-        int cntLookbook = lookbookService.countLookbook(uid);
+    public ResponseEntity<?> countLookbook(@RequestParam("memberId") String memberId) {
+        int cntLookbook = lookbookService.countLookbook(memberId);
         if (cntLookbook == -1) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 사용자의 룩북을 찾지 못했습니다.");
         }
@@ -238,8 +233,8 @@ public class LookbookController {
         @ApiResponse(responseCode = "200", description = "나의 룩북을 반환"),
     })
     @GetMapping("/mylookbook")
-    public ResponseEntity<?> myLookbook(@RequestParam("uid") String uid) {
-        List<LookbookMineDto> mineLookbooks = lookbookService.findMineLookbooks(uid);
+    public ResponseEntity<?> myLookbook(@RequestParam("memberId") String memberId) {
+        List<LookbookMineDto> mineLookbooks = lookbookService.findMineLookbooks(memberId);
         if (mineLookbooks == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자의 룩북을 찿지 못했습니다.");
         }

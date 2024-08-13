@@ -1,20 +1,21 @@
 package ssafy.c205.ott.domain.notification.controller;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationCreateDto;
-import ssafy.c205.ott.domain.notification.dto.requestdto.NotificationSelectDto;
-import ssafy.c205.ott.domain.notification.dto.responsedto.NotificationDto;
-import ssafy.c205.ott.domain.notification.service.NotificationService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import ssafy.c205.ott.common.ApiResponse;
+import ssafy.c205.ott.common.oauth.dto.CustomOAuth2User;
+import ssafy.c205.ott.domain.notification.dto.request.WebRtcNotificationDto;
+import ssafy.c205.ott.domain.notification.dto.request.WebRtcRequestDto;
+import ssafy.c205.ott.domain.notification.dto.response.DeleteNotificationSuccessDto;
+import ssafy.c205.ott.domain.notification.dto.response.NotificationResponseDto;
+import ssafy.c205.ott.domain.notification.dto.response.NotificationSuccessDto;
+import ssafy.c205.ott.domain.notification.entity.NotificationType;
+import ssafy.c205.ott.domain.notification.service.NotificationReadService;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,33 +23,34 @@ import ssafy.c205.ott.domain.notification.service.NotificationService;
 @RequestMapping("/api/notification")
 public class NotificationController {
 
-    private final NotificationService notificationService;
+    private final NotificationWriteService notificationWriteService;
+    private final NotificationReadService notificationReadService;
 
-    @PostMapping("/read/{notification_id}")
-    public ResponseEntity<?> readNotification(
-        @PathVariable("notification_id") String notificationId) {
-        notificationService.readNotification(notificationId);
-        return ResponseEntity.ok().body("알림 읽음처리를 완료했습니다.");
+    @GetMapping("/{memberId}")
+    public ApiResponse<List<NotificationResponseDto>> searchNotification(@PathVariable("memberId") Long memberId) {
+        return ApiResponse.success(notificationReadService.searchNotification(memberId));
     }
 
-    @DeleteMapping("/delete/{notification_id}")
-    public ResponseEntity<?> deleteNotification(
-        @PathVariable("notification_id") String notificationId) {
-        notificationService.deleteNotification(notificationId);
-        return ResponseEntity.ok().body("알림 삭제처리를 완료했습니다.");
+    @DeleteMapping("/{notificationId}")
+    public ApiResponse<DeleteNotificationSuccessDto> deleteNotification(@PathVariable("notificationId") Long notificationId) {
+        return ApiResponse.success(notificationWriteService.deleteNotification(notificationId));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createNotification(@ModelAttribute
-                                                NotificationCreateDto notificationCreateDto) {
-        notificationService.createCommentNotification(notificationCreateDto);
-        return ResponseEntity.ok().body("알림 생성을 완료했습니다.");
+    @PostMapping("/meeting")
+    public ApiResponse<NotificationSuccessDto> createWebRtcNotification(@RequestBody WebRtcRequestDto webRtcRequestDto, @AuthenticationPrincipal CustomOAuth2User currentMember) {
+
+        WebRtcNotificationDto webRtcNotificationDto = WebRtcNotificationDto.builder()
+                .sessionId(webRtcRequestDto.getSessionId())
+                .notificationType(NotificationType.RTC)
+                .memberId(webRtcRequestDto.getTargetMemberId())
+                .rtcRequestMemberSso(currentMember.getUsername())
+                .build();
+
+        return ApiResponse.success(notificationWriteService.createWebRtcNotification(webRtcNotificationDto));
     }
 
-    @GetMapping("/select")
-    public ResponseEntity<?> selectNotification(@ModelAttribute NotificationSelectDto notificationSelectDto) {
-        List<NotificationDto> notifications = notificationService.getNotifications(
-            notificationSelectDto);
-        return ResponseEntity.ok().body(notifications);
+    @GetMapping("/{memberId}/send")
+    public ApiResponse<NotificationResponseDto> sendNotification(@PathVariable Long memberId){
+        return ApiResponse.success(notificationReadService.sendNotification(memberId));
     }
 }

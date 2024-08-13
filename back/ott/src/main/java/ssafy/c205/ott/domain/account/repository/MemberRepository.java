@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
+import ssafy.c205.ott.domain.account.entity.BodyType;
 import ssafy.c205.ott.domain.account.entity.Member;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIdAndActiveStatus(Long id, ActiveStatus activeStatus);
     Boolean existsByNickname(String nickname);
     List<Member> findByActiveStatus(ActiveStatus activeStatus);
+    List<Member> findByBodyTypeAndActiveStatus(BodyType bodyType, ActiveStatus activeStatus);
 
     @Query("SELECT m FROM Member m WHERE m.nickname LIKE %:nickname% AND m.activeStatus = :activeStatus")
     Page<Member> findByNicknameContainingAndActiveStatus(@Param("nickname") String nickname, @Param("activeStatus") ActiveStatus activeStatus, Pageable pageable);
