@@ -143,13 +143,13 @@ const SearchPage = () => {
       const searchStyleResult = await searchStyleMethod(searchQuery, memberId);
       console.log('스타일 검색 결과 : ', searchStyleResult);
       // 검색어와 일치하는 스타일 데이터 필터링
-      const matchedResults = searchStyleResult.filter((item) =>
-        item.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
+      // const matchedResults = searchStyleResult.filter((item) =>
+      //   item.tags.some((tag) =>
+      //     tag.toLowerCase().includes(searchQuery.toLowerCase())
+      //   )
+      // );
 
-      setResults(matchedResults);
+      setResults(searchStyleResult);
     } else {
       const nickname = searchQuery;
       const offset = 1;
