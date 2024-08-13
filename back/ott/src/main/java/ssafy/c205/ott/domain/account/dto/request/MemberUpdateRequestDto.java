@@ -4,12 +4,9 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import ssafy.c205.ott.common.entity.MemberTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.BodyType;
 import ssafy.c205.ott.domain.account.entity.Gender;
-
-import java.util.List;
 
 @Builder
 @Getter
@@ -27,4 +24,5 @@ public class MemberUpdateRequestDto {
     private Gender gender;
     private BodyType bodyType;
     private PublicStatus publicStatus;
+    private boolean surveyCompleted;
 }
