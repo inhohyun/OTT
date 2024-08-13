@@ -188,7 +188,7 @@ const Lookbook = ({ data, onDelete, onClose }) => {
             <div className="w-[165px] h-[165px] mt-1">
               <img
                 className="w-full h-full object-cover"
-                src={data.img}
+                src={data.img || data.imageURL}
                 alt={data.name}
               />
             </div>
