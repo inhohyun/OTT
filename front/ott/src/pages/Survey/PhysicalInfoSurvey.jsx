@@ -11,9 +11,6 @@ export default function PhysicalInfoSurvey({
   const handleCardClick = (bodyType) => {
     setFormData({ ...formData, bodyType });
   };
-  const handleBlur = (e) => {
-    e.target.blur();
-  };
 
   return (
     <>
@@ -31,7 +28,6 @@ export default function PhysicalInfoSurvey({
               id="height"
               value={formData.height || ''}
               onChange={handleChange}
-              onBlur={handleBlur}
               required
               className="w-20 p-2 rounded-full border border-stone-300 box-border"
             />
@@ -48,7 +44,6 @@ export default function PhysicalInfoSurvey({
               id="weight"
               value={formData.weight || ''}
               onChange={handleChange}
-              onBlur={handleBlur}
               required
               className="w-20 p-2 rounded-full border border-stone-300 box-border"
             />

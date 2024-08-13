@@ -25,9 +25,7 @@ export default function StyleInfoSurvey({
   const handleTagRemove = (tag) => {
     setTags(tags.filter((t) => t !== tag));
   };
-  const handleBlur = (e) => {
-    e.target.blur();
-  };
+
   return (
     <>
       <h2 className="text-4xl mb-5 text-center text-gray-800 font-thin">
@@ -42,7 +40,6 @@ export default function StyleInfoSurvey({
             value={searchText}
             onChange={handleSearchChange}
             placeholder="검색할 스타일을 입력하세요"
-            onBlur={handleBlur}
             className="w-full p-2 rounded-full border border-violet-300 box-border focus:border-violet-400"
           />
         </div>
