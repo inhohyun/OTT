@@ -5,9 +5,10 @@ const NavBar = ({
   setActiveComponent,
   followerCount,
   followingCount,
+  postCount,
 }) => {
   // TODO : 게시글, 팔로워, 팔로잉 수를 서버에서 받아와야 함
-  const postNumber = 100;
+  const postNumber = postCount;
 
   return (
     <nav className="w-full text-center flex justify-around text-lg mt- font-dohyeon">

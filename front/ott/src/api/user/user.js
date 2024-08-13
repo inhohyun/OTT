@@ -93,3 +93,16 @@ export const addMemberTags = async (memberId, tags) => {
     throw error;
   }
 };
+
+// 사용자의 룩북 개수 조회
+export const getLookbookCount = async (memberId) => {
+  try {
+    const response = await axiosInstance.get(`api/lookbook/count`, {
+      params: { memberId: memberId },
+    });
+    console.log('룩북개수', response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
