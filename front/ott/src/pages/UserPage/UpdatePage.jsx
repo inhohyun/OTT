@@ -56,7 +56,7 @@ const UpdatePage = () => {
   };
 
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+    setIsChecked(isChecked);
   };
 
   const [searchText, setSearchText] = useState('');
