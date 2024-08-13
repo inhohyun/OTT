@@ -63,7 +63,7 @@ const UserPage = () => {
 
       // 팔로우,팔로워 업데이트
       setFollowerCount(userInfoResponse.data.followerCount);
-      setFollowingCount(userInfoResponse.data.followerCount);
+      setFollowingCount(userInfoResponse.data.followingCount);
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
