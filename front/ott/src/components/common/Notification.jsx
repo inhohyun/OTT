@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { followRequestAccept, followRequestReject } from '../../api/user/user';
 
 const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [visibleNotifications, setVisibleNotifications] = useState(4);
@@ -84,6 +85,34 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     return `${message} - ${additionalInfo}`;
   };
 
+  const handleAccept = async (followerId) => {
+    try {
+      await followRequestAccept(followerId);
+      setNotifications(
+        notifications.filter(
+          (notification) =>
+            notification.additionalData.followerId !== followerId
+        )
+      );
+    } catch (error) {
+      console.error('팔로우 요청 수락 중 에러 발생:', error);
+    }
+  };
+
+  const handleReject = async (followerId) => {
+    try {
+      await followRequestReject(followerId);
+      setNotifications(
+        notifications.filter(
+          (notification) =>
+            notification.additionalData.followerId !== followerId
+        )
+      );
+    } catch (error) {
+      console.error('팔로우 요청 거절 중 에러 발생:', error);
+    }
+  };
+
   if (!show) return null;
 
   return (
@@ -138,6 +167,27 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                 >
                   {formatDate(notification.createdAt)}
                 </p>
+                {notification.notificationType === 'FOLLOW' &&
+                  notification.additionalData.followStatus === 'WAIT' && (
+                    <div className="flex space-x-2 mt-2">
+                      <button
+                        className="bg-violet-400 text-white px-3 py-1 rounded"
+                        onClick={() =>
+                          handleAccept(notification.additionalData.followerId)
+                        }
+                      >
+                        Accept
+                      </button>
+                      <button
+                        className="bg-stone-500 text-white px-3 py-1 rounded"
+                        onClick={() =>
+                          handleReject(notification.additionalData.followerId)
+                        }
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
               </div>
             ))}
         </div>
