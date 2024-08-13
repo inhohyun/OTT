@@ -130,7 +130,17 @@ const CreateLookbook = () => {
           const clothesData = await Promise.all(
             response.map(async (item) => {
               try {
-                const imageResponse = await fetch(item.img[0]);
+                // S3에서 이미지를 가져오고 Blob으로 변환
+                const imageResponse = await fetch(item.img[0], {
+                  method: 'GET',
+                  mode: 'cors', // CORS 모드를 명시
+                  credentials: 'include', // 필요한 경우, 인증 정보 포함
+                });
+    
+                if (!imageResponse.ok) {
+                  throw new Error('Network response was not ok');
+                }
+    
                 const blob = await imageResponse.blob();
                 const url = URL.createObjectURL(blob);
     
@@ -156,6 +166,7 @@ const CreateLookbook = () => {
         console.error('옷 데이터 가져오기 실패:', error);
       }
     };
+    
     
 
     fetchClothes();
