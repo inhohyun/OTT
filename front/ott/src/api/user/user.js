@@ -75,6 +75,32 @@ export const unfollowUser = async (targetId) => {
   }
 };
 
+// 팔로우 요청 수락 api
+export const followRequestAccept = async (requestId) => {
+  try {
+    const response = await axiosInstance.post(
+      `api/members/follow/${requestId}/accept`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('팔로우 요청 수락 중 에러 발생:', error);
+    throw error;
+  }
+};
+
+// 팔로우 요청 거절 api
+export const followRequestReject = async (requestId) => {
+  try {
+    const response = await axiosInstance.post(
+      `api/members/follow/${requestId}/reject`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('팔로우 요청 거절 중 에러 발생:', error);
+    throw error;
+  }
+};
+
 // 유저 취향 태그 등록 api
 export const addMemberTags = async (memberId, tags) => {
   try {

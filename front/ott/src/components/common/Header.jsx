@@ -4,90 +4,37 @@ import iconImage from '/icon-rectangle.png';
 import closetImage from '../../assets/icons/closet_icon.png';
 import notificationImage from '../../assets/icons/notification_icon.png';
 import Notification from './Notification';
-import LatestNotificationModal from './LatestNotificationModal';
-import {
-  getNotificationsList,
-  getLatestNotification,
-} from '../../api/notification/notification';
+import { getNotificationsList } from '../../api/notification/notification';
 import useUserStore from '../../data/lookbook/userStore';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
-  const [showLatestModal, setShowLatestModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [latestNotification, setLatestNotification] = useState(null);
-  const [memberId, setMemberId] = useState(null);
-  const uid = useUserStore((state) => state.userId);
+  const memberId = useUserStore((state) => state.userId);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchMemberId = async () => {
-      try {
-        setMemberId(uid);
-      } catch (error) {
-        console.error('member Id 가져오는 중 에러 발생:', error);
-      }
-    };
-
-    fetchMemberId();
-  }, []);
-
-  useEffect(() => {
-    if (!memberId) return;
-
-    const intervalId = setInterval(async () => {
-      try {
-        const latestNotificationResponse =
-          await getLatestNotification(memberId);
-        if (latestNotificationResponse && latestNotificationResponse.data) {
-          const latestNotification = latestNotificationResponse.data[0];
-
-          const isNewNotification = !notifications.find(
-            (notification) =>
-              notification.notificationId === latestNotification.notificationId
-          );
-
-          if (isNewNotification) {
-            setNotifications((prevNotifications) => [
-              latestNotification,
-              ...prevNotifications,
-            ]);
-            setLatestNotification(latestNotification);
-            setShowLatestModal(true); // 최신 알림 모달 보이기
-          }
-        } else {
-          console.log('새로운 알림이 없습니다');
+    if (showModal && memberId) {
+      const fetchNotifications = async () => {
+        try {
+          const notificationsData = await getNotificationsList(memberId);
+          setNotifications(notificationsData);
+        } catch (error) {
+          console.error('알림 목록 가져오는 중 에러 발생', error);
         }
-      } catch (error) {
-        console.error('최신 알림 불러오는 중 오류 발생:', error);
-      }
-    }, 10000); // 10초마다
+      };
 
-    return () => clearInterval(intervalId);
-  }, [memberId, notifications]);
+      fetchNotifications();
+    }
+  }, [showModal, memberId]);
 
   const handleNotificationClick = async () => {
     setShowModal(true);
-
-    try {
-      if (memberId) {
-        const notificationsData = await getNotificationsList(memberId);
-        setNotifications(notificationsData);
-      }
-    } catch (error) {
-      console.error('알림 전체 목록 불러오는 중 오류 발생:', error);
-    }
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setLatestNotification(null);
-  };
-
-  const handleCloseLatestModal = () => {
-    setShowLatestModal(false);
-    setLatestNotification(null);
   };
 
   const handleClosetClick = () => {
@@ -127,11 +74,6 @@ const Header = () => {
         onClose={handleCloseModal}
         notifications={notifications}
         setNotifications={setNotifications}
-      />
-      <LatestNotificationModal
-        show={showLatestModal}
-        onClose={handleCloseLatestModal}
-        notification={latestNotification}
       />
     </>
   );
