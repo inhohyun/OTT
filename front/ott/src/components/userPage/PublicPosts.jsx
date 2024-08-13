@@ -8,7 +8,7 @@ import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import useUserStore from '../../data/lookbook/userStore';
 
-const PublicPosts = ({ isMe, currnetId }) => {
+const PublicPosts = ({ isMe, currentId }) => {
   const [lookbooks, setLookbooks] = useState([]);
   const { deleteLookbook, hideDetail } = useLookbookStore();
   const memberId = useUserStore((state) => state.userId);

@@ -79,19 +79,6 @@ const UserPage = () => {
     }
   }, []);
 
-  // const fetchLookbookCount = async (sendId) => {
-  //   try {
-  //     const response = await getLookbookCount(sendId);
-  //     setPostCount(response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-
-  //   useEffect(() => {
-  //     fetchLookbookCount(id);
-  //   }, [id]);
-  // };
-
   useEffect(() => {
     const fetchLookbookCount = async (sendId) => {
       try {
