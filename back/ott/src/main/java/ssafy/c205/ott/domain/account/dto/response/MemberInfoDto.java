@@ -34,4 +34,5 @@ public class MemberInfoDto {
     private int followingCount;
     private int followerCount;
     private FollowStatus followStatus;
+    private boolean surveyCompleted;
 }
