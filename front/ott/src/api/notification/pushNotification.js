@@ -4,6 +4,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import axios, { HttpStatusCode } from 'axios';
 import useUserStore from '../../data/lookbook/userStore';
+import axiosInstance from '../axiosInstance';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,7 +27,7 @@ const analytics = getAnalytics(app);
 const messaging = getMessaging(app);
 const baseUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL;
 
-export async function requestPermission() {
+export async function requestPermission(memberId) {
   console.log('권한 요청 중...');
 
   const permission = await Notification.requestPermission();
@@ -37,26 +38,27 @@ export async function requestPermission() {
 
   console.log('알림 권한이 허용됨');
 
-  const token = await getToken(messaging, {
-    vapidKey: import.meta.env.VITE_FCM_VAPID_KEY,
-  });
-  if (token) {
-    console.log('token: ', token);
-    const memberId = useUserStore((state) => state.userId);
+  try {
+    const token = await getToken(messaging, {
+      vapidKey: import.meta.env.VITE_FCM_VAPID_KEY,
+    });
 
-    axios
-      .post(baseUrl + 'api/push/device', { memberId: memberId, token: token })
-      .then((response) => {
-        if (response.status == HttpStatusCode.Ok) {
-          console.log('알림 등록 성공');
-        } else {
-          console.log('알림 등록 실패');
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else console.log('Can not get Token');
+    if (token) {
+      console.log('token: ', token);
+      console.log('API 요청을 보냅니다: ', memberId, token);
+      const response = await axiosInstance.post(baseUrl + 'api/push/device', { memberId: memberId, token: token });
+      
+      if (response.status === HttpStatusCode.Ok) {
+        console.log('알림 등록 성공');
+      } else {
+        console.log('알림 등록 실패');
+      }
+    } else {
+      console.log('토큰을 가져올 수 없습니다.');
+    }
+  } catch (error) {
+    console.error('알림 등록 중 오류 발생:', error);
+  }
 
   onMessage(messaging, (payload) => {
     console.log('메시지가 도착했습니다.', payload);

@@ -87,15 +87,18 @@ const MainPage = () => {
         const id = uidResponse.data.id;
         setUserId(id); // Set the userId in the Zustand store
         console.log('User ID:', id);
+        
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
 
     fetchUserData();
+  }, [setUserId]);
+
+  useEffect(() => {
     if (memberId) {
-      console.log(memberId);
-      requestPermission();
+      requestPermission(memberId).catch(error => console.error('Error in requestPermission:', error));
     }
   }, [memberId]);
 

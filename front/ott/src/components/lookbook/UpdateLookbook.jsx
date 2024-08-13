@@ -48,7 +48,7 @@ const clothesData = {
 };
 
 const UpdateLookbook = ({ lookbook, lookbookid }) => {
-  const [isPublic, setIsPublic] = useState(lookbook.isPublic !== 'PRIVATE');
+  const [isPublic, setIsPublic] = useState(lookbook.publicStatus !== 'PRIVATE');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState(lookbook.tags || []);
@@ -58,7 +58,6 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   const [closetId, setClosetId] = useState(null);
   const [clothes, setClothes] = useState([]);
   const [allClothes, setAllClothes] = useState([]);
-
   const categoryRef = useRef(null);
 
   const userId = useUserStore((state) => state.userId);
@@ -176,7 +175,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   useEffect(() => {
     if (lookbook) {
-      setIsPublic(lookbook.isPublic !== 'PRIVATE');
+      setIsPublic(lookbook.publicStatus !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
     }
@@ -199,7 +198,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
 
-          const selectedImages = canvasItems.map((item) => item.id);
+          const selectedImages = canvasItems.map((item) => item.clothesId);
           const formData = new FormData();
           // formData.append('memberId', 1);
           formData.append('memberId', userId);
@@ -213,7 +212,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
             const data = lookbookUpdate(formData, lookbookid.id);
             console.log('룩북 수정 성공', data);
             console.log('clothes', selectedImages);
-            nav(-1);
+            nav('/userPage', { state: { id: userId } });
           } catch (error) {
             console.error('Error:', error);
           } finally {
