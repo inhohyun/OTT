@@ -185,6 +185,15 @@ const LookbookDetail = ({
     }
   };
 
+  useEffect(() => {
+    // 초기 상태 설정: 모든 이미지의 clothesId에 대해 FRONT를 기본값으로 설정
+    const initialSides = {};
+    images.forEach((image) => {
+      initialSides[image.clothesId] = 'FRONT';
+    });
+    setCurrentSides(initialSides);
+  }, [images]);
+
   const handleDelete = async () => {
     try {
       await lookbookDelete(lookbookId);

@@ -212,7 +212,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
             const data = lookbookUpdate(formData, lookbookid.id);
             console.log('룩북 수정 성공', data);
             console.log('clothes', selectedImages);
-            nav(-1);
+            nav('/userPage', { state: { id: userId } });
           } catch (error) {
             console.error('Error:', error);
           } finally {

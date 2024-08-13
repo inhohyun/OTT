@@ -173,7 +173,7 @@ const CreateLookbook = () => {
             try {
               lookbookCreate(formData);
               console.log('룩북 저장 성공');
-              nav(-1);
+              nav('/userPage', { state: { id: userId } });
             } catch (error) {
               console.error(error);
             } finally {
