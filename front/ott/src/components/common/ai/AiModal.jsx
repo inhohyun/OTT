@@ -89,12 +89,9 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handleClothingClick = (clothing) => {
     console.log('사용자가 클릭한 ai 옷장 옷', clothing);
-    console.log(
-      '사용자가 클릭한 ai 옷장 옷에서 꺼낸 데이터',
-      clothing.data[0].img
-    );
-    setSelectedClothesURL(clothing.data[0].img);
-    setSelectedClothing(clothing);
+    //TODO : 아래의 함수를 완성하여 clothing의 img 주소를 상태로 저장하세요
+    const imageUrl = clothing.img[0]; // img 배열의 첫 번째 요소를 가져옴
+    setSelectedClothing(imageUrl); // 추출한 이미지 URL을 상태로 설정
   };
 
   const handleFilterChange = (option) => {
