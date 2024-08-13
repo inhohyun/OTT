@@ -88,9 +88,6 @@ const MainPage = () => {
         setUserId(id); // Set the userId in the Zustand store
         console.log('User ID:', id);
         
-        if (id) {
-          requestPermission().catch(error => console.error('Error in requestPermission:', error));
-        }
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -98,6 +95,12 @@ const MainPage = () => {
 
     fetchUserData();
   }, [setUserId]);
+
+  useEffect(() => {
+    if (memberId) {
+      requestPermission(memberId).catch(error => console.error('Error in requestPermission:', error));
+    }
+  }, [memberId]);
 
   return (
     <div
