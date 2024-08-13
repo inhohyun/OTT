@@ -99,6 +99,13 @@ const Recommend = () => {
     return <CustomSpinner />;
   }
 
+  if (
+    !Array.isArray(filteredLookbooks[category]) ||
+    filteredLookbooks[category].length === 0
+  ) {
+    return <CustomSpinner />;
+  }
+
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
       <style>{`
