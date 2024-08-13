@@ -30,11 +30,11 @@ const Recommend = () => {
   const fetchData = async () => {
     try {
       const heightWeightData = await heightWeight(memberId);
-      console.log(heightWeightData);
+      // console.log(heightWeightData);
       const bodyTypeData = await bodyType(memberId);
-      console.log(bodyTypeData);
+      // console.log(bodyTypeData);
       const styleData = await getTagRecommend(memberId);
-      console.log(styleData);
+      // console.log(styleData);
 
       setHeightWeightRecommend(heightWeightData);
       setBodyTypeRecommend(bodyTypeData);
@@ -49,7 +49,7 @@ const Recommend = () => {
     fetchData();
   }, [memberId]);
 
-  const initialLimit = 10;
+  const initialLimit = 100;
   const [visibleLookbooks, setVisibleLookbooks] = useState(
     categories.reduce(
       (acc, category) => ({ ...acc, [category]: initialLimit }),
@@ -99,12 +99,12 @@ const Recommend = () => {
     return <CustomSpinner />;
   }
 
-  if (
-    !Array.isArray(filteredLookbooks[category]) ||
-    filteredLookbooks[category].length === 0
-  ) {
-    return <CustomSpinner />;
-  }
+  // if (
+  //   !Array.isArray(filteredLookbooks[category]) ||
+  //   filteredLookbooks[category].length === 0
+  // ) {
+  //   return <CustomSpinner />;
+  // }
 
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
@@ -173,10 +173,7 @@ const Recommend = () => {
                     );
                   })
               ) : (
-                // <p className="ml-2 text-lg font-bold">
-                //   {category} 추천 리스트가 비어있음.
-                // </p>
-                <></>
+                <CustomSpinner />
               )}
               {visibleLookbooks[category] <
                 filteredLookbooks[category]?.length && (
