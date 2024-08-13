@@ -14,7 +14,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [moveX, setMoveX] = useState(null);
   const [isSwiping, setIsSwiping] = useState(false);
   const [swipedIndex, setSwipedIndex] = useState(null);
-  const [lookbookDetail, setLookbookDetail] = useState(null);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -66,34 +65,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
 
-  // const handleNotificationType = (notification) => {
-  //   const { notificationType, message, additionalData } = notification;
-  //   let additionalInfo = '';
-
-  //   switch (notificationType) {
-  //     case 'COMMENT':
-  //       additionalInfo = `룩북 ID: ${additionalData.lookbookId}, 댓글 ID: ${additionalData.commentId}, Author ID: ${additionalData.commentAuthorId}`;
-  //       break;
-
-  //     case 'FOLLOW':
-  //       additionalInfo = `팔로워 ID: ${additionalData.followerId}, 팔로우 행위 ID: ${additionalData.followId}, 팔로우 상태: ${additionalData.followStatus}`;
-  //       break;
-
-  //     case 'RTC':
-  //       additionalInfo = `화상 중고거래 상대방 ID: ${additionalData.rtcRequestMemberId}, 세션 ID: ${additionalData.sessionId}`;
-  //       break;
-
-  //     case 'AI':
-  //       additionalInfo = 'AI 알림';
-  //       break;
-
-  //     default:
-  //       additionalInfo = '기본';
-  //   }
-
-  //   return `${message} - ${additionalInfo}`;
-  // };
-
   const handleAccept = async (followerId) => {
     try {
       await followRequestAccept(followerId);
@@ -131,14 +102,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     navigate(`/video-chat`, { state: { sessionId, userName } });
     onClose();
   };
-
-  const openLookBookModal = (lookbookData) => {
-    setLookbookDetail(lookbookData);
-  }
-
-  // const closeLookbookModal = () => {
-  //   setLookbookDetail(null);
-  // }
 
   return (
     <div
@@ -220,7 +183,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                     index={index}
                     moveX={moveX}
                     startX={startX}
-                    openLookBookModal={openLookBookModal}
                   />
                 );
               case 'AI':
