@@ -37,7 +37,7 @@ const PublicPosts = ({ isMe, currentId }) => {
     };
 
     // 다른 사람일 경우 다른 사람 id로 가져오기
-    const sId = isMe ? memberId : currnetId;
+    const sId = isMe ? memberId : currentId;
     console.log('공개된 룩북에서 서버에 보낼 id', sId);
     getPublicLookbooks(sId);
   }, []);
