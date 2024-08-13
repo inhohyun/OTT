@@ -63,13 +63,12 @@ const UserPage = () => {
     } else {
       fetchUserData(id);
     }
-  }, [id]); // id가 변경될 때마다 호출되도록 의존성 배열에 추가
-
+  }, [id]);
   if (!userInfo) {
     return <div>Loading...</div>;
   }
 
-  const { nickname, name, tags } = userInfo;
+  const { nickname, name, tags, publicStatus } = userInfo;
 
   let renderComponent;
 
@@ -122,7 +121,9 @@ const UserPage = () => {
       console.error('ID is not available');
     }
   };
-
+  useEffect(() => {
+    setIsPublic(userInfo.publicStatus === 'PUBLIC');
+  }, [followStatus]);
   return (
     <div
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
