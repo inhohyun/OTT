@@ -149,6 +149,7 @@ const CreateLookbook = () => {
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');
       html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
+        console.log(canvas);
         canvas.toBlob((imageBlob) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
@@ -161,6 +162,7 @@ const CreateLookbook = () => {
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
           formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
+          console.log(imageBlob);
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           // formData.forEach((value, key) => {
