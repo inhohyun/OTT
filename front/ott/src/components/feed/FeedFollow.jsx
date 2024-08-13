@@ -287,6 +287,7 @@ const FeedFollow = () => {
                         cntComment: lookbook.cntComment,
                         cntFavorite: lookbook.cntFavorite,
                         createdAt: lookbook.createdAt,
+                        favorite: lookbook.favorite,
                         img: lookbook.imgThumbnail,
                         memberId: follower.memberId,
                         imgProfile: follower.imgProfile,
