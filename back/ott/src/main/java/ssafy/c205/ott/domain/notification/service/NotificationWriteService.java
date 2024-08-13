@@ -15,6 +15,7 @@ import ssafy.c205.ott.domain.notification.dto.request.AiNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.request.CommentNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.request.WebRtcNotificationDto;
+import ssafy.c205.ott.domain.notification.dto.requestdto.FCMPushNotificationDto;
 import ssafy.c205.ott.domain.notification.dto.response.DeleteNotificationSuccessDto;
 import ssafy.c205.ott.domain.notification.dto.response.NotificationSuccessDto;
 import ssafy.c205.ott.domain.notification.entity.Notification;
@@ -29,6 +30,7 @@ public class NotificationWriteService {
 
     private final NotificationRepository notificationRepository;
     private final MemberReadService memberReadService;
+    private final FCMService fcmService;
 
     public NotificationSuccessDto createCommentNotification(CommentNotificationDto commentNotificationDto) {
         Map<String, Object> additionalData = new HashMap<>();
@@ -42,6 +44,7 @@ public class NotificationWriteService {
                 commentNotificationDto.getMemberId(), additionalData);
 
         Notification notification = notificationRepository.save(commentNotification);
+        fcmService.pushNotification(buildPushNotification(notification));
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
@@ -52,11 +55,13 @@ public class NotificationWriteService {
         Map<String, Object> additionalData = new HashMap<>();
         additionalData.put("followerId", followNotificationDto.getFollowerId());
         additionalData.put("followId", followNotificationDto.getFollowId());
+        additionalData.put("followStatus", followNotificationDto.getFollowStatus());
 
         Notification followNotification = buildNotification(message, followNotificationDto.getNotificationType(),
                 followNotificationDto.getMemberId(), additionalData);
 
         Notification notification = notificationRepository.save(followNotification);
+        fcmService.pushNotification(buildPushNotification(notification));
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
@@ -70,6 +75,7 @@ public class NotificationWriteService {
         Notification webRtcNotification = buildNotification(memberInfo.getMemberName() + COMMENT.getMessage(), webRtcNotificationDto.getNotificationType(), webRtcNotificationDto.getMemberId(), additionalData);
 
         Notification notification = notificationRepository.save(webRtcNotification);
+        fcmService.pushNotification(buildPushNotification(notification));
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
@@ -77,6 +83,7 @@ public class NotificationWriteService {
         Notification aiNotification = buildNotification(AI_COMPLETE.getMessage(), NotificationType.AI, aiNotificationDto.getMemberId(), null);
 
         Notification notification = notificationRepository.save(aiNotification);
+        fcmService.pushNotification(buildPushNotification(notification));
         return NotificationSuccessDto.builder().notificationId(notification.getId()).build();
     }
 
@@ -92,6 +99,14 @@ public class NotificationWriteService {
                 .notificationStatus(NotificationStatus.UNREAD)
                 .memberId(memberId)
                 .additionalData(additionalData)
+                .build();
+    }
+
+    private FCMPushNotificationDto buildPushNotification(Notification notification) {
+        return FCMPushNotificationDto.builder()
+                .memberId(notification.getMemberId())
+                .title(notification.getNotificationType().name())
+                .body(notification.getMessage())
                 .build();
     }
 }
