@@ -48,8 +48,8 @@ public class MemberReadService {
         log.info("CurrentId" + memberRequestDto.getCurrentId());
         Member member = findActiveMemberById(memberRequestDto.getId());
         FollowStatus followStatus = determineFollowStatus(memberRequestDto, member);
-        int followingCount = member.getFollowings().size();
-        int followerCount = member.getFollowers().size();
+        int followingCount = followRepository.countByFromMemberId(member.getId());
+        int followerCount = followRepository.countByToMemberId(member.getId());
         List<String> tags = getTags(member);
 
         if (memberValidator.isCurrentUser(memberRequestDto)) {
