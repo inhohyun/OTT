@@ -67,7 +67,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
                 <div className="absolute top-2 left-2 flex items-center">
                   <FontAwesomeIcon
                     icon={faUserCircle}
-                    className="teㄷxt-gray-400 mr-2"
+                    className="text-gray-400 mr-2"
                     style={{ fontSize: '24px' }}
                   />
                   <p className="text-xs text-gray-500">{result.username}</p>
