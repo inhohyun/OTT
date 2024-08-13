@@ -630,6 +630,7 @@ public class LookbookServiceImpl implements LookbookService {
                 followingLooks.add(FollowLookbookDto
                     .builder()
                     .isFavorite(isFavorite)
+                    .lookbookId(lookbook.getId())
                     .cntFavorite(cntLikeLookbook(String.valueOf(lookbook.getId())))
                     .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
                     .imgThumbnail(lookbook.getLookbookImages().get(0).getImageUrl())
@@ -640,7 +641,7 @@ public class LookbookServiceImpl implements LookbookService {
                 .builder()
                 .introduction(member.getIntroduction())
                 .memberId(member.getId())
-                .nickname(member.getNickname())
+                .nickname(follow.getToMember().getNickname())
                 .imgProfile(member.getProfileImageUrl())
                 .followLookbookDtoList(followingLooks)
                 .build());
