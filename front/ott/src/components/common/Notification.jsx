@@ -59,28 +59,28 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const handleNotificationType = (notification) => {
     const { notificationType, message, additionalData } = notification;
     let additionalInfo = '';
-  
+
     switch (notificationType) {
       case 'COMMENT':
         additionalInfo = `룩북 ID: ${additionalData.lookbookId}, 댓글 ID: ${additionalData.commentId}, Author ID: ${additionalData.commentAuthorId}`;
         break;
-        
+
       case 'FOLLOW':
         additionalInfo = `팔로워 ID: ${additionalData.followerId}, 팔로우 행위 ID: ${additionalData.followId}`;
         break;
-        
+
       case 'RTC':
         additionalInfo = `화상 중고거래 상대방 ID: ${additionalData.rtcRequestMemberId}, 세션 ID: ${additionalData.sessionId}`;
         break;
-        
+
       case 'AI':
         additionalInfo = 'AI 알림';
         break;
-        
+
       default:
         additionalInfo = '기본';
     }
-  
+
     return `${message} - ${additionalInfo}`;
   };
 
@@ -127,7 +127,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                 }}
               >
                 <p className="text-base mb-4" style={{ fontSize: '14px' }}>
-                  {notification.message}
+                  {handleNotificationType(notification)}
                 </p>
                 <p className="text-xs mb-2 text-stone-500">
                   {notification.notificationType}
