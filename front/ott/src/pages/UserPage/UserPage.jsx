@@ -163,7 +163,7 @@ const UserPage = () => {
         <div className="w-full flex flex-col items-center justify-center mt-6">
           <div className="flex items-center justify-center w-full relative">
             <div className="flex items-center justify-center absolute left-0 right-0 mx-auto">
-              {isPublic && isMe && (
+              {!isPublic && isMe && (
                 <img src={lockIcon} alt="잠금표시" className="w-6 h-6 mr-2" />
               )}
               <p className="text-lg font-dohyeon text-[rgba(0,0,0,0.5)]">
