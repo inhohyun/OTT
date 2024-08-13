@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { followRequestAccept, followRequestReject } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
+import FollowNotification from './notificationtypes/FollowNotification'
+import CommentNotification from './notificationtypes/CommentNotification'
+import RTCNotification from './notificationtypes/RTCNotification'
+import AiNotification from './notificationtypes/AiNotification'
+
 
 const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [visibleNotifications, setVisibleNotifications] = useState(4);
@@ -10,6 +15,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [isSwiping, setIsSwiping] = useState(false);
   const [swipedIndex, setSwipedIndex] = useState(null);
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (!show) {
       setVisibleNotifications(4); // 알림 모달 꺼지면 보여주기 상태 초기화
@@ -57,34 +63,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-  };
-
-  const handleNotificationType = (notification) => {
-    const { notificationType, message, additionalData } = notification;
-    let additionalInfo = '';
-
-    switch (notificationType) {
-      case 'COMMENT':
-        additionalInfo = `룩북 ID: ${additionalData.lookbookId}, 댓글 ID: ${additionalData.commentId}, Author ID: ${additionalData.commentAuthorId}`;
-        break;
-
-      case 'FOLLOW':
-        additionalInfo = `팔로워 ID: ${additionalData.followerId}, 팔로우 행위 ID: ${additionalData.followId}, 팔로우 상태: ${additionalData.followStatus}`;
-        break;
-
-      case 'RTC':
-        additionalInfo = `화상 중고거래 상대방 ID: ${additionalData.rtcRequestMemberId}, 세션 ID: ${additionalData.sessionId}`;
-        break;
-
-      case 'AI':
-        additionalInfo = 'AI 알림';
-        break;
-
-      default:
-        additionalInfo = '기본';
-    }
-
-    return `${message} - ${additionalInfo}`;
   };
 
   const handleAccept = async (followerId) => {
@@ -146,7 +124,6 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
         </div>
         <div>
           <div className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative">
-            {/* <button type="button" onClick={() => joinSession(sessionId, userName)}>joinSession</button> */}
             <button
               type="button"
               onClick={() => joinSession('session-jjh', 'test')}
@@ -154,104 +131,80 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
               joinSession
             </button>
           </div>
-          {notifications
-            .slice(0, visibleNotifications)
-            .map((notification, index) => (
-              <div
-                key={index}
-                className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative"
-                // onTouchStart={(e) => handleTouchStart(index, e)}
-                // onTouchMove={handleTouchMove}
-                // onTouchEnd={handleTouchEnd}
-                style={{
-                  transform:
-                    swipedIndex === index && isSwiping
-                      ? `translateX(${moveX - startX}px)`
-                      : 'translateX(0)',
-                  transition:
-                    swipedIndex === index && isSwiping
-                      ? 'none'
-                      : 'transform 0.2s ease',
-                }}
-              >
-                {/* 상단: 알림 종류와 시간 */}
-                <div className="flex justify-between">
-                  <p className="text-xs text-stone-500">
-                    {notification.notificationType}
-                  </p>
-                  <p className="text-xs text-stone-500">
-                    {formatDate(notification.createdAt)}
-                  </p>
-                </div>
 
-                {/* 중단: 메시지 */}
-                <div
-                  className="text-center my-4"
-                  onTouchStart={(e) => handleTouchStart(index, e)}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                  style={{
-                    transform:
-                      swipedIndex === index && isSwiping
-                        ? `translateX(${moveX - startX}px)`
-                        : 'translateX(0)',
-                    transition:
-                      swipedIndex === index && isSwiping
-                        ? 'none'
-                        : 'transform 0.2s ease',
-                  }}
-                >
-                  <p className="text-base" style={{ fontSize: '14px' }}>
-                    {handleNotificationType(notification)}
-                  </p>
-                </div>
-
-                {/* 하단: 동작 버튼 중앙에 */}
-                {notification.notificationType === 'FOLLOW' &&
-                  notification.additionalData.followStatus === 'WAIT' && (
-                    <div className="flex justify-center space-x-2 mt-2">
-                      <button
-                        className="bg-violet-400 text-white px-3 py-1 rounded"
-                        onClick={() =>
-                          handleAccept(notification.additionalData.followerId)
-                        }
-                      >
-                        수락
-                      </button>
-                      <button
-                        className="bg-stone-500 text-white px-3 py-1 rounded"
-                        onClick={() =>
-                          handleReject(notification.additionalData.followerId)
-                        }
-                      >
-                        거절
-                      </button>
-                    </div>
-                  )}
-
-                {notification.notificationType === 'RTC' && (
-                  <div className="flex justify-center space-x-2 mt-2">
-                    <button
-                      className="bg-violet-400 text-white px-3 py-1 rounded"
-                      onClick={() =>
-                        // handleAccept(notification.additionalData.followerId)
-                        joinSession(notification.additionalData.sessionId)
-                      }
-                    >
-                      수락
-                    </button>
-                    <button
-                      className="bg-stone-500 text-white px-3 py-1 rounded"
-                      onClick={() =>
-                        handleReject(notification.additionalData.followerId)
-                      }
-                    >
-                      거절
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
+          {notifications.slice(0, visibleNotifications).map((notification, index) => {
+            switch (notification.notificationType) {
+              case 'FOLLOW':
+                return (
+                  <FollowNotification
+                    key={index}
+                    notification={notification}
+                    handleAccept={handleAccept}
+                    handleReject={handleReject}
+                    formatDate={formatDate}
+                    handleTouchStart={handleTouchStart}
+                    handleTouchMove={handleTouchMove}
+                    handleTouchEnd={handleTouchEnd}
+                    isSwiping={isSwiping}
+                    swipedIndex={swipedIndex}
+                    index={index}
+                    moveX={moveX}
+                    startX={startX}
+                  />
+                );
+              case 'RTC':
+                return (
+                  <RTCNotification
+                    key={index}
+                    notification={notification}
+                    joinSession={joinSession}
+                    formatDate={formatDate}
+                    handleTouchStart={handleTouchStart}
+                    handleTouchMove={handleTouchMove}
+                    handleTouchEnd={handleTouchEnd}
+                    isSwiping={isSwiping}
+                    swipedIndex={swipedIndex}
+                    index={index}
+                    moveX={moveX}
+                    startX={startX}
+                  />
+                );
+              case 'COMMENT':
+                return (
+                  <CommentNotification
+                    key={index}
+                    notification={notification}
+                    formatDate={formatDate}
+                    handleTouchStart={handleTouchStart}
+                    handleTouchMove={handleTouchMove}
+                    handleTouchEnd={handleTouchEnd}
+                    isSwiping={isSwiping}
+                    swipedIndex={swipedIndex}
+                    index={index}
+                    moveX={moveX}
+                    startX={startX}
+                  />
+                );
+              case 'AI':
+                return (
+                  <AiNotification
+                    key={index}
+                    notification={notification}
+                    formatDate={formatDate}
+                    handleTouchStart={handleTouchStart}
+                    handleTouchMove={handleTouchMove}
+                    handleTouchEnd={handleTouchEnd}
+                    isSwiping={isSwiping}
+                    swipedIndex={swipedIndex}
+                    index={index}
+                    moveX={moveX}
+                    startX={startX}
+                  />
+                );
+              default:
+                return <div key={index}>알림이 없습니다.</div>;
+            }
+          })}
         </div>
         {visibleNotifications < notifications.length && (
           <p
