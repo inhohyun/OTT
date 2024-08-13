@@ -44,7 +44,6 @@ const UserPage = () => {
 
       // isMe와 isPublic 상태 업데이트
       setIsMe(userInfoResponse.data.followStatus === 'SELF');
-      setIsPublic(userInfoResponse.data.publicStatus === 'PUBLIC');
 
       // 팔로우 상태 업데이트
       switch (userInfoResponse.data.followStatus) {
@@ -61,13 +60,13 @@ const UserPage = () => {
           setFollowStatus('팔로우');
           break;
       }
+
+      // 팔로우,팔로워 업데이트
+      setFollowerCount(userInfoResponse.data.followerCount);
+      setFollowingCount(userInfoResponse.data.followerCount);
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
-
-    // 팔로우,팔로워 업데이트
-    setFollowerCount(userInfoResponse.data.followerCount);
-    setFollowingCount(userInfoResponse.data.followerCount);
   };
 
   useEffect(() => {
