@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faImage } from '@fortawesome/free-solid-svg-icons';
-
+import Lookbook from '../../components/lookbook/Lookbook';
 const StyleSearchResult = ({ results, searchQuery }) => {
   const [visibleResults, setVisibleResults] = useState(6);
   const [filteredResults, setFilteredResults] = useState([]);
@@ -96,43 +96,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {filteredResults.slice(0, visibleResults).map((result, index) => (
-            <div
-              key={index}
-              className="flex-none w-56 p-2 rounded-lg relative flex flex-col items-center"
-              style={{ minWidth: '180px', height: '250px' }}
-            >
-              <div className="bg-stone-200 p-4 rounded-lg shadow-md w-full h-full relative">
-                <div className="absolute top-2 left-2 flex items-center">
-                  <FontAwesomeIcon
-                    icon={faUserCircle}
-                    className="text-gray-400 mr-2"
-                    style={{ fontSize: '24px' }}
-                  />
-                  <p className="text-xs text-gray-500">{result.username}</p>
-                </div>
-                <div className="flex flex-col items-center mt-4 mb-4">
-                  <FontAwesomeIcon
-                    icon={faImage}
-                    className="text-gray-400 mb-2"
-                    style={{ fontSize: '135px' }}
-                  />
-                  <h3
-                    className="text-base font-semibold"
-                    style={{ fontSize: '14px' }}
-                  >
-                    {result.tags.map((tag) => `#${tag}`).join(' ')}
-                  </h3>
-                </div>
-                <div className="absolute bottom-2 right-2 flex w-full justify-end">
-                  <span className="text-xs text-gray-500 ml-2">
-                    ❤️ {formatNumber(result.likes)}
-                  </span>
-                  <span className="text-xs text-gray-500 ml-2">
-                    💬 {formatNumber(result.comments)}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <Lookbook key={index} data={result} />
           ))}
         </div>
       </div>
