@@ -8,7 +8,7 @@ import useLookbookStore from '../../data/lookbook/detailStore';
 import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import useUserStore from '../../data/lookbook/userStore';
 
-const PublicPosts = () => {
+const PublicPosts = ({ isMe, currnetId }) => {
   const [lookbooks, setLookbooks] = useState([]);
   const { deleteLookbook, hideDetail } = useLookbookStore();
   const memberId = useUserStore((state) => state.userId);
@@ -24,17 +24,21 @@ const PublicPosts = () => {
   //     (_, i) => ({ id: i, text: 'Comment' })
   //   ),
   // }));
+
   useEffect(() => {
-    const getPublicLookbooks = async () => {
+    const getPublicLookbooks = async (sendId) => {
       try {
-        const response = await getPublicLookbookList(memberId);
+        const response = await getPublicLookbookList(sendId);
         console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
         setLookbooks(response);
       } catch (error) {
         console.error('Failed to get public lookbooks:', error);
       }
     };
-    getPublicLookbooks();
+
+    // 다른 사람일 경우 다른 사람 id로 가져오기
+    const sId = isMe ? memberId : currnetId;
+    getPublicLookbooks(sId);
   }, []);
   const containerRef = useRef(null);
 

@@ -99,7 +99,9 @@ const UserPage = () => {
 
   switch (activeComponent) {
     case 'posts':
-      renderComponent = <Posts isMe={isMe} isPublic={isPublic} />;
+      renderComponent = (
+        <Posts isMe={isMe} isPublic={isPublic} currentId={id} />
+      );
       break;
     case 'followers':
       renderComponent = <Followers uid={memberId} />;

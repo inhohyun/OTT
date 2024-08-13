@@ -8,7 +8,7 @@ import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
 import React from 'react';
 import useUserStore from '../../data/lookbook/userStore';
 
-const PrivatePosts = () => {
+const PrivatePosts = ({ isMe }) => {
   const [lookbooks, setLookbooks] = useState([]);
   const { deleteLookbook, hideDetail } = useLookbookStore();
   const memberId = useUserStore((state) => state.userId);
@@ -62,7 +62,14 @@ const PrivatePosts = () => {
     console.log('[*]모달 닫기');
     hideDetail();
   };
-
+  if (!isMe) {
+    return (
+      <div className="w-full h-full flex flex-col justify-center items-center">
+        <img src={lockIcon} alt="Lock Icon" className="w-24 h-24 mb-4" />
+        <p className="text-gray-500 text-xl">비공개 계정입니다.</p>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col items-center w-full space-y-5">
       <style>{`
