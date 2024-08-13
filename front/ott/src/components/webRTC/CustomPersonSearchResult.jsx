@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUserInfo, getUid } from '../../api/user/user';
 import axios from 'axios';
 import { inviteMeeting } from '../../api/notification/notification';
+import useUserStore from '../../data/lookbook/userStore';
 
 const CustomPersonSearchResult = ({
   // 검색 결과 데이터 배열
@@ -15,6 +16,7 @@ const CustomPersonSearchResult = ({
   const [visibleResults, setVisibleResults] = useState(4); // 한 번에 결과 4개 표시
   const [filteredResults, setFilteredResults] = useState([]); // 필터링된 결과 저장
   const navigate = useNavigate(); // 페이지 이동
+  const memberId = useUserStore((state) => state.userId);
 
   useEffect(() => {
     if (!searchQuery) {
@@ -35,14 +37,13 @@ const CustomPersonSearchResult = ({
     // const memberId = (await getUid()).data.id;
     // if (!memberId) console.log("호스트 회원 아이디 조회 실패");
 
-    // const userName = (await getUserInfo()).data.nickname;
-    const userName = 'jjh';
+    const userName = (await getUserInfo(memberId)).data.nickname;
     // if (!userName) console.log("호스트 회원 이름 조회 실패");
-    
-    // const sessionId = `session-${nickname}`;
-    const sessionId = 'session-jjh';
 
-    inviteMeeting({invitedMemberId, sessionId});
+    const sessionId = `session-${nickname}`;
+    // const sessionId = 'session-jjh';
+
+    await inviteMeeting({ invitedMemberId, sessionId });
     // 사용자를 비디오 채팅 페이지로 이동시키면서 세션 ID와 토큰을 전달
     navigate(`/video-chat`, { state: { sessionId, userName } });
   };

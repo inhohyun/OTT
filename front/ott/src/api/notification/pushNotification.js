@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import axios, { HttpStatusCode } from 'axios';
+import useUserStore from '../../data/lookbook/userStore';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -18,6 +19,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FCM_APP_ID,
   measurementId: import.meta.env.VITE_FCM_MEASUREMENT_ID,
 };
+
+const memberId = useUserStore((state) => state.userId);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -41,8 +44,9 @@ async function requestPermission() {
   });
   if (token) {
     console.log('token: ', token);
+
     axios
-      .post(baseUrl + 'api/push/device', { memberId: 1, token: token })
+      .post(baseUrl + 'api/push/device', { memberId: memberId, token: token })
       .then((response) => {
         if (response.status == HttpStatusCode.Ok) {
           console.log('알림 등록 성공');
