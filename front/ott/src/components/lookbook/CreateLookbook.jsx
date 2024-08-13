@@ -134,7 +134,6 @@ const CreateLookbook = () => {
                 const imageResponse = await fetch(item.img[0], {
                   method: 'GET',
                   mode: 'cors', // CORS 모드를 명시
-                  credentials: 'include', // 필요한 경우, 인증 정보 포함
                 });
     
                 if (!imageResponse.ok) {
