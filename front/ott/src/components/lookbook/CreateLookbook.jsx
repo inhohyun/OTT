@@ -101,26 +101,62 @@ const CreateLookbook = () => {
     //   return;
     // }
 
+    // const fetchClothes = async () => {
+    //   // const closetid = 1;
+    //   const closetid = closetId;
+    //   try {
+    //     const response = await getClothes(userId, selectedCategory, closetid);
+    //     // const response = await getClothes(1, selectedCategory, closetid);
+    //     if (Array.isArray(response)) {
+    //       const clothesData = response.map((item) => ({
+    //         id: item.clothId,
+    //         image: item.img[0],
+    //       }));
+    //       // console.log(clothesData);
+    //       setClothes(clothesData);
+    //     } else {
+    //       console.log('응답 데이터가 배열이 아닙니다:', response.data);
+    //     }
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+
     const fetchClothes = async () => {
-      // const closetid = 1;
-      const closetid = closetId;
+      const closetid = closetId; // closetId 변수 사용
       try {
         const response = await getClothes(userId, selectedCategory, closetid);
-        // const response = await getClothes(1, selectedCategory, closetid);
         if (Array.isArray(response)) {
-          const clothesData = response.map((item) => ({
-            id: item.clothId,
-            image: item.img[0],
-          }));
-          // console.log(clothesData);
+          const clothesData = await Promise.all(
+            response.map(async (item) => {
+              try {
+                const imageResponse = await fetch(item.img[0]);
+                const blob = await imageResponse.blob();
+                const url = URL.createObjectURL(blob);
+    
+                return {
+                  id: item.clothId,
+                  image: url,
+                };
+              } catch (imageError) {
+                console.error('이미지 가져오기 실패:', imageError);
+                return {
+                  id: item.clothId,
+                  image: null, // 이미지 로드 실패 시 null을 설정
+                };
+              }
+            })
+          );
+    
           setClothes(clothesData);
         } else {
           console.log('응답 데이터가 배열이 아닙니다:', response.data);
         }
       } catch (error) {
-        console.error(error);
+        console.error('옷 데이터 가져오기 실패:', error);
       }
     };
+    
 
     fetchClothes();
   }, [selectedCategory, userId, allClothes]);
