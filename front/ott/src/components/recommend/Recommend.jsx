@@ -30,8 +30,11 @@ const Recommend = () => {
   const fetchData = async () => {
     try {
       const heightWeightData = await heightWeight(memberId);
+      console.log(heightWeightData);
       const bodyTypeData = await bodyType(memberId);
+      console.log(bodyTypeData);
       const styleData = await getTagRecommend(memberId);
+      console.log(styleData);
 
       setHeightWeightRecommend(heightWeightData);
       setBodyTypeRecommend(bodyTypeData);
@@ -147,7 +150,8 @@ const Recommend = () => {
               ref={scrollRefs[category]}
               className="flex overflow-x-auto py-3 scrollbar-hide"
             >
-              {filteredLookbooks[category]?.length > 0 ? (
+              {Array.isArray(filteredLookbooks[category]) &&
+              filteredLookbooks[category]?.length > 0 ? (
                 filteredLookbooks[category]
                   .slice(0, visibleLookbooks[category])
                   .map((lookbook) => {
