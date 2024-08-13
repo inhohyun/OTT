@@ -7,7 +7,7 @@ import FeedNoFollow from '../../components/feed/FeedNoFollow.jsx';
 import { getUid } from '../../api/user/user.js';
 import useUserStore from '../../data/lookbook/userStore.js';
 import { getFollowingCount } from '../../api/user/user.js';
-import './api/notification/pushNotification.js';
+import '@/api/notification/pushNotification.js';
 
 const NavBar = ({ activeComponent, setActiveComponent }) => {
   return (
