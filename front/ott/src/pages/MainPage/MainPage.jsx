@@ -94,6 +94,7 @@ const MainPage = () => {
 
     fetchUserData();
     if (memberId) {
+      console.log(memberId);
       requestPermission();
     }
   }, [memberId]);

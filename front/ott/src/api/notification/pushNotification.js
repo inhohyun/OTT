@@ -20,8 +20,6 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FCM_MEASUREMENT_ID,
 };
 
-const memberId = useUserStore((state) => state.userId);
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -44,6 +42,7 @@ export async function requestPermission() {
   });
   if (token) {
     console.log('token: ', token);
+    const memberId = useUserStore((state) => state.userId);
 
     axios
       .post(baseUrl + 'api/push/device', { memberId: memberId, token: token })
