@@ -27,7 +27,7 @@ const SearchPage = () => {
   const searchStyleMethod = async (tags, memberId) => {
     try {
       const response = await searchStyle(tags, memberId);
-      return response;
+      return response.data;
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
