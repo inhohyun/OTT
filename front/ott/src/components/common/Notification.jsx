@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { followRequestAccept, followRequestReject } from '../../api/user/user';
+import { followRequestAccept, followRequestReject, getUserInfo } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
 import FollowNotification from './notificationtypes/FollowNotification';
 import CommentNotification from './notificationtypes/CommentNotification';
