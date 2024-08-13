@@ -148,7 +148,7 @@ const CreateLookbook = () => {
     setShowDeleteButton(false);
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');
-      html2canvas(canvasArea, { useCORS: true, allowTaint: true }).then(
+      html2canvas(canvasArea, { useCORS: true, allowTaint: true, logging: true }).then(
         (canvas) => {
           console.log(canvas);
           canvas.toBlob((imageBlob) => {
