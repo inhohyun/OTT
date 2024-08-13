@@ -66,7 +66,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
         break;
 
       case 'FOLLOW':
-        additionalInfo = `팔로워 ID: ${additionalData.followerId}, 팔로우 행위 ID: ${additionalData.followId}`;
+        additionalInfo = `팔로워 ID: ${additionalData.followerId}, 팔로우 행위 ID: ${additionalData.followId}, 팔로우 상태: ${additionalData.followStatus}`;
         break;
 
       case 'RTC':

@@ -14,24 +14,20 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  useEffect(
-    () => {
-      if (showModal && memberId) {
-        const fetchNotifications = async () => {
-          try {
-            const notificationsData = await getNotificationsList(memberId);
-            setNotifications(notificationsData);
-          } catch (error) {
-            console.error('알림 목록 가져오는 중 에러 발생', error);
-          }
-        };
+  useEffect(() => {
+    if (showModal && memberId) {
+      const fetchNotifications = async () => {
+        try {
+          const notificationsData = await getNotificationsList(memberId);
+          setNotifications(notificationsData);
+        } catch (error) {
+          console.error('알림 목록 가져오는 중 에러 발생', error);
+        }
+      };
 
-        fetchNotifications();
-      }
-    },
-    showModal,
-    memberId
-  );
+      fetchNotifications();
+    }
+  }, [showModal, memberId]);
 
   const handleNotificationClick = async () => {
     setShowModal(true);
