@@ -4,6 +4,7 @@ import { faUserCircle, faImage } from '@fortawesome/free-solid-svg-icons';
 
 const StyleSearchResult = ({ results, searchQuery }) => {
   const [visibleResults, setVisibleResults] = useState(6);
+  const [filteredResults, setFilteredResults] = useState([]);
   const containerRef = useRef(null);
 
   const handleScroll = () => {
@@ -28,6 +29,43 @@ const StyleSearchResult = ({ results, searchQuery }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredResults([]);
+      return;
+    }
+
+    // 검색 쿼리에 따른 검색 결과 나열
+    //FIXME - 필터링 로직 우선 주석처리
+    // const filtered = results
+    //   .filter(
+    //     (result) =>
+    //       result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //       result.description.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    //   .sort((a, b) => {
+    //     const aTitleIndex = a.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const aDescIndex = a.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bTitleIndex = b.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bDescIndex = b.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+
+    //     const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
+    //     const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
+
+    //     return aIndex - bIndex;
+    //   });
+    console.log('results:', results);
+    setFilteredResults(results);
+  }, [results, searchQuery]);
+
   // 숫자 포맷하는 함수 정의
   const formatNumber = (num) => {
     if (num >= 1000) {
@@ -36,7 +74,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
     return num;
   };
 
-  if (!results.length) {
+  if (!filteredResults.length) {
     return <p className="text-gray-500 text-center">검색 결과가 없습니다.</p>;
   }
 
@@ -57,7 +95,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
           className="grid grid-flow-col auto-cols-max grid-rows-2 gap-4"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          {results.slice(0, visibleResults).map((result, index) => (
+          {filteredResults.slice(0, visibleResults).map((result, index) => (
             <div
               key={index}
               className="flex-none w-56 p-2 rounded-lg relative flex flex-col items-center"
