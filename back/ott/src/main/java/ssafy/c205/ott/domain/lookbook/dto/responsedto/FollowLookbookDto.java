@@ -15,15 +15,16 @@ public class FollowLookbookDto {
     private String imgThumbnail;
     private int cntFavorite;
     private int cntComment;
+    private boolean isFavorite;
 
     @Builder
-    public FollowLookbookDto(LocalDateTime createdAt, String imgThumbnail,
-        int cntFavorite,
-        int cntComment) {
+    public FollowLookbookDto(LocalDateTime createdAt, String imgThumbnail, int cntFavorite,
+        int cntComment, boolean isFavorite) {
         this.createdAt = createdAt;
         this.imgThumbnail = imgThumbnail;
         this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
+        this.isFavorite = isFavorite;
     }
 
     public FollowLookbookDto() {
