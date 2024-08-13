@@ -11,7 +11,7 @@ import EmptyLookbook from './EmptyLookbook';
 import CustomSpinner from '../common/CustomSpinner';
 
 const MyLookbook = () => {
-  const initialLimit = 10;
+  const initialLimit = 100;
   const { lookbooks, setLookbooks, deleteLookbook, hideDetail } =
     useLookbookStore();
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
