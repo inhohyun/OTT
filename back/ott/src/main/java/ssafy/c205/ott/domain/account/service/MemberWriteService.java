@@ -1,5 +1,6 @@
 package ssafy.c205.ott.domain.account.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,14 @@ import ssafy.c205.ott.domain.account.exception.MemberNotFoundException;
 import ssafy.c205.ott.domain.account.repository.FollowRepository;
 import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import static ssafy.c205.ott.domain.account.util.FollowMessage.*;
+
+import ssafy.c205.ott.domain.category.dto.CategoryRequestDto;
+import ssafy.c205.ott.domain.category.service.CategoryService;
+import ssafy.c205.ott.domain.closet.entity.Closet;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
+import ssafy.c205.ott.domain.notification.dto.request.FollowNotificationDto;
+import ssafy.c205.ott.domain.notification.entity.NotificationType;
+import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +34,8 @@ public class MemberWriteService {
     private final FollowRepository followRepository;
     private final MemberValidator memberValidator;
     private final ClosetService closetService;
+    private final CategoryService categoryService;
+    private final NotificationWriteService notificationWriteService;
     private final AmazonS3Util amazonS3Util;
 
     public RegisterMemberSuccessDto registerMember(MemberRegisterRequestDto memberRegisterRequestDto) {
@@ -36,8 +46,7 @@ public class MemberWriteService {
                 .role(memberRegisterRequestDto.getRole())
                 .build();
 
-        memberRepository.save(member);
-        closetService.createClosetForMember(member);
+        initializeMemberClosetWithDefaultCategories(memberRepository.save(member));
         return new RegisterMemberSuccessDto(member.getId());
     }
 
@@ -45,7 +54,7 @@ public class MemberWriteService {
         memberValidator.validateSelfRequest(MemberRequestDto.builder().id(memberUpdateRequestDto.getMemberId()).currentId(id).build());
         Member member = findMemberById(memberUpdateRequestDto.getMemberId());
         member.updateMember(memberUpdateRequestDto.getNickname(), memberUpdateRequestDto.getPhoneNumber(), memberUpdateRequestDto.getIntroduction(), memberUpdateRequestDto.getHeight()
-                , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus(), memberUpdateRequestDto.getMemberTags());
+                , memberUpdateRequestDto.getWeight(), memberUpdateRequestDto.getGender(), memberUpdateRequestDto.getBodyType(), memberUpdateRequestDto.getPublicStatus());
         return new UpdateMemberSuccessDto(member.getId());
     }
 
@@ -83,17 +92,26 @@ public class MemberWriteService {
     }
 
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
-        Follow follow = createFollow(targetMember, requestMember, FollowStatus.FOLLOWING);
-        followRepository.save(follow);
-
-        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
+        Follow follow = followRepository.save(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING));
+        createNotification(targetMember, requestMember, follow);
+        return createFollowResponseDto(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING).getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePrivateFollow(Member targetMember, Member requestMember) {
-        Follow follow = createFollow(targetMember, requestMember, FollowStatus.WAIT);
-        followRepository.save(follow);
+        Follow follow = followRepository.save(createFollow(targetMember, requestMember, FollowStatus.WAIT));
+        createNotification(targetMember, requestMember, follow);
+        return createFollowResponseDto(createFollow(targetMember, requestMember, FollowStatus.WAIT).getFollowStatus(), 0, FOLLOW_REQUEST_MESSAGE.getMessage());
+    }
 
-        return createFollowResponseDto(follow.getFollowStatus(), 0, FOLLOW_REQUEST_MESSAGE.getMessage());
+    private void createNotification(Member targetMember, Member requestMember, Follow follow){
+        notificationWriteService.createFollowNotification(FollowNotificationDto.builder()
+                .notificationType(NotificationType.FOLLOW)
+                .memberId(targetMember.getId())
+                .followerId(requestMember.getId())
+                .followId(follow.getId())
+                .followerName(requestMember.getName())
+                .followStatus(follow.getFollowStatus())
+                .build());
     }
 
     private FollowResponseDto createFollowResponseDto(FollowStatus followStatus, int followerCount, String message) {
@@ -143,6 +161,20 @@ public class MemberWriteService {
         member.updateProfileImage(profileImageUrl);
 
         return new ProfileImageSuccessDto();
+    }
+
+    private void initializeMemberClosetWithDefaultCategories(Member member) {
+        Closet closet = closetService.createClosetForMember(member);
+
+        // 기본 카테고리 등록
+        List<String> defaultCategories = List.of("상의", "하의");
+
+        defaultCategories.stream()
+                .map(categoryName -> CategoryRequestDto.builder()
+                        .closetId(closet.getId())
+                        .name(categoryName)
+                        .build())
+                .forEach(categoryService::registerCategory);
     }
 
 }

@@ -22,22 +22,22 @@ public class TagLookbookDto {
 
     private Long lookbookId;
     private String nickname;
-    private int cntLike;
+    private int cntFavorite;
     private int cntComment;
     private LocalDateTime createdAt;
     private String img;
-    private boolean isLike;
+    private boolean isFavorite;
 
     @Builder
-    public TagLookbookDto(Long lookbookId, String nickname, int cntLike, int cntComment,
-        LocalDateTime createdAt, String img, boolean isLike) {
+    public TagLookbookDto(Long lookbookId, String nickname, int cntFavorite, int cntComment,
+        LocalDateTime createdAt, String img, boolean isFavorite) {
         this.lookbookId = lookbookId;
         this.nickname = nickname;
-        this.cntLike = cntLike;
+        this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
         this.createdAt = createdAt;
         this.img = img;
-        this.isLike = isLike;
+        this.isFavorite = isFavorite;
     }
 
     public TagLookbookDto() {
