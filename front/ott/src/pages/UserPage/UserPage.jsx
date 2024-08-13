@@ -34,7 +34,7 @@ const UserPage = () => {
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
-  const { id } = location.state || {}; // id 꺼내기, 기본값을 memberId로 설정
+  const { id } = location.state; // id 꺼내기
 
   const fetchUserData = async (sendId) => {
     try {
@@ -72,7 +72,6 @@ const UserPage = () => {
   useEffect(() => {
     console.log('서버에 보내기 전 id : ', id);
     if (id === undefined || id === null) {
-      id = memberId;
       console.log('본인 memberId로 정보 가져오기', memberId);
       fetchUserData(memberId);
     } else {
@@ -94,7 +93,7 @@ const UserPage = () => {
       fetchLookbookCount(id);
     }, [id]);
   };
-  if (!userInfo || id === undefined) {
+  if (!userInfo) {
     return <div>Loading...</div>;
   }
 
