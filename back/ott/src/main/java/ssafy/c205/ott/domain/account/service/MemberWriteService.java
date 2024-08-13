@@ -91,13 +91,13 @@ public class MemberWriteService {
         memberValidator.validateUnfollow(followRequestDto);
         followRepository.deleteByToMemberAndFromMember(targetMember, requestMember);
 
-        return createFollowResponseDto(null, targetMember.getFollowers().size(), UNFOLLOW_SUCCESS_MESSAGE.getMessage());
+        return createFollowResponseDto(null, followRepository.countByToMemberId(targetMember.getId()), UNFOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePublicFollow(Member targetMember, Member requestMember) {
         Follow follow = followRepository.save(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING));
         createNotification(targetMember, requestMember, follow);
-        return createFollowResponseDto(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING).getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_SUCCESS_MESSAGE.getMessage());
+        return createFollowResponseDto(createFollow(targetMember, requestMember, FollowStatus.FOLLOWING).getFollowStatus(), followRepository.countByToMemberId(targetMember.getId()), FOLLOW_SUCCESS_MESSAGE.getMessage());
     }
 
     private FollowResponseDto handlePrivateFollow(Member targetMember, Member requestMember) {
@@ -145,7 +145,7 @@ public class MemberWriteService {
         Follow follow = followRepository.findByToMemberAndFromMember(targetMember, requestMember).get();
         follow.updateFollowStatus();
 
-        return createFollowResponseDto(follow.getFollowStatus(), targetMember.getFollowers().size(), FOLLOW_ACCEPT_MESSAGE.getMessage());
+        return createFollowResponseDto(follow.getFollowStatus(), 0, FOLLOW_ACCEPT_MESSAGE.getMessage());
     }
 
     public FollowResponseDto rejectFollow(FollowRequestDto followRequestDto) {
