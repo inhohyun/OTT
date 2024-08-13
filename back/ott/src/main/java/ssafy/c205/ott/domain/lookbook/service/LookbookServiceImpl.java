@@ -252,6 +252,7 @@ public class LookbookServiceImpl implements LookbookService {
             .profileImg(saveLookbook.getMember().getProfileImageUrl())
             .isFollow(isFollow)
             .memberId(saveLookbook.getMember().getId())
+            .publicStatus(lookbook.getPublicStatus())
             .build();
     }
 
