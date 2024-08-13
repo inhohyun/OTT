@@ -73,7 +73,7 @@ public class MemberValidator {
 
     private void isAlreadyFollowing(long targetMemberId, long requestMemberId) {
         Optional<Follow> findFollow = followRepository.findByToMemberIdAndFromMemberId(targetMemberId, requestMemberId);
-        if (findFollow.isPresent() && findFollow.get().getFollowStatus() == FollowStatus.FOLLOWING) {
+        if (findFollow.isPresent() && (findFollow.get().getFollowStatus() == FollowStatus.FOLLOWING || findFollow.get().getFollowStatus() == FollowStatus.WAIT)) {
             throw new AlreadyFollowException();
         }
     }
