@@ -43,7 +43,7 @@ export async function requestPermission() {
   if (token) {
     console.log('token: ', token);
     const memberId = useUserStore((state) => state.userId);
-
+    console.log('API 요청을 보냅니다: ', memberId, token);
     axios
       .post(baseUrl + 'api/push/device', { memberId: memberId, token: token })
       .then((response) => {
