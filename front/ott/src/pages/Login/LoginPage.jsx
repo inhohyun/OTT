@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'; // Import framer-motion
-import mainIcon from '../../assets/icons/mini_main.logo.png';
+import mainIcon from '../../assets/icons/main.logo.png';
 // import FaceComponent from '../../components/login/3DFace'; // 3D 얼굴 컴포넌트 import
 import kakao from '../../assets/images/login/kakao_login.png';
 import naver from '../../assets/images/login/naver_login.png';
@@ -29,7 +29,7 @@ const LoginPage = () => {
 
   return (
     <div
-      className="w-full h-full flex items-center justify-center min-h-screen"
+      className="w-full flex items-center justify-center min-h-screen"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
