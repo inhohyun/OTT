@@ -256,7 +256,7 @@ const FeedFollow = () => {
 
       {followersData.map((follower, index) => (
         <div key={follower.nickname} className="w-full">
-          <p className="ml-2 text-xl font-bold">{follower.nickname}</p>
+          {/* <p className="ml-2 text-xl font-bold">{follower.nickname}</p> */}
           <div className="relative">
             {follower.followLookbookDtoList.length > 3 && (
               <button
