@@ -4,7 +4,7 @@ import PublicPosts from '../userPage/PublicPosts';
 import PrivatePosts from '../userPage/PrivatePosts';
 import AddIcon from '../../assets/icons/add_icon.png';
 import lockIcon from '../../assets/icons/lockicon.png';
-const Posts = ({ isMe, isPublic }) => {
+const Posts = ({ isMe, isPublic, currentId }) => {
   const [activePostType, setActivePostType] = useState('public');
 
   const nav = useNavigate();
@@ -17,7 +17,7 @@ const Posts = ({ isMe, isPublic }) => {
 
   if (!isMe && !isPublic) {
     return (
-      <div className="w-full h-full flex flex-col justify-center items-center mt-[150px]">
+      <div className="w-full h-full flex flex-col justify-center items-center">
         <img src={lockIcon} alt="Lock Icon" className="w-24 h-24 mb-4" />
         <p className="text-gray-500 text-xl">비공개 계정입니다.</p>
       </div>
@@ -52,7 +52,11 @@ const Posts = ({ isMe, isPublic }) => {
       </div>
       <div className="mt-[-2]">
         {' '}
-        {activePostType === 'public' ? <PublicPosts /> : <PrivatePosts />}
+        {activePostType === 'public' ? (
+          <PublicPosts isMe={isMe} currentId={currentId} />
+        ) : (
+          <PrivatePosts isMe={isMe} />
+        )}
       </div>
       <div className="flex justify-center mt-4">
         {' '}

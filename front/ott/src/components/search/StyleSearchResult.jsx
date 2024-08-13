@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faImage } from '@fortawesome/free-solid-svg-icons';
-
+import Lookbook from '../../components/lookbook/Lookbook';
+import useLookbookStore from '../../data/lookbook/detailStore';
 const StyleSearchResult = ({ results, searchQuery }) => {
   const [visibleResults, setVisibleResults] = useState(6);
+  const [filteredResults, setFilteredResults] = useState([]);
   const containerRef = useRef(null);
+  const { deleteLookbook, hideDetail } = useLookbookStore();
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -28,6 +31,52 @@ const StyleSearchResult = ({ results, searchQuery }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredResults([]);
+      return;
+    }
+
+    // 검색 쿼리에 따른 검색 결과 나열
+    //FIXME - 필터링 로직 우선 주석처리
+    // const filtered = results
+    //   .filter(
+    //     (result) =>
+    //       result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //       result.description.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    //   .sort((a, b) => {
+    //     const aTitleIndex = a.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const aDescIndex = a.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bTitleIndex = b.title
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+    //     const bDescIndex = b.description
+    //       .toLowerCase()
+    //       .indexOf(searchQuery.toLowerCase());
+
+    //     const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
+    //     const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
+
+    //     return aIndex - bIndex;
+    //   });
+    console.log('results:', results);
+    setFilteredResults(results);
+  }, [results, searchQuery]);
+
+  const handleDelete = (deletedLookbookId) => {
+    deleteLookbook(deletedLookbookId);
+    // handleCloseDetail();
+    hideDetail();
+  };
+
+  const handleCloseDetail = async () => {
+    hideDetail();
+  };
   // 숫자 포맷하는 함수 정의
   const formatNumber = (num) => {
     if (num >= 1000) {
@@ -36,8 +85,8 @@ const StyleSearchResult = ({ results, searchQuery }) => {
     return num;
   };
 
-  if (!results.length) {
-    return null;
+  if (!filteredResults.length) {
+    return <p className="text-gray-500 text-center">검색 결과가 없습니다.</p>;
   }
 
   return (
@@ -57,44 +106,13 @@ const StyleSearchResult = ({ results, searchQuery }) => {
           className="grid grid-flow-col auto-cols-max grid-rows-2 gap-4"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          {results.slice(0, visibleResults).map((result, index) => (
-            <div
+          {filteredResults.slice(0, visibleResults).map((result, index) => (
+            <Lookbook
               key={index}
-              className="flex-none w-56 p-2 rounded-lg relative flex flex-col items-center"
-              style={{ minWidth: '180px', height: '250px' }}
-            >
-              <div className="bg-stone-200 p-4 rounded-lg shadow-md w-full h-full relative">
-                <div className="absolute top-2 left-2 flex items-center">
-                  <FontAwesomeIcon
-                    icon={faUserCircle}
-                    className="text-gray-400 mr-2"
-                    style={{ fontSize: '24px' }}
-                  />
-                  <p className="text-xs text-gray-500">{result.username}</p>
-                </div>
-                <div className="flex flex-col items-center mt-4 mb-4">
-                  <FontAwesomeIcon
-                    icon={faImage}
-                    className="text-gray-400 mb-2"
-                    style={{ fontSize: '135px' }}
-                  />
-                  <h3
-                    className="text-base font-semibold"
-                    style={{ fontSize: '14px' }}
-                  >
-                    {result.tags.map((tag) => `#${tag}`).join(' ')}
-                  </h3>
-                </div>
-                <div className="absolute bottom-2 right-2 flex w-full justify-end">
-                  <span className="text-xs text-gray-500 ml-2">
-                    ❤️ {formatNumber(result.likes)}
-                  </span>
-                  <span className="text-xs text-gray-500 ml-2">
-                    💬 {formatNumber(result.comments)}
-                  </span>
-                </div>
-              </div>
-            </div>
+              data={result}
+              onClose={handleCloseDetail}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       </div>

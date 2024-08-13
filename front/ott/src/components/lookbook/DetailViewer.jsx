@@ -28,7 +28,7 @@ const DetailViewer = ({
         <img
           src={allImages[0]} // Thumbnail image
           alt="Thumnail"
-          className="w-full h-auto object-cover rounded-lg"
+          className="w-full h-auto object-contain rounded-lg"
         />
         <button
           className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
@@ -56,7 +56,7 @@ const DetailViewer = ({
         )?.imagePath.path;
 
   return (
-    <div className="relative w-[150px] h-[150px]">
+    <div className="relative w-[150px] h-[150px] mt-2">
       <button
         className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 w-6 h-6"
         style={{ zIndex: 1, background: 'none' }}
@@ -67,7 +67,7 @@ const DetailViewer = ({
       <img
         src={displayedImagePath || allImages[0]}
         alt={`Lookbook image ${currentImageIndex}`}
-        className="w-full h-full object-cover rounded-lg"
+        className="w-full h-full object-contain rounded-lg"
         onClick={toggleSide}
       />
       {images.some(

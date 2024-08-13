@@ -1,22 +1,46 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Lookbook from '../lookbook/Lookbook';
 import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import React from 'react';
+import { getPublicLookbookList } from '../../api/user/userLookbook';
+import useLookbookStore from '../../data/lookbook/detailStore';
+import { fetchMyLookbooks } from '../../api/lookbook/mylookbook';
+import useUserStore from '../../data/lookbook/userStore';
 
-const PublicPosts = () => {
-  const lookbooks = Array.from({ length: 10 }, (_, index) => ({
-    nickname: `Creator ${index + 1}`,
-    createdAt: new Date().toISOString(),
-    images: [{ imagePath: { path: 'https://via.placeholder.com/150' } }],
-    name: `Lookbook ${index + 1}`,
-    likes: Math.floor(Math.random() * 100),
-    comments: Array.from(
-      { length: Math.floor(Math.random() * 10) },
-      (_, i) => ({ id: i, text: 'Comment' })
-    ),
-  }));
+const PublicPosts = ({ isMe, currentId }) => {
+  const [lookbooks, setLookbooks] = useState([]);
+  const { deleteLookbook, hideDetail } = useLookbookStore();
+  const memberId = useUserStore((state) => state.userId);
 
+  // const lookbooks = Array.from({ length: 10 }, (_, index) => ({
+  //   nickname: `Creator ${index + 1}`,
+  //   createdAt: new Date().toISOString(),
+  //   images: [{ imagePath: { path: 'https://via.placeholder.com/150' } }],
+  //   name: `Lookbook ${index + 1}`,
+  //   likes: Math.floor(Math.random() * 100),
+  //   comments: Array.from(
+  //     { length: Math.floor(Math.random() * 10) },
+  //     (_, i) => ({ id: i, text: 'Comment' })
+  //   ),
+  // }));
+
+  useEffect(() => {
+    const getPublicLookbooks = async (sendId) => {
+      try {
+        const response = await getPublicLookbookList(sendId);
+        console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
+        setLookbooks(response);
+      } catch (error) {
+        console.error('Failed to get public lookbooks:', error);
+      }
+    };
+
+    // 다른 사람일 경우 다른 사람 id로 가져오기
+    const sId = isMe ? memberId : currentId;
+    console.log('공개된 룩북에서 서버에 보낼 id', sId);
+    getPublicLookbooks(sId);
+  }, []);
   const containerRef = useRef(null);
 
   const scrollLeft = (ref) => {
@@ -29,6 +53,17 @@ const PublicPosts = () => {
     if (ref.current) {
       ref.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
+  };
+
+  const handleDelete = (deletedLookbookId) => {
+    deleteLookbook(deletedLookbookId);
+    // handleCloseDetail();
+    hideDetail();
+  };
+
+  const handleCloseDetail = () => {
+    console.log('[*]모달 닫기');
+    hideDetail();
   };
 
   return (
@@ -62,12 +97,22 @@ const PublicPosts = () => {
             <div className="flex flex-col">
               <div className="flex space-x-4">
                 {lookbooks.slice(0, 5).map((lookbook, index) => (
-                  <Lookbook key={index} data={lookbook} />
+                  <Lookbook
+                    key={index}
+                    data={lookbook}
+                    onDelete={handleDelete}
+                    onClose={handleCloseDetail}
+                  />
                 ))}
               </div>
               <div className="flex space-x-4">
                 {lookbooks.slice(5).map((lookbook, index) => (
-                  <Lookbook key={index + 5} data={lookbook} />
+                  <Lookbook
+                    key={index + 5}
+                    data={lookbook}
+                    onDelete={handleDelete}
+                    onClose={handleCloseDetail}
+                  />
                 ))}
               </div>
             </div>

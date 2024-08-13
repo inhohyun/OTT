@@ -8,9 +8,9 @@ import { inviteMeeting } from '../../api/notification/notification';
 
 const CustomPersonSearchResult = ({
   // 검색 결과 데이터 배열
-  results,        
-  // 사용자가 입력한 검색어 
-  searchQuery,     
+  results,
+  // 사용자가 입력한 검색어
+  searchQuery,
 }) => {
   const [visibleResults, setVisibleResults] = useState(4); // 한 번에 결과 4개 표시
   const [filteredResults, setFilteredResults] = useState([]); // 필터링된 결과 저장

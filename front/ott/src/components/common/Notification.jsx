@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { followRequestAccept, followRequestReject } from '../../api/user/user';
 
 const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [visibleNotifications, setVisibleNotifications] = useState(4);
@@ -52,6 +53,69 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
     setNotifications(notifications.filter((_, i) => i !== index));
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+  };
+
+  const handleNotificationType = (notification) => {
+    const { notificationType, message, additionalData } = notification;
+    let additionalInfo = '';
+
+    switch (notificationType) {
+      case 'COMMENT':
+        additionalInfo = `룩북 ID: ${additionalData.lookbookId}, 댓글 ID: ${additionalData.commentId}, Author ID: ${additionalData.commentAuthorId}`;
+        break;
+
+      case 'FOLLOW':
+        additionalInfo = `팔로워 ID: ${additionalData.followerId}, 팔로우 행위 ID: ${additionalData.followId}, 팔로우 상태: ${additionalData.followStatus}`;
+        break;
+
+      case 'RTC':
+        additionalInfo = `화상 중고거래 상대방 ID: ${additionalData.rtcRequestMemberId}, 세션 ID: ${additionalData.sessionId}`;
+        break;
+
+      case 'AI':
+        additionalInfo = 'AI 알림';
+        break;
+
+      default:
+        additionalInfo = '기본';
+    }
+
+    return `${message} - ${additionalInfo}`;
+  };
+
+  const handleAccept = async (followerId) => {
+    try {
+      await followRequestAccept(followerId);
+      setNotifications(
+        notifications.filter(
+          (notification) =>
+            notification.additionalData.followerId !== followerId
+        )
+      );
+    } catch (error) {
+      console.error('팔로우 요청 수락 중 에러 발생:', error);
+    }
+  };
+
+  const handleReject = async (followerId) => {
+    try {
+      await followRequestReject(followerId);
+      setNotifications(
+        notifications.filter(
+          (notification) =>
+            notification.additionalData.followerId !== followerId
+        )
+      );
+    } catch (error) {
+      console.error('팔로우 요청 거절 중 에러 발생:', error);
+    }
+  };
+
+  if (!show) return null;
+
   const joinSession = (sessionId, userName) => {
     console.log("알림 클릭");
     console.log(sessionId);
@@ -90,9 +154,9 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
               <div
                 key={index}
                 className="mb-4 p-2 bg-white bg-opacity-40 rounded-lg shadow-md relative"
-                onTouchStart={(e) => handleTouchStart(index, e)}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
+                // onTouchStart={(e) => handleTouchStart(index, e)}
+                // onTouchMove={handleTouchMove}
+                // onTouchEnd={handleTouchEnd}
                 style={{
                   transform:
                     swipedIndex === index && isSwiping
@@ -104,15 +168,60 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
                       : 'transform 0.2s ease',
                 }}
               >
-                <p className="text-base mb-4" style={{ fontSize: '14px' }}>
-                  {notification.who}님이 {notification.what}
-                </p>
-                <p
-                  className="text-xs text-stone-500 absolute right-2 bottom-2"
-                  style={{ fontSize: '12px' }}
+                {/* 상단: 알림 종류와 시간 */}
+                <div className="flex justify-between">
+                  <p className="text-xs text-stone-500">
+                    {notification.notificationType}
+                  </p>
+                  <p className="text-xs text-stone-500">
+                    {formatDate(notification.createdAt)}
+                  </p>
+                </div>
+
+                {/* 중단: 메시지 */}
+                <div
+                  className="text-center my-4"
+                  onTouchStart={(e) => handleTouchStart(index, e)}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  style={{
+                    transform:
+                      swipedIndex === index && isSwiping
+                        ? `translateX(${moveX - startX}px)`
+                        : 'translateX(0)',
+                    transition:
+                      swipedIndex === index && isSwiping
+                        ? 'none'
+                        : 'transform 0.2s ease',
+                  }}
                 >
-                  {notification.when}
-                </p>
+                  <p className="text-base" style={{ fontSize: '14px' }}>
+                    {handleNotificationType(notification)}
+                  </p>
+                </div>
+
+                {/* 하단: 동작 버튼 중앙에 */}
+                {notification.notificationType === 'FOLLOW' &&
+                  notification.additionalData.followStatus === 'WAIT' && (
+                    <div className="flex justify-center space-x-2 mt-2">
+                      <button
+                        className="bg-violet-400 text-white px-3 py-1 rounded"
+                        onClick={() =>
+                          handleAccept(notification.additionalData.followerId)
+                        }
+                      >
+                        수락
+                      </button>
+                      <button
+                        className="bg-stone-500 text-white px-3 py-1 rounded"
+                        onClick={() =>
+                          handleReject(notification.additionalData.followerId)
+                        }
+                      >
+                        거절
+                      </button>
+                    </div>
+                  )}
               </div>
             ))}
         </div>

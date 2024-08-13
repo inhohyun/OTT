@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import defaultImage from '@/assets/images/default_picture.png';
 import './Modal.css';
@@ -7,6 +7,9 @@ import AiProceeding from './AiProceeding';
 import AiResult from './AiResult';
 import useStore from '@/data/ai/aiStore';
 
+import useUserStore from '@/data/lookbook/userStore';
+
+import { getBookmarkedClothes } from '@/api/closet/clothes';
 const Modal = ({ isOpen, onClose }) => {
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
@@ -20,16 +23,17 @@ const Modal = ({ isOpen, onClose }) => {
   const modelImage = useStore((state) => state.modelImage);
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
-  const selectClothesURL = useStore((state) => state.selectedClothesURL);
+
   const setSelectedClothesURL = useStore(
     (state) => state.setSelectedClothesURL
   );
 
-  const clothes = useStore((state) => state.clothes);
+  // const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
 
+  // zustand에 있는 memberId 가져오기
+  const memberId = useUserStore((state) => state.userId);
   // 모달이 열릴 때 Zustand 상태를 콘솔에 출력
-
   const categories = [
     { value: '상의', label: '상의' },
     { value: '하의', label: '하의' },
@@ -41,6 +45,21 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 3, label: '3장' },
     { value: 4, label: '4장' },
   ];
+  const [clothes, setClothes] = useState([]);
+  // 옷들을 저장
+  useEffect(() => {
+    const fetchBookmarkedClothes = async () => {
+      try {
+        const response = await getBookmarkedClothes(memberId);
+        console.log('북마크된 옷', response);
+        setClothes(response);
+      } catch (error) {
+        console.error('즐겨찾기 옷 조회 실패:', error);
+      }
+    };
+
+    fetchBookmarkedClothes();
+  }, [isOpen]);
 
   const customStyles = {
     control: (provided, state) => ({
@@ -69,7 +88,10 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleClothingClick = (clothing) => {
-    setSelectedClothing(clothing);
+    console.log('사용자가 클릭한 ai 옷장 옷', clothing);
+    //TODO : 아래의 함수를 완성하여 clothing의 img 주소를 상태로 저장하세요
+    const imageUrl = clothing.img[0]; // img 배열의 첫 번째 요소를 가져옴
+    setSelectedClothing(imageUrl); // 추출한 이미지 URL을 상태로 설정
   };
 
   const handleFilterChange = (option) => {
@@ -93,11 +115,11 @@ const Modal = ({ isOpen, onClose }) => {
       reader.readAsDataURL(file);
     }
   };
-
-  const filteredClothes =
-    filter === 'all'
-      ? clothes
-      : clothes.filter((clothing) => clothing.category === filter);
+  // 옷 필터 주석처리
+  // const filteredClothes =
+  //   filter === 'all'
+  //     ? clothes
+  //     : clothes.filter((clothing) => clothing.category === filter);
 
   return (
     <div className="modal-overlay custom-scrollbar mb-[65px]" onClick={onClose}>
@@ -148,7 +170,7 @@ const Modal = ({ isOpen, onClose }) => {
                 className="flex-grow"
               />
             </div>
-            <h4>저장된 옷</h4>
+            <h4>착용할 부위</h4>
             <div className="mb-4 dropdown-wrapper">
               <Select
                 options={categories}
@@ -163,11 +185,17 @@ const Modal = ({ isOpen, onClose }) => {
                 className="flex-grow"
               />
             </div>
-            <ClothesGridSingleLine
-              clothes={filteredClothes}
-              onToggleLike={toggleLike}
-              onClothingClick={handleClothingClick}
-            />
+            <h4>옷 선택</h4>
+            {clothes.length === 0 ? (
+              <p>입어볼 옷이 없습니다.</p>
+            ) : (
+              <ClothesGridSingleLine
+                clothes={clothes}
+                onToggleLike={toggleLike}
+                onClothingClick={handleClothingClick}
+              />
+            )}
+
             <div className="mt-4">
               <button className="try-on-button" onClick={handlePutOn}>
                 입어보기

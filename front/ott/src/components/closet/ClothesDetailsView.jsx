@@ -6,14 +6,15 @@ import {
   faChevronRight,
   faEdit,
   faTimes,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
+const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 이미지 인덱스 상태 관리
   const [detailedItem, setDetailedItem] = useState(itemDetails); // 상세 아이템 상태 관리
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
-  console.log(itemDetails);
+  const images = [detailedItem.frontImg, detailedItem.backImg].filter(Boolean);
 
   useEffect(() => {
     const fetchItemDetails = async () => {
@@ -29,6 +30,20 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
 
     fetchItemDetails();
   }, [itemDetails.clothesId]);
+
+  // 옷 삭제하는 함수
+  const handleDelete = async (event) => {
+    event.stopPropagation();
+
+    const confirmDelete = window.confirm('정말 이 옷을 삭제하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        await onDelete(detailedItem.clothesId);
+      } catch (error) {
+        console.error('옷 삭제 중 오류 발생:', error);
+      }
+    }
+  };
 
   // 성별에 따른 텍스트 반환 함수
   const getGenderText = (gender) => {
@@ -68,6 +83,12 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
           <FontAwesomeIcon icon={faEdit} size="lg" /> {/* 편집 아이콘 */}
         </div>
         <div
+          onClick={handleDelete}
+          className="text-gray-600 hover:text-gray-800 cursor-pointer"
+        >
+          <FontAwesomeIcon icon={faTrashAlt} size="lg" /> {/* 삭제 아이콘 */}
+        </div>
+        <div
           onClick={onClose}
           className="text-gray-600 hover:text-gray-800 cursor-pointer"
         >
@@ -80,34 +101,30 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
           {detailedItem.name || '상세 정보'} {/* 옷 이름 또는 상세 정보 */}
         </h2>
         <div className="relative mb-4">
-          {detailedItem.imageUrls && detailedItem.imageUrls.length > 0 ? (
+          {images.length > 0 ? (
             <div>
               <img
-                src={detailedItem.imageUrls[currentImageIndex]}
+                src={images[currentImageIndex]}
                 alt={`옷 이미지 ${currentImageIndex + 1}`}
-                className="w-full my-2"
+                className="w-full my-2 object-cover rounded-lg"
               />
-              {detailedItem.imageUrls.length > 1 && (
+              {images.length > 1 && (
                 <>
                   <div
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full cursor-pointer"
                     onClick={() =>
                       setCurrentImageIndex(
-                        (currentImageIndex -
-                          1 +
-                          detailedItem.imageUrls.length) %
-                          detailedItem.imageUrls.length
+                        (currentImageIndex - 1 + images.length) % images.length
                       )
                     }
                   >
-                    <FontAwesomeIcon icon={faChevronLeft} />{' '}
-                    {/* 이전 이미지로 이동 */}
+                    <FontAwesomeIcon icon={faChevronLeft} />
                   </div>
                   <div
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full cursor-pointer"
                     onClick={() =>
                       setCurrentImageIndex(
-                        (currentImageIndex + 1) % detailedItem.imageUrls.length
+                        (currentImageIndex + 1) % images.length
                       )
                     }
                   >
@@ -128,8 +145,8 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose }) => {
         <p>성별: {getGenderText(detailedItem.gender)}</p>
         <p>판매 여부: {getSalesStatusText(detailedItem.salesStatus)}</p>
         <p>공개 여부: {getPublicStatusText(detailedItem.publicStatus)}</p>
-        <p>즐겨찾기: {detailedItem.isLiked ? '예' : '아니오'}</p>
-      </div>
+        <p>즐겨찾기: {detailedItem.bookmarkStatus === 'BOOKMARKING' ? '예' : '아니오'}</p>
+        </div>
     </>
   );
 };

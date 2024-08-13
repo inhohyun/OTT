@@ -1,45 +1,23 @@
+/* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
 import bingleicon from '../../assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
-import {
-  getClothesList,
-  bookmarkClothes,
-  unbookmarkClothes,
-} from '../../api/closet/clothes';
+import { bookmarkClothes, unbookmarkClothes } from '../../api/closet/clothes';
 import {
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGrid = ({ onClothesClick }) => {
-  const [clothes, setClothes] = useState([]); // 옷 목록 상태
+const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12); // 한 번에 보여줄 항목 수
   const [visibleImages, setVisibleImages] = useState([]); // 보이는 이미지 상태 (앞면/뒷면)
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState(null); // 에러 상태
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
 
   useEffect(() => {
-    const fetchClothes = async () => {
-      try {
-        const userId = 1;
-        const clothesWithKeys = await getClothesList(userId);
-        setClothes(clothesWithKeys);
-        setVisibleImages(
-          clothesWithKeys.map((item) => ({ id: item.key, isFront: true }))
-        );
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
-
-    fetchClothes();
-  }, []);
+    setVisibleImages(clothes.map((item) => ({ id: item.key, isFront: true })));
+  }, [clothes]);
 
   // 가로 무한 스크롤 처리 함수
   const handleScroll = () => {
@@ -98,7 +76,7 @@ const ClothesGrid = ({ onClothesClick }) => {
           setClothes((prevClothes) =>
             prevClothes.map((item) =>
               item.key === key
-                ? { ...item, bookmarkStatus: 'UNBOOKMARKED' }
+                ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
                 : item
             )
           );
@@ -118,10 +96,6 @@ const ClothesGrid = ({ onClothesClick }) => {
     }
   };
 
-  if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
-  if (error) return <div>Error loading clothes: {error.message}</div>; // 에러 발생 시 표시
-
-  // clothes 배열이 비어있을 때 빈 상태 표시
   if (!clothes.length) {
     return <div>옷이 없습니다.</div>;
   }
@@ -155,17 +129,18 @@ const ClothesGrid = ({ onClothesClick }) => {
             scrollbarWidth: 'none',
           }}
         >
-          {clothes.slice(0, visibleItems).map((item) => {
+          {clothes.slice(0, visibleItems).map((item, index) => {
+            const uniqueKey = item.key !== undefined ? item.key : index;
             const isFrontVisible = visibleImages.find(
-              (image) => image.id === item.key
+              (image) => image.id === uniqueKey
             )?.isFront;
 
-            const frontImage = item.img?.[0];
-            const backImage = item.img?.[1];
+            const frontImage = item.img?.[0] || '';
+            const backImage = item.img?.[1] || '';
 
             return (
               <div
-                key={item.key}
+                key={uniqueKey}
                 className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center cursor-pointer"
                 style={{ minWidth: '100px', height: '190px' }}
                 onClick={() => onClothesClick(item)}

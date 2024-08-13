@@ -26,11 +26,12 @@ const EmptyLookbook = () => {
       <div className="w-full bg-white rounded-b-2xl p-6 flex flex-col items-center">
         <div className="text-center">
           <p className="text-lg font-bold text-slate-500 mb-4">
-            현재 저장된 <br />
-            룩북이 없습니다.
+            아직 팔로워들이 룩북을
+            <br />
+            저장하지 않았습니다.
           </p>
           <p className="text-sm text-slate-500 mb-6">
-            자신만의 룩북을 <br />
+            먼저 자신만의 룩북을 <br />
             만들어보세요!
           </p>
         </div>

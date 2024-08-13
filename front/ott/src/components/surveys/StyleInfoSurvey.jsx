@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { getUid, addMemberTags } from '../../api/user/user';
 
 export default function StyleInfoSurvey({
   formData,
@@ -18,7 +19,6 @@ export default function StyleInfoSurvey({
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
     if (searchText.trim() === '') {
       return;
     }
@@ -39,6 +39,19 @@ export default function StyleInfoSurvey({
     const newTags = tags.filter((t) => t !== tag);
     setTags(newTags);
     setFormData({ ...formData, tags: newTags });
+  };
+
+  const handleNextClick = async () => {
+    try {
+      const response = await getUid();
+      const memberId = response.data.id;
+
+      await addMemberTags(memberId, tags);
+      console.log('태그 추가 성공', tags);
+      handleNext();
+    } catch (error) {
+      console.error('태그 추가 중 오류 발생:', error);
+    }
   };
 
   return (
@@ -101,7 +114,7 @@ export default function StyleInfoSurvey({
               ? 'bg-violet-400 text-white hover:bg-violet-300'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
-          onClick={handleNext}
+          onClick={handleNextClick}
         >
           다음
         </button>

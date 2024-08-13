@@ -4,6 +4,7 @@ import CustomPersonSearchResult from '../../components/webRTC/CustomPersonSearch
 import VideoChat from './VideoChatPage';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import PersonData from './PersonData'; // 모의 데이터 가져오기
+import { searchPeople } from '../../api/search/searchPeople';
 import { getUserListNickname } from '../../api/user/user';
 
 const WebRTCPage = () => {
@@ -12,6 +13,8 @@ const WebRTCPage = () => {
   const [lastSearchQuery, setLastSearchQuery] = useState(''); // 마지막 검색어 상태
   const [results, setResults] = useState([]); // 검색 결과 상태
   const [selectedUser, setSelectedUser] = useState(null); // 화상 채팅에 선택된 사용자
+  const offset = 1;
+  const limit = 10;
 
   // 검색 입력 변화 처리
   const handleInputChange = (e) => {
@@ -19,16 +22,31 @@ const WebRTCPage = () => {
   };
 
   // 검색 버튼 클릭 시 호출
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchQuery) {
       // 검색어가 없으면 결과를 비움
-      setResults([]); 
+      setResults([]);
       return;
     }
 
     // 마지막 검색어 업데이트
-    setLastSearchQuery(searchQuery); 
+    setLastSearchQuery(searchQuery);
 
+    //   // 모의 데이터에서 검색어를 포함하는 항목 필터링
+    //   const filteredResults = PersonData.filter((item) =>
+    //     item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    //   );
+
+    //   setResults(filteredResults);
+    // };
+    try {
+      const response = await searchPeople(searchQuery, offset, limit);
+      if (response.data) {
+        setResults(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     // 모의 데이터에서 검색어를 포함하는 항목 필터링
     // const filteredResults = PersonData.filter((item) =>
       // item.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -75,13 +93,13 @@ const WebRTCPage = () => {
   // 화상 채팅 시작 버튼 클릭 시 호출
   const handleStartVideoChat = (userName) => {
     // 선택된 사용자 설정
-    setSelectedUser(userName); 
+    setSelectedUser(userName);
   };
 
   // 화상 채팅 종료 버튼 클릭 시 호출
   const handleEndVideoChat = () => {
     // 선택된 사용자 초기화
-    setSelectedUser(null); 
+    setSelectedUser(null);
   };
 
   return (

@@ -155,30 +155,39 @@ import leftArrow from '../../assets/icons/left_arrow_icon.png';
 import rightArrow from '../../assets/icons/right_arrow_icon.png';
 import plus from '../../assets/icons/plusicon.png';
 import useUserStore from '../../data/lookbook/userStore';
+import CustomSpinner from '../common/CustomSpinner';
+import NoFeed from '../../components/feed/NoFeed';
+import useLookbookStore from '../../data/lookbook/detailStore';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedFollower, setSelectedFollower] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { hideDetail } = useLookbookStore();
 
   const scrollRefs = useRef([]);
 
   const userId = useUserStore((state) => state.userId);
+  // const userId = 1;
 
   useEffect(() => {
     const fetchFollowFeed = async () => {
       try {
-        const data = await followFeed();
+        const data = await followFeed(userId);
+        console.log('Follow feed data:', data);
         setFollowersData(data);
         setVisibleLookbooks(
           data.reduce(
-            (acc, follower) => ({ ...acc, [follower.nickname]: 10 }),
+            (acc, follower) => ({ ...acc, [follower.nickname]: 100 }),
             {}
           )
         );
         scrollRefs.current = data.map(() => React.createRef());
       } catch (error) {
         console.error('Failed to fetch follow feed', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -205,10 +214,18 @@ const FeedFollow = () => {
     setSelectedFollower(null);
   };
 
+  const handleCloseDetail = async () => {
+    console.log('[*]모달 닫기');
+    hideDetail();
+  };
+
   if (!Array.isArray(followersData) || !followersData.length) {
-    return <p>Loading...</p>; // Optionally display a loading message
+    return <NoFeed />;
   }
 
+  if (isLoading) {
+    return <CustomSpinner />;
+  }
   return (
     <div className="relative flex flex-col items-start w-full pl-2 space-y-3">
       <style>{`
@@ -239,7 +256,7 @@ const FeedFollow = () => {
 
       {followersData.map((follower, index) => (
         <div key={follower.nickname} className="w-full">
-          <p className="ml-2 text-xl font-bold">{follower.nickname}</p>
+          {/* <p className="ml-2 text-xl font-bold">{follower.nickname}</p> */}
           <div className="relative">
             {follower.followLookbookDtoList.length > 3 && (
               <button
@@ -263,7 +280,21 @@ const FeedFollow = () => {
                 .slice(0, visibleLookbooks[follower.nickname])
                 .map((lookbook) => (
                   <div key={lookbook.lookbookId} className="lookbook-container">
-                    <Lookbook data={lookbook} />
+                    <Lookbook
+                      data={{
+                        lookbookId: lookbook.lookbookId,
+                        nickname: follower.nickname,
+                        cntComment: lookbook.cntComment,
+                        cntFavorite: lookbook.cntFavorite,
+                        createdAt: lookbook.createdAt,
+                        favorite: lookbook.favorite,
+                        img: lookbook.imgThumbnail,
+                        memberId: follower.memberId,
+                        imgProfile: follower.imgProfile,
+                        introduction: follower.introduction,
+                      }}
+                      onClose={handleCloseDetail}
+                    />
                   </div>
                 ))}
               {visibleLookbooks[follower.nickname] <

@@ -1,25 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import iconImage from '/icon-rectangle.png';
 import closetImage from '../../assets/icons/closet_icon.png';
 import notificationImage from '../../assets/icons/notification_icon.png';
 import Notification from './Notification';
+import { getNotificationsList } from '../../api/notification/notification';
+import useUserStore from '../../data/lookbook/userStore';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
-  const [notifications, setNotifications] = useState([
-    { who: '이정준', what: '화상 채팅을 요청하셨습니다.', when: '방금 전' },
-    { who: '박지민', what: '새로운 메시지가 도착했습니다.', when: '5분 전' },
-    { who: '박지응', what: '친구 요청을 수락하셨습니다.', when: '10분 전' },
-    { who: '김영희', what: '게시물에 댓글을 달았습니다.', when: '15분 전' },
-    { who: '최철수', what: '게시물을 좋아합니다.', when: '20분 전' },
-    { who: '이민수', what: '새로운 팔로워가 있습니다.', when: '25분 전' },
-    { who: '김영수', what: '게시물을 공유했습니다.', when: '30분 전' },
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const memberId = useUserStore((state) => state.userId);
 
   const navigate = useNavigate();
 
-  const handleNotificationClick = () => {
+  useEffect(() => {
+    if (showModal && memberId) {
+      const fetchNotifications = async () => {
+        try {
+          const notificationsData = await getNotificationsList(memberId);
+          setNotifications(notificationsData);
+        } catch (error) {
+          console.error('알림 목록 가져오는 중 에러 발생', error);
+        }
+      };
+
+      fetchNotifications();
+    }
+  }, [showModal, memberId]);
+
+  const handleNotificationClick = async () => {
     setShowModal(true);
   };
 

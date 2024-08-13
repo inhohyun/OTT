@@ -76,7 +76,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
               onClick={() => handleItemClick(item)} // Handle click event
             >
               <img
-                src={isFrontVisible ? item.frontImage : item.backImage}
+                src={item.img[0]}
                 alt={`${item.category}`}
                 className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
               />
@@ -110,10 +110,10 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                 }}
                 className="absolute top-3 left-3 p-1 cursor-pointer"
               >
-                <FontAwesomeIcon
+                {/* <FontAwesomeIcon
                   icon={item.isLiked ? faSolidStar : faRegularStar}
                   className="w-4 h-4 text-purple-300"
-                />
+                /> */}
               </div>
             </div>
           );

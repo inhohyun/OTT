@@ -1,33 +1,38 @@
-// BodyTypeModal.js
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const BodyTypeModal = ({ show, onClose, onSelect }) => {
-  const bodyTypes = ['보통', '마른', '근육질', '통통'];
+const BodyTypeModal = ({ show, onClose, onSelect, selectedBodyType }) => {
+  const bodyTypes = ['슬림', '슬림 탄탄', '보통', '통통'];
 
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-5 rounded shadow-md w-3/4 max-w-sm">
-        <h3 className="text-xl mb-4">체형 선택</h3>
-        <ul>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-5 rounded-2xl shadow-md w-3/4 max-w-sm">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold">체형</h3>
+          <button onClick={onClose} className="text-gray-500">
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
           {bodyTypes.map((type) => (
-            <li key={type} className="mb-2">
-              <button
-                onClick={() => {
-                  onSelect(type);
-                  onClose();
-                }}
-                className="w-full text-left p-2 rounded hover:bg-gray-200"
-              >
-                {type}
-              </button>
-            </li>
+            <div
+              key={type}
+              onClick={() => {
+                onSelect(type);
+                onClose();
+              }}
+              className={`cursor-pointer p-4 rounded-lg border text-center text-stone-400 ${
+                selectedBodyType === type ? 'bg-violet-200' : ''
+              }`}
+            >
+              <div className="w-8 h-8 bg-purple-100 rounded-full mb-2 mx-auto"></div>
+              <span className="text-sm">{type}</span>
+            </div>
           ))}
-        </ul>
-        <button onClick={onClose} className="mt-4 w-full p-2 bg-red-500 text-white rounded">
-          닫기
-        </button>
+        </div>
       </div>
     </div>
   );

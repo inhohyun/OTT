@@ -1,35 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import backgroundImage from '../../assets/images/background_image_main.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
-  faSearch,
   faCamera,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
 import { updateUserInfo } from '../../api/user/user';
+import BodyTypeModal from '../../components/userPage/BodyTypeModal';
 
 const UpdatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { uid, userInfo } = location.state;
+  const { memberId, userInfo } = location.state || {
+    memberId: null,
+    userInfo: {},
+  };
 
   const redirectProfile = () => {
     navigate('/userPage');
   };
 
-  const [bodyType, setBodyType] = useState('');
+  // State 초기화
+  const [userInfoState, setUserInfoState] = useState({
+    name: userInfo.name || '',
+    phone: userInfo.phone || '',
+    nickname: userInfo.nickname || '',
+    height: userInfo.height || '',
+    weight: userInfo.weight || '',
+    gender: userInfo.gender || '',
+    introduction: userInfo.introduction || '',
+  });
+
+  const [bodyType, setBodyType] = useState(userInfo.bodyType || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(
-    userInfo.publicStatus === 'PUBLIC'
+    userInfo.publicStatus !== 'PUBLIC'
   );
   const [profileImage, setProfileImage] = useState(
     userInfo.profileImage || mainIcon
   );
-  const [userInfoState, setUserInfoState] = useState(userInfo);
   const [profileImageFile, setProfileImageFile] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   const openModal = () => setIsModalOpen(true);
   const onClose = () => setIsModalOpen(false);
@@ -40,7 +56,7 @@ const UpdatePage = () => {
   };
 
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+    setIsChecked(isChecked);
   };
 
   const [searchText, setSearchText] = useState('');
@@ -54,17 +70,18 @@ const UpdatePage = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim() === '') {
-      return;
-    }
+    if (searchText.trim() === '') return;
+
     if (tags.includes(searchText.trim())) {
       setErrorMessage('이미 존재하는 태그입니다.');
       return;
     }
+
     if (tags.length >= 5) {
       setErrorMessage('태그는 최대 5개까지 추가할 수 있습니다.');
       return;
     }
+
     const newTags = [...tags, searchText.trim()];
     setTags(newTags);
     setSearchText('');
@@ -88,14 +105,16 @@ const UpdatePage = () => {
   };
 
   const triggerFileInput = () => {
-    document.getElementById('profileImageInput').click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
-  // 저장 클릭시 동작
+  // 저장 클릭 시 동작
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedUserInfo = {
-      memberId: uid,
+      memberId: memberId,
       nickname: userInfoState.nickname,
       phoneNumber: userInfoState.phone,
       introduction: userInfoState.introduction || '',
@@ -103,15 +122,18 @@ const UpdatePage = () => {
       weight: parseFloat(userInfoState.weight),
       gender: userInfoState.gender || null,
       bodyType: bodyType || null,
-      publicStatus: isChecked ? 'PUBLIC' : 'PRIVATE',
+      publicStatus: isChecked ? 'PRIVATE' : 'PUBLIC',
       memberTags: tags.length > 0 ? tags : null,
     };
 
     try {
-      await updateUserInfo(uid, updatedUserInfo);
+      await updateUserInfo(memberId, updatedUserInfo);
       redirectProfile();
     } catch (error) {
       console.error('Error updating user info:', error);
+      setErrorMessage(
+        '정보 업데이트 중 오류가 발생했습니다. 다시 시도해 주세요.'
+      );
     }
   };
 
@@ -133,17 +155,18 @@ const UpdatePage = () => {
               src={profileImage}
             />
             <div
-              className="absolute bottom-2 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
+              className="absolute bottom-3 left-1/2 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center"
               style={{ transform: 'translate(-50%, 0)', zIndex: 1 }}
             >
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 icon={faCamera}
                 className="text-purple-600 text-xs"
-              />
+              /> */}
             </div>
             <input
               type="file"
               id="profileImageInput"
+              ref={fileInputRef}
               className="hidden"
               accept="image/*"
               onChange={handleProfileImageChange}
@@ -151,14 +174,15 @@ const UpdatePage = () => {
           </div>
         </div>
 
-        <div className="flex mr-[40px] mt-[16px]">
+        <div className="flex mt-[16px]">
           <Switch
             isChecked={isChecked}
             handleCheckboxChange={handleCheckboxChange}
           />
         </div>
         <div className="bg-white p-8 rounded-lg shadow-md w-[90%] max-w-md mt-6">
-          <form className="space-y-6 mb-" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* 사용자 정보 입력 필드들 */}
             <div className="flex items-center mb-5">
               <label
                 htmlFor="name"
@@ -166,6 +190,7 @@ const UpdatePage = () => {
               >
                 이름
               </label>
+
               <input
                 type="text"
                 id="name"
@@ -176,8 +201,10 @@ const UpdatePage = () => {
                 onChange={(e) =>
                   setUserInfoState({ ...userInfoState, name: e.target.value })
                 }
+                readOnly
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="phone"
@@ -197,6 +224,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="nickname"
@@ -221,6 +249,7 @@ const UpdatePage = () => {
                 />
               </div>
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="height"
@@ -240,6 +269,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="weight"
@@ -259,6 +289,7 @@ const UpdatePage = () => {
                 }
               />
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="bodyType"
@@ -282,6 +313,7 @@ const UpdatePage = () => {
                 />
               </div>
             </div>
+
             <div className="flex items-center mb-5">
               <label
                 htmlFor="tags"
@@ -289,26 +321,13 @@ const UpdatePage = () => {
               >
                 태그
               </label>
-              <div className="w-3/4 flex flex-wrap">
-                {tags.map((tag, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-2 mr-2"
-                  >
-                    <span>{tag}</span>
-                    <FontAwesomeIcon
-                      icon={faSearch}
-                      className="ml-2 text-violet-400 cursor-pointer"
-                      onClick={() => handleTagRemove(tag)}
-                    />
-                  </div>
-                ))}
+              <div className="w-3/4 flex flex-wrap items-center">
                 <input
                   type="text"
                   id="tagInput"
                   placeholder="태그 추가"
                   maxLength="10"
-                  className="w-full p-3 rounded-full border border-violet-300 mx-auto block box-border focus:border-violet-400 text-center"
+                  className="flex-1 p-3 mb-2 rounded-full border border-violet-300 box-border focus:border-violet-400 text-center"
                   value={searchText}
                   onChange={handleSearchChange}
                   onKeyPress={(e) => {
@@ -317,11 +336,26 @@ const UpdatePage = () => {
                     }
                   }}
                 />
+                {tags.map((tag, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center bg-violet-200 text-[rgba(0,0,0,0.5)] py-1 px-3 rounded-full text-sm mb-2 ml-2"
+                  >
+                    <span>{tag}</span>
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="ml-2 text-violet-400 cursor-pointer"
+                      onClick={() => handleTagRemove(tag)}
+                    />
+                  </div>
+                ))}
               </div>
-              {errorMessage && (
-                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-              )}
             </div>
+
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+            )}
+
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
@@ -333,6 +367,12 @@ const UpdatePage = () => {
           </form>
         </div>
       </div>
+      {/* BodyTypeModal 추가 */}
+      <BodyTypeModal
+        show={isModalOpen}
+        onClose={onClose}
+        onSelect={handleBodyTypeSelect}
+      />
     </div>
   );
 };

@@ -23,6 +23,11 @@ const Followers = ({ uid }) => {
     setVisibleFollowers((prev) => prev + 10); // Show 10 more followers
   };
 
+  const handleClick = (user) => {
+    // console.log('Clicked user:', user.id);
+    navigate('/userpage', { state: { id: user.memberId } });
+  };
+
   return (
     <div className="flex flex-col items-center mb-20">
       <div className="backdrop-blur-md bg-white bg-opacity-40 text-stone-500 p-6 rounded-2xl max-w-md w-full h-full overflow-y-auto">
@@ -46,6 +51,7 @@ const Followers = ({ uid }) => {
                           src={follower.image || defaultImage}
                           alt="Follower"
                           className="w-full h-full object-cover"
+                          onClick={() => handleClick(follower)}
                         />
                       </div>
                       <span>{follower.nickname}</span>
