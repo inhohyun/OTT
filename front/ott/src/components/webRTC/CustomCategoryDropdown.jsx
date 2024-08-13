@@ -1,19 +1,11 @@
 import Select from 'react-select';
 
-// 기본 카테고리 리스트
-const DEFAULT_CATEGORIES = [
-  '전체',
-  '상의',
-  '하의',
-  '아우터',
-  '한벌옷',
-  '즐겨찾기',
-];
 
 const CustomCategoryDropdown = ({
   selectedCategory, // 현재 선택된 카테고리
   onCategoryChange, // 카테고리 변경
-  categories = DEFAULT_CATEGORIES, // 기본 카테고리 리스트를 사용
+  categories, // 기본 카테고리 리스트를 사용
+  closetId,
 }) => {
   // 스타일 커스터마이징
   const customStyles = {
@@ -34,7 +26,7 @@ const CustomCategoryDropdown = ({
 
   return (
     <div className="my-12 w-full max-w-xs flex items-center">
-      <Select
+      {/* <Select
         options={categories.map((category) => ({
           value: category,
           label: category,
@@ -43,6 +35,30 @@ const CustomCategoryDropdown = ({
         onChange={(option) => onCategoryChange(option.value)} // 카테고리 변경 시 호출되는 핸들러
         styles={customStyles} // 커스터마이징된 스타일 적용
         className="flex-grow"
+      /> */}
+      <Select
+        options={categories.map((category) => ({
+          value: category.categoryId,
+          label: (
+            <div className="flex justify-between items-center w-full">
+              <span className="flex-grow">{category.name}</span>
+            </div>
+          ),
+        }))}
+        value={
+          categories.find((cat) => cat.categoryId === selectedCategory)
+            ? {
+                value: selectedCategory,
+                label: categories.find(
+                  (cat) => cat.categoryId === selectedCategory
+                ).name,
+              }
+            : null
+        }
+        onChange={(option) => onCategoryChange(option.value)}
+        styles={customStyles}
+        className="flex-grow"
+        placeholder="카테고리를 선택하세요"
       />
     </div>
   );
