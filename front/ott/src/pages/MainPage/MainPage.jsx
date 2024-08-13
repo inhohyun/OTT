@@ -60,7 +60,6 @@ const MainPage = () => {
       }
     };
     fetchFollowCount();
-    requestPermission();
   }, [memberId]); // 의존성을 빈 배열로 설정
 
   const renderComponent = () => {
@@ -94,6 +93,9 @@ const MainPage = () => {
     };
 
     fetchUserData();
+    if (memberId) {
+      requestPermission();
+    }
   }, [memberId]);
 
   return (
