@@ -14,4 +14,5 @@ public class CommentChildrenDto {
     private String msg;
     private String nickname;
     private LocalDateTime createdAt;
+    private Long memberId;
 }

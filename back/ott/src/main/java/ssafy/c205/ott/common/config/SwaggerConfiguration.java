@@ -43,12 +43,36 @@ public class SwaggerConfiguration {
     }
 
     @Bean
-    public GroupedOpenApi memberApi(){
+    public GroupedOpenApi memberApi() {
         return GroupedOpenApi.builder().group("OTT-Member").pathsToMatch("/members/**").build();
     }
 
     @Bean
-    public GroupedOpenApi clothesApi(){
+    public GroupedOpenApi clothesApi() {
         return GroupedOpenApi.builder().group("OTT-Clothes").pathsToMatch("/api/clothes/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi pushNotificationApi() {
+        return GroupedOpenApi.builder().group("OTT-Push").pathsToMatch("/api/push/**").build();
+    }
+
+    public GroupedOpenApi categoryApi() {
+        return GroupedOpenApi.builder().group("OTT-Category").pathsToMatch("/api/category/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi closetApi(){
+        return GroupedOpenApi.builder().group("OTT-Closet").pathsToMatch("/api/closet/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi AiApi(){
+        return GroupedOpenApi.builder().group("OTT-AI").pathsToMatch("/api/process/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi RecommendApi(){
+        return GroupedOpenApi.builder().group("OTT-Recommend").pathsToMatch("/api/recommend/**").build();
     }
 }

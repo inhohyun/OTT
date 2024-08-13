@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
+import ssafy.c205.ott.domain.item.dto.responsedto.ItemCategoryResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 import ssafy.c205.ott.domain.item.service.ItemService;
 
@@ -39,7 +40,8 @@ public class ItemController {
     })
     @PostMapping("/")
     public ResponseEntity<?> createItem(@ModelAttribute ItemCreateDto itemCreateDto,
-        @RequestParam(value = "frontImg", required = true) MultipartFile frontImg, @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
+        @RequestParam(value = "frontImg", required = true) MultipartFile frontImg,
+        @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
         if (frontImg == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필요 이미지가 없습니다.");
         }
@@ -54,7 +56,8 @@ public class ItemController {
     @PutMapping("/{clothes_id}")
     public ResponseEntity<?> updateItem(@PathVariable("clothes_id") Long clothesId,
         @ModelAttribute ItemUpdateDto itemUpdateDto,
-        @RequestParam(value = "frontImg", required = false) MultipartFile frontImg, @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
+        @RequestParam(value = "frontImg", required = false) MultipartFile frontImg,
+        @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
         itemService.updateItem(clothesId, itemUpdateDto, frontImg, backImg);
         return ResponseEntity.ok().body("옷 수정을 완료했습니다.");
     }
@@ -92,23 +95,49 @@ public class ItemController {
         return ResponseEntity.ok().body(itemService.selectItemList(userId));
     }
 
+    @Operation(summary = "카테고리별 옷 조회하기", description = "<big>카테고리별 옷</big>을 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "카테고리별 옷 리스트"),
+    })
     @GetMapping("/{user_id}/{category_id}")
     public ResponseEntity<?> getItemByCategory(@PathVariable("user_id") Long userId,
         @PathVariable("category_id") Long categoryId, @RequestParam("closet_id") Long closetId) {
         return ResponseEntity.ok().body(itemService.selectByCategory(categoryId, userId, closetId));
     }
 
+    @Operation(summary = "옷 북마크 하기", description = "옷을 <big>북마크</big>합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "북마크를 완료했습니다."),
+    })
     @PostMapping("/bookmark/{cloth_id}")
     public ResponseEntity<?> bookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
         log.info("룩북 아이디 : {}", clothesId);
-        itemService.bookmarkLookbook(clothesId);
+        itemService.bookmarkClothes(clothesId);
         return ResponseEntity.ok().body("북마크를 완료했습니다.");
     }
 
+    @Operation(summary = "옷 북마크 해제", description = "옷의 <big>북마크를 해제</big>합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "북마크 해제를 완료했습니다."),
+    })
     @PostMapping("/unbookmark/{cloth_id}")
     public ResponseEntity<?> unbookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
         log.info("룩북 아이디 : {}", clothesId);
-        itemService.unbookmarkLookbook(clothesId);
+        itemService.unbookmarkClothes(clothesId);
         return ResponseEntity.ok().body("북마크 해제를 완료했습니다.");
+    }
+
+    @Operation(summary = "북마크된 옷 조회", description = "<big>북마크된 옷을 조회</big>합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "북마크된 옷 리스트"),
+    })
+    @GetMapping("/bookmark")
+    public ResponseEntity<?> getBookmark(@RequestParam("memberId") Long memberId) {
+        List<ItemCategoryResponseDto> itemCategoryResponseDtos = itemService.selectByBookmark(
+            memberId);
+        if (itemCategoryResponseDtos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("북마크된 옷을 찾지 못했습니다.");
+        }
+        return ResponseEntity.ok().body(itemCategoryResponseDtos);
     }
 }

@@ -1,4 +1,5 @@
 import axiosInstance from "../axiosInstance";
+import axios, { AxiosError } from "axios";
 
 export const getNotificationsList = async (memberId) => {
   try {
@@ -20,4 +21,20 @@ export const getLatestNotification = async (memberId) => {
     console.error('최신 알림 받아오는데 에러 발생:', error);
     throw error;
   }
+}
+
+const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
+
+export const inviteMeeting = async (data) => {
+    axios.post(`${baseURL}api/notification/meeting`, data)
+    .then(response => {
+        if (response && response.data) {
+            console.log(response);
+            
+        }
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        console.log('WebRTC 세션 초대 실패');
+    });
 }

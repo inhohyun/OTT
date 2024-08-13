@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVideo, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { getUserInfo, getUid } from '../../api/user/user';
+import axios from 'axios';
+import { inviteMeeting } from '../../api/notification/notification';
 
 const CustomPersonSearchResult = ({
   // 검색 결과 데이터 배열
@@ -19,33 +22,6 @@ const CustomPersonSearchResult = ({
       return;
     }
 
-    // // 검색어와 일치하는 결과 필터링 및 정렬
-    // const filtered = results
-    //   .filter(
-    //     (result) =>
-    //       result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //       result.description.toLowerCase().includes(searchQuery.toLowerCase())
-    //   )
-    //   .sort((a, b) => {
-    //     const aTitleIndex = a.title
-    //       .toLowerCase()
-    //       .indexOf(searchQuery.toLowerCase());
-    //     const aDescIndex = a.description
-    //       .toLowerCase()
-    //       .indexOf(searchQuery.toLowerCase());
-    //     const bTitleIndex = b.title
-    //       .toLowerCase()
-    //       .indexOf(searchQuery.toLowerCase());
-    //     const bDescIndex = b.description
-    //       .toLowerCase()
-    //       .indexOf(searchQuery.toLowerCase());
-
-    //     const aIndex = aTitleIndex >= 0 ? aTitleIndex : aDescIndex;
-    //     const bIndex = bTitleIndex >= 0 ? bTitleIndex : bDescIndex;
-
-    //     return aIndex - bIndex;
-    //   });
-
     setFilteredResults(results);
   }, [results, searchQuery]);
 
@@ -55,8 +31,20 @@ const CustomPersonSearchResult = ({
   };
 
   // 비디오 채팅 시작
-  const startVideoChat = (username) => {
-    navigate(`/video-chat/${username}`);
+  const startVideoChat = async (invitedMemberId) => {
+    // const memberId = (await getUid()).data.id;
+    // if (!memberId) console.log("호스트 회원 아이디 조회 실패");
+
+    // const userName = (await getUserInfo()).data.nickname;
+    const userName = 'jjh';
+    // if (!userName) console.log("호스트 회원 이름 조회 실패");
+    
+    // const sessionId = `session-${nickname}`;
+    const sessionId = 'session-jjh';
+
+    inviteMeeting({invitedMemberId, sessionId});
+    // 사용자를 비디오 채팅 페이지로 이동시키면서 세션 ID와 토큰을 전달
+    navigate(`/video-chat`, { state: { sessionId, userName } });
   };
 
   if (!searchQuery) {
@@ -90,6 +78,7 @@ const CustomPersonSearchResult = ({
               <FontAwesomeIcon
                 icon={faUserCircle}
                 className="text-gray-400 mr-4"
+                src={result.profileImageUrl}
                 style={{ fontSize: '36px' }}
               />
               <div>
@@ -103,12 +92,12 @@ const CustomPersonSearchResult = ({
                   className="text-xs text-stone-500"
                   style={{ fontSize: '12px' }}
                 >
-                  {result.description}
+                  {result.name}
                 </p>
               </div>
             </div>
             <div
-              onClick={() => startVideoChat(result.title)}
+              onClick={() => startVideoChat(result.id)}
               className="text-gray-600 hover:text-gray-800 cursor-pointer"
             >
               <FontAwesomeIcon icon={faVideo} className="text-xl" />

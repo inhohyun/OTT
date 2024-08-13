@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter
-@ToString @Builder
-public class NotificationSelectDto {
-
-    private String uid;
+@Getter
+@Setter
+@ToString
+@Builder
+public class FCMTokenDto {
+    private Long memberId;
+    private String token;
 }

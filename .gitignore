@@ -1,3 +1,4 @@
 *.idea
 *.properties
 
+/back/ott/src/main/resources

@@ -12,21 +12,23 @@ import lombok.ToString;
 public class FindLookbookDto {
 
     private String imageURL;
-    private Long uid;
+    private Long memberId;
     private LocalDateTime createdAt;
-    private int cntLike;
+    private int cntFavorite;
     private int cntComment;
-    private boolean isLike;
+    private boolean isFavorite;
+    private Long lookbookId;
 
     @Builder
-    public FindLookbookDto(String imageURL, Long uid, LocalDateTime createdAt, int cntLike,
-        int cntComment, boolean isLike) {
+    public FindLookbookDto(String imageURL, Long memberId, LocalDateTime createdAt, int cntFavorite,
+        int cntComment, boolean isFavorite, Long lookbookId) {
         this.imageURL = imageURL;
-        this.uid = uid;
+        this.memberId = memberId;
         this.createdAt = createdAt;
-        this.cntLike = cntLike;
+        this.cntFavorite = cntFavorite;
         this.cntComment = cntComment;
-        this.isLike = isLike;
+        this.isFavorite = isFavorite;
+        this.lookbookId = lookbookId;
     }
 
     public FindLookbookDto() {

@@ -22,6 +22,7 @@ import UserPage from './pages/UserPage/UserPage';
 import OAuthCallback from './pages/OAuth/OAuthCallback';
 import UpdateLookbookPage from './pages/Create/UpdateLookbookPage';
 import { CookiesProvider } from 'react-cookie';
+import "./api/notification/pushNotification.js"; 
 function App() {
   return (
     <>
@@ -42,7 +43,7 @@ function App() {
               <Route path="/UpdatePage" element={<UpdatePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/webrtc" element={<WebRTCPage />} />
-              <Route path="/video-chat/:username" element={<VideoChat />} />
+              <Route path="/video-chat" element={<VideoChat />} />
               <Route path="/lookbookcreate" element={<LookbookCreate />} />
               <Route
                 path="/update-lookbook/:id"
