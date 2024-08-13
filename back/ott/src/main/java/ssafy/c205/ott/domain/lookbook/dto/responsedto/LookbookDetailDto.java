@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import ssafy.c205.ott.common.entity.PublicStatus;
 
 @Getter
 @Setter
@@ -27,13 +28,14 @@ public class LookbookDetailDto {
     private String profileImg;
     private boolean isFollow;
     private Long memberId;
+    private PublicStatus publicStatus;
 
     @Builder
     public LookbookDetailDto(long viewCount, String content, String nickname,
         List<ClothesImageDto> images, List<String> tags, List<ClothesImageDto> salesClothes,
         LocalDateTime createdAt, String thumnail, int cntFavorite, int cntComment,
         boolean isFavorite,
-        String profileImg, boolean isFollow, Long memberId) {
+        String profileImg, boolean isFollow, Long memberId, PublicStatus publicStatus) {
         this.viewCount = viewCount;
         this.content = content;
         this.nickname = nickname;
@@ -48,6 +50,7 @@ public class LookbookDetailDto {
         this.profileImg = profileImg;
         this.isFollow = isFollow;
         this.memberId = memberId;
+        this.publicStatus = publicStatus;
     }
 
     public LookbookDetailDto() {
