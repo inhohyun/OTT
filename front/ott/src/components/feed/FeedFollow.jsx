@@ -157,12 +157,14 @@ import plus from '../../assets/icons/plusicon.png';
 import useUserStore from '../../data/lookbook/userStore';
 import CustomSpinner from '../common/CustomSpinner';
 import NoFeed from '../../components/feed/NoFeed';
+import useLookbookStore from '../../data/lookbook/detailStore';
 
 const FeedFollow = () => {
   const [followersData, setFollowersData] = useState([]);
   const [visibleLookbooks, setVisibleLookbooks] = useState({});
   const [selectedFollower, setSelectedFollower] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { hideDetail } = useLookbookStore();
 
   const scrollRefs = useRef([]);
 
@@ -210,6 +212,11 @@ const FeedFollow = () => {
 
   const closeDetailedView = () => {
     setSelectedFollower(null);
+  };
+
+  const handleCloseDetail = async () => {
+    console.log('[*]모달 닫기');
+    hideDetail();
   };
 
   if (!Array.isArray(followersData) || !followersData.length) {
@@ -273,7 +280,20 @@ const FeedFollow = () => {
                 .slice(0, visibleLookbooks[follower.nickname])
                 .map((lookbook) => (
                   <div key={lookbook.lookbookId} className="lookbook-container">
-                    <Lookbook data={lookbook} />
+                    <Lookbook
+                      data={{
+                        lookbookId: lookbook.lookbookId,
+                        nickname: follower.nickname,
+                        cntComment: lookbook.cntComment,
+                        cntFavorite: lookbook.cntFavorite,
+                        createdAt: lookbook.createdAt,
+                        img: lookbook.imgThumbnail,
+                        memberId: follower.memberId,
+                        imgProfile: follower.imgProfile,
+                        introduction: follower.introduction,
+                      }}
+                      onClose={handleCloseDetail}
+                    />
                   </div>
                 ))}
               {visibleLookbooks[follower.nickname] <
