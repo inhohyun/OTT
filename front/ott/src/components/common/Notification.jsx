@@ -94,6 +94,9 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const joinSession = async (sessionId) => {
     console.log('알림 클릭');
     const memberId = useUserStore((state) => state.userId);
+    console.log(memberId);
+    console.log(await getUserInfo(memberId));
+    console.log(await getUserInfo(memberId).data);
     const userName = (await getUserInfo(memberId)).data.nickname;
     navigate(`/video-chat`, { state: { sessionId, userName } });
     onClose(); // 세션에 참여한 후 모달 닫기
