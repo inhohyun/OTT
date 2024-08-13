@@ -22,6 +22,12 @@ const Following = ({ uid }) => {
 
     fetchFollings();
   }, [uid]);
+
+  const handleClick = (user) => {
+    // console.log('Clicked user:', user.id);
+    navigate('/userpage', { state: { id: user.memberId } });
+  };
+
   return (
     <div className="flex flex-col items-center mb-20">
       <div
@@ -48,6 +54,7 @@ const Following = ({ uid }) => {
                           src={following.image || defaultImage}
                           alt="Following"
                           className="w-full h-full object-cover"
+                          onClick={() => handleClick(following)}
                         />
                       </div>
                       <span>{following.nickname}</span>
