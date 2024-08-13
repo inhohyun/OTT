@@ -17,8 +17,10 @@ const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
   const [followStatus, setFollowStatus] = useState('팔로우'); // 초기 상태를 '팔로우'로 설정
   const [userInfo, setUserInfo] = useState(null);
+  const { nickname, tags, publicStatus } = userInfo;
+
   const [isMe, setIsMe] = useState(false);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(publicStatus === 'PUBLIC');
   const navigate = useNavigate();
   // memberId 가져오기
   const memberId = useUserStore((state) => state.userId);
@@ -67,8 +69,6 @@ const UserPage = () => {
   if (!userInfo) {
     return <div>Loading...</div>;
   }
-
-  const { nickname, name, tags, publicStatus } = userInfo;
 
   let renderComponent;
 
@@ -121,9 +121,7 @@ const UserPage = () => {
       console.error('ID is not available');
     }
   };
-  useEffect(() => {
-    setIsPublic(publicStatus === 'PUBLIC');
-  }, []);
+
   return (
     <div
       className="relative flex flex-col items-center w-full min-h-screen bg-cover bg-center font-dohyeon mb-20"
