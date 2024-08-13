@@ -33,7 +33,7 @@ const CanvasArea = ({
             style={{ left: item.x, top: item.y }}
           >
             <img
-              src={item.imagePath?.path || item.image}
+              src={(item.imagePath?.path || item.image)+ "?timestamp="+new Date().getTime()}
               alt={item.name}
               className="w-full h-full cursor-move"
               onMouseDown={() => handleMouseDown(index)}
