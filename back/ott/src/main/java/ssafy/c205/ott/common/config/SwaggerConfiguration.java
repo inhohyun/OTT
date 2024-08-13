@@ -51,4 +51,9 @@ public class SwaggerConfiguration {
     public GroupedOpenApi clothesApi(){
         return GroupedOpenApi.builder().group("OTT-Clothes").pathsToMatch("/api/clothes/**").build();
     }
+
+    @Bean
+    public GroupedOpenApi pushNotificationApi(){
+        return GroupedOpenApi.builder().group("OTT-Push").pathsToMatch("/api/push/**").build();
+    }
 }
