@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faImage } from '@fortawesome/free-solid-svg-icons';
 import Lookbook from '../../components/lookbook/Lookbook';
+import useLookbookStore from '../../data/lookbook/detailStore';
 const StyleSearchResult = ({ results, searchQuery }) => {
   const [visibleResults, setVisibleResults] = useState(6);
   const [filteredResults, setFilteredResults] = useState([]);
   const containerRef = useRef(null);
+  const { deleteLookbook, hideDetail } = useLookbookStore();
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -66,6 +68,15 @@ const StyleSearchResult = ({ results, searchQuery }) => {
     setFilteredResults(results);
   }, [results, searchQuery]);
 
+  const handleDelete = (deletedLookbookId) => {
+    deleteLookbook(deletedLookbookId);
+    // handleCloseDetail();
+    hideDetail();
+  };
+
+  const handleCloseDetail = async () => {
+    hideDetail();
+  };
   // 숫자 포맷하는 함수 정의
   const formatNumber = (num) => {
     if (num >= 1000) {
@@ -96,7 +107,12 @@ const StyleSearchResult = ({ results, searchQuery }) => {
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {filteredResults.slice(0, visibleResults).map((result, index) => (
-            <Lookbook key={index} data={result} />
+            <Lookbook
+              key={index}
+              data={result}
+              onClose={handleCloseDetail}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       </div>
