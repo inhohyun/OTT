@@ -5,7 +5,7 @@ import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-const CustomClothesGrid = ({ clothes, onToggleLike }) => {
+const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
   // 처음에 보이는 항목 수
   const [visibleItems, setVisibleItems] = useState(12);
   // 스크롤을 위한 컨테이너 요소의 참조
@@ -130,7 +130,7 @@ const CustomClothesGrid = ({ clothes, onToggleLike }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleToggleLike(item.key);
+                    onToggleLike(item.key);
                   }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
