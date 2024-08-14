@@ -88,7 +88,7 @@ const UserPage = () => {
     const fetchLookbookCount = async (sendId) => {
       try {
         const response = await getLookbookCount(sendId);
-        setPostCount(response.data);
+        setPostCount(response);
       } catch (error) {
         console.error(error);
       }
