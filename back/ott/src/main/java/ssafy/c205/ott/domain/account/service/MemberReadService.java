@@ -42,6 +42,10 @@ public class MemberReadService {
         return SurveyResponseDto.builder().surveyCompleted(memberRepository.findBySso(currentMember.getUsername()).isSurveyCompleted()).build();
     }
 
+    public MemberNicknameDto nicknameSearch(Long memberId) {
+        return MemberNicknameDto.builder().nickname(findActiveMemberById(memberId).getNickname()).build();
+    }
+
     public MemberNotificationDto myInfoSearch(MemberSsoDto memberSsoDto) {
         Member findMember = memberRepository.findBySso(memberSsoDto.getSso());
         return MemberNotificationDto.builder().memberId(findMember.getId()).memberName(findMember.getName()).build();
