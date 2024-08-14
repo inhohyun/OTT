@@ -73,6 +73,7 @@ const AiProceeding = () => {
 
     if (!hasModalOpenedRef.current) {
       console.log('모달 서버 호출 테스트');
+      console.log('서버에 보낼 옷 url', selectClothesURL);
       // FIXME : 하드코딩한 버전
       // sendData(
       //   1,
