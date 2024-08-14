@@ -13,7 +13,7 @@ import {
   getBookmarkedClothes,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
-import { getUserInfo } from '../../api/user/user';
+import { getUserNickname } from '../../api/user/user';
 
 const VideoChatPage = () => {
   const location = useLocation();
@@ -36,7 +36,7 @@ const VideoChatPage = () => {
   useEffect(() => {
     const fetchClosetIdAndCategories = async () => {
       try {
-        const otherUserInfoResponse = await getUserInfo(otherMemberId);
+        const otherUserInfoResponse = await getUserNickname(otherMemberId);
         setOtherUserInfo(otherUserInfoResponse.data);
         const closetResponse = await getClosetId(otherMemberId);
         console.log('closetResponse', closetResponse);
