@@ -144,13 +144,13 @@ const CreateLookbook = () => {
                 const url = URL.createObjectURL(blob);
 
                 return {
-                  id: item.clothId,
+                  id: item.clothesId,
                   image: url,
                 };
               } catch (imageError) {
                 console.error('이미지 가져오기 실패:', imageError);
                 return {
-                  id: item.clothId,
+                  id: item.clothesId,
                   image: null, // 이미지 로드 실패 시 null을 설정
                 };
               }
