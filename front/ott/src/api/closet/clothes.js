@@ -155,3 +155,23 @@ export const getOtherClothesList = async (memberId) => {
     throw error;
   }
 };
+
+// 카테고리별 옷 조회
+export const getOtherClothesByCategory = async (memberId, categoryId, closetId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/clothes/rtc/${memberId}/${categoryId}`,
+      {
+        params: { closet_id: closetId },
+      }
+    );
+    console.log(memberId);
+    console.log(categoryId);
+    console.log('카테고리별 조회 성공');
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error('카테고리별 조회 실패');
+    throw error;
+  }
+};
