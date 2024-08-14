@@ -10,6 +10,7 @@ import {
   getClosetId,
   getClothesByCategory,
   getBookmarkedClothes,
+  getOtherClothesList,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 import useUserStore from '../../data/lookbook/userStore';
@@ -52,9 +53,11 @@ const ClosetPage = () => {
     }
   };
   // 옷 목록을 가져오는 함수
-  const fetchInitialClothesList = async (sendId) => {
+  const fetchInitialClothesList = async (isMe, sendId) => {
     try {
-      const clothesList = await getClothesList(sendId);
+      const clothesList = isMe
+        ? await getClothesList(sendId)
+        : await getOtherClothesList(sendId);
       setClothes(clothesList);
     } catch (error) {
       console.error('옷 목록 가져오기 실패:', error);
@@ -65,11 +68,11 @@ const ClosetPage = () => {
     console.log('옷장의 currentId, undefind면 본인임:', currentId);
     if (currentId === undefined || currentId === null) {
       console.log('본인 memberId로 정보 가져오기', memberId);
-      fetchInitialClothesList(memberId);
+      fetchInitialClothesList(true, memberId);
       fetchClosetIdAndCategories(memberId);
     } else {
       console.log('다른 사람 memberId로 정보 가져오기', currentId);
-      fetchInitialClothesList(currentId);
+      fetchInitialClothesList(false, currentId);
       fetchClosetIdAndCategories(currentId);
     }
   }, []);

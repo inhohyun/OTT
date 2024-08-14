@@ -1,4 +1,5 @@
 import axiosInstance from '../axiosInstance';
+import { getCategoryList } from './categories';
 
 // closet id 가져오기
 export const getClosetId = async (memberId) => {
@@ -138,6 +139,19 @@ export const getBookmarkedClothes = async (memberId) => {
     return response;
   } catch (error) {
     console.error('북마크된 옷 목록 조회 실패: ', error);
+    throw error;
+  }
+};
+
+//상대방의 모든 옷 조회
+export const getOtherClothesList = async (memberId) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/clothes/rtc/${memberId}/list`
+    );
+    return response;
+  } catch (error) {
+    console.error('카테고리 목록 불러오는 중 에러 발생:', error);
     throw error;
   }
 };
