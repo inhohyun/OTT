@@ -23,15 +23,11 @@ const RTCNotification = ({
             ? `translateX(${moveX - startX}px)`
             : 'translateX(0)',
         transition:
-          swipedIndex === index && isSwiping
-            ? 'none'
-            : 'transform 0.2s ease',
+          swipedIndex === index && isSwiping ? 'none' : 'transform 0.2s ease',
       }}
     >
       <div className="flex justify-between">
-        <p className="text-xs text-stone-500">
-          {notification.notificationType}
-        </p>
+        <p className="text-xs text-stone-500">화상 거래 요청</p>
         <p className="text-xs text-stone-500">
           {formatDate(notification.createdAt)}
         </p>
@@ -48,9 +44,12 @@ const RTCNotification = ({
           className="bg-violet-400 text-white px-3 py-1 rounded"
           onClick={(e) => {
             e.stopPropagation(); // 이벤트 전파를 중지하여 부모의 터치 이벤트와 충돌하지 않도록 함
-            console.log("sessionId : "+notification.additionalData.sessionId);
-            
-            joinSession(notification.additionalData.sessionId, notification.additionalData.rtcRequestMemberId);
+            console.log('sessionId : ' + notification.additionalData.sessionId);
+
+            joinSession(
+              notification.additionalData.sessionId,
+              notification.additionalData.rtcRequestMemberId
+            );
           }}
         >
           수락
