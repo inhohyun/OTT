@@ -102,12 +102,15 @@ const LookbookDetail = ({
   // });
 
   const handleEditLookbook = () => {
-    hideDetail();
-    // setIsDetailVisible(false);
-    console.log(lookbook, '룩북!!');
-    nav(`/update-lookbook/${lookbookId}`, {
-      state: { lookbook: lookbook },
-    });
+    const isConfirmed = window.confirm('룩북을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      hideDetail();
+      // console.log(lookbook, '룩북!!');
+      nav(`/update-lookbook/${lookbookId}`, {
+        state: { lookbook: lookbook },
+      });
+    }
   };
 
   if (!lookbook) {
