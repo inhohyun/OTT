@@ -13,7 +13,7 @@ import {
   getBookmarkedClothes,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
-import { getUserInfo } from '../../api/user/user';
+import { getUserNickname } from '../../api/user/user';
 
 const VideoChatPage = () => {
   const location = useLocation();
@@ -28,7 +28,7 @@ const VideoChatPage = () => {
   const [closetId, setClosetId] = useState(null);
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [otherUserInfo, setOtherUserInfo] = useState(null);
+  const [otherUserNickname, setOtherUserNickname] = useState(null);
 
   // 옷 데이터 상태
 
@@ -36,8 +36,8 @@ const VideoChatPage = () => {
   useEffect(() => {
     const fetchClosetIdAndCategories = async () => {
       try {
-        const otherUserInfoResponse = await getUserInfo(otherMemberId);
-        setOtherUserInfo(otherUserInfoResponse.data);
+        const otherUserNicknameResponse = await getUserNickname(otherMemberId);
+        setOtherUserNickname(otherUserNicknameResponse.data.nickname);
         const closetResponse = await getClosetId(otherMemberId);
         console.log('closetResponse', closetResponse);
         const closetId = closetResponse.data[0].id;
@@ -124,7 +124,7 @@ const VideoChatPage = () => {
       </div>
       <div className="flex-grow h-2/3">
         <div className="text-center my-2">
-          <h2 className="text-xl font-bold mb-2">{otherUserInfo.nickname}님의 옷장</h2>{' '}
+          <h2 className="text-xl font-bold mb-2">{otherUserNickname}님의 옷장</h2>{' '}
           {/* 사용자 이름 표시 */}
           <div className="flex justify-center mt-[-5%]">
             <CustomCategoryDropdown
