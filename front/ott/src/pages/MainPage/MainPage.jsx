@@ -106,7 +106,7 @@ const MainPage = () => {
     };
 
     fetchUserData();
-  }, [setUserId]);
+  }, []);
 
   useEffect(() => {
     if (memberId) {
