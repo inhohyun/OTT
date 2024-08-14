@@ -28,19 +28,21 @@ const Posts = ({ isMe, isPublic, currentId }) => {
     <div className="w-full">
       <div className="flex justify-center space-x-2">
         <button
-          className={`py-2 px-5 cursor-pointer rounded-full`}
+          className={`py-2 px-5 cursor-pointer rounded-full ${isMe ? 'space-x-2' : ''}`}
           onClick={() => setActivePostType('public')}
           style={{ fontFamily: 'dohyeon' }}
         >
           공개
         </button>
-        <button
-          className={`py-2 px-5 cursor-pointer rounded-full`}
-          onClick={() => setActivePostType('private')}
-          style={{ fontFamily: 'dohyeon' }}
-        >
-          비공개
-        </button>
+        {isMe && (
+          <button
+            className={`py-2 px-5 cursor-pointer rounded-full`}
+            onClick={() => setActivePostType('private')}
+            style={{ fontFamily: 'dohyeon' }}
+          >
+            비공개
+          </button>
+        )}
       </div>
       <div className="mt-[-2]">
         {' '}
@@ -50,19 +52,21 @@ const Posts = ({ isMe, isPublic, currentId }) => {
           <PrivatePosts isMe={isMe} />
         )}
       </div>
-      <div className="flex justify-center mt-4">
-        {' '}
-        <button
-          className="w-[220px] py-2 px-5 cursor-pointer rounded-full bg-violet-200 text-white flex items-center justify-center mb-20 relative mt-5"
-          style={{ fontFamily: 'dohyeon' }}
-          onClick={handleLookbookRegister}
-        >
-          <span className="flex items-center">
-            <img src={AddIcon} alt="룩북 아이콘" className="w-6 h-6 mr-2" />
-            룩북 등록
-          </span>
-        </button>
-      </div>
+      {isMe && (
+        <div className="flex justify-center mt-4">
+          {' '}
+          <button
+            className="w-[220px] py-2 px-5 cursor-pointer rounded-full bg-violet-200 text-white flex items-center justify-center mb-20 relative mt-5"
+            style={{ fontFamily: 'dohyeon' }}
+            onClick={handleLookbookRegister}
+          >
+            <span className="flex items-center">
+              <img src={AddIcon} alt="룩북 아이콘" className="w-6 h-6 mr-2" />
+              룩북 등록
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
