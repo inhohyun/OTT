@@ -26,7 +26,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
       if (scrollLeft + clientWidth >= scrollWidth - 10) {
-        setVisibleItems((prev) => prev + 12);
+        setVisibleItems((prev) => prev + 1150);
       }
     }
   };

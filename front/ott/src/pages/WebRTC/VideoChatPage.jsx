@@ -14,13 +14,12 @@ import {
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 
-
 const VideoChatPage = () => {
   const location = useLocation();
   const { sessionId, userName, otherMemberId } = location.state;
 
   // URL에서 username을 추출
-  // const { username } = useParams(); 
+  // const { username } = useParams();
   // 선택된 카테고리 상태
   const [selectedCategory, setSelectedCategory] = useState(-100);
   const [categories, setCategories] = useState([]);
@@ -28,7 +27,6 @@ const VideoChatPage = () => {
   const [closetId, setClosetId] = useState(null);
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-
 
   // 옷 데이터 상태
 
@@ -64,7 +62,7 @@ const VideoChatPage = () => {
   // 카테고리 변경
   const handleCategoryChange = (newCategory) => {
     // 선택된 카테고리 업데이트
-    setSelectedCategory(newCategory); 
+    setSelectedCategory(newCategory);
   };
 
   useEffect(() => {
@@ -122,7 +120,8 @@ const VideoChatPage = () => {
       </div>
       <div className="flex-grow h-2/3">
         <div className="text-center my-2">
-          <h2 className="text-xl font-bold mb-2">{userName}님의 옷장</h2> {/* 사용자 이름 표시 */}
+          <h2 className="text-xl font-bold mb-2">{userName}님의 옷장</h2>{' '}
+          {/* 사용자 이름 표시 */}
           <div className="flex justify-center mt-[-5%]">
             <CustomCategoryDropdown
               selectedCategory={selectedCategory}
@@ -140,16 +139,16 @@ const VideoChatPage = () => {
             onClothesClick={handleClothesClick}
           />
           {selectedClothing && (
-          <ClothesDetailModal
-            isOpen={isDetailModalOpen}
-            onClose={() => setIsDetailModalOpen(false)}
-            clothingItem={selectedClothing}
-            categories={filteredCategories}
-            setClothes={setClothes}
-            memberId={otherMemberId}
-            setCategories={setCategories}
-          />
-        )}
+            <ClothesDetailModal
+              isOpen={isDetailModalOpen}
+              onClose={() => setIsDetailModalOpen(false)}
+              clothingItem={selectedClothing}
+              categories={filteredCategories}
+              setClothes={setClothes}
+              memberId={otherMemberId}
+              setCategories={setCategories}
+            />
+          )}
         </div>
       </div>
     </div>

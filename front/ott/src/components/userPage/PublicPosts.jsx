@@ -90,7 +90,7 @@ const PublicPosts = ({ isMe, currentId }) => {
               backgroundPosition: 'center',
             }}
           ></button>
-          <div
+          {/* <div
             ref={containerRef}
             className="overflow-x-auto scrollbar-hide flex space-x-4"
           >
@@ -115,6 +115,18 @@ const PublicPosts = ({ isMe, currentId }) => {
                   />
                 ))}
               </div>
+            </div>
+          </div> */}
+          <div ref={containerRef} className="overflow-x-auto scrollbar-hide">
+            <div className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1">
+              {lookbooks.map((lookbook, index) => (
+                <Lookbook
+                  key={index}
+                  data={lookbook}
+                  onClose={handleCloseDetail}
+                  onDelete={handleDelete}
+                />
+              ))}
             </div>
           </div>
           <button

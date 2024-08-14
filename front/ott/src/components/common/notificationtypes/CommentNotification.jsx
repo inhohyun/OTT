@@ -59,11 +59,16 @@ const CommentNotification = ({
         </div>
       </div>
 
+      {/* {isDetailVisible && (
+        <LookbookDetail lookbookId={notification.additionalData.lookbookId} onClose={onClose} />
+      )} */}
       {isDetailVisible && (
-        <LookbookDetail
-          lookbookId={notification.additionalData.lookbookId}
-          onClose={onClose}
-        />
+        <div className="fixed top-0 left-0 max-w-md h-full flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <LookbookDetail
+            lookbookId={notification.additionalData.lookbookId}
+            onClose={onClose}
+          />
+        </div>
       )}
     </div>
   );

@@ -12,7 +12,7 @@ const baseURL = 'https://i11c205.p.ssafy.io';
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: baseURL,
-  timeout: 60000,
+  timeout: 1000000,
   headers: {
     'Content-Type': 'application/json',
     'Origin': 'https://i11c205.p.ssafy.io', // 여기에 Origin 헤더 추가

@@ -193,7 +193,7 @@ const FormControls = ({
                 {clothes.map((item) => {
                   const isAdded = (canvasItems || []).some(
                     (canvasItem) =>
-                      canvasItem.id === item.id &&
+                      (canvasItem.id || canvasItem.clothesId) === item.id &&
                       canvasItem.category === selectedCategory
                   );
                   return (

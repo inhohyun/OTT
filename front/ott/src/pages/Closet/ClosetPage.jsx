@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
@@ -9,6 +10,7 @@ import {
   getClosetId,
   getClothesByCategory,
   getBookmarkedClothes,
+  getOtherClothesList,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 import useUserStore from '../../data/lookbook/userStore';
@@ -22,46 +24,58 @@ const ClosetPage = () => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [closetId, setClosetId] = useState(null);
   const memberId = useUserStore((state) => state.userId);
+  const location = useLocation();
+
+  const currentId = location.state?.id;
+
+  // 카테고리를 가져오는 함수
+  const fetchClosetIdAndCategories = async (sendId) => {
+    try {
+      const closetResponse = await getClosetId(sendId);
+      console.log('closetResponse', closetResponse);
+      const closetId = closetResponse.data[0].id;
+      setClosetId(closetId);
+
+      const categoryList = await getCategoryList(closetResponse.data[0].id);
+      console.log('categoryList', categoryList);
+      const fetchedCategories = categoryList.data.map((category) => ({
+        categoryId: category.categoryId,
+        name: category.name,
+      }));
+
+      setCategories([
+        { categoryId: -100, name: '전체' },
+        { categoryId: -200, name: '즐겨찾기' },
+        ...fetchedCategories,
+      ]);
+    } catch (error) {
+      console.error('카테고리 목록 가져오기 실패:', error);
+    }
+  };
+  // 옷 목록을 가져오는 함수
+  const fetchInitialClothesList = async (isMe, sendId) => {
+    try {
+      const clothesList = isMe
+        ? await getClothesList(sendId)
+        : await getOtherClothesList(sendId);
+      setClothes(clothesList);
+    } catch (error) {
+      console.error('옷 목록 가져오기 실패:', error);
+    }
+  };
   useEffect(() => {
-    const fetchInitialClothesList = async () => {
-      try {
-        const clothesList = await getClothesList(memberId);
-        setClothes(clothesList);
-      } catch (error) {
-        console.error('옷 목록 가져오기 실패:', error);
-      }
-    };
-
-    fetchInitialClothesList();
-  }, [memberId]);
-
-  useEffect(() => {
-    const fetchClosetIdAndCategories = async () => {
-      try {
-        const closetResponse = await getClosetId(memberId);
-        console.log('closetResponse', closetResponse);
-        const closetId = closetResponse.data[0].id;
-        setClosetId(closetId);
-
-        const categoryList = await getCategoryList(closetResponse.data[0].id);
-        console.log('categoryList', categoryList);
-        const fetchedCategories = categoryList.data.map((category) => ({
-          categoryId: category.categoryId,
-          name: category.name,
-        }));
-
-        setCategories([
-          { categoryId: -100, name: '전체' },
-          { categoryId: -200, name: '즐겨찾기' },
-          ...fetchedCategories,
-        ]);
-      } catch (error) {
-        console.error('카테고리 목록 가져오기 실패:', error);
-      }
-    };
-
-    fetchClosetIdAndCategories();
-  }, [memberId]);
+    // 본인 또는 다른 사람의 카테고리 및 옷 목록 가져오기
+    console.log('옷장의 currentId, undefind면 본인임:', currentId);
+    if (currentId === undefined || currentId === null) {
+      console.log('본인 memberId로 정보 가져오기', memberId);
+      fetchInitialClothesList(true, memberId);
+      fetchClosetIdAndCategories(memberId);
+    } else {
+      console.log('다른 사람 memberId로 정보 가져오기', currentId);
+      fetchInitialClothesList(false, currentId);
+      fetchClosetIdAndCategories(currentId);
+    }
+  }, []);
 
   useEffect(() => {
     if (closetId !== null) {

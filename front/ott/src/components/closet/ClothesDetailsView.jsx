@@ -8,6 +8,7 @@ import {
   faTimes,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import CustomSpinner from '../common/CustomSpinner';
 
 const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 이미지 인덱스 상태 관리
@@ -70,7 +71,7 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // 로딩 중일 때 표시
+    return <CustomSpinner />; // 로딩 중일 때 표시
   }
 
   return (
@@ -145,8 +146,11 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
         <p>성별: {getGenderText(detailedItem.gender)}</p>
         <p>판매 여부: {getSalesStatusText(detailedItem.salesStatus)}</p>
         <p>공개 여부: {getPublicStatusText(detailedItem.publicStatus)}</p>
-        <p>즐겨찾기: {detailedItem.bookmarkStatus === 'BOOKMARKING' ? '예' : '아니오'}</p>
-        </div>
+        <p>
+          즐겨찾기:{' '}
+          {detailedItem.bookmarkStatus === 'BOOKMARKING' ? '예' : '아니오'}
+        </p>
+      </div>
     </>
   );
 };

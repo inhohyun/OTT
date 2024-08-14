@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
-import { updateClothes, getClothesItemData, deleteClothes, getClothesList } from '../../api/closet/clothes';
+import {
+  updateClothes,
+  getClothesItemData,
+  deleteClothes,
+  getClothesList,
+} from '../../api/closet/clothes';
 
 const ClothesDetailModal = ({
   isOpen,
@@ -15,14 +20,13 @@ const ClothesDetailModal = ({
   const [itemDetails, setItemDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-
   useEffect(() => {
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
-          console.log(clothingItem)
+          console.log(clothingItem);
           const data = await getClothesItemData(clothingItem.clothesId);
-          console.log(data)
+          console.log(data);
           setItemDetails(data);
         } catch (error) {
           console.error('Failed to fetch item details:', error);
@@ -33,8 +37,8 @@ const ClothesDetailModal = ({
   }, [clothingItem]);
 
   const handleToggleEdit = () => {
-    console.log(itemDetails)
-    setIsEditing(true); 
+    console.log(itemDetails);
+    setIsEditing(true);
   };
 
   const handleSave = async () => {
@@ -49,7 +53,7 @@ const ClothesDetailModal = ({
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
       formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
       formData.append('memberId', memberId);
-  
+
       await updateClothes(itemDetails.clothesId, formData);
       const updatedClothesList = await getClothesList(memberId);
       setClothes(updatedClothesList);
@@ -60,7 +64,7 @@ const ClothesDetailModal = ({
       if (updatedItemDetails) {
         setItemDetails(updatedItemDetails);
       }
-  
+
       // onEdit(itemDetails);
       setIsEditing(false);
     } catch (error) {
@@ -79,7 +83,7 @@ const ClothesDetailModal = ({
       console.error('Error deleting item:', error);
     }
   };
-  
+
   const handleCancel = () => {
     setIsEditing(false);
   };

@@ -56,7 +56,7 @@ const UpdatePage = () => {
   };
 
   const handleCheckboxChange = () => {
-    setIsChecked(isChecked);
+    setIsChecked(!isChecked);
   };
 
   const [searchText, setSearchText] = useState('');
@@ -122,7 +122,7 @@ const UpdatePage = () => {
       weight: parseFloat(userInfoState.weight),
       gender: userInfoState.gender || null,
       bodyType: bodyType || null,
-      publicStatus: isChecked ? 'PRIVATE' : 'PUBLIC',
+      publicStatus: isChecked ? 'PUBLIC' : 'PRIVATE',
       memberTags: tags.length > 0 ? tags : null,
     };
 
