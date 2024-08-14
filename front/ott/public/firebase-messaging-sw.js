@@ -26,7 +26,7 @@ self.addEventListener("push", function (e) {
 
 self.addEventListener("notificationclick", function (event) {
   console.log("notification click");
-  const url = "/mainpage";
+  const url = "/mainpage?fromNotification=true";
   event.notification.close();
   event.waitUntil(clients.openWindow(url));
 });

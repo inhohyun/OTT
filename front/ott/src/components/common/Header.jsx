@@ -8,9 +8,10 @@ import { getNotificationsList } from '../../api/notification/notification';
 import useUserStore from '../../data/lookbook/userStore';
 
 const Header = () => {
-  const [showModal, setShowModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const memberId = useUserStore((state) => state.userId);
+  const showModal = useUserStore((state) => state.showModal);
+  const setShowModal = useUserStore((state) => state.setShowModal);
 
   const navigate = useNavigate();
 
