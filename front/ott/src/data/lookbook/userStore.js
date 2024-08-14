@@ -6,6 +6,9 @@ const useUserStore = create(
     (set) => ({
       userId: null,
       setUserId: (id) => set({ userId: id }),
+
+      showModal: false,
+      setShowModal: (show) => set({ showModal: show }),
     }),
     {
       name: 'user-store',
