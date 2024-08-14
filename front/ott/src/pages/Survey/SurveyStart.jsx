@@ -10,7 +10,10 @@ export default function SurveyStart() {
   useEffect(() => {
     const checkSurveyStatus = async () => {
       try {
-        const { surveyCompleted } = await getSurveyCompleteStatus();
+        const response = await getSurveyCompleteStatus();
+        console.log(response);
+
+        const { surveyCompleted } = response;
         if (surveyCompleted) {
           navigate('/mainpage');
         }
