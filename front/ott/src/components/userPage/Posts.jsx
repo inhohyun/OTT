@@ -25,25 +25,17 @@ const Posts = ({ isMe, isPublic, currentId }) => {
   }
 
   return (
-    <div className="w-full text-center">
+    <div className="w-full">
       <div className="flex justify-center space-x-2">
         <button
-          className={`py-2 px-5 cursor-pointer rounded-full ${
-            activePostType === 'public'
-              ? 'bg-violet-200 text-black'
-              : 'text-gray-400'
-          }`}
+          className={`py-2 px-5 cursor-pointer rounded-full`}
           onClick={() => setActivePostType('public')}
           style={{ fontFamily: 'dohyeon' }}
         >
           공개
         </button>
         <button
-          className={`py-2 px-5 cursor-pointer rounded-full ${
-            activePostType === 'private'
-              ? 'bg-violet-200 text-black'
-              : 'text-gray-400'
-          }`}
+          className={`py-2 px-5 cursor-pointer rounded-full`}
           onClick={() => setActivePostType('private')}
           style={{ fontFamily: 'dohyeon' }}
         >

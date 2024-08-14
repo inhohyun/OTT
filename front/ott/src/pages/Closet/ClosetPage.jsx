@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import backgroundImage from '../../assets/images/background_image_closet.png';
 import CategoryDropdown from '../../components/closet/CategoryDropdown';
 import ClothesGrid from '../../components/closet/ClothesGrid';
@@ -22,17 +23,23 @@ const ClosetPage = () => {
   const [selectedClothing, setSelectedClothing] = useState(null);
   const [closetId, setClosetId] = useState(null);
   const memberId = useUserStore((state) => state.userId);
+  const location = useLocation();
+  const currentId = location.state?.id || {};
+
   useEffect(() => {
-    const fetchInitialClothesList = async () => {
+    const fetchInitialClothesList = async (sendId) => {
       try {
-        const clothesList = await getClothesList(memberId);
+        const clothesList = await getClothesList(sendId);
         setClothes(clothesList);
       } catch (error) {
         console.error('옷 목록 가져오기 실패:', error);
       }
     };
-
-    fetchInitialClothesList();
+    if (currentId === undefined || currentId === null) {
+      fetchInitialClothesList(memberId);
+    } else {
+      fetchInitialClothesList(currentId);
+    }
   }, [memberId]);
 
   useEffect(() => {
