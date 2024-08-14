@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import Select from 'react-select';
 import AddClothesCategorySelector from './AddClothesCategorySelector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -169,10 +168,14 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
     setFormData((prev) => ({ ...prev, categoryId: categoryId }));
   };
 
+  const handleGenderChange = (value) => {
+    setFormData((prev) => ({ ...prev, gender: value }));
+  };
+
   const genderOptions = [
     { value: 'MAN', label: '남성' },
     { value: 'WOMAN', label: '여성' },
-    { value: 'COMMON', label: '남녀공용' },
+    { value: 'COMMON', label: '공용' },
   ];
 
   if (!isOpen) return null;
@@ -287,6 +290,25 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
             )}
           </div>
         ))}
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">성별</label>
+          <div className="flex items-center space-x-4">
+            {genderOptions.map((option) => (
+              <label key={option.value} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.gender === option.value}
+                  onChange={() => handleGenderChange(option.value)}
+                  className="form-checkbox h-5 w-5 text-violet-400"
+                />
+                <span className="ml-2">{option.label}</span>
+              </label>
+            ))}
+          </div>
+          {errors.gender && (
+            <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+          )}
+        </div>
         <div className="mb-4 flex items-center">
           <label className="text-gray-700 mr-2">공개 여부</label>
           <input
@@ -308,18 +330,6 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
             }
             className="form-checkbox h-5 w-5 text-violet-400"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">성별</label>
-          <Select
-            value={genderOptions.find((opt) => opt.value === formData.gender)}
-            onChange={(opt) => handleChange('gender', opt.value)}
-            options={genderOptions}
-            placeholder="성별을 선택하세요"
-          />
-          {errors.gender && (
-            <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
-          )}
         </div>
         <div className="flex justify-center">
           <button
