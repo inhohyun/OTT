@@ -48,18 +48,20 @@ const Modal = ({ isOpen, onClose }) => {
   // 옷들을 저장
   useEffect(() => {
     const fetchBookmarkedClothes = async () => {
-      try {
-        console.log('북마크된 옷 가져올 때 memberId', memberId);
-        const response = await getBookmarkedClothes(memberId);
-        console.log('북마크된 옷', response);
-        setClothes(response);
-      } catch (error) {
-        console.error('즐겨찾기 옷 조회 실패:', error);
+      if (memberId) {
+        try {
+          console.log('북마크된 옷 가져올 때 memberId', memberId);
+          const response = await getBookmarkedClothes(memberId);
+          console.log('북마크된 옷', response);
+          setClothes(response);
+        } catch (error) {
+          console.error('즐겨찾기 옷 조회 실패:', error);
+        }
       }
     };
 
     fetchBookmarkedClothes();
-  }, []);
+  }, [memberId]);
 
   const customStyles = {
     control: (provided, state) => ({
@@ -186,7 +188,7 @@ const Modal = ({ isOpen, onClose }) => {
               />
             </div>
             <h4>옷 선택</h4>
-            {/* {clothes.length === 0 ? (
+            {clothes.length === 0 ? (
               <p>입어볼 옷이 없습니다.</p>
             ) : (
               <ClothesGridSingleLine
@@ -194,7 +196,7 @@ const Modal = ({ isOpen, onClose }) => {
                 onToggleLike={toggleLike}
                 onClothingClick={handleClothingClick}
               />
-            )} */}
+            )}
 
             <div className="mt-4">
               <button className="try-on-button" onClick={handlePutOn}>
