@@ -82,7 +82,7 @@ const UserPage = () => {
       console.log('다른 사람 memberId로 정보 가져오기', id);
       fetchUserData(id);
     }
-  }, []);
+  }, [id, memberId]);
 
   useEffect(() => {
     const fetchLookbookCount = async (sendId) => {
