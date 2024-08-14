@@ -321,7 +321,7 @@ public class ItemServiceImpl implements ItemService {
                 ItemCategoryResponseDto
                     .builder()
                     .bookmarkStatus(item.getItem().getBookmarkStatus())
-                    .clothId(item.getId())
+                    .clothesId(item.getId())
                     .img(imgUrls)
                     .build());
         }
@@ -342,7 +342,7 @@ public class ItemServiceImpl implements ItemService {
             itemCategoryResponseDtos.add(ItemCategoryResponseDto
                 .builder()
                 .bookmarkStatus(item.getBookmarkStatus())
-                .clothId(item.getId())
+                .clothesId(item.getId())
                 .img(imgs)
                 .build()
             );
@@ -398,7 +398,7 @@ public class ItemServiceImpl implements ItemService {
             itemCategoryResponseDtos.add(ItemCategoryResponseDto
                 .builder()
                 .img(urls)
-                .clothId(findItemCategory.getItem().getId())
+                .clothesId(findItemCategory.getItem().getId())
                 .bookmarkStatus(findItemCategory.getItem().getBookmarkStatus())
                 .build());
         }
