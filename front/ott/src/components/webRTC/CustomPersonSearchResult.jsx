@@ -45,7 +45,7 @@ const CustomPersonSearchResult = ({
 
     await inviteMeeting({ targetMemberId, sessionId });
     // 사용자를 비디오 채팅 페이지로 이동시키면서 세션 ID와 토큰을 전달
-    navigate(`/video-chat`, { state: { sessionId, userName } });
+    navigate(`/video-chat`, { state: { sessionId, userName, otherMemberId : targetMemberId } });
   };
 
   if (!searchQuery) {
