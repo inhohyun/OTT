@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Recommend from '../../components/recommend/Recommend.jsx';
 import MyLookbook from '../../components/mylookbook/MyLookbook';
 import backgroundImage from '../../assets/images/background_image_main.png';
@@ -34,12 +35,23 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
 
 const MainPage = () => {
   const [activeComponent, setActiveComponent] = useState('recommendation');
-
   const [hasFollow, setHasFollow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const setUserId = useUserStore((state) => state.setUserId);
-
   const memberId = useUserStore((state) => state.userId);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const fromNotification = params.get('fromNotification');
+
+    if (fromNotification) {
+      setShowModal(true);
+    }
+  }, [location]);
+
   useEffect(() => {
     const fetchFollowCount = async () => {
       // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
@@ -101,6 +113,10 @@ const MainPage = () => {
       requestPermission(memberId).catch(error => console.error('Error in requestPermission:', error));
     }
   }, [memberId]);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  }
 
   return (
     <div
