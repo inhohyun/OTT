@@ -82,13 +82,13 @@ const AiProceeding = () => {
       //   filter === '상의' ? 0 : 1
       // );
       // FIXME : 하드코딩 제거한 버전
-      // sendData(
-      //   memberId,
-      //   modelImage,
-      //   selectedClothesURL
-      //   sample,
-      //   filter === '상의' ? 0 : 1
-      // );
+      sendData(
+        memberId,
+        modelImage,
+        selectedClothesURL,
+        sample,
+        filter === '상의' ? 0 : 1
+      );
 
       // 모달이 열렸음을 표시
       hasModalOpenedRef.current = true;
