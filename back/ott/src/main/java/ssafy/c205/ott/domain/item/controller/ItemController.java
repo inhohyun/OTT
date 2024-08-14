@@ -145,8 +145,8 @@ public class ItemController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "상대방의 모든 옷"),
     })
-    @GetMapping("/rtc/{meber_id}/list")
-    public ResponseEntity<?> getItemListByRtc(@PathVariable("meber_id") Long memberId) {
+    @GetMapping("/rtc/{member_id}/list")
+    public ResponseEntity<?> getItemListByRtc(@PathVariable("member_id") Long memberId) {
         return ResponseEntity.ok().body(itemService.selectByRtcList(memberId));
     }
 
