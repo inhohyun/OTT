@@ -39,6 +39,15 @@ public class MemberController {
         return ApiResponse.success(MemberIdDto.builder().id(memberReadService.myIdSearch(currentMember).getId()).build());
     }
 
+    @Operation(summary = "자신의 설문조사 여부 가져오기", description = "<big>자신의 설문조사 여부를</big> 조회 합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "설문조사 여부"),
+    })
+    @GetMapping("/SurveyStatus")
+    public ApiResponse<SurveyResponseDto> getSurveyStatus(@AuthenticationPrincipal CustomOAuth2User currentMember) {
+        return ApiResponse.success(memberReadService.mySurveyStatusSearch(currentMember));
+    }
+
     @Operation(summary = "멤버 상세보기", description = "<big>유저 데이터를</big> 상세조회 합니다.")
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
