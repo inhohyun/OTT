@@ -16,7 +16,7 @@ const AiProceeding = () => {
   const filter = useStore((state) => state.filter);
   const modelImage = useStore((state) => state.modelImage);
   const sample = useStore((state) => state.sample);
-  const clothes = useStore((state) => state.clothes);
+  const clothesURL = useStore((state) => state.clothesURL);
   // 이미지 결과
   const resultImages = useStore((state) => state.resultImages);
   const setResultImages = useStore((state) => state.setResultImages);
@@ -72,7 +72,7 @@ const AiProceeding = () => {
 
     if (!hasModalOpenedRef.current) {
       console.log('모달 서버 호출 테스트');
-      console.log('서버에 보낼 옷 url', clothes);
+      console.log('서버에 보낼 옷 url', clothesURL);
       // FIXME : 하드코딩한 버전
       // sendData(
       //   1,
@@ -85,7 +85,7 @@ const AiProceeding = () => {
       // sendData(
       //   memberId,
       //   modelImage,
-      //   clothes,
+      //   clothesURL,
       //   sample,
       //   filter === '상의' ? 0 : 1
       // );

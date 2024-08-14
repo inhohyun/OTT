@@ -28,7 +28,7 @@ const useStore = create((set, get) => ({
   modelImage: null,
   filter: '상의',
   sample: 4,
-  clothes: null,
+  clothesURL: null,
 
   // 생성된 옷 이미지 데이터 저장
   resultImages: null,
@@ -39,7 +39,7 @@ const useStore = create((set, get) => ({
     set((state) => ({ percentage: updater(state.percentage) })),
   resetPercentage: () => set({ percentage: 0 }),
   setIsModalVisible: (isVisible) => set({ isModalVisible: isVisible }),
-  setSelectedClothing: (clothes) => set({ selectedClothing: clothes }),
+  selectedClothesURL: (clothesURL) => set({ selectedClothesURL: clothesURL }),
   setFilter: (filter) => set({ filter }),
   setSample: (sample) => set({ sample }),
   setModelImage: (modelImage) => set({ modelImage }),
