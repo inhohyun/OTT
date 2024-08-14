@@ -64,9 +64,11 @@ const ClosetPage = () => {
     // 본인 또는 다른 사람의 카테고리 및 옷 목록 가져오기
     console.log('옷장의 currentId, undefind면 본인임:', currentId);
     if (currentId === undefined || currentId === null) {
+      console.log('본인 memberId로 정보 가져오기', memberId);
       fetchInitialClothesList(memberId);
       fetchClosetIdAndCategories(memberId);
     } else {
+      console.log('다른 사람 memberId로 정보 가져오기', currentId);
       fetchInitialClothesList(currentId);
       fetchClosetIdAndCategories(currentId);
     }
