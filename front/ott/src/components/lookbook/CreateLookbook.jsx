@@ -15,8 +15,6 @@ import {
   getAllClothes,
 } from '../../api/lookbook/category';
 
-import { saveAs } from 'file-saver';
-
 const CreateLookbook = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -203,8 +201,6 @@ const CreateLookbook = () => {
         canvas.toBlob((imageBlob) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
-
-          saveAs(blob, 'lookbookimage.png');
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
