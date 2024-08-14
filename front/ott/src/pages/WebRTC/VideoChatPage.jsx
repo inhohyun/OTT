@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import VideoSpace from '../../components/webRTC/video/VideoSpace';
 import CustomClothesGrid from '../../components/webRTC/CustomClothesGrid';
 import CustomCategoryDropdown from '../../components/webRTC/CustomCategoryDropdown';
-import backgroundImage from '../../assets/images/background_image_main.png';
-import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
+import backgroundImage from '../../assets/images/background_image_main.png'; 
+import CustomClothesDetailModal from '../../components/webRTC/CustomClothesDetailModal';
 import { useLocation } from 'react-router-dom';
 import {
   getClothesList,
@@ -147,7 +147,7 @@ const VideoChatPage = () => {
             onClothesClick={handleClothesClick}
           />
           {selectedClothing && (
-            <ClothesDetailModal
+            <CustomClothesDetailModal
               isOpen={isDetailModalOpen}
               onClose={() => setIsDetailModalOpen(false)}
               clothingItem={selectedClothing}
