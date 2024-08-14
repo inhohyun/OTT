@@ -11,6 +11,8 @@ import {
   getClosetId,
   getClothesByCategory,
   getBookmarkedClothes,
+  getOtherClothesByCategory,
+  getOtherClothesList,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 import { getUserNickname } from '../../api/user/user';
@@ -52,7 +54,6 @@ const VideoChatPage = () => {
 
         setCategories([
           { categoryId: -100, name: '전체' },
-          { categoryId: -200, name: '즐겨찾기' },
           ...fetchedCategories,
         ]);
       } catch (error) {
@@ -84,12 +85,9 @@ const VideoChatPage = () => {
       let clothesList;
       if (categoryId === -100) {
         // 전체
-        clothesList = await getClothesList(otherMemberId);
-      } else if (categoryId === -200) {
-        // 즐겨찾기
-        clothesList = await getBookmarkedClothes(otherMemberId);
+        clothesList = await getOtherClothesList(otherMemberId);
       } else {
-        clothesList = await getClothesByCategory(
+        clothesList = await getOtherClothesByCategory(
           otherMemberId,
           categoryId,
           closetId
