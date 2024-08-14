@@ -25,7 +25,7 @@ const ClosetPage = () => {
   const memberId = useUserStore((state) => state.userId);
   const location = useLocation();
 
-  const currentId = location.state?.id || {};
+  const currentId = location.state?.id;
 
   // 카테고리를 가져오는 함수
   const fetchClosetIdAndCategories = async (sendId) => {
