@@ -138,30 +138,43 @@ export const getUserListNickname = async (nickname) => {
   try {
     console.log(nickname);
     const endpoint = `api/members/more?nickname=${nickname}`;
-    
+
     const response = await axiosInstance.get(endpoint);
-    
+
     if (response && response.status === 200 && response.data) {
       const data = response.data.data;
 
       if (data) {
-        const processedData = data.map(user => ({
+        const processedData = data.map((user) => ({
           id: user.id,
           name: user.name,
           nickname: user.nickname,
           profileImageUrl: user.profileImageUrl,
         }));
         console.log(processedData);
-        
+
         return processedData;
       } else {
         throw new Error('Response data is empty');
       }
     } else {
-      throw new Error(`Unexpected response structure or status: ${response.status}`);
+      throw new Error(
+        `Unexpected response structure or status: ${response.status}`
+      );
     }
   } catch (error) {
     console.error('Error search user:', error);
     throw error;
   }
-}
+};
+
+// 설문조사 여부 확인 api
+export const getSurveyCompleteStatus = async () => {
+  try {
+    const response = await axiosInstance.get('api/members/SurveyStatus');
+    return response.data;
+  } catch (error) {
+    console.error('설문조사 상태 가져오는 중 에러 발생:', error);
+    throw error;
+  }
+};
