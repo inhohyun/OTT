@@ -28,7 +28,11 @@ const Posts = ({ isMe, isPublic, currentId }) => {
     <div className="w-full">
       <div className="flex justify-center space-x-2">
         <button
-          className={`py-2 px-5 cursor-pointer rounded-full ${isMe ? 'space-x-2' : ''}`}
+          className={`py-2 px-5 cursor-pointer rounded-full ${isMe ? 'space-x-2' : ''}  ${
+            activePostType === 'public'
+              ? 'bg-violet-200 text-white'
+              : 'bg-gray-200 text-black'
+          }`}
           onClick={() => setActivePostType('public')}
           style={{ fontFamily: 'dohyeon' }}
         >
@@ -36,7 +40,11 @@ const Posts = ({ isMe, isPublic, currentId }) => {
         </button>
         {isMe && (
           <button
-            className={`py-2 px-5 cursor-pointer rounded-full`}
+            className={`py-2 px-5 cursor-pointer rounded-full  ${
+              activePostType === 'public'
+                ? 'bg-violet-200 text-white'
+                : 'bg-gray-200 text-black'
+            }`}
             onClick={() => setActivePostType('private')}
             style={{ fontFamily: 'dohyeon' }}
           >
