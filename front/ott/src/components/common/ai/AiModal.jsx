@@ -49,6 +49,7 @@ const Modal = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchBookmarkedClothes = async () => {
       try {
+        console.log('북마크된 옷 가져올 때 memberId', memberId);
         const response = await getBookmarkedClothes(memberId);
         console.log('북마크된 옷', response);
         setClothes(response);
