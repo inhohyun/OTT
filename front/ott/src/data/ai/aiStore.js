@@ -89,7 +89,7 @@ const useStore = create((set, get) => ({
   setModelImage: (modelImage) => set({ modelImage }),
   setSelectedImage: (selectedImage) => set({ selectedImage }),
   setModelPicture: (modelPicture) => set({ modelPicture }),
-  setselectedClothesURL: (selectedClothesURL) => set({ selectedClothesURL }),
+  setSelectedClothesURL: (selectedClothesURL) => set({ selectedClothesURL }),
   setResultImages: (resultImages) => set({ resultImages }),
   toggleLike: (id) =>
     set((state) => ({
