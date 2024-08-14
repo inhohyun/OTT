@@ -13,9 +13,6 @@ import { getBookmarkedClothes } from '@/api/closet/clothes';
 const Modal = ({ isOpen, onClose }) => {
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
-  const setSelectedClothesURL = useStore(
-    (state) => state.setSelectedClothesURL
-  );
   const selectedClothing = useStore((state) => state.selectedClothing);
   const setSelectedClothing = useStore((state) => state.setSelectedClothing);
   const filter = useStore((state) => state.filter);
@@ -23,8 +20,13 @@ const Modal = ({ isOpen, onClose }) => {
   const sample = useStore((state) => state.sample);
   const setSample = useStore((state) => state.setSample);
   const modelPicture = useStore((state) => state.modelPicture);
+  const modelImage = useStore((state) => state.modelImage);
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
+
+  const setSelectedClothesURL = useStore(
+    (state) => state.setSelectedClothesURL
+  );
 
   // const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
@@ -86,12 +88,10 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleClothingClick = (clothing) => {
-    //옷을 클릭했음을 저장
-    setSelectedClothing(true);
     console.log('사용자가 클릭한 ai 옷장 옷', clothing);
     //TODO : 아래의 함수를 완성하여 clothing의 img 주소를 상태로 저장하세요
     const imageUrl = clothing.img[0]; // img 배열의 첫 번째 요소를 가져옴
-    setSelectedClothesURL(imageUrl); // 추출한 이미지 URL을 상태로 설정
+    setSelectedClothing(imageUrl); // 추출한 이미지 URL을 상태로 설정
   };
 
   const handleFilterChange = (option) => {
