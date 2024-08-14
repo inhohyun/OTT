@@ -96,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
             .builder()
             .lookbook(lookbook)
             .id(parent.getId())
-            .member(member)
+            .member(parent.getMember())
             .message(parent.getMessage())
             .commentStatus(parent.getCommentStatus())
             .children(children)
