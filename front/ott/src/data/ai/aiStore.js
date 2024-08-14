@@ -39,7 +39,7 @@ const useStore = create((set, get) => ({
     set((state) => ({ percentage: updater(state.percentage) })),
   resetPercentage: () => set({ percentage: 0 }),
   setIsModalVisible: (isVisible) => set({ isModalVisible: isVisible }),
-  setSelectedClothesURL: (selectedClothing) => set({ selectedClothing }),
+  setSelectedClothesURL: (clothesURL) => set({ clothesURL }),
   setFilter: (filter) => set({ filter }),
   setSample: (sample) => set({ sample }),
   setModelImage: (modelImage) => set({ modelImage }),
@@ -53,6 +53,10 @@ const useStore = create((set, get) => ({
       ),
     })),
 
+  setSelectedClothing: (clothing) => {
+    // 선택된 옷을 저장하는 메서드
+    set({ selectedClothing: clothing });
+  },
   // 프로그래스 바 진행 관리 메서드들
   intervalId: null,
   startInterval: () => {

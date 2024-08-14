@@ -17,6 +17,7 @@ const Modal = ({ isOpen, onClose }) => {
     (state) => state.setSelectedClothesURL
   );
   const selectedClothing = useStore((state) => state.selectedClothing);
+  const setSelectedClothing = useStore((state) => state.setSelectedClothing);
   const filter = useStore((state) => state.filter);
   const setFilter = useStore((state) => state.setFilter);
   const sample = useStore((state) => state.sample);
@@ -85,6 +86,8 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleClothingClick = (clothing) => {
+    //옷을 클릭했음을 저장
+    setSelectedClothing(true);
     console.log('사용자가 클릭한 ai 옷장 옷', clothing);
     //TODO : 아래의 함수를 완성하여 clothing의 img 주소를 상태로 저장하세요
     const imageUrl = clothing.img[0]; // img 배열의 첫 번째 요소를 가져옴
