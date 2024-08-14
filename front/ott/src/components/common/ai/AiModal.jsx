@@ -19,7 +19,6 @@ const Modal = ({ isOpen, onClose }) => {
   const sample = useStore((state) => state.sample);
   const setSample = useStore((state) => state.setSample);
   const modelPicture = useStore((state) => state.modelPicture);
-  const modelImage = useStore((state) => state.modelImage);
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
 
@@ -186,7 +185,7 @@ const Modal = ({ isOpen, onClose }) => {
               />
             </div>
             <h4>옷 선택</h4>
-            {clothes.length === 0 ? (
+            {/* {clothes.length === 0 ? (
               <p>입어볼 옷이 없습니다.</p>
             ) : (
               <ClothesGridSingleLine
@@ -194,7 +193,7 @@ const Modal = ({ isOpen, onClose }) => {
                 onToggleLike={toggleLike}
                 onClothingClick={handleClothingClick}
               />
-            )}
+            )} */}
 
             <div className="mt-4">
               <button className="try-on-button" onClick={handlePutOn}>
