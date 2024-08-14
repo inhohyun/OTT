@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.ItemCategory;
+import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.common.util.AmazonS3Util;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
@@ -251,8 +252,12 @@ public class ItemServiceImpl implements ItemService {
                 urls[i] = itemList.getItemImages().get(i).getItemImagePath();
             }
             itemListResponseDtos.add(
-                ItemListResponseDto.builder().bookmarkStatus(itemList.getBookmarkStatus())
-                    .clothesId(itemList.getId()).img(urls).build());
+                ItemListResponseDto
+                    .builder()
+                    .bookmarkStatus(itemList.getBookmarkStatus())
+                    .clothesId(itemList.getId())
+                    .img(urls)
+                    .build());
         }
         return itemListResponseDtos;
     }
@@ -342,6 +347,62 @@ public class ItemServiceImpl implements ItemService {
                 .build()
             );
         }
+        return itemCategoryResponseDtos;
+    }
+
+    @Override
+    public List<ItemListResponseDto> selectByRtcList(Long memberId) {
+        // memberId의 공개된 옷들 전부 가져오기
+        List<Item> findItems = itemRepository.findByMemberIdAndPublicStatus(
+            memberId, PublicStatus.PUBLIC);
+
+        List<ItemListResponseDto> itemListResponseDtos = new ArrayList<>();
+
+        for (Item findItem : findItems) {
+            //이미지 URL 저장
+            String[] urls = new String[findItem.getItemImages().size()];
+            for (int i = 0; i < findItem.getItemImages().size(); i++) {
+                urls[i] = findItem.getItemImages().get(i).getItemImagePath();
+            }
+            itemListResponseDtos.add(ItemListResponseDto
+                .builder()
+                .img(urls)
+                .clothesId(findItem.getId())
+                .bookmarkStatus(findItem.getBookmarkStatus())
+                .build()
+            );
+        }
+        return itemListResponseDtos;
+    }
+
+    @Override
+    public List<ItemCategoryResponseDto> selectByRtcCategoryList(Long memberId, Long categoryId,
+        Long closetId) {
+        // memberId가 갖고있는 공개된 categoryId의 옷을 가져옴
+        List<ItemCategory> findItemCategories = itemCategoryRepository.findByMemberIdAndCategoryIdAndPublicStatus(
+            memberId, categoryId,
+            PublicStatus.PUBLIC);
+
+        List<ItemCategoryResponseDto> itemCategoryResponseDtos = new ArrayList<>();
+
+        for (ItemCategory findItemCategory : findItemCategories) {
+            if (findItemCategory.getCategory().getCloset().getId() != closetId) {
+                continue;
+            }
+
+            String[] urls = new String[findItemCategory.getItem().getItemImages().size()];
+            for (int i = 0; i < findItemCategory.getItem().getItemImages().size(); i++) {
+                urls[i] = findItemCategory.getItem().getItemImages().get(i).getItemImagePath();
+            }
+
+            itemCategoryResponseDtos.add(ItemCategoryResponseDto
+                .builder()
+                .img(urls)
+                .clothId(findItemCategory.getItem().getId())
+                .bookmarkStatus(findItemCategory.getItem().getBookmarkStatus())
+                .build());
+        }
+
         return itemCategoryResponseDtos;
     }
 }
