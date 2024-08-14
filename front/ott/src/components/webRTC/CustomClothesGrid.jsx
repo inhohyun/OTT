@@ -96,7 +96,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
           }}
         >
           {clothes.slice(0, visibleItems).map((item, index) => {
-            const uniqueKey = item.key !== undefined ? item.key : index;
+            const uniqueKey = item.clothesId !== undefined ? item.clothesId : index;
             const isFrontVisible = visibleImages.find(
               (image) => image.id === uniqueKey
             )?.isFront;
