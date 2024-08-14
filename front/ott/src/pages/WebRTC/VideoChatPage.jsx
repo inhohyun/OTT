@@ -68,6 +68,10 @@ const VideoChatPage = () => {
     // 선택된 카테고리 업데이트
     setSelectedCategory(newCategory);
   };
+  
+  const filteredCategories = categories.filter(
+    (category) => category.name !== '전체' && category.name !== '즐겨찾기'
+  );
 
   useEffect(() => {
     if (closetId !== null) {
