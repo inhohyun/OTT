@@ -50,7 +50,7 @@ const RTCNotification = ({
             e.stopPropagation(); // 이벤트 전파를 중지하여 부모의 터치 이벤트와 충돌하지 않도록 함
             console.log("sessionId : "+notification.additionalData.sessionId);
             
-            joinSession(notification.additionalData.sessionId);
+            joinSession(notification.additionalData.sessionId, notification.additionalData.rtcRequestMemberId);
           }}
         >
           수락

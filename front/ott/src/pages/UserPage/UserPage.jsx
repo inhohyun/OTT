@@ -134,7 +134,7 @@ const UserPage = () => {
   };
 
   const handleClosetIconClick = () => {
-    navigate('/closet');
+    navigate('/closet', { state: { id: id } });
   };
 
   const handleRtcIconClick = () => {};

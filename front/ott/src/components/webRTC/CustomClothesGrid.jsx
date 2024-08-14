@@ -68,19 +68,16 @@ const CustomClothesGrid = ({ clothes, onToggleLike }) => {
 
   return (
     <div className="relative w-full p-1">
-      {/* 왼쪽 스크롤 버튼 */}
-      <div className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10">
+      <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
         <div onClick={scrollLeft} className="bg-gray-200 p-2 rounded-full">
           <FontAwesomeIcon icon={faChevronLeft} />
         </div>
       </div>
-      {/* 오른쪽 스크롤 버튼 */}
-      <div className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10">
+      <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
         <div onClick={scrollRight} className="bg-gray-200 p-2 rounded-full">
           <FontAwesomeIcon icon={faChevronRight} />
         </div>
       </div>
-      {/* 옷 그리드 표시 */}
       <div
         className="w-full overflow-x-auto p-1 touch-pan-x"
         ref={containerRef}
@@ -92,41 +89,57 @@ const CustomClothesGrid = ({ clothes, onToggleLike }) => {
         }}
       >
         <div
-          className="flex space-x-4"
+          className="grid grid-flow-col auto-cols-max grid-rows-1 gap-1"
           style={{
             msOverflowStyle: 'none',
             scrollbarWidth: 'none',
           }}
         >
-          {clothes.slice(0, visibleItems).map((item) => {
+          {clothes.slice(0, visibleItems).map((item, index) => {
+            const uniqueKey = item.key !== undefined ? item.key : index;
             const isFrontVisible = visibleImages.find(
-              (image) => image.id === item.id
+              (image) => image.id === uniqueKey
             )?.isFront;
+
+            const frontImage = item.img?.[0] || '';
+            const backImage = item.img?.[1] || '';
+
             return (
               <div
-                key={item.id}
-                className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center"
+                key={uniqueKey}
+                className="flex-none w-52 h-60 p-2 rounded-lg relative flex flex-col items-center cursor-pointer"
                 style={{ minWidth: '100px', height: '190px' }}
+                onClick={() => onClothesClick(item)}
               >
                 <img
-                  src={isFrontVisible ? item.image_path[0] : item.image_path[1]}
-                  alt={`${item.category}`}
+                  src={isFrontVisible ? frontImage : backImage}
+                  alt={item.category}
                   className="w-full h-full rounded-lg shadow-lg"
                 />
-                {item.backImage && (
+                {backImage && (
                   <div
-                    onClick={() => handleToggleImage(item.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleImage(item.key);
+                    }}
                     className="absolute top-3 right-4 p-1 cursor-pointer"
                   >
-                    <img src={bingleicon} alt="bingle" className="w-4 h-4" />
+                    <img src={bingleicon} alt="Toggle" className="w-4 h-4" />
                   </div>
                 )}
                 <div
-                  onClick={() => onToggleLike(item.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleLike(item.key);
+                  }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
                   <FontAwesomeIcon
-                    icon={item.isLiked ? faSolidStar : faRegularStar}
+                    icon={
+                      item.bookmarkStatus === 'BOOKMARKING'
+                        ? faSolidStar
+                        : faRegularStar
+                    }
                     className="w-4 h-4 text-purple-300"
                   />
                 </div>
