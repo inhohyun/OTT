@@ -19,7 +19,6 @@ const Modal = ({ isOpen, onClose }) => {
   const sample = useStore((state) => state.sample);
   const setSample = useStore((state) => state.setSample);
   const modelPicture = useStore((state) => state.modelPicture);
-  const modelImage = useStore((state) => state.modelImage);
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
 
@@ -49,17 +48,20 @@ const Modal = ({ isOpen, onClose }) => {
   // 옷들을 저장
   useEffect(() => {
     const fetchBookmarkedClothes = async () => {
-      try {
-        const response = await getBookmarkedClothes(memberId);
-        console.log('북마크된 옷', response);
-        setClothes(response);
-      } catch (error) {
-        console.error('즐겨찾기 옷 조회 실패:', error);
+      if (memberId) {
+        try {
+          console.log('북마크된 옷 가져올 때 memberId', memberId);
+          const response = await getBookmarkedClothes(memberId);
+          console.log('북마크된 옷', response);
+          setClothes(response);
+        } catch (error) {
+          console.error('즐겨찾기 옷 조회 실패:', error);
+        }
       }
     };
 
     fetchBookmarkedClothes();
-  }, []);
+  }, [memberId]);
 
   const customStyles = {
     control: (provided, state) => ({

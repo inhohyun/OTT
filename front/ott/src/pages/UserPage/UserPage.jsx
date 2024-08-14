@@ -30,6 +30,7 @@ const UserPage = () => {
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
+  const [profileImg, setProfileImg] = useState(null);
   const navigate = useNavigate();
   // memberId 가져오기
   const memberId = useUserStore((state) => state.userId);
@@ -66,6 +67,9 @@ const UserPage = () => {
         // 팔로우,팔로워 업데이트
         setFollowerCount(userInfoResponse.data.followerCount);
         setFollowingCount(userInfoResponse.data.followingCount);
+
+        // 프로필 이미지 업데이트
+        setProfileImg(userInfoResponse.data.profileImageUrl);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -78,7 +82,7 @@ const UserPage = () => {
       console.log('다른 사람 memberId로 정보 가져오기', id);
       fetchUserData(id);
     }
-  }, []);
+  }, [id, memberId]);
 
   useEffect(() => {
     const fetchLookbookCount = async (sendId) => {
@@ -163,7 +167,7 @@ const UserPage = () => {
           <img
             className="w-[70px] h-[70px] rounded-full"
             alt="User Icon"
-            src={mainIcon}
+            src={profileImg ? profileImg : mainIcon}
           />
         </div>
         <div className="w-full flex flex-col items-center justify-center mt-6">

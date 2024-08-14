@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import defaultImage from '../../assets/icons/main.logo.png';
 import { getFollowerList } from '../../api/follower/follower';
+import { useNavigate } from 'react-router-dom';
+
 const Followers = ({ uid }) => {
   const [followers, setFollowers] = useState([]);
   const [visibleFollowers, setVisibleFollowers] = useState(10);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFollowers = async () => {
@@ -20,12 +24,11 @@ const Followers = ({ uid }) => {
   }, [uid]);
 
   const handleShowMore = () => {
-    setVisibleFollowers((prev) => prev + 10); // Show 10 more followers
+    setVisibleFollowers((prev) => prev + 10);
   };
 
   const handleClick = (user) => {
-    // console.log('Clicked user:', user.id);
-    navigate('/userpage', { state: { id: user.memberId } });
+    navigate('/userPage', { state: { id: user.memberId } });
   };
 
   return (

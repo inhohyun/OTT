@@ -39,6 +39,7 @@ const LookbookDetail = ({
   const [currentSides, setCurrentSides] = useState({});
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [detailModal, setDetailModal] = useState(false);
   const [selectedClothingItem, setSelectedClothingItem] = useState(null);
   const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
@@ -101,12 +102,15 @@ const LookbookDetail = ({
   // });
 
   const handleEditLookbook = () => {
-    hideDetail();
-    // setIsDetailVisible(false);
-    console.log(lookbook, '룩북!!');
-    nav(`/update-lookbook/${lookbookId}`, {
-      state: { lookbook: lookbook },
-    });
+    const isConfirmed = window.confirm('룩북을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      hideDetail();
+      // console.log(lookbook, '룩북!!');
+      nav(`/update-lookbook/${lookbookId}`, {
+        state: { lookbook: lookbook },
+      });
+    }
   };
 
   if (!lookbook) {
@@ -209,7 +213,8 @@ const LookbookDetail = ({
 
   const handleClothingItemClick = (item) => {
     setSelectedClothingItem(item);
-    setIsModalOpen(true);
+    setDetailModal(true);
+    // setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -415,7 +420,7 @@ const LookbookDetail = ({
       </div>
       {selectedClothingItem && (
         <ClothesDetailModal
-          isOpen={isModalOpen}
+          isOpen={detailModal}
           onClose={handleCloseModal}
           clothingItem={selectedClothingItem}
           categories={[]} // 필요한 카테고리 정보를 전달
