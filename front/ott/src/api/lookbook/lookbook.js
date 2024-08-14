@@ -14,17 +14,19 @@ export const lookbookCreate = async (formData) => {
 };
 
 // 룩북 수정 api
-export const lookbookUpdate = (formData, lookbookId) => {
-  axiosInstance
-    .put(`api/lookbook/${lookbookId}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-    .then(() => {
-      console.log('룩북 수정 성공');
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+export const lookbookUpdate = async (formData, lookbookId) => {
+  try {
+    const response = await axiosInstance.put(
+      `api/lookbook/${lookbookId}`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // 룩북 삭제 api
