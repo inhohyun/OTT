@@ -201,13 +201,15 @@ const ClosetPage = () => {
         onClothesClick={handleClothesClick}
       />
       <div className="flex justify-center mt-5">
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
-          style={{ width: '200px' }}
-        >
-          + 옷 추가하기
-        </button>
+        {currentId === null || typeof currentId === 'undefined' ? (
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
+            style={{ width: '200px' }}
+          >
+            + 옷 추가하기
+          </button>
+        ) : null}
       </div>
       <AddClothesModal
         isOpen={isAddModalOpen}
