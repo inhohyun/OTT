@@ -168,6 +168,17 @@ export const getUserListNickname = async (nickname) => {
   }
 };
 
+// 유저 페이지에서 사용자 정보를 불러옴
+export const getUserNickname = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/api/members/${id}/nickname`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching user nickname:', error);
+    throw error;
+  }
+};
+
 // 설문조사 여부 확인 api
 export const getSurveyCompleteStatus = async () => {
   try {
