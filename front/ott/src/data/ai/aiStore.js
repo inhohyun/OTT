@@ -32,57 +32,13 @@ const useStore = create((set, get) => ({
 
   // 생성된 옷 이미지 데이터 저장
   resultImages: null,
-  clothes: [
-    {
-      id: 1,
-      category: '하의',
-      frontImage: pants1,
-      backImage: pants1Back,
-      isLiked: false,
-    },
-    {
-      id: 2,
-      category: '하의',
-      frontImage: pants2,
-      backImage: pants2Back,
-      isLiked: false,
-    },
-    {
-      id: 3,
-      category: '하의',
-      frontImage: pants3,
-      backImage: pants3Back,
-      isLiked: false,
-    },
-    {
-      id: 4,
-      category: '상의',
-      frontImage: shirt1,
-      backImage: shirt1Back,
-      isLiked: false,
-    },
-    {
-      id: 5,
-      category: '상의',
-      frontImage: shirt2,
-      backImage: shirt2Back,
-      isLiked: false,
-    },
-    {
-      id: 6,
-      category: '상의',
-      frontImage: shirt3,
-      backImage: shirt3Back,
-      isLiked: false,
-    },
-  ],
 
   // 상태 설정 메서드들
   setCurrentStep: (step) => set({ currentStep: step }),
   setPercentage: (updater) =>
     set((state) => ({ percentage: updater(state.percentage) })),
   resetPercentage: () => set({ percentage: 0 }),
-  setIsModalVisible: (isVisible) => set({ isModalVisible: isVisible }),
+  setIsModalVisible: (isModalVisible) => set({ isModalVisible }),
   setSelectedClothing: (clothing) => set({ selectedClothing: clothing }),
   setFilter: (filter) => set({ filter }),
   setSample: (sample) => set({ sample }),
