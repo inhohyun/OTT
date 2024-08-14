@@ -16,7 +16,9 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
 
   useEffect(() => {
-    setVisibleImages(clothes.map((item) => ({ id: item.key, isFront: true })));
+    setVisibleImages(
+      clothes.map((item) => ({ id: item.clothesId, isFront: true }))
+    );
   }, [clothes]);
 
   // 가로 무한 스크롤 처리 함수
@@ -56,26 +58,24 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   }, []);
 
   // 이미지 앞/뒷면 토글 함수
-  const handleToggleImage = (key) => {
+  const handleToggleImage = (clothesId) => {
     setVisibleImages((prev) =>
       prev.map((item) =>
-        item.id === key ? { ...item, isFront: !item.isFront } : item
+        item.id === clothesId ? { ...item, isFront: !item.isFront } : item
       )
     );
   };
 
   // 좋아요 상태 토글 함수
-  const handleToggleLike = async (key) => {
-    const toggledItem = clothes.find((item) => item.key === key);
+  const handleToggleLike = async (clothesId) => {
+    const toggledItem = clothes.find((item) => item.clothesId === clothesId);
     if (toggledItem) {
-      const clothesId = toggledItem.clothesId;
-
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
           await unbookmarkClothes(clothesId);
           setClothes((prevClothes) =>
             prevClothes.map((item) =>
-              item.key === key
+              item.clothesId === clothesId
                 ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
                 : item
             )
@@ -84,7 +84,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
           await bookmarkClothes(clothesId);
           setClothes((prevClothes) =>
             prevClothes.map((item) =>
-              item.key === key
+              item.clothesId === clothesId
                 ? { ...item, bookmarkStatus: 'BOOKMARKING' }
                 : item
             )
@@ -130,7 +130,8 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
           }}
         >
           {clothes.slice(0, visibleItems).map((item, index) => {
-            const uniqueKey = item.key !== undefined ? item.key : index;
+            const uniqueKey =
+              item.clothesId !== undefined ? item.clothesId : index;
             const isFrontVisible = visibleImages.find(
               (image) => image.id === uniqueKey
             )?.isFront;
@@ -154,7 +155,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleToggleImage(item.key);
+                      handleToggleImage(uniqueKey);
                     }}
                     className="absolute top-3 right-4 p-1 cursor-pointer"
                   >
@@ -164,7 +165,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleToggleLike(item.key);
+                    handleToggleLike(uniqueKey);
                   }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
