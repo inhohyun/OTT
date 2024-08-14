@@ -103,8 +103,7 @@ const LookbookDetail = ({
 
   const handleEditLookbook = () => {
     hideDetail();
-    // setIsDetailVisible(false);
-    console.log(lookbook, '룩북!!');
+    // console.log(lookbook, '룩북!!');
     nav(`/update-lookbook/${lookbookId}`, {
       state: { lookbook: lookbook },
     });
@@ -187,6 +186,12 @@ const LookbookDetail = ({
   };
 
   const handleDelete = async () => {
+    const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
+
+    if (!isConfirmed) {
+      return; // 사용자가 취소를 누르면 함수가 여기서 종료됩니다.
+    }
+
     try {
       await lookbookDelete(lookbookId);
       deleteLookbook(lookbookId);

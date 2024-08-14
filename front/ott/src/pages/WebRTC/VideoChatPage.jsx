@@ -3,14 +3,16 @@ import { useState, useEffect } from 'react';
 import VideoSpace from '../../components/webRTC/video/VideoSpace';
 import CustomClothesGrid from '../../components/webRTC/CustomClothesGrid';
 import CustomCategoryDropdown from '../../components/webRTC/CustomCategoryDropdown';
-import backgroundImage from '../../assets/images/background_image_main.png';
-import ClothesDetailModal from '../../components/closet/ClothesDetailModal'; // Comment out import if not using
+import backgroundImage from '../../assets/images/background_image_main.png'; 
+import CustomClothesDetailModal from '../../components/webRTC/CustomClothesDetailModal';
 import { useLocation } from 'react-router-dom';
 import {
   getClothesList,
   getClosetId,
   getClothesByCategory,
   getBookmarkedClothes,
+  getOtherClothesByCategory,
+  getOtherClothesList,
 } from '../../api/closet/clothes';
 import { getCategoryList } from '../../api/closet/categories';
 import { getUserNickname } from '../../api/user/user';
@@ -52,7 +54,6 @@ const VideoChatPage = () => {
 
         setCategories([
           { categoryId: -100, name: '전체' },
-          { categoryId: -200, name: '즐겨찾기' },
           ...fetchedCategories,
         ]);
       } catch (error) {
@@ -68,6 +69,10 @@ const VideoChatPage = () => {
     // 선택된 카테고리 업데이트
     setSelectedCategory(newCategory);
   };
+  
+  const filteredCategories = categories.filter(
+    (category) => category.name !== '전체' && category.name !== '즐겨찾기'
+  );
 
   useEffect(() => {
     if (closetId !== null) {
@@ -80,12 +85,9 @@ const VideoChatPage = () => {
       let clothesList;
       if (categoryId === -100) {
         // 전체
-        clothesList = await getClothesList(otherMemberId);
-      } else if (categoryId === -200) {
-        // 즐겨찾기
-        clothesList = await getBookmarkedClothes(otherMemberId);
+        clothesList = await getOtherClothesList(otherMemberId);
       } else {
-        clothesList = await getClothesByCategory(
+        clothesList = await getOtherClothesByCategory(
           otherMemberId,
           categoryId,
           closetId
@@ -143,7 +145,7 @@ const VideoChatPage = () => {
             onClothesClick={handleClothesClick}
           />
           {selectedClothing && (
-            <ClothesDetailModal
+            <CustomClothesDetailModal
               isOpen={isDetailModalOpen}
               onClose={() => setIsDetailModalOpen(false)}
               clothingItem={selectedClothing}
