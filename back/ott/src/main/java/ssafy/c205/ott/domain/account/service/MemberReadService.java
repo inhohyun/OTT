@@ -38,6 +38,10 @@ public class MemberReadService {
         return MemberIdDto.builder().id(memberRepository.findBySso(currentMember.getUsername()).getId()).build();
     }
 
+    public SurveyResponseDto mySurveyStatusSearch(CustomOAuth2User currentMember) {
+        return SurveyResponseDto.builder().surveyCompleted(memberRepository.findBySso(currentMember.getUsername()).isSurveyCompleted()).build();
+    }
+
     public MemberNotificationDto myInfoSearch(MemberSsoDto memberSsoDto) {
         Member findMember = memberRepository.findBySso(memberSsoDto.getSso());
         return MemberNotificationDto.builder().memberId(findMember.getId()).memberName(findMember.getName()).build();
