@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 // import axios from 'axios';
 import {
   lookbookComment,
@@ -11,13 +13,12 @@ import {
 } from '../../api/lookbook/comments';
 
 const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
-  const currentUser = 'csh'; // Replace with the actual current user nickname
   const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
-  const [editingComment, setEditingComment] = useState(''); // Track the editing comment content
-  const [editingReply, setEditingReply] = useState(''); // Track the editing reply content
-  const inputRef = useRef(null); // Ref for the input field
+  const [replyTo, setReplyTo] = useState(null);
+  const [editingComment, setEditingComment] = useState('');
+  const [editingReply, setEditingReply] = useState('');
+  const inputRef = useRef(null);
 
   useEffect(() => {
     // console.log('닉네임', comments.nickname);
@@ -322,7 +323,7 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
                             ➥{reply.msg}
                           </div>
                         )}
-                        {reply.nickname === currentUser && (
+                        {reply.memberId === userId && (
                           <div className="flex space-x-2">
                             {!reply.isEditing && (
                               <>
@@ -378,6 +379,11 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
           className="border rounded-full w-full p-2 mb-2 flex-grow"
           placeholder="댓글을 작성하세요"
           style={{ fontFamily: 'dohyeon' }}
+        />
+        <FontAwesomeIcon
+          icon={faPaperPlane}
+          className="text-gray-500 cursor-pointer ml-2"
+          onClick={handleAddComment} // 아이콘 클릭 시 현재 상황에 맞는 함수 호출
         />
       </form>
     </div>
