@@ -1,6 +1,6 @@
-import useLookbookStore from "../../../data/lookbook/detailStore";
-import LookbookDetail from "../../lookbook/LookbookDetail";
-import { useState } from "react";
+import useLookbookStore from '../../../data/lookbook/detailStore';
+import LookbookDetail from '../../lookbook/LookbookDetail';
+import { useState } from 'react';
 
 const CommentNotification = ({
   notification,
@@ -23,9 +23,15 @@ const CommentNotification = ({
   };
 
   const handleClick = async () => {
+    return (
+      <LookbookDetail
+        lookbookId={notification.additionalData.lookbookId}
+        onClose={onClose}
+      />
+    );
     setIsDetailVisible(true);
-  }
- 
+  };
+
   return (
     <div>
       <div
@@ -40,15 +46,17 @@ const CommentNotification = ({
               ? `translateX(${moveX - startX}px)`
               : 'translateX(0)',
           transition:
-            swipedIndex === index && isSwiping
-              ? 'none'
-              : 'transform 0.2s ease',
+            swipedIndex === index && isSwiping ? 'none' : 'transform 0.2s ease',
         }}
       >
         {/* 상단: 알림 종류와 시간 */}
         <div className="flex justify-between">
-          <p className="text-xs text-stone-500">{notification.notificationType}</p>
-          <p className="text-xs text-stone-500">{formatDate(notification.createdAt)}</p>
+          <p className="text-xs text-stone-500">
+            {notification.notificationType}
+          </p>
+          <p className="text-xs text-stone-500">
+            {formatDate(notification.createdAt)}
+          </p>
         </div>
 
         {/* 중단: 메시지 */}
@@ -59,9 +67,9 @@ const CommentNotification = ({
         </div>
       </div>
 
-      {isDetailVisible && (
+      {/* {isDetailVisible && (
         <LookbookDetail lookbookId={notification.additionalData.lookbookId} onClose={onClose} />
-      )}
+      )} */}
     </div>
   );
 };
