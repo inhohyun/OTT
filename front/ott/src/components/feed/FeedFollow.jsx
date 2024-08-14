@@ -68,8 +68,17 @@ const FeedFollow = () => {
   const handleCloseDetail = async () => {
     console.log('[*]모달 닫기');
     hideDetail();
-    const lookbookData = await fetchFollowFeed(); // 상태를 업데이트하기 위해 fetchFollowFeed 함수 호출
-    setFollowersData(lookbookData);
+    setIsLoading(true);
+
+    try {
+      const lookbookData = await followFeed(userId);
+      console.log('Updated feed data:', lookbookData);
+      setFollowersData(lookbookData);
+    } catch (error) {
+      console.error('Failed to update follow feed', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!Array.isArray(followersData) || isLoading) {
