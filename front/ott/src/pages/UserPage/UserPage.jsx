@@ -17,6 +17,7 @@ import {
   getLookbookCount,
 } from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
+import CustomSpinner from '../../components/common/CustomSpinner';
 
 const UserPage = () => {
   const [activeComponent, setActiveComponent] = useState('posts');
@@ -91,7 +92,7 @@ const UserPage = () => {
     fetchLookbookCount(id);
   }, [id]);
   if (!userInfo) {
-    return <div>Loading...</div>;
+    return <CustomSpinner />;
   }
 
   let renderComponent;

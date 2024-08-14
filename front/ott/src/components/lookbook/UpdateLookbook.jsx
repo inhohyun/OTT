@@ -137,7 +137,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
         const response = await getClothes(userId, selectedCategory, closetid);
         if (Array.isArray(response)) {
           const clothesData = response.map((item) => ({
-            id: item.clothId,
+            id: item.clothesId,
             image: item.img[0],
           }));
           setClothes(clothesData);
