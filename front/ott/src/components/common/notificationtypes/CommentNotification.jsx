@@ -45,9 +45,7 @@ const CommentNotification = ({
       >
         {/* 상단: 알림 종류와 시간 */}
         <div className="flex justify-between">
-          <p className="text-xs text-stone-500">
-            {notification.notificationType}
-          </p>
+          <p className="text-xs text-stone-500">댓글</p>
           <p className="text-xs text-stone-500">
             {formatDate(notification.createdAt)}
           </p>

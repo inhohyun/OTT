@@ -24,15 +24,11 @@ const FollowNotification = ({
             ? `translateX(${moveX - startX}px)`
             : 'translateX(0)',
         transition:
-          swipedIndex === index && isSwiping
-            ? 'none'
-            : 'transform 0.2s ease',
+          swipedIndex === index && isSwiping ? 'none' : 'transform 0.2s ease',
       }}
     >
       <div className="flex justify-between">
-        <p className="text-xs text-stone-500">
-          {notification.notificationType}
-        </p>
+        <p className="text-xs text-stone-500">팔로우</p>
         <p className="text-xs text-stone-500">
           {formatDate(notification.createdAt)}
         </p>
@@ -59,7 +55,7 @@ const FollowNotification = ({
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default FollowNotification;
