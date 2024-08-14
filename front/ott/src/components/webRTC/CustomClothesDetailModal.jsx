@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ClothesDetailsView from '@/components/closet/ClothesDetailsView';
+import CustomClothesDetailsView from './CustomClothesDetailsView';
 import {
   updateClothes,
   getClothesItemData,
@@ -34,27 +34,14 @@ const CustomClothesDetailModal = ({
     }
   }, [clothingItem]);
 
-  const handleDelete = async () => {
-    try {
-      await deleteClothes(itemDetails.clothesId);
-      setClothes((prevClothes) =>
-        prevClothes.filter((item) => item.clothesId !== itemDetails.clothesId)
-      );
-      onClose();
-    } catch (error) {
-      console.error('Error deleting item:', error);
-    }
-  };
-
   if (!isOpen || !itemDetails) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full relative overflow-y-auto max-h-full">
-        <ClothesDetailsView
+        <CustomClothesDetailsView
           itemDetails={itemDetails}
           onClose={onClose}
-          onDelete={handleDelete}
         />
       </div>
     </div>
