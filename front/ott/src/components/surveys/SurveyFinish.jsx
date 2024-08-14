@@ -51,6 +51,7 @@ export default function SurveyFinish({ formData }) {
         gender: translatedGender,
         bodyType: translatedBodyType,
         publicStatus: 'PUBLIC',
+        surveyCompleted: true,
       };
 
       console.log(dataToSend);
