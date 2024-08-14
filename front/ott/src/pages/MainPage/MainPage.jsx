@@ -36,9 +36,9 @@ const NavBar = ({ activeComponent, setActiveComponent }) => {
 const MainPage = () => {
   const [activeComponent, setActiveComponent] = useState('recommendation');
   const [hasFollow, setHasFollow] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const setUserId = useUserStore((state) => state.setUserId);
+  const setShowModal = useUserStore((state) => state.setShowModal);
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
@@ -50,7 +50,7 @@ const MainPage = () => {
     if (fromNotification) {
       setShowModal(true);
     }
-  }, [location]);
+  }, [location, setShowModal]);
 
   useEffect(() => {
     const fetchFollowCount = async () => {
@@ -97,7 +97,7 @@ const MainPage = () => {
         const uidResponse = await getUid();
         console.log(uidResponse);
         const id = uidResponse.data.id;
-        setUserId(id); // Set the userId in the Zustand store
+        setUserId(id);
         console.log('User ID:', id);
         
       } catch (error) {
@@ -113,10 +113,6 @@ const MainPage = () => {
       requestPermission(memberId).catch(error => console.error('Error in requestPermission:', error));
     }
   }, [memberId]);
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  }
 
   return (
     <div
