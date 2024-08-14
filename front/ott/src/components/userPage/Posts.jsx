@@ -41,7 +41,7 @@ const Posts = ({ isMe, isPublic, currentId }) => {
         {isMe && (
           <button
             className={`py-2 px-5 cursor-pointer rounded-full  ${
-              activePostType === 'public'
+              activePostType === 'private'
                 ? 'bg-violet-200 text-white'
                 : 'bg-gray-200 text-black'
             }`}

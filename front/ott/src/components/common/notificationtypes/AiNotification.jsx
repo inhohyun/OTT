@@ -22,15 +22,15 @@ const AiNotification = ({
             ? `translateX(${moveX - startX}px)`
             : 'translateX(0)',
         transition:
-          swipedIndex === index && isSwiping
-            ? 'none'
-            : 'transform 0.2s ease',
+          swipedIndex === index && isSwiping ? 'none' : 'transform 0.2s ease',
       }}
     >
       {/* 상단: 알림 종류와 시간 */}
       <div className="flex justify-between">
-        <p className="text-xs text-stone-500">{notification.notificationType}</p>
-        <p className="text-xs text-stone-500">{formatDate(notification.createdAt)}</p>
+        <p className="text-xs text-stone-500">AI</p>
+        <p className="text-xs text-stone-500">
+          {formatDate(notification.createdAt)}
+        </p>
       </div>
 
       {/* 중단: 메시지 */}
