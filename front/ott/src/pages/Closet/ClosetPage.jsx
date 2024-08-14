@@ -24,51 +24,53 @@ const ClosetPage = () => {
   const [closetId, setClosetId] = useState(null);
   const memberId = useUserStore((state) => state.userId);
   const location = useLocation();
+
   const currentId = location.state?.id || {};
 
+  // 카테고리를 가져오는 함수
+  const fetchClosetIdAndCategories = async (sendId) => {
+    try {
+      const closetResponse = await getClosetId(sendId);
+      console.log('closetResponse', closetResponse);
+      const closetId = closetResponse.data[0].id;
+      setClosetId(closetId);
+
+      const categoryList = await getCategoryList(closetResponse.data[0].id);
+      console.log('categoryList', categoryList);
+      const fetchedCategories = categoryList.data.map((category) => ({
+        categoryId: category.categoryId,
+        name: category.name,
+      }));
+
+      setCategories([
+        { categoryId: -100, name: '전체' },
+        { categoryId: -200, name: '즐겨찾기' },
+        ...fetchedCategories,
+      ]);
+    } catch (error) {
+      console.error('카테고리 목록 가져오기 실패:', error);
+    }
+  };
+  // 옷 목록을 가져오는 함수
+  const fetchInitialClothesList = async (sendId) => {
+    try {
+      const clothesList = await getClothesList(sendId);
+      setClothes(clothesList);
+    } catch (error) {
+      console.error('옷 목록 가져오기 실패:', error);
+    }
+  };
   useEffect(() => {
-    const fetchInitialClothesList = async (sendId) => {
-      try {
-        const clothesList = await getClothesList(sendId);
-        setClothes(clothesList);
-      } catch (error) {
-        console.error('옷 목록 가져오기 실패:', error);
-      }
-    };
+    // 본인 또는 다른 사람의 카테고리 및 옷 목록 가져오기
+    console.log('옷장의 currentId, undefind면 본인임:', currentId);
     if (currentId === undefined || currentId === null) {
       fetchInitialClothesList(memberId);
+      fetchClosetIdAndCategories(memberId);
     } else {
       fetchInitialClothesList(currentId);
+      fetchClosetIdAndCategories(currentId);
     }
-  }, [memberId]);
-
-  useEffect(() => {
-    const fetchClosetIdAndCategories = async () => {
-      try {
-        const closetResponse = await getClosetId(memberId);
-        console.log('closetResponse', closetResponse);
-        const closetId = closetResponse.data[0].id;
-        setClosetId(closetId);
-
-        const categoryList = await getCategoryList(closetResponse.data[0].id);
-        console.log('categoryList', categoryList);
-        const fetchedCategories = categoryList.data.map((category) => ({
-          categoryId: category.categoryId,
-          name: category.name,
-        }));
-
-        setCategories([
-          { categoryId: -100, name: '전체' },
-          { categoryId: -200, name: '즐겨찾기' },
-          ...fetchedCategories,
-        ]);
-      } catch (error) {
-        console.error('카테고리 목록 가져오기 실패:', error);
-      }
-    };
-
-    fetchClosetIdAndCategories();
-  }, [memberId]);
+  }, []);
 
   useEffect(() => {
     if (closetId !== null) {
