@@ -48,6 +48,16 @@ public class MemberController {
         return ApiResponse.success(memberReadService.mySurveyStatusSearch(currentMember));
     }
 
+    @Operation(summary = "멤버 닉네임 가져오기", description = "<big>멤버의 닉네임을</big> 조회 합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "닉네임 조회"),
+    })
+    @GetMapping("/{memberId}/nickname")
+    public ApiResponse<MemberNicknameDto> getMemberNickname(@PathVariable Long memberId) {
+        return ApiResponse.success(memberReadService.nicknameSearch(memberId));
+    }
+
+
     @Operation(summary = "멤버 상세보기", description = "<big>유저 데이터를</big> 상세조회 합니다.")
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보"),
