@@ -24,10 +24,6 @@ const Modal = ({ isOpen, onClose }) => {
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
 
-  const setSelectedClothesURL = useStore(
-    (state) => state.setSelectedClothesURL
-  );
-
   // const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
 

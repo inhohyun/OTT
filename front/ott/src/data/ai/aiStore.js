@@ -28,54 +28,10 @@ const useStore = create((set, get) => ({
   modelImage: null,
   filter: '상의',
   sample: 4,
-  selectedClothesURL: null,
+  clothes: null,
 
   // 생성된 옷 이미지 데이터 저장
   resultImages: null,
-  clothes: [
-    {
-      id: 1,
-      category: '하의',
-      frontImage: pants1,
-      backImage: pants1Back,
-      isLiked: false,
-    },
-    {
-      id: 2,
-      category: '하의',
-      frontImage: pants2,
-      backImage: pants2Back,
-      isLiked: false,
-    },
-    {
-      id: 3,
-      category: '하의',
-      frontImage: pants3,
-      backImage: pants3Back,
-      isLiked: false,
-    },
-    {
-      id: 4,
-      category: '상의',
-      frontImage: shirt1,
-      backImage: shirt1Back,
-      isLiked: false,
-    },
-    {
-      id: 5,
-      category: '상의',
-      frontImage: shirt2,
-      backImage: shirt2Back,
-      isLiked: false,
-    },
-    {
-      id: 6,
-      category: '상의',
-      frontImage: shirt3,
-      backImage: shirt3Back,
-      isLiked: false,
-    },
-  ],
 
   // 상태 설정 메서드들
   setCurrentStep: (step) => set({ currentStep: step }),
@@ -83,13 +39,12 @@ const useStore = create((set, get) => ({
     set((state) => ({ percentage: updater(state.percentage) })),
   resetPercentage: () => set({ percentage: 0 }),
   setIsModalVisible: (isVisible) => set({ isModalVisible: isVisible }),
-  setSelectedClothing: (clothing) => set({ selectedClothing: clothing }),
+  setSelectedClothing: (clothes) => set({ selectedClothing: clothes }),
   setFilter: (filter) => set({ filter }),
   setSample: (sample) => set({ sample }),
   setModelImage: (modelImage) => set({ modelImage }),
   setSelectedImage: (selectedImage) => set({ selectedImage }),
   setModelPicture: (modelPicture) => set({ modelPicture }),
-  setselectedClothesURL: (selectedClothesURL) => set({ selectedClothesURL }),
   setResultImages: (resultImages) => set({ resultImages }),
   toggleLike: (id) =>
     set((state) => ({
