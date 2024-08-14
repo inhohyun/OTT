@@ -28,7 +28,7 @@ const Followers = ({ uid }) => {
   };
 
   const handleClick = (user) => {
-    navigate('/userpage', { state: { id: user.memberId } });
+    navigate('/userPage', { state: { id: user.memberId } });
   };
 
   return (
