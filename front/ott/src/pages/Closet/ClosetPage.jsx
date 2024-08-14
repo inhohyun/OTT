@@ -79,25 +79,31 @@ const ClosetPage = () => {
 
   useEffect(() => {
     if (closetId !== null) {
-      fetchClothesByCategory(selectedCategory);
+      if (currentId === undefined || currentId === null) {
+        fetchClothesByCategory(true, selectedCategory, memberId);
+      } else {
+        fetchClothesByCategory(false, selectedCategory, currentId);
+      }
     }
   }, [selectedCategory, closetId]);
 
-  const fetchClothesByCategory = async (categoryId) => {
+  const fetchClothesByCategory = async (isMe, categoryId, sendId) => {
     try {
       let clothesList;
       if (categoryId === -100) {
         // 전체
-        clothesList = await getClothesList(memberId);
+        clothesList = isMe
+          ? await getClothesList(memberId)
+          : await getOtherClothesList(sendId);
       } else if (categoryId === -200) {
         // 즐겨찾기
-        clothesList = await getBookmarkedClothes(memberId);
+        clothesList = isMe
+          ? await getBookmarkedClothes(memberId)
+          : await getBookmarkedClothes(sendId);
       } else {
-        clothesList = await getClothesByCategory(
-          memberId,
-          categoryId,
-          closetId
-        );
+        clothesList = isMe
+          ? await getClothesByCategory(memberId, categoryId, closetId)
+          : await getOtherClothesByCategory(currentId, categoryId, closetId);
       }
       setClothes(clothesList);
     } catch (error) {
