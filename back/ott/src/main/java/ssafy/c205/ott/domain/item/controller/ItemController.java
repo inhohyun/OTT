@@ -140,4 +140,25 @@ public class ItemController {
         }
         return ResponseEntity.ok().body(itemCategoryResponseDtos);
     }
+
+    @Operation(summary = "상대방의 모든 옷 조회", description = "<big>RTC 상대의 모든 옷을</big> 조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "상대방의 모든 옷"),
+    })
+    @GetMapping("/rtc/{meber_id}/list")
+    public ResponseEntity<?> getItemListByRtc(@PathVariable("meber_id") Long memberId) {
+        return ResponseEntity.ok().body(itemService.selectByRtcList(memberId));
+    }
+
+    @Operation(summary = "상대방의 카테고리별 옷을 조회합니다.", description = "<big>상대방의 카테고리의 옷을 </big>조회합니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "해당 카테고리의 상대 옷"),
+    })
+    @GetMapping("/rtc/{member_id}/{category_id}")
+    public ResponseEntity<?> getCategoryItemListByRtc(@PathVariable("member_id") Long memberId,
+        @PathVariable("category_id") Long categoryId, @RequestParam("closet_id") Long closetId) {
+        return ResponseEntity.ok()
+            .body(itemService.selectByRtcCategoryList(memberId, categoryId, closetId));
+    }
+
 }
