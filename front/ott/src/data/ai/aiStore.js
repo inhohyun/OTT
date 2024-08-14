@@ -39,7 +39,7 @@ const useStore = create((set, get) => ({
     set((state) => ({ percentage: updater(state.percentage) })),
   resetPercentage: () => set({ percentage: 0 }),
   setIsModalVisible: (isVisible) => set({ isModalVisible: isVisible }),
-  setSelectedClothesURL: (clothesURL) => set({ selectedClothing }),
+  setSelectedClothesURL: (selectedClothing) => set({ selectedClothing }),
   setFilter: (filter) => set({ filter }),
   setSample: (sample) => set({ sample }),
   setModelImage: (modelImage) => set({ modelImage }),
