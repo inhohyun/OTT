@@ -72,11 +72,11 @@ const FeedFollow = () => {
     setFollowersData(lookbookData);
   };
 
-  if (!Array.isArray(followersData) || !followersData.length) {
+  if (!followersData.length) {
     return <NoFeed />;
   }
 
-  if (isLoading) {
+  if (!Array.isArray(followersData) || isLoading) {
     return <CustomSpinner />;
   }
 
