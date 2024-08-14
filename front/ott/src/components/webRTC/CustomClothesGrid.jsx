@@ -120,7 +120,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleToggleImage(item.key);
+                      handleToggleImage(uniqueKey);
                     }}
                     className="absolute top-3 right-4 p-1 cursor-pointer"
                   >
@@ -130,7 +130,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    onToggleLike(item.key);
+                    onToggleLike(uniqueKey);
                   }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
