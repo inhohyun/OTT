@@ -23,6 +23,7 @@ const Modal = ({ isOpen, onClose }) => {
   const setModelImage = useStore((state) => state.setModelImage);
   const setModelPicture = useStore((state) => state.setModelPicture);
 
+  const setSelectedClothing = useStore((state) => state.setSelectedClothing);
   const setSelectedClothesURL = useStore(
     (state) => state.setSelectedClothesURL
   );
@@ -87,8 +88,9 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleClothingClick = (clothing) => {
-    console.log('사용자가 클릭한 ai 옷장 옷', clothing);
+    console.log('사용자가 클릭한 ai 옷장 옷', clothing.img[0]);
     const imageUrl = clothing.img[0]; // img 배열의 첫 번째 요소를 가져옴
+    setSelectedClothing(true); // 옷을 선택했음을 상태로 설정
     setSelectedClothesURL(imageUrl); // 추출한 이미지 URL을 상태로 설정
   };
 
