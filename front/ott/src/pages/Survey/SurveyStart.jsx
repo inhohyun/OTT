@@ -1,9 +1,26 @@
 import iconImage from '/icon-512x512.png';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import backgroundImage from '../../assets/images/background_image_survey.png';
+import { getSurveyCompleteStatus } from '../../api/user/user';
 
 export default function SurveyStart() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSurveyStatus = async () => {
+      try {
+        const { surveyCompleted } = await getSurveyCompleteStatus();
+        if (surveyCompleted) {
+          navigate('/mainpage');
+        }
+      } catch (error) {
+        console.error('설문조사 상태 확인 중 에러 발생:', error);
+      }
+    };
+
+    checkSurveyStatus();
+  }, [navigate]);
 
   const handleSurveyIng = () => {
     navigate('/survey_ing');
