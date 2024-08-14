@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { bookmarkClothes, unbookmarkClothes } from '../../api/closet/clothes';
 
-const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
+
+const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
   // 처음에 보이는 항목 수
   const [visibleItems, setVisibleItems] = useState(12);
   // 스크롤을 위한 컨테이너 요소의 참조
@@ -57,14 +59,48 @@ const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
     }
   };
 
-  // 앞면과 뒷면 이미지를 토글
-  const handleToggleImage = (id) => {
+  // 이미지 앞/뒷면 토글 함수
+  const handleToggleImage = (clothesId) => {
     setVisibleImages((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, isFront: !item.isFront } : item
+        item.id === clothesId ? { ...item, isFront: !item.isFront } : item
       )
     );
   };
+
+  // 좋아요 상태 토글 함수
+  const handleToggleLike = async (clothesId) => {
+    const toggledItem = clothes.find((item) => item.clothesId === clothesId);
+    if (toggledItem) {
+      try {
+        if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
+          await unbookmarkClothes(clothesId);
+          setClothes((prevClothes) =>
+            prevClothes.map((item) =>
+              item.clothesId === clothesId
+                ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
+                : item
+            )
+          );
+        } else {
+          await bookmarkClothes(clothesId);
+          setClothes((prevClothes) =>
+            prevClothes.map((item) =>
+              item.clothesId === clothesId
+                ? { ...item, bookmarkStatus: 'BOOKMARKING' }
+                : item
+            )
+          );
+        }
+      } catch (error) {
+        console.error('Error changing bookmark status:', error);
+      }
+    }
+  };
+
+  if (!clothes.length) {
+    return <div>옷이 없습니다.</div>;
+  }
 
   return (
     <div className="relative w-full p-1">
@@ -130,7 +166,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, onToggleLike }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    onToggleLike(uniqueKey);
+                    handleToggleLike(uniqueKey);
                   }}
                   className="absolute top-3 left-3 p-1 cursor-pointer"
                 >
