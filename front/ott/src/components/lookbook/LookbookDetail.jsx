@@ -39,6 +39,7 @@ const LookbookDetail = ({
   const [currentSides, setCurrentSides] = useState({});
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [detailModal, setDetailModal] = useState(false);
   const [selectedClothingItem, setSelectedClothingItem] = useState(null);
   const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
@@ -209,7 +210,8 @@ const LookbookDetail = ({
 
   const handleClothingItemClick = (item) => {
     setSelectedClothingItem(item);
-    setIsModalOpen(true);
+    setDetailModal(true);
+    // setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -415,7 +417,7 @@ const LookbookDetail = ({
       </div>
       {selectedClothingItem && (
         <ClothesDetailModal
-          isOpen={isModalOpen}
+          isOpen={detailModal}
           onClose={handleCloseModal}
           clothingItem={selectedClothingItem}
           categories={[]} // 필요한 카테고리 정보를 전달
