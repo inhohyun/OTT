@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import ClothesItem from './ClothesItem';
+
 const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   const [visibleItems, setVisibleItems] = useState(12);
   const [selectedItemId, setSelectedItemId] = useState(null);
