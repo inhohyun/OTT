@@ -191,7 +191,7 @@ export const getSurveyCompleteStatus = async () => {
 };
 
 // 프로필 이미지 업로드 api
-export const uploadProfileImg = async () => {
+export const uploadProfileImg = async (formData) => {
   try {
     const response = await axiosInstance.post(
       '/api/members/profile-image/upload',
