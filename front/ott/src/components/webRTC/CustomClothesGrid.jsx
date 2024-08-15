@@ -14,7 +14,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
   const containerRef = useRef(null);
   // 현재 보이는 이미지(앞/뒤)를 추적하는 상태
   const [visibleImages, setVisibleImages] = useState(
-    clothes.map((item) => ({ id: item.id, isFront: true }))
+    clothes.map((item) => ({ id: item.clothesId, isFront: true }))
   );
 
   // 컴포넌트가 마운트될 때 스크롤 이벤트 추가
@@ -32,7 +32,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
 
   // clothes 데이터가 변경될 때 보이는 이미지를 업데이트
   useEffect(() => {
-    setVisibleImages(clothes.map((item) => ({ id: item.id, isFront: true })));
+    setVisibleImages(clothes.map((item) => ({ id: item.clothesId, isFront: true })));
   }, [clothes]);
 
   // 무한 스크롤을 처리하여 더 많은 항목을 로드
