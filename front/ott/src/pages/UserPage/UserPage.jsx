@@ -197,9 +197,9 @@ const UserPage = () => {
                 <button
                   className={`w-[70%] px-4 py-2 border rounded ${
                     followStatus === '팔로잉'
-                      ? 'bg-violet-200 text-black-500 border-violet-300'
+                      ? 'bg-violet-200 text-black-500'
                       : followStatus === '요청됨'
-                        ? 'bg-blue-200 text-black-500 border-blue-300'
+                        ? 'bg-blue-200 text-black-500'
                         : 'bg-transparent text-[rgba(0,0,0,0.5)]'
                   }`}
                   onClick={handleFollowButtonClick}
