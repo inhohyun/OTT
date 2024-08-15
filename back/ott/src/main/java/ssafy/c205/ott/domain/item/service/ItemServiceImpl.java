@@ -156,18 +156,20 @@ public class ItemServiceImpl implements ItemService {
         List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
         Long closetId = closets.get(0).getId();
 
-        Category category = categoryRepository.findById(itemUpdateDto.getCategoryId())
+        Category newCategory = categoryRepository.findById(itemUpdateDto.getCategoryId())
             .orElseThrow(CategoryNotFoundException::new);
 
         List<ItemCategory> categories = new ArrayList<>();
-        ItemCategory itemCategory = itemCategoryRepository.findByMemberIdAndCategoryId(
-            itemUpdateDto.getMemberId(), itemUpdateDto.getCategoryId()).get(0);
+        ItemCategory itemCategory = itemCategoryRepository.findByItemIdAndCategoryId(
+            itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId());
+
+        itemCategoryRepository.delete(itemCategory);
 
         ItemCategory saveCategory = itemCategoryRepository.save(
             ItemCategory
                 .builder()
                 .id(itemCategory.getId())
-                .category(category)
+                .category(newCategory)
                 .item(item)
                 .build());
 
