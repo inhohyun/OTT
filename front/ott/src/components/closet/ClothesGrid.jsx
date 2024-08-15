@@ -11,7 +11,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import useBookmark from '../../data/ai/bookmarkClothes';
-import { useStore } from 'zustand';
 const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12); // 한 번에 보여줄 항목 수
   const [visibleImages, setVisibleImages] = useState([]); // 보이는 이미지 상태 (앞면/뒷면)
@@ -81,7 +80,6 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
     if (toggledItem) {
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
-          removeBookmarkedClothes(toggledItem);
           // 옷 즐겨찾기 해제
           await unbookmarkClothes(clothesId);
           setClothes((prevClothes) =>
@@ -91,8 +89,8 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
                 : item
             )
           );
+          removeBookmarkedClothes(toggledItem);
         } else {
-          setBookmarkedClothes(toggledItem);
           // 옷 즐겨찾기 추가
           await bookmarkClothes(clothesId);
           setClothes((prevClothes) =>
@@ -102,6 +100,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
                 : item
             )
           );
+          setBookmarkedClothes(toggledItem);
         }
       } catch (error) {
         console.error('Error changing bookmark status:', error);
