@@ -119,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
+    public Item updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
         MultipartFile backImg) {
         //이전 정보 가져오기
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
@@ -171,6 +171,8 @@ public class ItemServiceImpl implements ItemService {
 
         //아이템 정보 최신화
         item.updateItem(itemUpdateDto, categories, itemImages);
+
+        return item;
     }
 
     @Override
@@ -245,15 +247,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void bookmarkClothes(Long clothesId) {
+    public Long bookmarkClothes(Long clothesId) {
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
         item.updateBookmark(BookmarkStatus.BOOKMARKING);
+        return clothesId;
     }
 
     @Override
-    public void unbookmarkClothes(Long clothesId) {
+    public Long unbookmarkClothes(Long clothesId) {
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
         item.updateBookmark(BookmarkStatus.NOT_BOOKMARKING);
+        return clothesId;
     }
 
     @Override
