@@ -139,6 +139,30 @@ public class RecommendServiceImpl implements RecommendService {
                         .isFavorite(isFavorite).build());
             }
         }
+        if (bodyResponseDtos.isEmpty()) {
+            List<Lookbook> lookbooks = lookbookRepository.findByActiveStatus(
+                ssafy.c205.ott.domain.lookbook.entity.ActiveStatus.ACTIVE);
+
+            //모든 룩북을 가져옴
+            for (Lookbook lookbook : lookbooks) {
+                if (lookbook.getMember().getId() == memberId) {
+                    continue;
+                }
+                boolean isFavorite = false;
+                Favorite favorite = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
+                    memberId);
+                if (favorite != null) {
+                    isFavorite = true;
+                }
+                bodyResponseDtos.add(BodyResponseDto.builder()
+                    .cntFavorite(lookbookService.cntLikeLookbook(String.valueOf(lookbook.getId())))
+                    .img(lookbook.getLookbookImages().get(0).getImageUrl())
+                    .cntComment(commentService.countComment(String.valueOf(lookbook.getId())))
+                    .createdAt(lookbook.getCreatedAt()).nickname(lookbook.getMember().getNickname())
+                    .memberId(lookbook.getMember().getId()).lookbookId(lookbook.getId())
+                    .isFavorite(isFavorite).build());
+            }
+        }
         return bodyResponseDtos;
     }
 
