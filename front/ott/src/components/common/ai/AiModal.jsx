@@ -67,6 +67,7 @@ const Modal = ({ isOpen, onClose }) => {
     };
 
     fetchBookmarkedClothes();
+    console.log('북마크된 옷들', bookmarkClothes);
   }, [isOpen]);
 
   const customStyles = {
