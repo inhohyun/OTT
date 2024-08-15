@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import useBookmark from '../../data/ai/bookmarkClothes';
-const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
+const ClothesGrid = ({ currentId, clothes, setClothes, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12); // 한 번에 보여줄 항목 수
   const [visibleImages, setVisibleImages] = useState([]); // 보이는 이미지 상태 (앞면/뒷면)
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
@@ -81,8 +81,12 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
     if (toggledItem) {
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
-          // 옷 즐겨찾기 해제
-          await unbookmarkClothes(clothesId);
+          //본인일 경우에만 서버에서 옷 즐겨찾기 해제
+          if (!currentId) {
+            // 옷 즐겨찾기 해제
+            await unbookmarkClothes(clothesId);
+          }
+
           setClothes((prevClothes) =>
             prevClothes.map((item) =>
               item.clothesId === clothesId
@@ -92,8 +96,11 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
           );
           removeBookmarkedClothes(toggledItem);
         } else {
-          // 옷 즐겨찾기 추가
-          await bookmarkClothes(clothesId);
+          //본인일 경우에만 서버에서 옷 즐겨찾기 추가
+          if (!currentId) {
+            // 옷 즐겨찾기 추가
+            await bookmarkClothes(clothesId);
+          }
           setClothes((prevClothes) =>
             prevClothes.map((item) =>
               item.clothesId === clothesId

@@ -199,6 +199,7 @@ const ClosetPage = () => {
         setClothes={setClothes}
         onToggleLike={handleToggleLike}
         onClothesClick={handleClothesClick}
+        currentId={currentId}
       />
       <div className="flex justify-center mt-5">
         <button
