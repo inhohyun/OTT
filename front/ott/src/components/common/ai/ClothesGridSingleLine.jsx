@@ -43,7 +43,9 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   };
 
   const handleItemClick = (item) => {
-    setSelectedItemId(item.id);
+    setSelectedItemId((prevSelectedItemId) =>
+      prevSelectedItemId === item.id ? null : item.id
+    );
     onClothingClick(item);
   };
 
@@ -58,9 +60,6 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {clothes.slice(0, visibleItems).map((item) => {
-          const isFrontVisible = visibleImages.find(
-            (image) => image.id === item.id
-          )?.isFront;
           const isSelected = selectedItemId === item.id;
           return (
             <div
