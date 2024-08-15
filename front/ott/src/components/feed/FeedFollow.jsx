@@ -29,7 +29,7 @@ const FeedFollow = () => {
       setFollowersData(data);
       setVisibleLookbooks(
         data.reduce(
-          (acc, follower) => ({ ...acc, [follower.nickname]: 100 }),
+          (acc, follower) => ({ ...acc, [follower.nickname]: 1000 }),
           {}
         )
       );

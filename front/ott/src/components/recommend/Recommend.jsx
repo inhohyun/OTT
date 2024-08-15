@@ -30,16 +30,15 @@ const Recommend = () => {
   const fetchData = async () => {
     try {
       const heightWeightData = await heightWeight(memberId);
+      setHeightWeightRecommend(heightWeightData);
+
       // console.log(heightWeightData);
       const bodyTypeData = await bodyType(memberId);
+      setBodyTypeRecommend(bodyTypeData);
       // console.log(bodyTypeData);
       const styleData = await getTagRecommend(memberId);
-      // console.log(styleData);
-
-      setHeightWeightRecommend(heightWeightData);
-      setBodyTypeRecommend(bodyTypeData);
       setStyleRecommend(styleData);
-      setIsLoading(false);
+      // console.log(styleData);
     } catch (error) {
       console.error('Failed to fetch data:', error);
     }
@@ -49,7 +48,20 @@ const Recommend = () => {
     fetchData();
   }, [memberId]);
 
-  const initialLimit = 100;
+  useEffect(() => {
+    if (
+      heightWeightRecommend !== null &&
+      bodyTypeRecommend !== null &&
+      styleRecommend !== null &&
+      (heightWeightRecommend.length > 0 ||
+        bodyTypeRecommend.length > 0 ||
+        styleRecommend.length > 0)
+    ) {
+      setIsLoading(false);
+    }
+  }, [heightWeightRecommend, bodyTypeRecommend, styleRecommend]);
+
+  const initialLimit = 1000;
   const [visibleLookbooks, setVisibleLookbooks] = useState(
     categories.reduce(
       (acc, category) => ({ ...acc, [category]: initialLimit }),
