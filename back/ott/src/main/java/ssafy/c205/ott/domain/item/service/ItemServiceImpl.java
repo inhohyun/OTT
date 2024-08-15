@@ -30,6 +30,7 @@ import ssafy.c205.ott.domain.item.entity.ItemImage;
 import ssafy.c205.ott.domain.item.entity.ItemStatus;
 import ssafy.c205.ott.domain.item.exception.ClothesFindException;
 import ssafy.c205.ott.domain.item.exception.ImageNotFoundException;
+import ssafy.c205.ott.domain.item.exception.ItemCategoryNotFoundException;
 import ssafy.c205.ott.domain.item.repository.ItemCategoryRepository;
 import ssafy.c205.ott.domain.item.repository.ItemImageRepository;
 import ssafy.c205.ott.domain.item.repository.ItemRepository;
@@ -162,7 +163,7 @@ public class ItemServiceImpl implements ItemService {
 
         //이전 ItemCategory 조회
         ItemCategory itemCategory = itemCategoryRepository.findByItemIdAndCategoryId(
-            itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId());
+            itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId()).orElseThrow(ItemCategoryNotFoundException::new);
 
         //신규 카테고리로 변경
         itemCategory.updateCategory(newCategory);
