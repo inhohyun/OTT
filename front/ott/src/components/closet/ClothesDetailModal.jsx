@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
 import {
@@ -27,29 +27,33 @@ const ClothesDetailModal = ({
           console.log(clothingItem);
           const data = await getClothesItemData(clothingItem.clothesId);
           console.log(data);
-          setItemDetails(data);
+          setItemDetails({ ...data, newCategoryId: null });
         } catch (error) {
-          console.error('Failed to fetch item details:', error);
+          console.error('수정할 옷 정보 가져오는데 에러 발생:', error);
         }
       };
       fetchItemDetails();
     }
   }, [clothingItem]);
 
-  const handleToggleEdit = useCallback(() => {
+  const handleToggleEdit = () => {
     console.log(itemDetails);
     setIsEditing(true);
-  }, []);
+  };
 
-  const handleSave = useCallback(async () => {
+  const handleSave = async () => {
     try {
       const formData = new FormData();
+      formData.append('clothesId', itemDetails.clothesId);
       formData.append('brand', itemDetails.brand);
       formData.append('purchase', itemDetails.purchase);
       formData.append('size', itemDetails.size);
       formData.append('color', itemDetails.color);
       formData.append('gender', itemDetails.gender || '');
-      formData.append('categoryId', itemDetails.categoryId);
+      formData.append(
+        'categoryId',
+        itemDetails.newCategoryId || itemDetails.categoryId
+      );
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
       formData.append('salesStatus', itemDetails.salesStatus || 'NOT_SALE');
       formData.append('memberId', memberId);
@@ -66,12 +70,13 @@ const ClothesDetailModal = ({
         setItemDetails(updatedItemDetails);
       }
 
-      // onEdit(itemDetails);
+      console.log('수정된 옷 정보:', updatedItemDetails)
+
       setIsEditing(false);
     } catch (error) {
-      console.error('Error saving changes:', error);
+      console.error('옷 수정하는데 에러 발생:', error);
     }
-  }, [itemDetails, memberId, setClothes]);
+  };
 
   const handleDelete = async () => {
     try {
