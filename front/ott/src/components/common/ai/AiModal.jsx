@@ -54,22 +54,25 @@ const Modal = ({ isOpen, onClose }) => {
 
   // 옷들을 저장
   useEffect(() => {
-    const fetchBookmarkedClothes = async () => {
-      if (memberId) {
-        try {
-          console.log('북마크된 옷 가져올 때 memberId', memberId);
-          const response = await getBookmarkedClothes(memberId);
+    // const fetchBookmarkedClothes = async () => {
+    //   if (memberId) {
+    //     try {
+    //       console.log('북마크된 옷 가져올 때 memberId', memberId);
+    //       const response = await getBookmarkedClothes(memberId);
 
-          console.log('북마크된 옷', response);
-          setClothes(response);
-        } catch (error) {
-          console.error('즐겨찾기 옷 조회 실패:', error);
-        }
-      }
-    };
+    //       console.log('북마크된 옷', response);
+    //       // setClothes(response);
+    //     } catch (error) {
+    //       console.error('즐겨찾기 옷 조회 실패:', error);
+    //     }
+    //   }
+    // };
 
-    fetchBookmarkedClothes();
+    // fetchBookmarkedClothes();
     console.log('ai 옷장에 북마크된 옷들', bookmarkedClothes);
+    if (bookmarkedClothes.length > 0) {
+      setClothes(bookmarkedClothes);
+    }
   }, [isOpen]);
 
   const customStyles = {
