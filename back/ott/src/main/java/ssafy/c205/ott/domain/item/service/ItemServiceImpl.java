@@ -1,15 +1,12 @@
 package ssafy.c205.ott.domain.item.service;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.ItemCategory;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.common.util.AmazonS3Util;
@@ -40,6 +37,7 @@ import ssafy.c205.ott.domain.item.repository.ItemRepository;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
