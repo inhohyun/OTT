@@ -167,31 +167,12 @@ public class ItemServiceImpl implements ItemService {
             itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId());
 
         //신규 카테고리로 변경
-        ItemCategory saveCategory = itemCategoryRepository.save(
-            ItemCategory
-                .builder()
-                .id(itemCategory.getId())
-                .category(newCategory)
-                .item(item)
-                .build());
+        itemCategory.updateCategory(newCategory);
 
-        categories.add(saveCategory);
+        categories.add(itemCategory);
 
         //아이템 정보 최신화
-        itemRepository.save(Item
-            .builder()
-            .id(item.getId())
-            .sex(itemUpdateDto.getGender())
-            .brand(itemUpdateDto.getBrand())
-            .member(item.getMember()).itemImages(itemImages)
-            .size(itemUpdateDto.getSize())
-            .purchase(itemUpdateDto.getPurchase())
-            .itemCategories(categories)
-            .bookmarkStatus(item.getBookmarkStatus())
-            .publicStatus(itemUpdateDto.getPublicStatus())
-            .salesStatus(itemUpdateDto.getSalesStatus())
-            .color(itemUpdateDto.getColor())
-            .build());
+        item.updateItem(itemUpdateDto, categories, itemImages);
     }
 
     @Override
@@ -268,41 +249,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void bookmarkClothes(Long clothesId) {
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
-        itemRepository.save(
-            Item
-                .builder()
-                .id(item.getId())
-                .color(item.getColor())
-                .sex(item.getSex())
-                .brand(item.getBrand())
-                .member(item.getMember())
-                .itemImages(item.getItemImages())
-                .size(item.getSize())
-                .purchase(item.getPurchase())
-                .publicStatus(item.getPublicStatus())
-                .bookmarkStatus(BookmarkStatus.BOOKMARKING)
-                .salesStatus(item.getSalesStatus())
-                .build());
+        item.updateBookmark(BookmarkStatus.BOOKMARKING);
     }
 
     @Override
     public void unbookmarkClothes(Long clothesId) {
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
-        itemRepository.save(
-            Item
-                .builder()
-                .id(item.getId())
-                .color(item.getColor())
-                .sex(item.getSex())
-                .brand(item.getBrand())
-                .member(item.getMember())
-                .itemImages(item.getItemImages())
-                .size(item.getSize())
-                .purchase(item.getPurchase())
-                .publicStatus(item.getPublicStatus())
-                .bookmarkStatus(BookmarkStatus.NOT_BOOKMARKING)
-                .salesStatus(item.getSalesStatus())
-                .build());
+        item.updateBookmark(BookmarkStatus.NOT_BOOKMARKING);
     }
 
     @Override
