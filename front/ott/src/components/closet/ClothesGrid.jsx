@@ -72,6 +72,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
     if (toggledItem) {
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
+          console.log('즐겨찾기 클릭된 옷 객체 보기', toggledItem);
           // 옷 즐겨찾기 해제
           await unbookmarkClothes(clothesId);
           setClothes((prevClothes) =>
