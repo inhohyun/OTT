@@ -225,7 +225,7 @@ const LookbookDetail = ({
   };
 
   const goUserPage = () => {
-    nav('/userPage', { state: { id: currentLookbook.memberId } });
+    nav('/userPage', { state: { id: lookbook.memberId } });
   };
 
   return (
