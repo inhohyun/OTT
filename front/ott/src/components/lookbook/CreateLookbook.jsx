@@ -196,9 +196,9 @@ const CreateLookbook = () => {
         useCORS: true,
         allowTaint: true,
         logging: true,
-      }).then((canvas) => {
+      }).then(async (canvas) => {
         console.log(canvas);
-        canvas.toBlob((imageBlob) => {
+        canvas.toBlob(async (imageBlob) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
 
@@ -218,7 +218,7 @@ const CreateLookbook = () => {
           // });
 
           try {
-            lookbookCreate(formData);
+            await lookbookCreate(formData);
             console.log('룩북 저장 성공');
             nav('/userPage', { state: { id: userId } });
           } catch (error) {
