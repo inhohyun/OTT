@@ -1,6 +1,7 @@
 package ssafy.c205.ott.domain.item.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,9 +14,7 @@ public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Long
     List<ItemCategory> findByMemberIdAndCategoryId(@Param("memberId") Long memberId,
         @Param("categoryId") Long categoryId);
 
-    @Query("SELECT ic FROM ItemCategory ic WHERE ic.item.id = :itemId AND ic.category.id = :categoryId")
-    ItemCategory findByItemIdAndCategoryId(@Param("itemId") Long itemId,
-        @Param("categoryId") Long categoryId);
+    Optional<ItemCategory> findByItemIdAndCategoryId(Long itemId, Long categoryId);
 
     List<ItemCategory> findByCategoryId(Long categoryId);
 
