@@ -61,7 +61,7 @@ const Modal = ({ isOpen, onClose }) => {
     };
 
     fetchBookmarkedClothes();
-  }, [clothes]);
+  }, [isOpen]);
 
   const customStyles = {
     control: (provided, state) => ({
