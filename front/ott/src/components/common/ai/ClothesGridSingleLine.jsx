@@ -6,8 +6,8 @@ import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
-  const [visibleItems, setVisibleItems] = useState(12); // 필요에 따라 조정
-  const [selectedItemId, setSelectedItemId] = useState(null); // 현재 선택된 항목의 ID를 추적하는 상태
+  const [visibleItems, setVisibleItems] = useState(12); // 초기 표시 항목 수
+  const [selectedItemId, setSelectedItemId] = useState(null); // 선택된 아이템의 ID를 저장
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
     clothes.map((item) => ({ id: item.id, isFront: true }))
@@ -17,7 +17,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
       if (scrollLeft + clientWidth >= scrollWidth - 10) {
-        setVisibleItems((prev) => prev + 12); // 스크롤 시 더 많은 항목을 로드
+        setVisibleItems((prev) => prev + 12); // 스크롤 시 더 많은 항목 로드
       }
     }
   };
@@ -43,7 +43,6 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   };
 
   const handleItemClick = (item) => {
-    // 항목 ID를 기반으로 선택을 토글하는 로직을 업데이트
     setSelectedItemId((prevSelectedItemId) =>
       prevSelectedItemId === item.id ? null : item.id
     );
@@ -61,10 +60,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {clothes.slice(0, visibleItems).map((item) => {
-          const isFrontVisible = visibleImages.find(
-            (image) => image.id === item.id
-          )?.isFront;
-          const isSelected = selectedItemId === item.id;
+          const isSelected = selectedItemId === item.id; // 선택된 아이템만 true
           return (
             <div
               key={item.id}
@@ -73,13 +69,13 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                 minWidth: '180px',
                 height: '230px',
                 transition: 'background-color 0.3s ease',
-              }}
-              onClick={() => handleItemClick(item)}
+              }} // 너비와 높이를 조정
+              onClick={() => handleItemClick(item)} // 클릭 이벤트 처리
             >
               <img
                 src={item.img[0]}
                 alt={`${item.category}`}
-                className={`w-full h-full rounded-lg shadow-lg`}
+                className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
               />
               {isSelected && (
                 <FontAwesomeIcon
@@ -90,7 +86,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     fontSize: '3rem',
-                  }}
+                  }} // 크기를 증가시킴
                 />
               )}
               {item.backImage && (
@@ -111,10 +107,10 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                 }}
                 className="absolute top-3 left-3 p-1 cursor-pointer"
               >
-                {/* <FontAwesomeIcon
+                <FontAwesomeIcon
                   icon={item.isLiked ? faSolidStar : faRegularStar}
                   className="w-4 h-4 text-purple-300"
-                /> */}
+                />
               </div>
             </div>
           );
