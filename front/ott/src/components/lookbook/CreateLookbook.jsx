@@ -214,9 +214,9 @@ const CreateLookbook = () => {
           console.log(imageBlob);
           formData.append('img', imageBlob, 'lookbookimage.png');
 
-          // formData.forEach((value, key) => {
-          //   console.log(`${key}:`, value);
-          // });
+          formData.forEach((value, key) => {
+            console.log(`${key}:`, value);
+          });
 
           try {
             await lookbookCreate(formData);
