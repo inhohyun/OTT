@@ -23,7 +23,7 @@ const EditCategoryModal = ({
       existingCategories.some(
         (existingCategory) =>
           existingCategory.name.toLowerCase() === trimmedName.toLowerCase() &&
-          existingCategory.id !== category.closetId
+          existingCategory.id !== category.categoryId
       )
     ) {
       setError('같은 이름의 카테고리가 이미 존재합니다.');
@@ -32,6 +32,7 @@ const EditCategoryModal = ({
 
     try {
       // API 호출하여 카테고리 수정
+      console.log(closetId, category.categoryId, trimmedName)
       await fixCategory(closetId, category.categoryId, trimmedName);
       // 저장 성공 시 상위 컴포넌트에 변경 사항 전달
       onSave(trimmedName);
