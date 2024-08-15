@@ -22,7 +22,7 @@ const CustomSearchInput = ({
           value={searchQuery}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
-          placeholder="사용자 닉네임을 입력하세요"
+          placeholder="거래할 사용자를 검색하세요"
           className="border p-2 rounded-full w-full pl-4"
         />
         <FontAwesomeIcon
