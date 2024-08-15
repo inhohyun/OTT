@@ -52,7 +52,7 @@ const ClothesEditForm = ({
 
   // 카테고리 찾는 함수
   const matchingCategory = categories.find(
-    (category) => category.name === itemDetails.category
+    (category) => category.categoryId === itemDetails.categoryId
   );
 
   return (
@@ -109,9 +109,9 @@ const ClothesEditForm = ({
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
         <AddClothesCategorySelector
-          selectedCategory={matchingCategory?.categoryId || null}
-          onCategoryChange={(categoryId) => 
-            setItemDetails((prev) => ({ ...prev, categoryId }))
+          selectedCategory={itemDetails.newCategoryId || matchingCategory?.categoryId || null}
+          onCategoryChange={(newCategoryId) => 
+            setItemDetails((prev) => ({ ...prev, newCategoryId }))
           }
         />
       </div>
