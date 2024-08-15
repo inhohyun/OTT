@@ -29,7 +29,7 @@ const ClosetPage = () => {
 
   const currentId = location.state?.id;
 
-  const isMe = currentId === memberId || !currentId;
+  const isMyCloset = currentId === memberId || !currentId;
 
   useEffect(() => {
     const initializePage = async () => {
@@ -203,7 +203,7 @@ const ClosetPage = () => {
         onClothesClick={handleClothesClick}
         currentId={currentId}
       />
-      {isMe && (
+      {isMyCloset && (
         <div className="flex justify-center mt-5">
           <button
             onClick={() => setIsAddModalOpen(true)}
