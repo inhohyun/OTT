@@ -11,7 +11,7 @@ public interface MemberGroupRepository extends JpaRepository<MemberGroup, Long> 
 
     @Transactional
     @Modifying
-    @Query(value = "truncate membergroup", nativeQuery = true)
+    @Query(value = "truncate MemberGroup", nativeQuery = true)
     void truncateMemberGroup();
 
     MemberGroup findByMemberId(Long memberId);
