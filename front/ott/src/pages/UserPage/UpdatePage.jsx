@@ -11,6 +11,7 @@ import mainIcon from '../../assets/icons/main.logo.png';
 import Switch from '../../components/userPage/Switch';
 import { updateUserInfo } from '../../api/user/user';
 import BodyTypeModal from '../../components/userPage/BodyTypeModal';
+import { uploadProfileImg } from '../../api/user/user';
 
 const UpdatePage = () => {
   const navigate = useNavigate();
