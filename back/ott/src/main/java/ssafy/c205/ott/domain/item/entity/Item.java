@@ -12,6 +12,7 @@ import ssafy.c205.ott.common.entity.BaseEntity;
 import ssafy.c205.ott.common.entity.ItemCategory;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
 
 @Entity
 @Getter
@@ -66,5 +67,21 @@ public class Item extends BaseEntity {
     }
 
     public Item() {
+    }
+
+    public void updateItem(ItemUpdateDto itemUpdateDto, List<ItemCategory> categories, List<ItemImage> images) {
+        this.sex = itemUpdateDto.getGender();
+        this.color = itemUpdateDto.getColor();
+        this.size = itemUpdateDto.getSize();
+        this.brand = itemUpdateDto.getBrand();
+        this.purchase = itemUpdateDto.getPurchase();
+        this.publicStatus = itemUpdateDto.getPublicStatus();
+        this.itemCategories = categories;
+        this.itemImages = images;
+        this.salesStatus = itemUpdateDto.getSalesStatus();
+    }
+
+    public void updateBookmark(BookmarkStatus bookmarkStatus) {
+        this.bookmarkStatus = bookmarkStatus;
     }
 }
