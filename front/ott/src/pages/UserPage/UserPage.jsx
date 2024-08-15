@@ -36,7 +36,7 @@ const UserPage = () => {
   const memberId = useUserStore((state) => state.userId);
 
   const location = useLocation();
-  const { id } = location.state || {}; // id 꺼내기, 기본값을 memberId로 설정
+  const { id } = location.state; // id 꺼내기, 기본값을 memberId로 설정
 
   useEffect(() => {
     const fetchUserData = async (sendId) => {
@@ -74,27 +74,30 @@ const UserPage = () => {
         console.error('Error fetching user info:', error);
       }
     };
-
-    if (id === undefined || id === null) {
-      console.log('본인 memberId로 정보 가져오기', memberId);
-      fetchUserData(memberId);
-    } else {
-      console.log('다른 사람 memberId로 정보 가져오기', id);
-      fetchUserData(id);
-    }
   }, [id, memberId]);
 
   useEffect(() => {
     const fetchLookbookCount = async (sendId) => {
       try {
+        if (id === undefined || id === null) {
+          console.log('본인 memberId로 정보 가져오기', memberId);
+          fetchUserData(memberId);
+        } else {
+          console.log('다른 사람 memberId로 정보 가져오기', id);
+          fetchUserData(id);
+        }
         const response = await getLookbookCount(sendId);
         setPostCount(response.data);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchLookbookCount(id);
-  }, []);
+    if (id === undefined || id === null) {
+      fetchLookbookCount(memberId);
+    } else {
+      fetchLookbookCount(id);
+    }
+  }, [id, memberId]);
 
   if (!userInfo) {
     return <CustomSpinner />;
