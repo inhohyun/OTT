@@ -145,6 +145,7 @@ const CreateLookbook = () => {
 
                 return {
                   id: item.clothesId,
+                  imagePath: item.img[0],
                   image: url,
                 };
               } catch (imageError) {
