@@ -107,7 +107,12 @@ const Recommend = () => {
     '선호 스타일': styleRecommend,
   };
 
-  if (isLoading) {
+  if (
+    isLoading ||
+    !Array.isArray(heightWeightRecommend) ||
+    !Array.isArray(bodyTypeRecommend) ||
+    !Array.isArray(styleRecommend)
+  ) {
     return <CustomSpinner />;
   }
 
