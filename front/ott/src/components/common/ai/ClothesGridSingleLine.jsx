@@ -1,17 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import bingleicon from '@/assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
-import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   const [visibleItems, setVisibleItems] = useState(12);
-  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState(null); // Only one selected item
   const containerRef = useRef(null);
-  const [visibleImages, setVisibleImages] = useState(
-    clothes.map((item) => ({ id: item.id, isFront: true }))
-  );
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -34,16 +29,8 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
     };
   }, []);
 
-  const handleToggleImage = (id) => {
-    setVisibleImages((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isFront: !item.isFront } : item
-      )
-    );
-  };
-
   const handleItemClick = (item) => {
-    setSelectedItemId(item.id); // 선택된 아이템 ID 업데이트
+    setSelectedItemId(item.id); // Update to the clicked item ID
     onClothingClick(item);
   };
 
@@ -58,35 +45,27 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {clothes.slice(0, visibleItems).map((item) => {
-          const isSelected = selectedItemId === item.id;
           return (
             <div
               key={item.id}
-              className={`flex-none w-52 h-60 rounded-lg relative flex flex-col items-center ${isSelected ? 'bg-gray-700' : ''}`}
+              className={`flex-none w-52 h-60 rounded-lg relative flex flex-col items-center`}
               style={{
                 minWidth: '180px',
                 height: '230px',
                 transition: 'background-color 0.3s ease',
+                backgroundColor:
+                  item.id === selectedItemId
+                    ? 'rgba(0, 0, 0, 0.1)'
+                    : 'transparent',
               }}
-              onClick={() => handleItemClick(item)}
+              onClick={() => handleItemClick(item)} // Handle item click
             >
               <img
                 src={item.img[0]}
                 alt={`${item.category}`}
-                className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
+                className={`w-full h-full rounded-lg shadow-lg `}
               />
-              {isSelected && (
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="absolute text-white"
-                  style={{
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '3rem',
-                  }}
-                />
-              )}
+
               {item.backImage && (
                 <div
                   onClick={(e) => {
@@ -105,11 +84,16 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                 }}
                 className="absolute top-3 left-3 p-1 cursor-pointer"
               >
-                {/* <FontAwesomeIcon
-                  icon={item.isLiked ? faSolidStar : faRegularStar}
-                  className="w-4 h-4 text-purple-300"
-                /> */}
+                {/* Like/Unlike logic here */}
               </div>
+
+              {item.id === selectedItemId && (
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className="absolute bottom-3 right-3 text-green-500"
+                  size="lg"
+                />
+              )}
             </div>
           );
         })}
