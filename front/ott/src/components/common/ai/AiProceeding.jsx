@@ -61,7 +61,7 @@ const AiProceeding = () => {
         );
         console.log('ai 서버로부터 반환받은 데이터', response);
         // 서버에서 받은 이미지 처리
-        setResultImages(response.data.images);
+        setResultImages(response.images);
         sessionStorage.setItem('hasModalOpened', 'false'); // 넘어간 이후 모달은 최초 모달임을 표시
         setCurrentStep('AiResult');
         // 서버 응답 처리 로직 추가
