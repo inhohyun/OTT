@@ -15,7 +15,7 @@ const useStore = create((set, get) => ({
   modelPicture: defaultImage,
   modelImage: null,
   filter: '상의',
-  sample: 4,
+  sample: 1,
   selectedClothesURL: null,
 
   // 생성된 옷 이미지 데이터 저장
