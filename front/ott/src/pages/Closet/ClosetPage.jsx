@@ -12,7 +12,7 @@ import {
   getBookmarkedClothes,
   getOtherClothesList,
 } from '../../api/closet/clothes';
-import { getCategoryList } from '../../api/closet/categories';
+import { getCategoryList, deleteCategory } from '../../api/closet/categories';
 import useUserStore from '../../data/lookbook/userStore';
 import { addClothes } from '../../api/closet/clothes';
 
@@ -119,17 +119,25 @@ const ClosetPage = () => {
     );
   };
 
-  const handleDeleteCategory = (categoryToDelete) => {
-    setCategories((prevCategories) =>
-      prevCategories.filter((category) => category !== categoryToDelete)
-    );
-    setClothes((prevClothes) =>
-      prevClothes.map((item) =>
-        item.category === categoryToDelete
-          ? { ...item, category: '전체' }
-          : item
-      )
-    );
+  const handleDeleteCategory = async (categoryToDelete) => {
+    try {
+      await deleteCategory(categoryToDelete.categoryId);
+      setCategories((prevCategories) =>
+        prevCategories.filter((category) => category.categoryId !== categoryToDelete.categoryId)
+      );
+  
+      setClothes((prevClothes) =>
+        prevClothes.map((item) =>
+          item.categoryId === categoryToDelete.categoryId
+            ? { ...item, categoryId: -100 } 
+            : item
+        )
+      );
+  
+      console.log(`${categoryToDelete.name} 카테고리 삭제 완료`);
+    } catch (error) {
+      console.error('카테고리 삭제 중 에러 발생:', error);
+    }
   };
 
   const handleNewClothes = async (newClothesData) => {
