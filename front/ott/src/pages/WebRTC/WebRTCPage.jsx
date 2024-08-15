@@ -3,7 +3,6 @@ import CustomSearchInput from '../../components/webRTC/CustomSearchInput';
 import CustomPersonSearchResult from '../../components/webRTC/CustomPersonSearchResult';
 import VideoChat from './VideoChatPage';
 import backgroundImage from '../../assets/images/background_image_main.png';
-import PersonData from './PersonData'; // 모의 데이터 가져오기
 import { searchPeople } from '../../api/search/searchPeople';
 import { getUserListNickname } from '../../api/user/user';
 
@@ -113,7 +112,7 @@ const WebRTCPage = () => {
       ) : (
         // 선택된 사용자가 없는 경우 검색 입력 및 결과 표시
         <main className="flex-grow p-4 w-full max-w-md mx-auto mt-5">
-          <h1 className="text-2xl font-bold mb-4">화상 중고거래중</h1>
+          <h1 className="text-2xl font-bold mb-4">화상 중고거래</h1>
           <CustomSearchInput
             searchQuery={searchQuery}
             handleInputChange={handleInputChange}
