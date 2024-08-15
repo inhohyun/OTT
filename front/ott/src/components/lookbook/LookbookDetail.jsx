@@ -43,6 +43,7 @@ const LookbookDetail = ({
   const [selectedClothingItem, setSelectedClothingItem] = useState(null);
   const [followStatus, setFollowStatus] = useState(null);
   const { deleteLookbook, hideDetail } = useLookbookStore();
+  const [profileImg, setProfileImg] = useState(null);
   const userId = useUserStore((state) => state.userId);
   // const userId = 1;
   // const userId = 2;
@@ -63,6 +64,7 @@ const LookbookDetail = ({
         setLiked(data.favorite);
         setCntFavorite(data.cntFavorite);
         setFollowed(data.follow);
+        setProfileImg(data.profileImg);
       } catch (error) {
         console.error('Error fetching lookbook detail:', error);
       }
@@ -268,7 +270,7 @@ const LookbookDetail = ({
           <div className="flex items-center flex-grow">
             <div className="w-10 h-10 mr-2 rounded-full border border-solid  border-slate-500  overflow-hidden">
               <img
-                src={ProfileImg(data.profileImg)}
+                src={ProfileImg(profileImg)}
                 className="w-full h-full object-cover"
                 onClick={goUserPage}
               />
