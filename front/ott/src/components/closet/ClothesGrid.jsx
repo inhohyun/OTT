@@ -10,7 +10,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-import bookmarkClothes from '../../data/ai/bookmarkClothes';
+import useBookmark from '../../data/ai/bookmarkClothes';
 import { useStore } from 'zustand';
 const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const [visibleItems, setVisibleItems] = useState(12); // 한 번에 보여줄 항목 수
@@ -18,8 +18,10 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
   const containerRef = useRef(null); // 스크롤 컨테이너 참조
 
   // 즐겨찾기한 옷 ai 옷장에 추가 및 삭제
-  const setBookmarkedClothes = useStore((state) => state.setBookmarkedClothes);
-  const removeBookmarkedClothes = useStore(
+  const setBookmarkedClothes = useBookmark(
+    (state) => state.setBookmarkedClothes
+  );
+  const removeBookmarkedClothes = useBookmark(
     (state) => state.removeBookmarkedClothes
   );
   useEffect(() => {
