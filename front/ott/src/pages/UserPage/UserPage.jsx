@@ -94,7 +94,8 @@ const UserPage = () => {
       }
     };
     fetchLookbookCount(id);
-  }, [id]);
+  }, []);
+
   if (!userInfo) {
     return <CustomSpinner />;
   }
