@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import AddCategory from './AddCategory';
-import EditCategoryModal from './EditCategoryModal';
+// import EditCategoryModal from './EditCategoryModal';
 // import { getCategoryList, deleteCategory } from '../../api/closet/categories';
 // import { getClosetId } from '../../api/closet/clothes';
 // import useUserStore from '../../data/lookbook/userStore';
@@ -100,31 +100,31 @@ const CategoryDropdown = ({
   // };
 
   // 수정하고자 하는 카테고리 클릭
-  const handleEditCategoryClick = (category, e) => {
-    e.stopPropagation();
-    setEditingCategory(category);
-    setIsEditModalOpen(true);
-  };
+  // const handleEditCategoryClick = (category, e) => {
+  //   e.stopPropagation();
+  //   setEditingCategory(category);
+  //   setIsEditModalOpen(true);
+  // };
 
   // 수정한 카테고리 저장
-  const handleEditCategorySave = (newCategoryName) => {
-    setCategories((prevCategories) =>
-      prevCategories.map((cat) =>
-        cat.categoryId === editingCategory.categoryId
-          ? { ...cat, name: newCategoryName }
-          : cat
-      )
-    );
-    onEditCategory(editingCategory, newCategoryName);
-    setEditingCategory(null);
-    setIsEditModalOpen(false);
-  };
+  // const handleEditCategorySave = (newCategoryName) => {
+  //   setCategories((prevCategories) =>
+  //     prevCategories.map((cat) =>
+  //       cat.categoryId === editingCategory.categoryId
+  //         ? { ...cat, name: newCategoryName }
+  //         : cat
+  //     )
+  //   );
+  //   onEditCategory(editingCategory, newCategoryName);
+  //   setEditingCategory(null);
+  //   setIsEditModalOpen(false);
+  // };
 
   // 카테고리 수정 취소
-  const handleEditCategoryCancel = () => {
-    setEditingCategory(null); // 수정 중 모달 껐을 경우 수정되는 카테고리 선택 초기화
-    setIsEditModalOpen(false);
-  };
+  // const handleEditCategoryCancel = () => {
+  //   setEditingCategory(null); // 수정 중 모달 껐을 경우 수정되는 카테고리 선택 초기화
+  //   setIsEditModalOpen(false);
+  // };
 
   return (
     <div className="my-12 w-full max-w-xs flex items-center">
@@ -136,11 +136,11 @@ const CategoryDropdown = ({
               <span className="flex-grow">{category.name}</span>
               {category.name !== '전체' && category.name !== '즐겨찾기' && (
                 <div className="flex space-x-2 ml-auto">
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={faEdit}
                     className="cursor-pointer text-gray-500 hover:text-gray-700"
                     onClick={(e) => handleEditCategoryClick(category, e)}
-                  />
+                  /> */}
                   <FontAwesomeIcon
                     icon={faTrash}
                     className="cursor-pointer text-gray-500 hover:text-gray-700"
