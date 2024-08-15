@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import AddClothesCategorySelector from './AddClothesCategorySelector';
+// import AddClothesCategorySelector from './AddClothesCategorySelector';
 
 
 const ClothesEditForm = ({
@@ -8,7 +8,7 @@ const ClothesEditForm = ({
   onSave,
   onCancel,
   setItemDetails,
-  categories
+  // categories
 }) => {
   const customStyles = {
     control: (provided, state) => ({
@@ -51,9 +51,9 @@ const ClothesEditForm = ({
   };
 
   // 카테고리 찾는 함수
-  const matchingCategory = categories.find(
-    (category) => category.categoryId === itemDetails.categoryId
-  );
+  // const matchingCategory = categories.find(
+  //   (category) => category.categoryId === itemDetails.categoryId
+  // );
 
   return (
     <div
@@ -106,7 +106,7 @@ const ClothesEditForm = ({
           placeholder="색상을 입력하세요"
         />
       </div>
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
         <AddClothesCategorySelector
           selectedCategory={matchingCategory?.categoryId || null}
@@ -114,7 +114,7 @@ const ClothesEditForm = ({
             setItemDetails((prev) => ({ ...prev, newCategoryId }))
           }
         />
-      </div>
+      </div> */}
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">성별</label>
         <Select
