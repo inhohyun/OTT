@@ -268,7 +268,7 @@ const LookbookDetail = ({
           <div className="flex items-center flex-grow">
             <div className="w-10 h-10 mr-2 rounded-full border border-solid  border-slate-500  overflow-hidden">
               <img
-                src={ProfileImg(data.profileimg)}
+                src={ProfileImg(data.profileImg)}
                 className="w-full h-full object-cover"
                 onClick={goUserPage}
               />
