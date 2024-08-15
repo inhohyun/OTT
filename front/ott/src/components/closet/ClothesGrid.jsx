@@ -74,6 +74,7 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
     );
   };
 
+  // TODO : 다른 사람일 경우 서버 호출 x
   // 좋아요 상태 토글 함수
   const handleToggleLike = async (clothesId) => {
     const toggledItem = clothes.find((item) => item.clothesId === clothesId);

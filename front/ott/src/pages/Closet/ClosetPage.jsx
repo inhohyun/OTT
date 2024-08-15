@@ -201,7 +201,6 @@ const ClosetPage = () => {
         onClothesClick={handleClothesClick}
       />
       <div className="flex justify-center mt-5">
-        (
         <button
           onClick={() => setIsAddModalOpen(true)}
           className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
@@ -209,7 +208,6 @@ const ClosetPage = () => {
         >
           + 옷 추가하기
         </button>
-        )
       </div>
       <AddClothesModal
         isOpen={isAddModalOpen}
