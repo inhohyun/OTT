@@ -41,9 +41,7 @@ const UpdatePage = () => {
   const [isChecked, setIsChecked] = useState(
     userInfo.publicStatus !== 'PUBLIC'
   );
-  const [profileImage, setProfileImage] = useState(
-    userInfo.profileImage || mainIcon
-  );
+  const [profileImage, setProfileImage] = useState(userInfo.profileImageUrl);
   const [profileImageFile, setProfileImageFile] = useState(null);
 
   const fileInputRef = useRef(null);
