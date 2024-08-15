@@ -161,6 +161,9 @@ public class ItemServiceImpl implements ItemService {
 
         List<ItemCategory> categories = new ArrayList<>();
 
+        log.info("clothesId" + itemUpdateDto.getClothesId());
+        log.info("categoryId" + itemUpdateDto.getCategoryId());
+
         //이전 ItemCategory 조회
         ItemCategory itemCategory = itemCategoryRepository.findByItemIdAndCategoryId(
             itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId()).orElseThrow(ItemCategoryNotFoundException::new);
