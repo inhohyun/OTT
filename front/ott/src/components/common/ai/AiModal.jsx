@@ -10,6 +10,7 @@ import useStore from '@/data/ai/aiStore';
 import useUserStore from '@/data/lookbook/userStore';
 import { getBookmarkedClothes } from '@/api/closet/clothes';
 import useBookmarkStore from '@/data/ai/bookmarkClothes';
+
 const Modal = ({ isOpen, onClose }) => {
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
@@ -27,12 +28,10 @@ const Modal = ({ isOpen, onClose }) => {
     (state) => state.setSelectedClothesURL
   );
 
-  // const clothes = useStore((state) => state.clothes);
   const toggleLike = useStore((state) => state.toggleLike);
 
-  // zustand에 있는 memberId 가져오기
   const memberId = useUserStore((state) => state.userId);
-  // 모달이 열릴 때 Zustand 상태를 콘솔에 출력
+
   const categories = [
     { value: '상의', label: '상의' },
     { value: '하의', label: '하의' },
@@ -44,31 +43,15 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 3, label: '3장' },
     { value: 4, label: '4장' },
   ];
-  // 사용자에게 보여줄 북마크된 옷들을 저장할 상태
-  const [clothes, setClothes] = useState([]);
 
-  // 현재 북마크 되어있는 옷
+  const [clothes, setClothes] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
   const bookmarkedClothes = useBookmarkStore(
     (state) => state.bookmarkedClothes
   );
 
-  // 옷들을 저장
   useEffect(() => {
-    // const fetchBookmarkedClothes = async () => {
-    //   if (memberId) {
-    //     try {
-    //       console.log('북마크된 옷 가져올 때 memberId', memberId);
-    //       const response = await getBookmarkedClothes(memberId);
-
-    //       console.log('북마크된 옷', response);
-    //       // setClothes(response);
-    //     } catch (error) {
-    //       console.error('즐겨찾기 옷 조회 실패:', error);
-    //     }
-    //   }
-    // };
-
-    // fetchBookmarkedClothes();
     console.log('ai 옷장에 북마크된 옷들', bookmarkedClothes);
     if (bookmarkedClothes.length > 0) {
       setClothes(bookmarkedClothes);
@@ -103,9 +86,10 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handleClothingClick = (clothing) => {
     console.log('사용자가 클릭한 ai 옷장 옷', clothing.img[0]);
-    const imageUrl = clothing.img[0]; // img 배열의 첫 번째 요소를 가져옴
-    setSelectedClothing(true); // 옷을 선택했음을 상태로 설정
-    setSelectedClothesURL(imageUrl); // 추출한 이미지 URL을 상태로 설정
+    const imageUrl = clothing.img[0];
+    setSelectedClothing(true);
+    setSelectedClothesURL(imageUrl);
+    setSelectedItemId(clothing.id); // 선택된 아이템 ID 설정
   };
 
   const handleFilterChange = (option) => {
@@ -113,7 +97,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleSampleChange = (option) => {
-    setSample(option.value); // 숫자가 저장되도록 수정
+    setSample(option.value);
   };
 
   const handleImageChange = (event) => {
@@ -129,11 +113,6 @@ const Modal = ({ isOpen, onClose }) => {
       reader.readAsDataURL(file);
     }
   };
-  // 옷 필터 주석처리
-  // const filteredClothes =
-  //   filter === 'all'
-  //     ? clothes
-  //     : clothes.filter((clothing) => clothing.category === filter);
 
   return (
     <div className="modal-overlay custom-scrollbar mb-[65px]" onClick={onClose}>
@@ -205,6 +184,7 @@ const Modal = ({ isOpen, onClose }) => {
             ) : (
               <ClothesGridSingleLine
                 clothes={clothes}
+                selectedItemId={selectedItemId} // 선택된 아이템 ID 전달
                 onToggleLike={toggleLike}
                 onClothingClick={handleClothingClick}
               />
