@@ -402,7 +402,7 @@ const LookbookDetail = ({
             className="overflow-y-auto custom-scrollbar"
             style={{ maxHeight: '200px' }}
           >
-            {showSellComments ? (
+            {Object.keys(groupedClothes).length > 0 && showSellComments ? (
               <SellComment
                 comments={comments}
                 lookbookId={lookbookId}
