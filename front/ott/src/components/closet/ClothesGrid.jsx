@@ -75,12 +75,10 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
           // 옷 즐겨찾기 해제
           await unbookmarkClothes(clothesId);
           setClothes((prevClothes) =>
-            prevClothes.map(
-              (item) =>
-                item.clothesId === clothesId
-                  ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
-                  : item,
-              console.log('itme', item)
+            prevClothes.map((item) =>
+              item.clothesId === clothesId
+                ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
+                : item
             )
           );
         } else {
