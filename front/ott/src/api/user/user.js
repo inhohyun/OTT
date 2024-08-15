@@ -189,3 +189,21 @@ export const getSurveyCompleteStatus = async () => {
     throw error;
   }
 };
+
+// 프로필 이미지 업로드 api
+export const uploadProfileImg = async () => {
+  try {
+    const response = await axios.post(
+      '/api/members/profile-image/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    console.log('프로필 사진 업로드 성공:', response.data);
+  } catch (error) {
+    console.error('프로필 사진 업로드 실패:', error);
+  }
+};

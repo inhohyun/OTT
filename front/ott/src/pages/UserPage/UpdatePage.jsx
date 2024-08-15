@@ -104,6 +104,19 @@ const UpdatePage = () => {
     }
   };
 
+  // 프로필 이미지 업로드
+  const handleProfileImageUpload = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await uploadProfileImg(formData);
+      return response.data.imageUrl; // 서버에서 반환된 이미지 URL
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
+      return null;
+    }
+  };
+
   const triggerFileInput = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -125,6 +138,10 @@ const UpdatePage = () => {
       publicStatus: isChecked ? 'PUBLIC' : 'PRIVATE',
       memberTags: tags.length > 0 ? tags : null,
     };
+
+    if (profileImageFile) {
+      await handleProfileImageUpload(profileImageFile);
+    }
 
     try {
       await updateUserInfo(memberId, updatedUserInfo);
