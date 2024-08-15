@@ -6,8 +6,8 @@ import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
-  const [visibleItems, setVisibleItems] = useState(12); // Adjust this if needed
-  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [visibleItems, setVisibleItems] = useState(12); // 필요에 따라 조정
+  const [selectedItemId, setSelectedItemId] = useState(null); // 현재 선택된 항목의 ID를 추적하는 상태
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
     clothes.map((item) => ({ id: item.id, isFront: true }))
@@ -17,7 +17,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
       if (scrollLeft + clientWidth >= scrollWidth - 10) {
-        setVisibleItems((prev) => prev + 12); // Load more items as you scroll
+        setVisibleItems((prev) => prev + 12); // 스크롤 시 더 많은 항목을 로드
       }
     }
   };
@@ -43,6 +43,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   };
 
   const handleItemClick = (item) => {
+    // 항목 ID를 기반으로 선택을 토글하는 로직을 업데이트
     setSelectedItemId((prevSelectedItemId) =>
       prevSelectedItemId === item.id ? null : item.id
     );
@@ -72,13 +73,13 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                 minWidth: '180px',
                 height: '230px',
                 transition: 'background-color 0.3s ease',
-              }} // Adjust the width and height
-              onClick={() => handleItemClick(item)} // Handle click event
+              }}
+              onClick={() => handleItemClick(item)}
             >
               <img
                 src={item.img[0]}
                 alt={`${item.category}`}
-                className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
+                className={`w-full h-full rounded-lg shadow-lg`}
               />
               {isSelected && (
                 <FontAwesomeIcon
@@ -89,7 +90,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     fontSize: '3rem',
-                  }} // Increase the size
+                  }}
                 />
               )}
               {item.backImage && (
