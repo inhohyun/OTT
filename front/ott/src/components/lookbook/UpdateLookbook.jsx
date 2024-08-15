@@ -193,8 +193,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     setShowDeleteButton(false);
     setTimeout(() => {
       const canvasArea = document.getElementById('canvasArea');
-      html2canvas(canvasArea, { useCORS: true }).then((canvas) => {
-        canvas.toBlob((imageBlob) => {
+      html2canvas(canvasArea, { useCORS: true }).then(async (canvas) => {
+        canvas.toBlob(async (imageBlob) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
 
@@ -209,7 +209,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           try {
-            const data = lookbookUpdate(formData, lookbookid.id);
+            const data = await lookbookUpdate(formData, lookbookid.id);
             console.log('룩북 수정 성공', data);
             console.log('clothes', selectedImages);
             nav('/userPage', { state: { id: userId } });
