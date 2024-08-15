@@ -156,15 +156,17 @@ public class ItemServiceImpl implements ItemService {
         List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
         Long closetId = closets.get(0).getId();
 
+        //새로운 카테고리 정보 조회
         Category newCategory = categoryRepository.findById(itemUpdateDto.getCategoryId())
             .orElseThrow(CategoryNotFoundException::new);
 
         List<ItemCategory> categories = new ArrayList<>();
+
+        //이전 ItemCategory 조회
         ItemCategory itemCategory = itemCategoryRepository.findByItemIdAndCategoryId(
             itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId());
 
-        itemCategoryRepository.delete(itemCategory);
-
+        //신규 카테고리로 변경
         ItemCategory saveCategory = itemCategoryRepository.save(
             ItemCategory
                 .builder()
@@ -174,15 +176,14 @@ public class ItemServiceImpl implements ItemService {
                 .build());
 
         categories.add(saveCategory);
-        Member member = memberRepository.findByIdAndActiveStatus(item.getMember().getId(),
-            ActiveStatus.ACTIVE).orElseThrow(MemberNotFoundException::new);
 
+        //아이템 정보 최신화
         itemRepository.save(Item
             .builder()
             .id(item.getId())
             .sex(itemUpdateDto.getGender())
             .brand(itemUpdateDto.getBrand())
-            .member(member).itemImages(itemImages)
+            .member(item.getMember()).itemImages(itemImages)
             .size(itemUpdateDto.getSize())
             .purchase(itemUpdateDto.getPurchase())
             .itemCategories(categories)
