@@ -147,14 +147,14 @@ const LookbookDetail = ({
   const toggleFollow = () => {
     if (followed) {
       try {
-        unfollowUser(currentLookbook.memberId);
+        unfollowUser(lookbook.memberId);
         setFollowed(false);
       } catch (error) {
         console.error(error);
       }
     } else {
       try {
-        followUser(currentLookbook.memberId);
+        followUser(lookbook.memberId);
         setFollowed(true);
       } catch (error) {
         console.error(error);
@@ -225,7 +225,7 @@ const LookbookDetail = ({
   };
 
   const goUserPage = () => {
-    nav('/userPage', { state: { id: currentLookbook.memberId } });
+    nav('/userPage', { state: { id: lookbook.memberId } });
   };
 
   return (
