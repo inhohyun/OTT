@@ -262,7 +262,13 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
                   />
                 ) : (
                   <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
-                    {comment.msg}
+                    <span
+                      onClick={() => handleNicknameClick(comment.memberId)}
+                      className="text-black cursor-pointer"
+                    >
+                      {comment.nickname}
+                    </span>{' '}
+                    : {comment.msg}
                   </div>
                 )}
                 {comment.memberId === userId && (
