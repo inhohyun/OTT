@@ -67,8 +67,8 @@ const Modal = ({ isOpen, onClose }) => {
     };
 
     fetchBookmarkedClothes();
-    console.log('북마크된 옷들', bookmarkClothes);
-  }, [isOpen]);
+    console.log('ai 옷장에 북마크된 옷들', bookmarkClothes);
+  }, [isOpen, bookmarkClothes]);
 
   const customStyles = {
     control: (provided, state) => ({
