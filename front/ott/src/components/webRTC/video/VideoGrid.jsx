@@ -93,7 +93,7 @@ const styles = {
     zIndex: 1,
   },
   subscriber: {
-    flex: '1 1 calc(50% - 10px)',
+    flex: '1 1 calc(45% - 10px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
