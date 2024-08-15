@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 // import axios from 'axios';
 import {
   lookbookComment,
@@ -11,13 +14,14 @@ import {
 } from '../../api/lookbook/comments';
 
 const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
-  const currentUser = 'csh'; // Replace with the actual current user nickname
   const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [replyTo, setReplyTo] = useState(null); // Track which comment is being replied to
-  const [editingComment, setEditingComment] = useState(''); // Track the editing comment content
-  const [editingReply, setEditingReply] = useState(''); // Track the editing reply content
-  const inputRef = useRef(null); // Ref for the input field
+  const [replyTo, setReplyTo] = useState(null);
+  const [editingComment, setEditingComment] = useState('');
+  const [editingReply, setEditingReply] = useState('');
+  const inputRef = useRef(null);
+
+  const nav = useNavigate();
 
   useEffect(() => {
     // console.log('닉네임', comments.nickname);
@@ -42,7 +46,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
     try {
       const status = 'DM';
       const commentsData = await lookbookComment(lookbookId, status);
-      console.log('[*]판매용 댓글 룩북아이디', lookbookId);
+      // console.log('룩북아이디', lookbookId);
       setCommentList(
         commentsData.map((comment) => ({
           ...comment,
@@ -233,6 +237,10 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
     }
   };
 
+  const handleNicknameClick = (memberId) => {
+    nav('/userPage', { state: { id: memberId } });
+  };
+
   return (
     <div className="py-2">
       {commentList.length === 0 ? (
@@ -254,7 +262,13 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
                   />
                 ) : (
                   <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
-                    {comment.msg}
+                    <span
+                      onClick={() => handleNicknameClick(comment.memberId)}
+                      className="text-black cursor-pointer"
+                    >
+                      {comment.nickname}
+                    </span>{' '}
+                    : {comment.msg}
                   </div>
                 )}
                 {comment.memberId === userId && (
@@ -319,10 +333,19 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
                           />
                         ) : (
                           <div className="text-[13px] bg-gray-50 rounded-md flex-grow">
-                            ➥{reply.msg}
+                            ➥
+                            <span
+                              onClick={() =>
+                                handleNicknameClick(reply.memberId)
+                              }
+                              className="text-black cursor-pointer"
+                            >
+                              {reply.nickname}
+                            </span>{' '}
+                            : {reply.msg}
                           </div>
                         )}
-                        {reply.nickname === currentUser && (
+                        {reply.memberId === userId && (
                           <div className="flex space-x-2">
                             {!reply.isEditing && (
                               <>
@@ -378,6 +401,11 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
           className="border rounded-full w-full p-2 mb-2 flex-grow"
           placeholder="댓글을 작성하세요"
           style={{ fontFamily: 'dohyeon' }}
+        />
+        <FontAwesomeIcon
+          icon={faPaperPlane}
+          className="text-gray-500 cursor-pointer ml-2"
+          onClick={handleAddComment} // 아이콘 클릭 시 현재 상황에 맞는 함수 호출
         />
       </form>
     </div>

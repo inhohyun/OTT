@@ -14,7 +14,6 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // const memberId = 1;
         const closetResponse = await getClosetId(memberId);
         console.log('closetResponse', closetResponse);
         const closetid = closetResponse.data[0].id;

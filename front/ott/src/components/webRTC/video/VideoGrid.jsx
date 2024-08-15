@@ -91,6 +91,7 @@ const styles = {
     overflow: 'hidden',
     position: 'relative',
     zIndex: 1,
+    paddingLeft: '20px', 
   },
   subscriber: {
     flex: '1 1 calc(45% - 10px)',
@@ -112,8 +113,8 @@ const styles = {
     fontStyle: 'italic',
   },
   defaultImage: {
-    width: '100%',
-    height: '100%',
+    width: '80%',
+    height: '80%',
     objectFit: 'cover',
   },
 };

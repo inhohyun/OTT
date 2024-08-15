@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ClothesDetailsView from './ClothesDetailsView';
 import ClothesEditForm from './ClothesEditForm';
 import {
@@ -36,12 +36,12 @@ const ClothesDetailModal = ({
     }
   }, [clothingItem]);
 
-  const handleToggleEdit = () => {
+  const handleToggleEdit = useCallback(() => {
     console.log(itemDetails);
     setIsEditing(true);
-  };
+  }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
       const formData = new FormData();
       formData.append('brand', itemDetails.brand);
@@ -61,6 +61,7 @@ const ClothesDetailModal = ({
       const updatedItemDetails = updatedClothesList.find(
         (item) => item.clothesId === itemDetails.clothesId
       );
+
       if (updatedItemDetails) {
         setItemDetails(updatedItemDetails);
       }
@@ -70,7 +71,7 @@ const ClothesDetailModal = ({
     } catch (error) {
       console.error('Error saving changes:', error);
     }
-  };
+  }, [itemDetails, memberId, setClothes]);
 
   const handleDelete = async () => {
     try {
