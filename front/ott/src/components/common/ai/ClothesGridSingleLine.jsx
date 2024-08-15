@@ -43,9 +43,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
   };
 
   const handleItemClick = (item) => {
-    setSelectedItemId((prevSelectedItemId) =>
-      prevSelectedItemId === item.id ? null : item.id
-    );
+    setSelectedItemId(item.id);
     onClothingClick(item);
   };
 
@@ -80,7 +78,7 @@ const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
                 alt={`${item.category}`}
                 className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
               />
-              {isSelected && isFrontVisible && (
+              {isSelected && (
                 <FontAwesomeIcon
                   icon={faCheckCircle}
                   className="absolute text-white"
