@@ -48,7 +48,9 @@ const Modal = ({ isOpen, onClose }) => {
   const [clothes, setClothes] = useState([]);
 
   // 현재 북마크 되어있는 옷
-  const bookmarkClothes = useBookmarkStore((state) => state.bookmarkClothes);
+  const bookmarkedClothes = useBookmarkStore(
+    (state) => state.bookmarkedClothes
+  );
 
   // 옷들을 저장
   useEffect(() => {
@@ -67,8 +69,8 @@ const Modal = ({ isOpen, onClose }) => {
     };
 
     fetchBookmarkedClothes();
-    console.log('ai 옷장에 북마크된 옷들', bookmarkClothes);
-  }, [isOpen, bookmarkClothes]);
+    console.log('ai 옷장에 북마크된 옷들', bookmarkedClothes);
+  }, [isOpen]);
 
   const customStyles = {
     control: (provided, state) => ({
