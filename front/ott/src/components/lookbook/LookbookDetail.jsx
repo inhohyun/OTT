@@ -389,20 +389,22 @@ const LookbookDetail = ({
             >
               댓글
             </p>
-            <p
-              className={`text-lg cursor-pointer ${
-                showSellComments ? 'text-black font-bold' : 'text-slate-500'
-              }`}
-              onClick={() => setShowSellComments(true)}
-            >
-              판매용 댓글
-            </p>
+            {Object.keys(groupedClothes).length > 0 && (
+              <p
+                className={`text-lg cursor-pointer ${
+                  showSellComments ? 'text-black font-bold' : 'text-slate-500'
+                }`}
+                onClick={() => setShowSellComments(true)}
+              >
+                판매용 댓글
+              </p>
+            )}
           </div>
           <div
             className="overflow-y-auto custom-scrollbar"
             style={{ maxHeight: '200px' }}
           >
-            {Object.keys(groupedClothes).length > 0 && showSellComments ? (
+            {showSellComments ? (
               <SellComment
                 comments={comments}
                 lookbookId={lookbookId}
