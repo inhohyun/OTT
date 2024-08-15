@@ -9,7 +9,7 @@ import useStore from '@/data/ai/aiStore';
 
 import useUserStore from '@/data/lookbook/userStore';
 import { getBookmarkedClothes } from '@/api/closet/clothes';
-import bookmarkStore from '@/data/ai/bookmarkClothes';
+import useBookmarkStore from '@/data/ai/bookmarkClothes';
 const Modal = ({ isOpen, onClose }) => {
   const currentStep = useStore((state) => state.currentStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
@@ -48,7 +48,7 @@ const Modal = ({ isOpen, onClose }) => {
   const [clothes, setClothes] = useState([]);
 
   // 현재 북마크 되어있는 옷
-  const bookmarkClothes = bookmarkStore((state) => state.bookmarkClothes);
+  const bookmarkClothes = useBookmarkStore((state) => state.bookmarkClothes);
 
   // 옷들을 저장
   useEffect(() => {
