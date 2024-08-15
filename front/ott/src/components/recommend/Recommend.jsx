@@ -169,24 +169,19 @@ const Recommend = () => {
               ref={scrollRefs[category]}
               className="flex overflow-x-auto py-3 scrollbar-hide"
             >
-              {Array.isArray(filteredLookbooks[category]) &&
-              filteredLookbooks[category]?.length > 0 ? (
-                filteredLookbooks[category]
-                  .slice(0, visibleLookbooks[category])
-                  .map((lookbook) => {
-                    return (
-                      <div key={lookbook.id} className="lookbook-container">
-                        <Lookbook
-                          data={lookbook}
-                          onClick={() => setSelectedLookbook(lookbook)}
-                          onClose={closeDetailedView}
-                        />
-                      </div>
-                    );
-                  })
-              ) : (
-                <CustomSpinner />
-              )}
+              {filteredLookbooks[category]
+                .slice(0, visibleLookbooks[category])
+                .map((lookbook) => {
+                  return (
+                    <div key={lookbook.id} className="lookbook-container">
+                      <Lookbook
+                        data={lookbook}
+                        onClick={() => setSelectedLookbook(lookbook)}
+                        onClose={closeDetailedView}
+                      />
+                    </div>
+                  );
+                })}
               {visibleLookbooks[category] <
                 filteredLookbooks[category]?.length && (
                 <div className="show-more-button">
