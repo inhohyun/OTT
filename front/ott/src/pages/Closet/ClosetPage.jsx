@@ -29,6 +29,8 @@ const ClosetPage = () => {
 
   const currentId = location.state?.id;
 
+  const isMe = currentId === memberId || !currentId;
+
   useEffect(() => {
     const initializePage = async () => {
       try {
@@ -201,15 +203,17 @@ const ClosetPage = () => {
         onClothesClick={handleClothesClick}
         currentId={currentId}
       />
-      <div className="flex justify-center mt-5">
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
-          style={{ width: '200px' }}
-        >
-          + 옷 추가하기
-        </button>
-      </div>
+      {isMe && (
+        <div className="flex justify-center mt-5">
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="p-2 bg-violet-400 text-white rounded-lg hover:bg-violet-600 flex items-center justify-center"
+            style={{ width: '200px' }}
+          >
+            + 옷 추가하기
+          </button>
+        </div>
+      )}
       <AddClothesModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
