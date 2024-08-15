@@ -8,12 +8,13 @@ import ssafy.c205.ott.domain.item.dto.responsedto.ItemListResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
 
 import java.util.List;
+import ssafy.c205.ott.domain.item.entity.Item;
 
 public interface ItemService {
 
     void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg, MultipartFile backImg);
 
-    void updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg, MultipartFile backImg);
+    Item updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg, MultipartFile backImg);
 
     void deleteItem(Long clothesId);
 
@@ -21,9 +22,9 @@ public interface ItemService {
 
     List<ItemListResponseDto> selectItemList(Long memberId);
 
-    void bookmarkClothes(Long clothesId);
+    Long bookmarkClothes(Long clothesId);
 
-    void unbookmarkClothes(Long clothesId);
+    Long unbookmarkClothes(Long clothesId);
 
     List<ItemCategoryResponseDto> selectByCategory(Long categoryId, Long memberId, Long closetId);
 

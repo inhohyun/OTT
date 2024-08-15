@@ -1,15 +1,12 @@
 package ssafy.c205.ott.domain.item.service;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.ItemCategory;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.common.util.AmazonS3Util;
@@ -40,6 +37,7 @@ import ssafy.c205.ott.domain.item.repository.ItemRepository;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -121,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
+    public Item updateItem(Long clothesId, ItemUpdateDto itemUpdateDto, MultipartFile frontImg,
         MultipartFile backImg) {
         //이전 정보 가져오기
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
@@ -173,6 +171,8 @@ public class ItemServiceImpl implements ItemService {
 
         //아이템 정보 최신화
         item.updateItem(itemUpdateDto, categories, itemImages);
+
+        return item;
     }
 
     @Override
@@ -247,15 +247,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void bookmarkClothes(Long clothesId) {
+    public Long bookmarkClothes(Long clothesId) {
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
         item.updateBookmark(BookmarkStatus.BOOKMARKING);
+        return clothesId;
     }
 
     @Override
-    public void unbookmarkClothes(Long clothesId) {
+    public Long unbookmarkClothes(Long clothesId) {
         Item item = itemRepository.findById(clothesId).orElseThrow(ClothesFindException::new);
         item.updateBookmark(BookmarkStatus.NOT_BOOKMARKING);
+        return clothesId;
     }
 
     @Override

@@ -23,6 +23,7 @@ import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemUpdateDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemCategoryResponseDto;
 import ssafy.c205.ott.domain.item.dto.responsedto.ItemResponseDto;
+import ssafy.c205.ott.domain.item.entity.Item;
 import ssafy.c205.ott.domain.item.service.ItemService;
 
 @Slf4j
@@ -58,8 +59,8 @@ public class ItemController {
         @ModelAttribute ItemUpdateDto itemUpdateDto,
         @RequestParam(value = "frontImg", required = false) MultipartFile frontImg,
         @RequestParam(value = "backImg", required = false) MultipartFile backImg) {
-        itemService.updateItem(clothesId, itemUpdateDto, frontImg, backImg);
-        return ResponseEntity.ok().body("옷 수정을 완료했습니다.");
+        Item item = itemService.updateItem(clothesId, itemUpdateDto, frontImg, backImg);
+        return ResponseEntity.ok().body(item);
     }
 
     @Operation(summary = "옷 삭제하기", description = "<big>옷</big>을 삭제합니다")
@@ -112,8 +113,8 @@ public class ItemController {
     @PostMapping("/bookmark/{cloth_id}")
     public ResponseEntity<?> bookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
         log.info("룩북 아이디 : {}", clothesId);
-        itemService.bookmarkClothes(clothesId);
-        return ResponseEntity.ok().body("북마크를 완료했습니다.");
+        Long id = itemService.bookmarkClothes(clothesId);
+        return ResponseEntity.ok().body(id);
     }
 
     @Operation(summary = "옷 북마크 해제", description = "옷의 <big>북마크를 해제</big>합니다")
@@ -123,8 +124,8 @@ public class ItemController {
     @PostMapping("/unbookmark/{cloth_id}")
     public ResponseEntity<?> unbookmarkClothes(@PathVariable("cloth_id") Long clothesId) {
         log.info("룩북 아이디 : {}", clothesId);
-        itemService.unbookmarkClothes(clothesId);
-        return ResponseEntity.ok().body("북마크 해제를 완료했습니다.");
+        Long id = itemService.unbookmarkClothes(clothesId);
+        return ResponseEntity.ok().body(id);
     }
 
     @Operation(summary = "북마크된 옷 조회", description = "<big>북마크된 옷을 조회</big>합니다")
