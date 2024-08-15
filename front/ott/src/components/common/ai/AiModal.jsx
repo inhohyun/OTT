@@ -8,7 +8,7 @@ import AiResult from './AiResult';
 import useStore from '@/data/ai/aiStore';
 
 import useUserStore from '@/data/lookbook/userStore';
-
+import bookmarkClothes from '../../../data/ai/bookmarkClothes';
 import { getBookmarkedClothes } from '@/api/closet/clothes';
 const Modal = ({ isOpen, onClose }) => {
   const currentStep = useStore((state) => state.currentStep);
@@ -44,7 +44,12 @@ const Modal = ({ isOpen, onClose }) => {
     { value: 3, label: '3장' },
     { value: 4, label: '4장' },
   ];
+  // 사용자에게 보여줄 북마크된 옷들을 저장할 상태
   const [clothes, setClothes] = useState([]);
+
+  // 현재 북마크 되어있는 옷
+  const bookmarkClothes = useStore((state) => state.bookmarkClothes);
+
   // 옷들을 저장
   useEffect(() => {
     const fetchBookmarkedClothes = async () => {
@@ -52,6 +57,7 @@ const Modal = ({ isOpen, onClose }) => {
         try {
           console.log('북마크된 옷 가져올 때 memberId', memberId);
           const response = await getBookmarkedClothes(memberId);
+
           console.log('북마크된 옷', response);
           setClothes(response);
         } catch (error) {

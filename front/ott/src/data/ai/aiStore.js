@@ -1,17 +1,5 @@
 import { create } from 'zustand';
 import defaultImage from '@/assets/images/default_picture.png';
-import pants1 from '@/assets/images/clothes/pants1.jpg';
-import pants1Back from '@/assets/images/clothes/pants1-1.jpg';
-import pants2 from '@/assets/images/clothes/pants2.jpg';
-import pants2Back from '@/assets/images/clothes/pants2-1.jpg';
-import pants3 from '@/assets/images/clothes/pants3.jpg';
-import pants3Back from '@/assets/images/clothes/pants3-1.jpg';
-import shirt1 from '@/assets/images/clothes/shirt1.jpg';
-import shirt1Back from '@/assets/images/clothes/shirt1-1.jpg';
-import shirt2 from '@/assets/images/clothes/shirt2.jpg';
-import shirt2Back from '@/assets/images/clothes/shirt2-1.jpg';
-import shirt3 from '@/assets/images/clothes/shirt3.jpg';
-import shirt3Back from '@/assets/images/clothes/shirt3-1.jpg';
 
 const useStore = create((set, get) => ({
   // 현재 페이지

@@ -72,15 +72,19 @@ const ClothesGrid = ({ clothes, setClothes, onClothesClick }) => {
     if (toggledItem) {
       try {
         if (toggledItem.bookmarkStatus === 'BOOKMARKING') {
+          // 옷 즐겨찾기 해제
           await unbookmarkClothes(clothesId);
           setClothes((prevClothes) =>
-            prevClothes.map((item) =>
-              item.clothesId === clothesId
-                ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
-                : item
+            prevClothes.map(
+              (item) =>
+                item.clothesId === clothesId
+                  ? { ...item, bookmarkStatus: 'NOT_BOOKMARKING' }
+                  : item,
+              console.log('itme', item)
             )
           );
         } else {
+          // 옷 즐겨찾기 추가
           await bookmarkClothes(clothesId);
           setClothes((prevClothes) =>
             prevClothes.map((item) =>
