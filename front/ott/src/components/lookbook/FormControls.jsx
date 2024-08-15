@@ -199,7 +199,7 @@ const FormControls = ({
                   return (
                     <div className="relative" key={item.id}>
                       <img
-                        src={item.image}
+                        src={(item.imagePath?.path || item.image) + "?" + new Date().getTime()}
                         alt={item.name}
                         className="w-20 h-20 cursor-pointer"
                         onClick={() =>
