@@ -33,4 +33,8 @@ public class ItemCategory {
 
     public ItemCategory() {
     }
+
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
 }
