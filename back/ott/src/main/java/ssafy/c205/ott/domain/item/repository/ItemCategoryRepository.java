@@ -13,6 +13,10 @@ public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Long
     List<ItemCategory> findByMemberIdAndCategoryId(@Param("memberId") Long memberId,
         @Param("categoryId") Long categoryId);
 
+    @Query("SELECT ic FROM ItemCategory ic WHERE ic.item.id = :itemId AND ic.category.id = :categoryId")
+    ItemCategory findByItemIdAndCategoryId(@Param("itemId") Long itemId,
+        @Param("categoryId") Long categoryId);
+
     List<ItemCategory> findByCategoryId(Long categoryId);
 
     @Query("SELECT ic FROM ItemCategory ic WHERE ic.item.member.id = :memberId AND ic.category.id = :categoryId And ic.item.publicStatus = :publicStatus")
