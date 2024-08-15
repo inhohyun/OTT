@@ -220,6 +220,10 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
     }
   };
 
+  const handleNicknameClick = (memberId) => {
+    nav('/userPage', { state: { id: memberId } });
+  };
+
   const timeAgo = (time) => {
     const now = new Date();
     const diff = (now - new Date(time)) / 1000;
@@ -255,7 +259,13 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
                   />
                 ) : (
                   <div className="text-[14px] bg-gray-100 rounded-md flex-grow">
-                    {comment.msg}
+                    <span
+                      onClick={() => handleNicknameClick(comment.memberId)}
+                      className="text-black cursor-pointer"
+                    >
+                      {comment.nickname}
+                    </span>{' '}
+                    : {comment.msg}
                   </div>
                 )}
                 {comment.memberId === userId && (
@@ -320,7 +330,16 @@ const Comment = ({ comments = [], lookbookId, lookbook, userId }) => {
                           />
                         ) : (
                           <div className="text-[13px] bg-gray-50 rounded-md flex-grow">
-                            ➥{reply.msg}
+                            ➥
+                            <span
+                              onClick={() =>
+                                handleNicknameClick(reply.memberId)
+                              }
+                              className="text-black cursor-pointer"
+                            >
+                              {reply.nickname}
+                            </span>{' '}
+                            : {reply.msg}
                           </div>
                         )}
                         {reply.memberId === userId && (
