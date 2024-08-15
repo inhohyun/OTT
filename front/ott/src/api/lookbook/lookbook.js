@@ -9,7 +9,7 @@ export const lookbookCreate = async (formData) => {
     console.log('룩북 저장 성공');
     return response.data;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.response?.data);
   }
 };
 
