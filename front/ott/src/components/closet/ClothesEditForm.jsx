@@ -1,14 +1,7 @@
-import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import AddClothesCategorySelector from './AddClothesCategorySelector';
 
-const ClothesEditForm = ({
-  itemDetails,
-  onSave,
-  onCancel,
-  setItemDetails,
-  categories,
-}) => {
+const ClothesEditForm = ({ itemDetails, onSave, onCancel, setItemDetails }) => {
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -46,25 +39,16 @@ const ClothesEditForm = ({
 
   // 드롭다운 변경값 저장 함수
   const handleSelectChange = (selectedOption, name) => {
-    console.log(selectedOption, name);
     setItemDetails((prev) => ({ ...prev, [name]: selectedOption.value }));
   };
 
   // 카테고리 선택
   const handleCategoryChange = (newCategoryId) => {
-    console.log('선택된 카테고리 id:', newCategoryId);
     setItemDetails((prev) => ({
       ...prev,
       newCategoryId,
     }));
   };
-
-  // 카테고리 찾는 함수
-  const matchingCategory = categories.find(
-    (category) =>
-      category.categoryId === itemDetails.newCategoryId ||
-      category.categoryId === itemDetails.categoryId
-  );
 
   return (
     <div
