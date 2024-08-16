@@ -40,7 +40,7 @@ const Recommend = () => {
       setStyleRecommend(styleData);
       // console.log(styleData);
     } catch (error) {
-      console.error('Failed to fetch data:', error);
+      // console.error('Failed to fetch data:', error);
     }
   };
 

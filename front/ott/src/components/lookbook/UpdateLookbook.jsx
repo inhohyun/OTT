@@ -198,15 +198,14 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       if (url) {
         return url;
       } else {
-        return item.imagePath;
+        return item.imagePath.path;
       }
     } catch (imageError) {
       console.error('이미지 가져오기 실패:', imageError);
-      return  item.imagePath;
+      return item.imagePath.path;
     }
-  }
+  };
 
-  
   const {
     canvasItems,
     draggedItem,
@@ -219,10 +218,9 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   } = useCanvasItems(
     lookbook.images
       .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
-      .map((image, index) => (
-        {
-          image : image,
-        imagePath : convertUrlToBlob(image),
+      .map((image, index) => ({
+        image: image,
+        imagePath: convertUrlToBlob(image),
         side: 'FRONT', // side 정보를 'FRONT'로 고정
         uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
         x: 10 + index * 30,

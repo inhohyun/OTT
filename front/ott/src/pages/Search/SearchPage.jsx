@@ -18,10 +18,10 @@ const SearchPage = () => {
   const searchPeopleMethod = async (nickname, offset, limit) => {
     try {
       const response = await searchPeople(nickname, offset, limit);
-      console.log('검색한 response.data : ', response.data);
+      // console.log('검색한 response.data : ', response.data);
       return response.data;
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      // console.error('Error fetching user info:', error);
     }
   };
   const searchStyleMethod = async (tags, memberId) => {
@@ -29,7 +29,7 @@ const SearchPage = () => {
       const response = await searchStyle(tags, memberId);
       return response;
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      // console.error('Error fetching user info:', error);
     }
   };
 
@@ -141,7 +141,7 @@ const SearchPage = () => {
         },
       ];
       const searchStyleResult = await searchStyleMethod(searchQuery, memberId);
-      console.log('스타일 검색 결과 : ', searchStyleResult);
+      // console.log('스타일 검색 결과 : ', searchStyleResult);
       // 검색어와 일치하는 스타일 데이터 필터링
       // const matchedResults = searchStyleResult.filter((item) =>
       //   item.tags.some((tag) =>

@@ -3,12 +3,12 @@ import axiosInstance from '../axiosInstance';
 // 카테고리 조회
 export const getCategoryList = async (closetId) => {
   try {
-    console.log('closetId:', closetId);
+    // console.log('closetId:', closetId);
     const response = await axiosInstance.get(`/api/category/${closetId}`);
-    console.log('카테고리 목록 조회 성공:', response);
+    // console.log('카테고리 목록 조회 성공:', response);
     return response;
   } catch (error) {
-    console.error('카테고리 목록 조회 실패:', error);
+    // console.error('카테고리 목록 조회 실패:', error);
     throw error;
   }
 };
@@ -25,10 +25,10 @@ export const fixCategory = async (closetId, categoryId, newName) => {
       `/api/category/${closetId}`,
       requestBody
     );
-    console.log('카테고리 수정 성공:', response.data);
+    // console.log('카테고리 수정 성공:', response.data);
     return response.data;
   } catch (error) {
-    console.error('카테고리 목록 조회 실패:', error);
+    // console.error('카테고리 목록 조회 실패:', error);
     throw error;
   }
 };
@@ -43,10 +43,10 @@ export const addCategory = async (closetId, name) => {
       `/api/category/${closetId}`,
       requestBody
     );
-    console.log('카테고리 추가 성공', response.data);
+    // console.log('카테고리 추가 성공', response.data);
     return response.data;
   } catch (error) {
-    console.error('카테고리 추가 실패:', error);
+    // console.error('카테고리 추가 실패:', error);
     throw error;
   }
 };
@@ -55,10 +55,10 @@ export const addCategory = async (closetId, name) => {
 export const deleteCategory = async (categoryId) => {
   try {
     const response = await axiosInstance.delete(`/api/category/${categoryId}`);
-    console.log('카테고리 삭제 성공', response.data);
+    // console.log('카테고리 삭제 성공', response.data);
     return response.data;
   } catch (error) {
-    console.error('카테고리 삭제 실패:', error);
+    // console.error('카테고리 삭제 실패:', error);
     throw error;
   }
 };

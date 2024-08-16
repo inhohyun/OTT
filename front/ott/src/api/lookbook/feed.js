@@ -20,6 +20,6 @@ export const followFeed = async (userId) => {
     });
     return response;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };

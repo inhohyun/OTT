@@ -11,14 +11,14 @@ export default function SurveyStart() {
     const checkSurveyStatus = async () => {
       try {
         const response = await getSurveyCompleteStatus();
-        console.log(response);
+        // console.log(response);
 
         const { surveyCompleted } = response;
         if (surveyCompleted) {
           navigate('/mainpage');
         }
       } catch (error) {
-        console.error('설문조사 상태 확인 중 에러 발생:', error);
+        // console.error('설문조사 상태 확인 중 에러 발생:', error);
       }
     };
 

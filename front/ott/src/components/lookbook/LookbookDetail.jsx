@@ -49,24 +49,24 @@ const LookbookDetail = ({
   // const userId = 2;
   const hasFetchedComments = useRef(false);
 
-  console.log(currentLookbook, '현재룩북 멤버');
+  // console.log(currentLookbook, '현재룩북 멤버');
 
   const nav = useNavigate();
 
   useEffect(() => {
-    console.log(currentLookbook, '현재 선택 룩북');
-    console.log(lookbookId, '룩북아이디');
+    // console.log(currentLookbook, '현재 선택 룩북');
+    // console.log(lookbookId, '룩북아이디');
     const fetchLookbookDetail = async () => {
       try {
         const data = await lookbookDetail(lookbookId, userId); // API 호출
-        console.log('룩북디테일', data);
+        // console.log('룩북디테일', data);
         setLookbook(data); // 받아온 데이터를 상태로 설정
         setLiked(data.favorite);
         setCntFavorite(data.cntFavorite);
         setFollowed(data.follow);
         setProfileImg(data.profileImg);
       } catch (error) {
-        console.error('Error fetching lookbook detail:', error);
+        // console.error('Error fetching lookbook detail:', error);
       }
     };
 
@@ -74,16 +74,16 @@ const LookbookDetail = ({
   }, []);
 
   useEffect(() => {
-    console.log('현재룩북', lookbookId);
+    // console.log('현재룩북', lookbookId);
     if (lookbookId && !hasFetchedComments.current) {
       const fetchComments = async () => {
         try {
           const status = showSellComments ? 'DM' : 'comment';
           const commentsData = await lookbookComment(lookbookId, status);
-          console.log('댓글 호출');
+          // console.log('댓글 호출');
           setComments(commentsData);
         } catch (error) {
-          console.error('Failed to fetch comments:', error);
+          // console.error('Failed to fetch comments:', error);
         }
       };
 
@@ -133,7 +133,7 @@ const LookbookDetail = ({
         setLiked(false);
         setCntFavorite((prevCntLike) => prevCntLike - 1);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     } else {
       try {
@@ -141,7 +141,7 @@ const LookbookDetail = ({
         setLiked(true);
         setCntFavorite((prevCntLike) => prevCntLike + 1);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     }
   };
@@ -152,14 +152,14 @@ const LookbookDetail = ({
         unfollowUser(lookbook.memberId);
         setFollowed(false);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     } else {
       try {
         followUser(lookbook.memberId);
         setFollowed(true);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     }
   };
@@ -202,7 +202,7 @@ const LookbookDetail = ({
       hideDetail();
       onClose();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 

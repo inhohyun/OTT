@@ -56,7 +56,7 @@ const MainPage = () => {
     const fetchFollowCount = async () => {
       // console.log('Fetching follow count...'); // 이 로그가 찍히는지 확인
       try {
-        console.log('메인페이지에서 보내는 memberId:', memberId);
+        // console.log('메인페이지에서 보내는 memberId:', memberId);
 
         if (memberId !== null && memberId !== undefined) {
           const response = await getFollowingCount(memberId);
@@ -68,7 +68,7 @@ const MainPage = () => {
           }
         }
       } catch (error) {
-        console.error('Error fetching follow count:', error);
+        // console.error('Error fetching follow count:', error);
       }
     };
     fetchFollowCount();
@@ -95,13 +95,12 @@ const MainPage = () => {
     const fetchUserData = async () => {
       try {
         const uidResponse = await getUid();
-        console.log(uidResponse);
+        // console.log(uidResponse);
         const id = uidResponse.data.id;
         setUserId(id);
-        console.log('User ID:', id);
-        
+        // console.log('User ID:', id);
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        // console.error('Error fetching user info:', error);
       }
     };
 
@@ -110,7 +109,9 @@ const MainPage = () => {
 
   useEffect(() => {
     if (memberId) {
-      requestPermission(memberId).catch(error => console.error('Error in requestPermission:', error));
+      requestPermission(memberId).catch((error) => {
+        // console.error('Error in requestPermission:', error)
+      });
     }
   }, [memberId]);
 

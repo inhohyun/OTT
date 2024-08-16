@@ -44,26 +44,25 @@ const WebRTCPage = () => {
         setResults(response.data);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
     // 모의 데이터에서 검색어를 포함하는 항목 필터링
     // const filteredResults = PersonData.filter((item) =>
-      // item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    // item.title.toLowerCase().includes(searchQuery.toLowerCase())
     // );
     getUserListNickname(searchQuery.toLowerCase())
-      .then(filteredResults => {
+      .then((filteredResults) => {
         setResults(filteredResults);
       })
-      .catch(error => {
+      .catch((error) => {
         // 에러 처리
-        console.error('Error fetching filtered results:', error);
+        // console.error('Error fetching filtered results:', error);
       })
       .finally(() => {
         // 마지막 검색어 업데이트
-        setLastSearchQuery(searchQuery); 
+        setLastSearchQuery(searchQuery);
       });
 
-    
     // .then(response => {
     //   const data = response.data.data;
 
@@ -85,7 +84,7 @@ const WebRTCPage = () => {
     //   // 항상 실행될 코드
     //   console.log('Filtering complete.');
     // });
- 
+
     // setResults(filteredResults);
   };
 

@@ -4,12 +4,12 @@ import { getCategoryList } from './categories';
 // closet id 가져오기
 export const getClosetId = async (memberId) => {
   try {
-    console.log('closetId memberId:', memberId);
+    // console.log('closetId memberId:', memberId);
     const response = await axiosInstance.get(`api/closet/${memberId}`);
-    console.log('closetId 가져오기 성공:', response);
+    // console.log('closetId 가져오기 성공:', response);
     return response;
   } catch (error) {
-    console.error('옷장 id 가져오기 실패:', error);
+    // console.error('옷장 id 가져오기 실패:', error);
     throw error;
   }
 };
@@ -22,10 +22,10 @@ export const addClothes = async (formData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log('Successfully added clothes:', response);
+    // console.log('Successfully added clothes:', response);
     return response;
   } catch (error) {
-    console.error('Error adding clothes:', error);
+    // console.error('Error adding clothes:', error);
     throw error;
   }
 };
@@ -36,7 +36,7 @@ export const getClothesItemData = async (clothesId) => {
     const response = await axiosInstance.get(`/api/clothes/${clothesId}`);
     return response;
   } catch (error) {
-    console.error('옷 정보 가져오기 실패:', error);
+    // console.error('옷 정보 가져오기 실패:', error);
     throw error;
   }
 };
@@ -45,13 +45,13 @@ export const getClothesItemData = async (clothesId) => {
 export const getClothesList = async (memberId) => {
   try {
     const response = await axiosInstance.get(`/api/clothes/${memberId}/list`);
-    console.log(response);
+    // console.log(response);
     return response.map((item, index) => ({
       ...item,
       key: item.clothesId || index,
     }));
   } catch (error) {
-    console.error('옷 목록 가져오기 실패:', error);
+    // console.error('옷 목록 가져오기 실패:', error);
     throw error;
   }
 };
@@ -60,9 +60,9 @@ export const getClothesList = async (memberId) => {
 export const bookmarkClothes = async (clothesId) => {
   try {
     await axiosInstance.post(`/api/clothes/bookmark/${clothesId}`);
-    console.log(`${clothesId} 북마크 성공`);
+    // console.log(`${clothesId} 북마크 성공`);
   } catch (error) {
-    console.error(`${clothesId} 북마크 실패:`, error);
+    // console.error(`${clothesId} 북마크 실패:`, error);
     throw error;
   }
 };
@@ -71,9 +71,9 @@ export const bookmarkClothes = async (clothesId) => {
 export const unbookmarkClothes = async (clothesId) => {
   try {
     await axiosInstance.post(`/api/clothes/unbookmark/${clothesId}`);
-    console.log(`${clothesId} 언북마크 성공`);
+    // console.log(`${clothesId} 언북마크 성공`);
   } catch (error) {
-    console.error(`${clothesId} 언북마크 실패:`, error);
+    // console.error(`${clothesId} 언북마크 실패:`, error);
     throw error;
   }
 };
@@ -90,10 +90,10 @@ export const updateClothes = async (clothesId, formData) => {
         },
       }
     );
-    console.log('Successfully updated clothes:', response.data);
+    // console.log('Successfully updated clothes:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error updating clothes:', error);
+    // console.error('Error updating clothes:', error);
     throw error;
   }
 };
@@ -102,9 +102,9 @@ export const updateClothes = async (clothesId, formData) => {
 export const deleteClothes = async (clothesId) => {
   try {
     await axiosInstance.delete(`/api/clothes/${clothesId}`);
-    console.log(`${clothesId} 삭제 성공`);
+    // console.log(`${clothesId} 삭제 성공`);
   } catch (error) {
-    console.error(`${clothesId} 삭제 실패:`, error);
+    // console.error(`${clothesId} 삭제 실패:`, error);
     throw error;
   }
 };
@@ -120,7 +120,7 @@ export const getClothesByCategory = async (memberId, categoryId, closetId) => {
     );
     return response;
   } catch (error) {
-    console.error('카테고리별 조회 실패');
+    // console.error('카테고리별 조회 실패');
     throw error;
   }
 };
@@ -131,10 +131,10 @@ export const getBookmarkedClothes = async (memberId) => {
     const response = await axiosInstance.get(`/api/clothes/bookmark`, {
       params: { memberId },
     });
-    console.log('북마크된 옷 목록 조회 성공: ', response);
+    // console.log('북마크된 옷 목록 조회 성공: ', response);
     return response;
   } catch (error) {
-    console.error('북마크된 옷 목록 조회 실패: ', error);
+    // console.error('북마크된 옷 목록 조회 실패: ', error);
     throw error;
   }
 };
@@ -147,7 +147,7 @@ export const getOtherClothesList = async (memberId) => {
     );
     return response;
   } catch (error) {
-    console.error('카테고리 목록 불러오는 중 에러 발생:', error);
+    // console.error('카테고리 목록 불러오는 중 에러 발생:', error);
     throw error;
   }
 };
@@ -167,7 +167,7 @@ export const getOtherClothesByCategory = async (
     );
     return response;
   } catch (error) {
-    console.error('카테고리별 조회 실패');
+    // console.error('카테고리별 조회 실패');
     throw error;
   }
 };

@@ -6,7 +6,7 @@ export const getUserInfo = async (id) => {
     const response = await axiosInstance.get(`/api/members/${id}`);
     return response;
   } catch (error) {
-    console.error('Error fetching user info:', error);
+    // console.error('Error fetching user info:', error);
     throw error;
   }
 };
@@ -20,7 +20,7 @@ export const updateUserInfo = async (memberId, MemberUpdateRequestDto) => {
     );
     return response;
   } catch (error) {
-    console.error('Error updating user info:', error);
+    // console.error('Error updating user info:', error);
     throw error;
   }
 };
@@ -31,7 +31,7 @@ export const getUid = async () => {
     const response = await axiosInstance.get('/api/members/my');
     return response;
   } catch (error) {
-    console.error('Error fetching user info:', error);
+    // console.error('Error fetching user info:', error);
     throw error;
   }
 };
@@ -42,10 +42,10 @@ export const getFollowingCount = async (memberId) => {
     const response = await axiosInstance.get(
       `api/members/${memberId}/followingsCount`
     );
-    console.log('팔로우수', response);
+    // console.log('팔로우수', response);
     return response.data;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };
 
@@ -57,7 +57,7 @@ export const followUser = async (targetId) => {
     );
     return response;
   } catch (error) {
-    console.error('Error following user:', error);
+    // console.error('Error following user:', error);
     throw error;
   }
 };
@@ -70,7 +70,7 @@ export const unfollowUser = async (targetId) => {
     );
     return response;
   } catch (error) {
-    console.error('Error unfollowing user:', error);
+    // console.error('Error unfollowing user:', error);
     throw error;
   }
 };
@@ -83,7 +83,7 @@ export const followRequestAccept = async (requestId) => {
     );
     return response.data;
   } catch (error) {
-    console.error('팔로우 요청 수락 중 에러 발생:', error);
+    // console.error('팔로우 요청 수락 중 에러 발생:', error);
     throw error;
   }
 };
@@ -96,7 +96,7 @@ export const followRequestReject = async (requestId) => {
     );
     return response.data;
   } catch (error) {
-    console.error('팔로우 요청 거절 중 에러 발생:', error);
+    // console.error('팔로우 요청 거절 중 에러 발생:', error);
     throw error;
   }
 };
@@ -115,7 +115,7 @@ export const addMemberTags = async (memberId, tags) => {
     );
     return response;
   } catch (error) {
-    console.error('태그 추가 중 오류 발생', error);
+    // console.error('태그 추가 중 오류 발생', error);
     throw error;
   }
 };
@@ -126,17 +126,17 @@ export const getLookbookCount = async (memberId) => {
     const response = await axiosInstance.get(`api/lookbook/count`, {
       params: { memberId: memberId },
     });
-    console.log('룩북개수', response);
+    // console.log('룩북개수', response);
     return response;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 
 // 유저 닉네임 검색
 export const getUserListNickname = async (nickname) => {
   try {
-    console.log(nickname);
+    // console.log(nickname);
     const endpoint = `api/members/more?nickname=${nickname}`;
 
     const response = await axiosInstance.get(endpoint);
@@ -151,7 +151,7 @@ export const getUserListNickname = async (nickname) => {
           nickname: user.nickname,
           profileImageUrl: user.profileImageUrl,
         }));
-        console.log(processedData);
+        // console.log(processedData);
 
         return processedData;
       } else {
@@ -163,7 +163,7 @@ export const getUserListNickname = async (nickname) => {
       );
     }
   } catch (error) {
-    console.error('Error search user:', error);
+    // console.error('Error search user:', error);
     throw error;
   }
 };
@@ -174,7 +174,7 @@ export const getUserNickname = async (id) => {
     const response = await axiosInstance.get(`/api/members/${id}/nickname`);
     return response;
   } catch (error) {
-    console.error('Error fetching user nickname:', error);
+    // console.error('Error fetching user nickname:', error);
     throw error;
   }
 };
@@ -185,7 +185,7 @@ export const getSurveyCompleteStatus = async () => {
     const response = await axiosInstance.get('api/members/SurveyStatus');
     return response.data;
   } catch (error) {
-    console.error('설문조사 상태 가져오는 중 에러 발생:', error);
+    // console.error('설문조사 상태 가져오는 중 에러 발생:', error);
     throw error;
   }
 };
@@ -202,8 +202,8 @@ export const uploadProfileImg = async (formData) => {
         },
       }
     );
-    console.log('프로필 사진 업로드 성공:', response.data);
+    // console.log('프로필 사진 업로드 성공:', response.data);
   } catch (error) {
-    console.error('프로필 사진 업로드 실패:', error);
+    // console.error('프로필 사진 업로드 실패:', error);
   }
 };

@@ -23,7 +23,7 @@ const CustomClothesDetailsView = ({ itemDetails, onClose }) => {
         const data = await getClothesItemData(itemDetails.clothesId);
         setDetailedItem(data);
       } catch (error) {
-        console.error('Error fetching item details:', error);
+        // console.error('Error fetching item details:', error);
       } finally {
         setLoading(false);
       }

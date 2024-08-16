@@ -16,7 +16,7 @@ const reissueAccessToken = async () => {
       const newAccessToken = response.headers['access'];
 
       // 새로운 Access Token을 저장 또는 사용
-      console.log('New Access Token:', newAccessToken);
+      // console.log('New Access Token:', newAccessToken);
 
       // localUtils.js의 함수 사용
       setAccessToken(newAccessToken);
@@ -25,10 +25,10 @@ const reissueAccessToken = async () => {
       // alert('Access token stored in local storage');
     } else {
       // 실패 처리 (예: Refresh Token 만료 등)
-      console.error('Failed to reissue access token:', response.statusText);
+      // console.error('Failed to reissue access token:', response.statusText);
     }
   } catch (error) {
-    console.error('Error during reissue access token:', error);
+    // console.error('Error during reissue access token:', error);
   }
 };
 
