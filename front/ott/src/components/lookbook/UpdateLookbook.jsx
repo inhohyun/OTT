@@ -179,13 +179,11 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   }, [selectedCategory, userId, allClothes]);
 
   const convertUrlToBlob = async (image) => {
-    console.log("룩북 초기데이터");
-    console.log(...image);
     let item = image;
     
     try {
       // S3에서 이미지를 가져오고 Blob으로 변환
-      const imageResponse = await fetch(item.imagePath, {
+      const imageResponse = await fetch(item.imagePath.path, {
         method: 'GET',
         mode: 'cors', // CORS 모드를 명시
       });
