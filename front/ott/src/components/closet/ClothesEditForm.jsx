@@ -46,6 +46,7 @@ const ClothesEditForm = ({
 
   // 드롭다운 변경값 저장 함수
   const handleSelectChange = (selectedOption, name) => {
+    console.log(selectedOption, name);
     setItemDetails((prev) => ({ ...prev, [name]: selectedOption.value }));
   };
 
