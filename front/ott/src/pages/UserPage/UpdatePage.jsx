@@ -12,6 +12,7 @@ import Switch from '../../components/userPage/Switch';
 import { updateUserInfo } from '../../api/user/user';
 import BodyTypeModal from '../../components/userPage/BodyTypeModal';
 import { uploadProfileImg } from '../../api/user/user';
+import { addMemberTags } from '../../api/user/user';
 
 const UpdatePage = () => {
   const navigate = useNavigate();
@@ -146,6 +147,7 @@ const UpdatePage = () => {
 
     try {
       await updateUserInfo(memberId, updatedUserInfo);
+      await addMemberTags(memberId, tags);
       redirectProfile();
     } catch (error) {
       // console.error('Error updating user info:', error);
