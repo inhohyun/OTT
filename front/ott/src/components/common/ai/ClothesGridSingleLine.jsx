@@ -1,17 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import bingleicon from '@/assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGridSingleLine = ({
-  clothes,
-  onToggleLike,
-  onClothingClick,
-  selectedItemId,
-  setSelectedItemId,
-}) => {
-  const [visibleItems, setVisibleItems] = useState(12);
-  // const [selectedItemId, setSelectedItemId] = useState(null);
+const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
+  const [visibleItems, setVisibleItems] = useState(12); // Adjust this if needed
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
     clothes.map((item) => ({ id: item.id, isFront: true }))
@@ -21,7 +17,7 @@ const ClothesGridSingleLine = ({
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
       if (scrollLeft + clientWidth >= scrollWidth - 10) {
-        setVisibleItems((prev) => prev + 12);
+        setVisibleItems((prev) => prev + 12); // Load more items as you scroll
       }
     }
   };
@@ -76,11 +72,11 @@ const ClothesGridSingleLine = ({
                 minWidth: '180px',
                 height: '230px',
                 transition: 'background-color 0.3s ease',
-              }}
-              onClick={() => handleItemClick(item)}
+              }} // Adjust the width and height
+              onClick={() => handleItemClick(item)} // Handle click event
             >
               <img
-                src={item.img[0]}
+                src={isFrontVisible ? item.frontImage : item.backImage}
                 alt={`${item.category}`}
                 className={`w-full h-full rounded-lg shadow-lg ${isSelected ? 'opacity-50' : ''}`}
               />
@@ -93,7 +89,7 @@ const ClothesGridSingleLine = ({
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     fontSize: '3rem',
-                  }}
+                  }} // Increase the size
                 />
               )}
               {item.backImage && (
@@ -114,10 +110,10 @@ const ClothesGridSingleLine = ({
                 }}
                 className="absolute top-3 left-3 p-1 cursor-pointer"
               >
-                {/* <FontAwesomeIcon
+                <FontAwesomeIcon
                   icon={item.isLiked ? faSolidStar : faRegularStar}
                   className="w-4 h-4 text-purple-300"
-                /> */}
+                />
               </div>
             </div>
           );
