@@ -17,6 +17,7 @@ import ssafy.c205.ott.domain.account.repository.MemberRepository;
 import ssafy.c205.ott.domain.category.entity.Category;
 import ssafy.c205.ott.domain.category.exception.CategoryNotFoundException;
 import ssafy.c205.ott.domain.category.repository.CategoryRepository;
+import ssafy.c205.ott.domain.category.service.CategoryValidator;
 import ssafy.c205.ott.domain.closet.dto.ClosetDto;
 import ssafy.c205.ott.domain.closet.service.ClosetService;
 import ssafy.c205.ott.domain.item.dto.requestdto.ItemCreateDto;
@@ -48,6 +49,7 @@ public class ItemServiceImpl implements ItemService {
     private final ClosetService closetService;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final CategoryValidator categoryValidator;
 
     @Override
     public void createItem(ItemCreateDto itemCreateDto, MultipartFile frontImg,
@@ -151,22 +153,21 @@ public class ItemServiceImpl implements ItemService {
         }
 
         //카테고리 변경
-        //closet id 가져오기
-        List<ClosetDto> closets = closetService.findByMemberId(itemUpdateDto.getMemberId());
-        Long closetId = closets.get(0).getId();
 
-        //새로운 카테고리 정보 조회
-        Category newCategory = categoryRepository.findById(itemUpdateDto.getCategoryId())
+        //새로운 옷 카테고리 정보 조회
+        Category newCategory = categoryRepository.findById(itemUpdateDto.getNewCategoryId())
             .orElseThrow(CategoryNotFoundException::new);
 
         List<ItemCategory> categories = new ArrayList<>();
 
         log.info("clothesId" + itemUpdateDto.getClothesId());
-        log.info("categoryId" + itemUpdateDto.getCategoryId());
+        log.info("originalCategoryId" + itemUpdateDto.getOriginalCategoryId());
+        log.info("newCategoryId" + itemUpdateDto.getNewCategoryId());
+
 
         //이전 ItemCategory 조회
         ItemCategory itemCategory = itemCategoryRepository.findByItemIdAndCategoryId(
-            itemUpdateDto.getClothesId(), itemUpdateDto.getCategoryId()).orElseThrow(ItemCategoryNotFoundException::new);
+            itemUpdateDto.getClothesId(), itemUpdateDto.getOriginalCategoryId()).orElseThrow(ItemCategoryNotFoundException::new);
 
         //신규 카테고리로 변경
         itemCategory.updateCategory(newCategory);
