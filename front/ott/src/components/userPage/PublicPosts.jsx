@@ -65,7 +65,7 @@ const PublicPosts = ({ isMe, currentId }) => {
     // console.log('[*]모달 닫기');
     hideDetail();
   };
-
+  if (!lookbooks) return null;
   return (
     <div className="flex flex-col items-center w-full space-y-5">
       <style>{`
