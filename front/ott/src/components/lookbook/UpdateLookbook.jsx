@@ -195,18 +195,14 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       const blob = await imageResponse.blob();
       const url = URL.createObjectURL(blob);
 
-      return {
-        id: item.clothesId,
-        imagePath: item.imagePath,
-        image: url,
-      };
+      if (url) {
+        return url;
+      } else {
+        return item.imagePath;
+      }
     } catch (imageError) {
       console.error('이미지 가져오기 실패:', imageError);
-      return {
-        id: item.clothesId,
-        imagePath: item.imagePath,
-        image: null, // 이미지 로드 실패 시 null을 설정
-      };
+      return  item.imagePath;
     }
   }
 
@@ -225,7 +221,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
       .map((image, index) => (
         {
-        ...convertUrlToBlob(image),
+          image : image,
+        imagePath : convertUrlToBlob(image),
         side: 'FRONT', // side 정보를 'FRONT'로 고정
         uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
         x: 10 + index * 30,
