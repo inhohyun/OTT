@@ -190,7 +190,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   } = useCanvasItems(
     lookbook.images
       .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
-      .map((image, index) => ({
+      .map((image, index) => (
+        {
         ...image,
         side: 'FRONT', // side 정보를 'FRONT'로 고정
         uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
@@ -198,6 +199,38 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
         y: 10 + index * 30,
       }))
   );
+
+  const convertUrlToBlob = async (image) => {
+    console.log({...image});
+    const item = image;
+    
+    try {
+      // S3에서 이미지를 가져오고 Blob으로 변환
+      const imageResponse = await fetch(item.img[0], {
+        method: 'GET',
+        mode: 'cors', // CORS 모드를 명시
+      });
+
+      if (!imageResponse.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const blob = await imageResponse.blob();
+      const url = URL.createObjectURL(blob);
+
+      return {
+        id: item.clothesId,
+        imagePath: item.img[0],
+        image: url,
+      };
+    } catch (imageError) {
+      console.error('이미지 가져오기 실패:', imageError);
+      return {
+        id: item.clothesId,
+        image: null, // 이미지 로드 실패 시 null을 설정
+      };
+    }
+  }
 
   useEffect(() => {
     if (lookbook) {
