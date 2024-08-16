@@ -21,6 +21,7 @@ import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.LookbookDto;
 
 @Entity
 @Getter
@@ -74,6 +75,19 @@ public class Lookbook extends BaseEntity {
     }
 
     public Lookbook() {
-
+    }
+    public void hitUp(){
+        this.hitCount++;
+    }
+    public void deleteLookbook(){
+        this.activeStatus = ActiveStatus.INACTIVE;
+    }
+    public void updateLookbook(LookbookDto lookbookDto, List<LookbookTag> lookbookTags, List<LookbookItem> lookbookItems, List<LookbookImage> lookbookImages) {
+        this.publicStatus = lookbookDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC
+            : PublicStatus.PRIVATE;
+        this.content = lookbookDto.getContent();
+        this.lookbookImages = lookbookImages;
+        this.lookbookTags = lookbookTags;
+        this.lookbookItemList = lookbookItems;
     }
 }
