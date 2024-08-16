@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
   timeout: 1000000,
   headers: {
     'Content-Type': 'application/json',
-    'Origin': 'https://i11c205.p.ssafy.io', // 여기에 Origin 헤더 추가
+    // 'Origin': 'https://i11c205.p.ssafy.io', // 여기에 Origin 헤더 추가
   },
 });
 
