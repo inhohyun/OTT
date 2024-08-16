@@ -25,7 +25,7 @@ const CanvasArea = ({
       onTouchEnd={handleMouseUpOrLeave}
     >
       {canvasItems.map((item, index) => {
-        // console.log('Canvas item:', item); // Log item to the console
+        console.log('Canvas item:', item); // Log item to the console
         return (
           <div
             key={item.uniqueKey}
