@@ -44,12 +44,11 @@ axiosInstance.interceptors.response.use(
   // 토큰이 만료되거나 오류가 발생한 경우 동작하는 코드
   async (error) => {
     const originalRequest = error.config; // 실패한 요청의 설정 가져오기
-
     console.error('Error response:', error.response);
     // 오류가 발생하면 아래 요청 수행
     if (
       (error.response && error.response.status === 401) ||
-      (error.response && error.response.status === 400)
+      (error.response && error.response.status === 403)
     ) {
       // 요청이 이미 한 번 재시도 되었는지 확인
       if (!originalRequest._retry) {
