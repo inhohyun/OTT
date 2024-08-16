@@ -120,7 +120,7 @@ const ClothesEditForm = ({
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
         <AddClothesCategorySelector
-          selectedCategory={matchingCategory?.categoryId || null}
+          selectedCategory={itemDetails.newCategoryId || itemDetails.categoryId}
           onCategoryChange={handleCategoryChange}
         />
       </div>
