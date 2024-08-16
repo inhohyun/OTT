@@ -56,13 +56,14 @@ const ClothesEditForm = ({
     setItemDetails((prev) => ({
       ...prev,
       newCategoryId,
-      categoryId: newCategoryId,
     }));
   };
 
   // 카테고리 찾는 함수
   const matchingCategory = categories.find(
-    (category) => category.categoryId === itemDetails.categoryId
+    (category) =>
+      category.categoryId === itemDetails.newCategoryId ||
+      category.categoryId === itemDetails.categoryId
   );
 
   return (
