@@ -265,7 +265,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
             return console.error('Failed to convert canvas to blob.');
 
           const selectedImages = canvasItems.map((item) => {
-            console.log('canvas Item', item);
+            // console.log('canvas Item', item);
 
             return item.id || item.clothesId;
           });
@@ -280,8 +280,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
           try {
             const data = await lookbookUpdate(formData, lookbookid.id);
-            console.log('룩북 수정 성공', data);
-            console.log('clothes', selectedImages);
+            // console.log('룩북 수정 성공', data);
+            // console.log('clothes', selectedImages);
             nav('/userPage', { state: { id: userId } });
           } catch (error) {
             console.error('Error:', error);
