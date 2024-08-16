@@ -192,7 +192,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
       .map((image, index) => (
         {
-        ...image,
+        ...convertUrlToBlob(image),
         side: 'FRONT', // side 정보를 'FRONT'로 고정
         uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
         x: 10 + index * 30,
@@ -201,12 +201,12 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   );
 
   const convertUrlToBlob = async (image) => {
-    console.log({...image});
+    console.log("룩북 초기데이터" + {...image});
     const item = image;
     
     try {
       // S3에서 이미지를 가져오고 Blob으로 변환
-      const imageResponse = await fetch(item.img[0], {
+      const imageResponse = await fetch(item.imagePath, {
         method: 'GET',
         mode: 'cors', // CORS 모드를 명시
       });
@@ -220,7 +220,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
       return {
         id: item.clothesId,
-        imagePath: item.img[0],
+        imagePath: item.imagePath,
         image: url,
       };
     } catch (imageError) {
