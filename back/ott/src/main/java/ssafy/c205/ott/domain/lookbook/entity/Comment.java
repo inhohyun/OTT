@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import ssafy.c205.ott.common.entity.BaseEntity;
 import ssafy.c205.ott.common.entity.CommentStatus;
 import ssafy.c205.ott.domain.account.entity.Member;
+import ssafy.c205.ott.domain.lookbook.dto.requestdto.CommentMessageDto;
 
 @Entity
 @Getter
@@ -54,5 +55,18 @@ public class Comment extends BaseEntity {
     }
 
     public Comment() {
+    }
+
+    public void updateComment(CommentMessageDto commentMessageDto) {
+        this.message = commentMessageDto.getMsg();
+    }
+
+    public void deleteComment(){
+        this.commentStatus = CommentStatus.DELETED;
+    }
+
+    public void createReply(Lookbook lookbook, List<Comment> children) {
+        this.lookbook = lookbook;
+        this.children = children;
     }
 }

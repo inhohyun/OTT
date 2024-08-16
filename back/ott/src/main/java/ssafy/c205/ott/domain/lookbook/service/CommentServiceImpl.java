@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.CommentStatus;
 import ssafy.c205.ott.domain.account.entity.ActiveStatus;
@@ -29,6 +30,7 @@ import ssafy.c205.ott.domain.notification.service.NotificationWriteService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
@@ -92,16 +94,8 @@ public class CommentServiceImpl implements CommentService {
         // Parent에 child 댓글에 추가
         List<Comment> children = parent.getChildren();
         children.add(replyComment);
-        commentRepository.save(Comment
-            .builder()
-            .lookbook(lookbook)
-            .id(parent.getId())
-            .member(parent.getMember())
-            .message(parent.getMessage())
-            .commentStatus(parent.getCommentStatus())
-            .children(children)
-            .build());
 
+        parent.createReply(lookbook, children);
         //Todo : 대댓글이 잘 작성되었는지 확인하여 예외처리 할 필요
     }
 
@@ -160,16 +154,7 @@ public class CommentServiceImpl implements CommentService {
             .orElseThrow(CommentNotFoundException::new);
 
         // 데이터 업데이트
-        commentRepository.save(Comment
-            .builder()
-            .id(comment.getId())
-            .message(commentMessageDto.getMsg())
-            .commentStatus(comment.getCommentStatus())
-            .children(comment.getChildren())
-            .member(comment.getMember())
-            .parent(comment.getParent())
-            .lookbook(comment.getLookbook())
-            .build());
+        comment.updateComment(commentMessageDto);
     }
 
     //댓글 삭제
@@ -180,16 +165,7 @@ public class CommentServiceImpl implements CommentService {
             .orElseThrow(CommentNotFoundException::new);
 
         //댓글 삭제하기 => 상태를 Delete 상태로 변경하기
-        commentRepository.save(Comment
-            .builder()
-            .id(comment.getId())
-            .lookbook(comment.getLookbook())
-            .member(comment.getMember())
-            .parent(comment.getParent())
-            .message(comment.getMessage())
-            .children(comment.getChildren())
-            .commentStatus(CommentStatus.DELETED)
-            .build());
+        comment.deleteComment();
     }
 
     @Override

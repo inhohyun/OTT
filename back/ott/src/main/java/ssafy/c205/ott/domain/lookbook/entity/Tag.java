@@ -36,4 +36,12 @@ public class Tag extends BaseEntity {
         this.name = name;
         this.count = count;
     }
+
+    public void tagAdd(){
+        this.count++;
+    }
+
+    public void tagMinus(){
+        this.count--;
+    }
 }
