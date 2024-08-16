@@ -209,38 +209,18 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     }
   };
   
+  const {
+    canvasItems,
+    draggedItem,
+    setCanvasItems,
+    setDraggedItem,
+    handleAddToCanvas,
+    handleDelete,
+    handleMouseDown,
+    handleMouseUpOrLeave,
+    handleMouseMove,
+  } = useCanvasItems();
 
-  const [canvasItems, setCanvasItems] = useState([]);
-const {
-  draggedItem,
-  setDraggedItem,
-  handleAddToCanvas,
-  handleDelete,
-  handleMouseDown,
-  handleMouseUpOrLeave,
-  handleMouseMove,
-} = useCanvasItems(canvasItems);
-
-useEffect(() => {
-  const fetchCanvasItems = async () => {
-    const items = await Promise.all(
-      lookbook.images
-        .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
-        .map(async (image, index) => ({
-          image: image.imagePath.path,
-          imagePath: await convertUrlToBlob(image),
-          side: 'FRONT', // side 정보를 'FRONT'로 고정
-          uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
-          x: 10 + index * 30,
-          y: 10 + index * 30,
-        }))
-    );
-
-    setCanvasItems(items);
-  };
-
-  fetchCanvasItems();
-}, [lookbook.images]);
   
 
   useEffect(() => {
@@ -248,7 +228,24 @@ useEffect(() => {
       setIsPublic(lookbook.publicStatus !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
-    }
+
+      const fetchCanvasItems = async () => {
+        const items = await Promise.all(
+          lookbook.images
+            .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
+            .map(async (image, index) => ({
+              image: image.imagePath.path,
+              imagePath: await convertUrlToBlob(image),
+              side: 'FRONT', // side 정보를 'FRONT'로 고정
+              uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
+              x: 10 + index * 30,
+              y: 10 + index * 30,
+            }))
+          );
+          setCanvasItems(items);
+        }
+        fetchCanvasItems();
+      }
   }, [lookbook]);
 
   const handleCategoryChange = (selectedOption) => {

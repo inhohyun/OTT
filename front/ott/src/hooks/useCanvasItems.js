@@ -48,6 +48,7 @@ const useCanvasItems = (initialItems = []) => {
   return {
     canvasItems,
     draggedItem,
+    setCanvasItems,
     setDraggedItem,
     handleAddToCanvas,
     handleDelete,
