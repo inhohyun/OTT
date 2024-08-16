@@ -8,7 +8,6 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
 
   const [closetId, setClosetId] = useState(null);
-  s;
 
   const memberId = useUserStore((state) => state.userId);
 
