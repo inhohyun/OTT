@@ -7,7 +7,8 @@ import useUserStore from '../../data/lookbook/userStore';
 const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
 
-  // const [closetId, setClosetId] = useState(null);s
+  const [closetId, setClosetId] = useState(null);
+  s;
 
   const memberId = useUserStore((state) => state.userId);
 
@@ -17,7 +18,7 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
         const closetResponse = await getClosetId(memberId);
         // console.log('closetResponse', closetResponse);
         const closetid = closetResponse.data[0].id;
-        // setClosetId(closetid);
+        setClosetId(closetid);
         // console.log('옷 추가때 옷장 아이디', closetId);
         // console.log('옷장 아이디', closetid);
         const categoryList = await getCategoryList(closetid);

@@ -50,8 +50,9 @@ const ClothesDetailModal = ({
       formData.append('size', itemDetails.size);
       formData.append('color', itemDetails.color);
       formData.append('gender', itemDetails.gender || '');
+      formData.append('originalCategoryId', itemDetails.categoryId);
       formData.append(
-        'categoryId',
+        'newCategoryId',
         itemDetails.newCategoryId || itemDetails.categoryId
       );
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
@@ -70,11 +71,11 @@ const ClothesDetailModal = ({
         setItemDetails(updatedItemDetails);
       }
 
-      // console.log('수정된 옷 정보:', updatedItemDetails)
+      console.log('수정된 옷 정보:', updatedItemDetails);
 
       setIsEditing(false);
     } catch (error) {
-      // console.error('옷 수정하는데 에러 발생:', error);
+      console.error('옷 수정하는데 에러 발생:', error);
     }
   };
 
