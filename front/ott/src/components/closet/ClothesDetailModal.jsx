@@ -71,8 +71,6 @@ const ClothesDetailModal = ({
         setItemDetails(updatedItemDetails);
       }
 
-      console.log('수정된 옷 정보:', updatedItemDetails);
-
       setIsEditing(false);
     } catch (error) {
       console.error('옷 수정하는데 에러 발생:', error);
