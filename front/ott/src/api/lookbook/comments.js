@@ -18,14 +18,14 @@ import axiosInstance from '../axiosInstance';
 // 댓글 조회 api
 export const lookbookComment = async (lookbookId, status) => {
   try {
-    console.log('댓글룩북:', lookbookId);
+    // console.log('댓글룩북:', lookbookId);
     const response = await axiosInstance.get(`api/comment/${lookbookId}`, {
       params: { status: status },
     });
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     // throw error;
   }
 };
@@ -33,9 +33,9 @@ export const lookbookComment = async (lookbookId, status) => {
 // 댓글 생성 API
 export const commentCreate = async (formData, lookbookId) => {
   try {
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ': ' + pair[1]);
+    // }
     const response = await axiosInstance.post(
       `api/comment/${lookbookId}`,
       formData,
@@ -45,7 +45,7 @@ export const commentCreate = async (formData, lookbookId) => {
     );
     return response.status;
   } catch (error) {
-    console.error('댓글 생성 실패:', error);
+    // console.error('댓글 생성 실패:', error);
     throw error; // 필요에 따라 에러를 다시 던질 수 있습니다.
   }
 };
@@ -62,7 +62,7 @@ export const replyCreate = async (formData, lookbookId, replyTo) => {
     );
     return response.status;
   } catch (error) {
-    console.error('답글 생성 실패:', error);
+    // console.error('답글 생성 실패:', error);
     throw error; // 필요에 따라 에러를 다시 던질 수 있습니다.
   }
 };
@@ -79,7 +79,7 @@ export const commentUpdate = async (formData, lookbookId, commentId) => {
     );
     return response.status;
   } catch (error) {
-    console.error('댓글 수정 실패:', error);
+    // console.error('댓글 수정 실패:', error);
     throw error; // 필요에 따라 에러를 다시 던질 수 있습니다.
   }
 };
@@ -92,7 +92,7 @@ export const commentDelete = async (lookbookId, commentId) => {
     );
     return response.status;
   } catch (error) {
-    console.error('댓글 삭제 실패:', error);
+    // console.error('댓글 삭제 실패:', error);
     throw error; // 필요에 따라 에러를 다시 던질 수 있습니다.
   }
 };
@@ -109,7 +109,7 @@ export const replyUpdate = async (formData, lookbookId, replyId) => {
     );
     return response.status;
   } catch (error) {
-    console.error('답글 수정 실패:', error);
+    // console.error('답글 수정 실패:', error);
     throw error; // 필요에 따라 에러를 다시 던질 수 있습니다.
   }
 };
@@ -122,7 +122,7 @@ export const replyDelete = async (lookbookId, replyId) => {
     );
     return response.status;
   } catch (error) {
-    console.error('답글 삭제 실패:', error);
+    // console.error('답글 삭제 실패:', error);
     throw error; // 필요에 따라 에러를 다시 던질 수 있습니다.
   }
 };

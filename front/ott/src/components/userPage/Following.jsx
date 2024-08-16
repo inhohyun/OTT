@@ -17,10 +17,10 @@ const Following = ({ uid }) => {
     const fetchFollings = async () => {
       try {
         const response = await getFollowingList(uid);
-        console.log('팔로잉 목록 response', response);
+        // console.log('팔로잉 목록 response', response);
         setFollowings(response.data);
       } catch (error) {
-        console.error('팔로잉 목록을 불러오는 중 오류 발생:', error);
+        // console.error('팔로잉 목록을 불러오는 중 오류 발생:', error);
       }
     };
 

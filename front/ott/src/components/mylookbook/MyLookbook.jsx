@@ -32,7 +32,7 @@ const MyLookbook = () => {
           const tags = Array.from(
             new Set(lookbooksData.flatMap((lb) => lb.tags || []))
           );
-          console.log('Tags:', tags);
+          // console.log('Tags:', tags);
 
           setVisibleLookbooks(
             tags.reduce((acc, tag) => ({ ...acc, [tag]: initialLimit }), {})
@@ -44,10 +44,10 @@ const MyLookbook = () => {
             }
           });
         } else {
-          console.error('Fetched data is not an array:', lookbooksData);
+          // console.error('Fetched data is not an array:', lookbooksData);
         }
       } catch (error) {
-        console.error('Error fetching lookbooks:', error);
+        // console.error('Error fetching lookbooks:', error);
       } finally {
         setIsLoading(false); // 로딩 완료 후 isLoading을 false로 설정
       }
@@ -63,14 +63,14 @@ const MyLookbook = () => {
   };
 
   const handleCloseDetail = async () => {
-    console.log('[*]모달 닫기');
+    // console.log('[*]모달 닫기');
     hideDetail();
     const lookbooksData = await fetchMyLookbooks(userId);
-    console.log('[*] 내룩북 불러오기');
+    // console.log('[*] 내룩북 불러오기');
     if (Array.isArray(lookbooksData)) {
       await setLookbooks(lookbooksData);
     } else {
-      console.error('Fetched data is not an array:', lookbooksData);
+      // console.error('Fetched data is not an array:', lookbooksData);
     }
   };
 
@@ -86,7 +86,7 @@ const MyLookbook = () => {
     : {};
 
   const tags = Object.keys(categorizedLookbooks);
-  console.log('Categorized lookbooks:', categorizedLookbooks);
+  // console.log('Categorized lookbooks:', categorizedLookbooks);
 
   const scrollLeft = (tag) => {
     if (scrollRefs.current[tag] && scrollRefs.current[tag].current) {

@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-// import AddClothesCategorySelector from './AddClothesCategorySelector';
-
+import AddClothesCategorySelector from './AddClothesCategorySelector';
 
 const ClothesEditForm = ({
   itemDetails,
   onSave,
   onCancel,
   setItemDetails,
-  // categories
+  categories,
 }) => {
   const customStyles = {
     control: (provided, state) => ({
@@ -47,13 +46,14 @@ const ClothesEditForm = ({
 
   // 드롭다운 변경값 저장 함수
   const handleSelectChange = (selectedOption, name) => {
+    console.log(selectedOption, name);
     setItemDetails((prev) => ({ ...prev, [name]: selectedOption.value }));
   };
 
   // 카테고리 찾는 함수
-  // const matchingCategory = categories.find(
-  //   (category) => category.categoryId === itemDetails.categoryId
-  // );
+  const matchingCategory = categories.find(
+    (category) => category.categoryId === itemDetails.categoryId
+  );
 
   return (
     <div
@@ -61,7 +61,7 @@ const ClothesEditForm = ({
       style={{ maxHeight: '75vh', overflowY: 'auto' }}
     >
       <h2 className="text-xl font-bold mb-4">옷 정보 수정</h2>
-      
+
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">브랜드</label>
         <input
@@ -106,15 +106,15 @@ const ClothesEditForm = ({
           placeholder="색상을 입력하세요"
         />
       </div>
-      {/* <div className="mb-4">
+      <div className="mb-4">
         <label className="block text-gray-700 mb-2">카테고리</label>
         <AddClothesCategorySelector
           selectedCategory={matchingCategory?.categoryId || null}
-          onCategoryChange={(newCategoryId) => 
+          onCategoryChange={(newCategoryId) =>
             setItemDetails((prev) => ({ ...prev, newCategoryId }))
           }
         />
-      </div> */}
+      </div>
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">성별</label>
         <Select

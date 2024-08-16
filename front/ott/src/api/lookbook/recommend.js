@@ -11,7 +11,7 @@ export const heightWeight = async (memberId) => {
     // console.log('키추천', response);
     return response;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };
 
@@ -22,7 +22,7 @@ export const bodyType = async (memberId) => {
     });
     return response;
   } catch (error) {
-    console.error('Error fetching bodyType recommendations:', error);
+    // console.error('Error fetching bodyType recommendations:', error);
     throw error;
   }
 };
@@ -34,6 +34,6 @@ export const getTagRecommend = async (memberId) => {
     });
     return response;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };

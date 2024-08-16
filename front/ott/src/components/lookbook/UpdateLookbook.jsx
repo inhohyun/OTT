@@ -136,10 +136,36 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       try {
         const response = await getClothes(userId, selectedCategory, closetid);
         if (Array.isArray(response)) {
-          const clothesData = response.map((item) => ({
-            id: item.clothesId,
-            image: item.img[0],
-          }));
+          const clothesData = await Promise.all(
+            response.map(async (item) => {
+              try {
+                // S3에서 이미지를 가져오고 Blob으로 변환
+                const imageResponse = await fetch(item.img[0], {
+                  method: 'GET',
+                  mode: 'cors', // CORS 모드를 명시
+                });
+
+                if (!imageResponse.ok) {
+                  throw new Error('Network response was not ok');
+                }
+
+                const blob = await imageResponse.blob();
+                const url = URL.createObjectURL(blob);
+
+                return {
+                  id: item.clothesId,
+                  imagePath: item.img[0],
+                  image: url,
+                };
+              } catch (imageError) {
+                console.error('이미지 가져오기 실패:', imageError);
+                return {
+                  id: item.clothesId,
+                  image: null, // 이미지 로드 실패 시 null을 설정
+                };
+              }
+            })
+          );
           setClothes(clothesData);
         } else {
           console.log('응답 데이터가 배열이 아닙니다:', response.data);
@@ -152,32 +178,72 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
     fetchClothes();
   }, [selectedCategory, userId, allClothes]);
 
+  const convertUrlToBlob = async (image) => {
+    let item = image;
+
+    try {
+      // item.imagePath가 Promise인 경우 await를 사용해 결과를 얻습니다.
+      const resolvedImagePath = await item.imagePath;
+
+      // S3에서 이미지를 가져오고 Blob으로 변환
+      const imageResponse = await fetch(resolvedImagePath.path, {
+        method: 'GET',
+        mode: 'cors', // CORS 모드를 명시
+      });
+
+      if (!imageResponse.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const blob = await imageResponse.blob();
+      const url = URL.createObjectURL(blob);
+
+      if (url) {
+        return url;
+      } else {
+        return resolvedImagePath.path;
+      }
+    } catch (imageError) {
+      console.error('이미지 가져오기 실패:', imageError);
+      return item.imagePath.path;
+    }
+  };
+
   const {
     canvasItems,
     draggedItem,
+    setCanvasItems,
     setDraggedItem,
     handleAddToCanvas,
     handleDelete,
     handleMouseDown,
     handleMouseUpOrLeave,
     handleMouseMove,
-  } = useCanvasItems(
-    lookbook.images
-      .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
-      .map((image, index) => ({
-        ...image,
-        side: 'FRONT', // side 정보를 'FRONT'로 고정
-        uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
-        x: 10 + index * 30,
-        y: 10 + index * 30,
-      }))
-  );
+  } = useCanvasItems();
 
   useEffect(() => {
     if (lookbook) {
       setIsPublic(lookbook.publicStatus !== 'PRIVATE');
       setDescription(lookbook.content);
       setTags(lookbook.tags || []);
+
+      const fetchCanvasItems = async () => {
+        const items = await Promise.all(
+          lookbook.images
+            .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
+            .map(async (image, index) => ({
+              id: image.clothesId,
+              image: image.imagePath.path,
+              imagePath: await convertUrlToBlob(image),
+              side: 'FRONT', // side 정보를 'FRONT'로 고정
+              uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
+              x: 10 + index * 30,
+              y: 10 + index * 30,
+            }))
+        );
+        setCanvasItems(items);
+      };
+      fetchCanvasItems();
     }
   }, [lookbook]);
 
@@ -198,7 +264,11 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
 
-          const selectedImages = canvasItems.map((item) => item.clothesId);
+          const selectedImages = canvasItems.map((item) => {
+            // console.log('canvas Item', item);
+
+            return item.id || item.clothesId;
+          });
           const formData = new FormData();
           // formData.append('memberId', 1);
           formData.append('memberId', userId);
@@ -210,8 +280,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
           try {
             const data = await lookbookUpdate(formData, lookbookid.id);
-            console.log('룩북 수정 성공', data);
-            console.log('clothes', selectedImages);
+            // console.log('룩북 수정 성공', data);
+            // console.log('clothes', selectedImages);
             nav('/userPage', { state: { id: userId } });
           } catch (error) {
             console.error('Error:', error);

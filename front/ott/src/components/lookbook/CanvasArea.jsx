@@ -25,7 +25,7 @@ const CanvasArea = ({
       onTouchEnd={handleMouseUpOrLeave}
     >
       {canvasItems.map((item, index) => {
-        console.log('Canvas item:', item); // Log item to the console
+        // console.log('Canvas item:', item); // Log item to the console
         return (
           <div
             key={item.uniqueKey}
@@ -33,7 +33,7 @@ const CanvasArea = ({
             style={{ left: item.x, top: item.y }}
           >
             <img
-              src={(item.image?.path || item.imagePath)}
+              src={item.image?.path || item.imagePath.path || item.imagePath}
               alt={item.name}
               className="w-full h-full cursor-move"
               onMouseDown={() => handleMouseDown(index)}

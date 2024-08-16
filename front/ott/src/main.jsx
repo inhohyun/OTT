@@ -11,13 +11,13 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('/service-worker.js')
       .then((registration) => {
-        console.log(
-          '서비스 워커가 다음과 같은 scope에서 등록되었습니다: ',
-          registration.scope
-        );
+        // console.log(
+        // '서비스 워커가 다음과 같은 scope에서 등록되었습니다: ',
+        // registration.scope
+        // );
       })
       .catch((error) => {
-        console.log('서비스워커 등록에 실패했습니다: ', error);
+        // console.log('서비스워커 등록에 실패했습니다: ', error);
       });
   });
 }

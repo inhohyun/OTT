@@ -18,10 +18,10 @@ export const lookbookDetail = async (lookbookId, userId) => {
     const response = await axiosInstance.get(`api/lookbook/${lookbookId}`, {
       params: { memberId: userId },
     });
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };
 
@@ -48,10 +48,10 @@ export const lookbookDislike = (lookbookId, userId) => {
       memberId: userId,
     })
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
     });
 };
 
@@ -77,9 +77,9 @@ export const lookbookLike = (lookbookId, userId) => {
       memberId: userId,
     })
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
     });
 };

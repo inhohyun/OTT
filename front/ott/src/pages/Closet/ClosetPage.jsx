@@ -60,7 +60,7 @@ const ClosetPage = () => {
           : await getOtherClothesList(sendId);
         setClothes(clothesList);
       } catch (error) {
-        console.error('초기 데이터 가져오기 실패:', error);
+        // console.error('초기 데이터 가져오기 실패:', error);
       }
     };
 
@@ -90,7 +90,7 @@ const ClosetPage = () => {
       }
       setClothes(clothesList);
     } catch (error) {
-      console.error('카테고리별 옷 목록 가져오기 실패:', error);
+      // console.error('카테고리별 옷 목록 가져오기 실패:', error);
     }
   };
 
@@ -123,20 +123,22 @@ const ClosetPage = () => {
     try {
       await deleteCategory(categoryToDelete.categoryId);
       setCategories((prevCategories) =>
-        prevCategories.filter((category) => category.categoryId !== categoryToDelete.categoryId)
+        prevCategories.filter(
+          (category) => category.categoryId !== categoryToDelete.categoryId
+        )
       );
-  
+
       setClothes((prevClothes) =>
         prevClothes.map((item) =>
           item.categoryId === categoryToDelete.categoryId
-            ? { ...item, categoryId: -100 } 
+            ? { ...item, categoryId: -100 }
             : item
         )
       );
-  
-      console.log(`${categoryToDelete.name} 카테고리 삭제 완료`);
+
+      // console.log(`${categoryToDelete.name} 카테고리 삭제 완료`);
     } catch (error) {
-      console.error('카테고리 삭제 중 에러 발생:', error);
+      // console.error('카테고리 삭제 중 에러 발생:', error);
     }
   };
 
@@ -155,10 +157,10 @@ const ClosetPage = () => {
 
         setClothes(updatedClothesList);
       } else {
-        console.error('Unexpected response format:', response);
+        // console.error('Unexpected response format:', response);
       }
     } catch (error) {
-      console.error('Error adding clothes:', error);
+      // console.error('Error adding clothes:', error);
     }
   };
 
@@ -171,7 +173,7 @@ const ClosetPage = () => {
   };
 
   const handleClothesClick = (clothingItem) => {
-    console.log(clothingItem.clothesId);
+    // console.log(clothingItem.clothesId);
     setSelectedClothing(clothingItem);
     setIsDetailModalOpen(true);
   };

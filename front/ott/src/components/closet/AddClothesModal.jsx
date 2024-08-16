@@ -83,7 +83,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
       clearInputs();
       onClose();
     } catch (error) {
-      console.error('Error adding clothes:', error);
+      // console.error('Error adding clothes:', error);
     }
   };
 
@@ -141,7 +141,7 @@ const AddClothesModal = ({ isOpen, onClose, onAddClothes }) => {
           [`${type}Img`]: processedImageUrl,
         }));
       } catch (error) {
-        console.error('Error processing the image:', error);
+        // console.error('Error processing the image:', error);
       } finally {
         setIsProcessing((prev) => ({ ...prev, [`${type}Img`]: false }));
       }

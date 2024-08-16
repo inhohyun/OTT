@@ -22,7 +22,7 @@ const Header = () => {
           const notificationsData = await getNotificationsList(memberId);
           setNotifications(notificationsData);
         } catch (error) {
-          console.error('알림 목록 가져오는 중 에러 발생', error);
+          // console.error('알림 목록 가져오는 중 에러 발생', error);
         }
       };
 

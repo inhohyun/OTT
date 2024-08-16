@@ -7,7 +7,7 @@ import useUserStore from '../../data/lookbook/userStore';
 const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
 
-  // const [closetId, setClosetId] = useState(null);s
+  const [closetId, setClosetId] = useState(null);
 
   const memberId = useUserStore((state) => state.userId);
 
@@ -15,16 +15,16 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
     const fetchCategories = async () => {
       try {
         const closetResponse = await getClosetId(memberId);
-        console.log('closetResponse', closetResponse);
+        // console.log('closetResponse', closetResponse);
         const closetid = closetResponse.data[0].id;
-        // setClosetId(closetid);
+        setClosetId(closetid);
         // console.log('옷 추가때 옷장 아이디', closetId);
-        console.log('옷장 아이디', closetid);
+        // console.log('옷장 아이디', closetid);
         const categoryList = await getCategoryList(closetid);
-        console.log('[*]카테고리 목록', categoryList.data);
+        // console.log('[*]카테고리 목록', categoryList.data);
         setCategories(categoryList.data);
       } catch (error) {
-        console.error('카테고리 목록 조회 실패:', error);
+        // console.error('카테고리 목록 조회 실패:', error);
       }
     };
     fetchCategories();
@@ -49,7 +49,7 @@ const AddClothesCategorySelector = ({ selectedCategory, onCategoryChange }) => {
   };
 
   const handleCategoryChange = (selectedOption) => {
-    console.log(selectedOption);
+    // console.log(selectedOption);
     onCategoryChange(selectedOption.value);
   };
 

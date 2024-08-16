@@ -12,6 +12,7 @@ import Switch from '../../components/userPage/Switch';
 import { updateUserInfo } from '../../api/user/user';
 import BodyTypeModal from '../../components/userPage/BodyTypeModal';
 import { uploadProfileImg } from '../../api/user/user';
+import { addMemberTags } from '../../api/user/user';
 
 const UpdatePage = () => {
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ const UpdatePage = () => {
       const response = await uploadProfileImg(formData);
       return response.data.imageUrl; // 서버에서 반환된 이미지 URL
     } catch (error) {
-      console.error('Error uploading profile image:', error);
+      // console.error('Error uploading profile image:', error);
       return null;
     }
   };
@@ -146,9 +147,10 @@ const UpdatePage = () => {
 
     try {
       await updateUserInfo(memberId, updatedUserInfo);
+      await addMemberTags(memberId, tags);
       redirectProfile();
     } catch (error) {
-      console.error('Error updating user info:', error);
+      // console.error('Error updating user info:', error);
       setErrorMessage(
         '정보 업데이트 중 오류가 발생했습니다. 다시 시도해 주세요.'
       );

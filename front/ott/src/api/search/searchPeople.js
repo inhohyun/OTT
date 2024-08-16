@@ -12,6 +12,6 @@ export const searchPeople = async (nickname, offset, limit) => {
     });
     return response;
   } catch (error) {
-    console.error('Error fetching user info:', error);
+    // console.error('Error fetching user info:', error);
   }
 };

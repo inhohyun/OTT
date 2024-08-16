@@ -39,9 +39,9 @@ const CreateLookbook = () => {
       try {
         const response = await getClosetId(uid);
         setClosetId(response[0].id);
-        console.log('옷장 아이디', response[0].id);
+        // console.log('옷장 아이디', response[0].id);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
 
@@ -58,11 +58,11 @@ const CreateLookbook = () => {
     const fetchCategory = async () => {
       try {
         const response = await getCategory(closetId);
-        console.log('카테고리', response);
+        // console.log('카테고리', response);
         // setCategories(response.data);
         setCategories(response);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
     fetchCategory();
@@ -149,7 +149,7 @@ const CreateLookbook = () => {
                   image: url,
                 };
               } catch (imageError) {
-                console.error('이미지 가져오기 실패:', imageError);
+                // console.error('이미지 가져오기 실패:', imageError);
                 return {
                   id: item.clothesId,
                   image: null, // 이미지 로드 실패 시 null을 설정
@@ -160,10 +160,10 @@ const CreateLookbook = () => {
 
           setClothes(clothesData);
         } else {
-          console.log('응답 데이터가 배열이 아닙니다:', response.data);
+          // console.log('응답 데이터가 배열이 아닙니다:', response.data);
         }
       } catch (error) {
-        console.error('옷 데이터 가져오기 실패:', error);
+        // console.error('옷 데이터 가져오기 실패:', error);
       }
     };
 
@@ -198,10 +198,11 @@ const CreateLookbook = () => {
         allowTaint: true,
         logging: true,
       }).then(async (canvas) => {
-        console.log(canvas);
+        // console.log(canvas);
         canvas.toBlob(async (imageBlob) => {
           if (!imageBlob)
-            return console.error('Failed to convert canvas to blob.');
+            // return console.error('Failed to convert canvas to blob.');
+            return;
 
           const selectedImages = canvasItems.map((item) => item.id);
           const formData = new FormData();
@@ -211,19 +212,19 @@ const CreateLookbook = () => {
           formData.append('clothes', selectedImages);
           formData.append('tags', tags);
           formData.append('publicStatus', isPublic ? 'PUBLIC' : 'PRIVATE');
-          console.log(imageBlob);
+          // console.log(imageBlob);
           formData.append('img', imageBlob, 'lookbookimage.png');
 
           formData.forEach((value, key) => {
-            console.log(`${key}:`, value);
+            // console.log(`${key}:`, value);
           });
 
           try {
             await lookbookCreate(formData);
-            console.log('룩북 저장 성공');
+            // console.log('룩북 저장 성공');
             nav('/userPage', { state: { id: userId } });
           } catch (error) {
-            console.error(error);
+            // console.error(error);
           } finally {
             setShowDeleteButton(true);
           }

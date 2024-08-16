@@ -47,10 +47,10 @@ export default function StyleInfoSurvey({
       const memberId = response.data.id;
 
       await addMemberTags(memberId, tags);
-      console.log('태그 추가 성공', tags);
+      // console.log('태그 추가 성공', tags);
       handleNext();
     } catch (error) {
-      console.error('태그 추가 중 오류 발생:', error);
+      // console.error('태그 추가 중 오류 발생:', error);
     }
   };
 

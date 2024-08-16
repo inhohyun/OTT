@@ -24,12 +24,12 @@ const ClothesDetailModal = ({
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
-          console.log(clothingItem);
+          // console.log(clothingItem);
           const data = await getClothesItemData(clothingItem.clothesId);
-          console.log(data);
+          // console.log(data);
           setItemDetails({ ...data, newCategoryId: null });
         } catch (error) {
-          console.error('수정할 옷 정보 가져오는데 에러 발생:', error);
+          // console.error('수정할 옷 정보 가져오는데 에러 발생:', error);
         }
       };
       fetchItemDetails();
@@ -37,7 +37,7 @@ const ClothesDetailModal = ({
   }, [clothingItem]);
 
   const handleToggleEdit = () => {
-    console.log(itemDetails);
+    // console.log(itemDetails);
     setIsEditing(true);
   };
 
@@ -50,8 +50,9 @@ const ClothesDetailModal = ({
       formData.append('size', itemDetails.size);
       formData.append('color', itemDetails.color);
       formData.append('gender', itemDetails.gender || '');
+      formData.append('originalCategoryId', itemDetails.categoryId);
       formData.append(
-        'categoryId',
+        'newCategoryId',
         itemDetails.newCategoryId || itemDetails.categoryId
       );
       formData.append('publicStatus', itemDetails.publicStatus || 'PUBLIC');
@@ -70,7 +71,7 @@ const ClothesDetailModal = ({
         setItemDetails(updatedItemDetails);
       }
 
-      console.log('수정된 옷 정보:', updatedItemDetails)
+      console.log('수정된 옷 정보:', updatedItemDetails);
 
       setIsEditing(false);
     } catch (error) {
@@ -86,7 +87,7 @@ const ClothesDetailModal = ({
       );
       onClose();
     } catch (error) {
-      console.error('Error deleting item:', error);
+      // console.error('Error deleting item:', error);
     }
   };
 
