@@ -50,6 +50,16 @@ const ClothesEditForm = ({
     setItemDetails((prev) => ({ ...prev, [name]: selectedOption.value }));
   };
 
+  // 카테고리 선택
+  const handleCategoryChange = (newCategoryId) => {
+    console.log('선택된 카테고리 id:', newCategoryId);
+    setItemDetails((prev) => ({
+      ...prev,
+      newCategoryId,
+      categoryId: newCategoryId,
+    }));
+  };
+
   // 카테고리 찾는 함수
   const matchingCategory = categories.find(
     (category) => category.categoryId === itemDetails.categoryId
