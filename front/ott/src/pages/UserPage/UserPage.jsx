@@ -42,7 +42,7 @@ const UserPage = () => {
     const fetchUserData = async (sendId) => {
       try {
         const userInfoResponse = await getUserInfo(sendId);
-        console.log('userInfoResponse : ', userInfoResponse);
+        // console.log('userInfoResponse : ', userInfoResponse);
         setUserInfo(userInfoResponse.data);
 
         // isMe와 isPublic 상태 업데이트
@@ -71,15 +71,15 @@ const UserPage = () => {
         // 프로필 이미지 업데이트
         setProfileImg(userInfoResponse.data.profileImageUrl);
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        // console.error('Error fetching user info:', error);
       }
     };
 
     if (id === undefined || id === null) {
-      console.log('본인 memberId로 정보 가져오기', memberId);
+      // console.log('본인 memberId로 정보 가져오기', memberId);
       fetchUserData(memberId);
     } else {
-      console.log('다른 사람 memberId로 정보 가져오기', id);
+      // console.log('다른 사람 memberId로 정보 가져오기', id);
       fetchUserData(id);
     }
   }, [id, memberId]);
@@ -90,7 +90,7 @@ const UserPage = () => {
         const response = await getLookbookCount(sendId);
         setPostCount(response.data);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
 
@@ -134,9 +134,9 @@ const UserPage = () => {
         response = await followUser(sendId);
         setFollowStatus(isPublic ? '팔로잉' : '요청됨');
       }
-      console.log('response : ', response);
+      // console.log('response : ', response);
     } catch (error) {
-      console.error('Error toggling follow status:', error);
+      // console.error('Error toggling follow status:', error);
     }
   };
 
@@ -151,11 +151,11 @@ const UserPage = () => {
   };
 
   const handleSettingsClick = () => {
-    console.log('이동하려는 회원 id', memberId);
+    // console.log('이동하려는 회원 id', memberId);
     if (memberId) {
       navigate(`/updatePage`, { state: { memberId, userInfo } });
     } else {
-      console.error('ID is not available');
+      // console.error('ID is not available');
     }
   };
 

@@ -9,7 +9,7 @@ export const getPublicLookbookList = async (memberId) => {
 
     return response;
   } catch (error) {
-    console.error('Error getting public lookbook list:', error);
+    // console.error('Error getting public lookbook list:', error);
     throw error;
   }
 };
@@ -22,7 +22,7 @@ export const getPrivateLookbookList = async (memberId) => {
 
     return response;
   } catch (error) {
-    console.error('Error getting private lookbook list:', error);
+    // console.error('Error getting private lookbook list:', error);
     throw error;
   }
 };

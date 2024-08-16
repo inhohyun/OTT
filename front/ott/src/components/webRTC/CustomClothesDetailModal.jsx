@@ -22,12 +22,12 @@ const CustomClothesDetailModal = ({
     if (clothingItem) {
       const fetchItemDetails = async () => {
         try {
-          console.log(clothingItem);
+          // console.log(clothingItem);
           const data = await getClothesItemData(clothingItem.clothesId);
-          console.log(data);
+          // console.log(data);
           setItemDetails(data);
         } catch (error) {
-          console.error('Failed to fetch item details:', error);
+          // console.error('Failed to fetch item details:', error);
         }
       };
       fetchItemDetails();
@@ -39,10 +39,7 @@ const CustomClothesDetailModal = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full relative overflow-y-auto max-h-full">
-        <CustomClothesDetailsView
-          itemDetails={itemDetails}
-          onClose={onClose}
-        />
+        <CustomClothesDetailsView itemDetails={itemDetails} onClose={onClose} />
       </div>
     </div>
   );

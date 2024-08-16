@@ -64,7 +64,7 @@ const StyleSearchResult = ({ results, searchQuery }) => {
 
     //     return aIndex - bIndex;
     //   });
-    console.log('results:', results);
+    // console.log('results:', results);
     setFilteredResults(results);
   }, [results, searchQuery]);
 

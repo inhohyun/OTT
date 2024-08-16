@@ -11,7 +11,7 @@ const UpdateLookbookPage = () => {
   // console.log(lookbook);
 
   useEffect(() => {
-    console.log('수정하려는', lookbook);
+    // console.log('수정하려는', lookbook);
   });
 
   return (

@@ -28,6 +28,6 @@ export const sendfittingData = async (
 
     return respnse;
   } catch (error) {
-    console.error('AI 옷 피팅 중 에러발생 :', error);
+    // console.error('AI 옷 피팅 중 에러발생 :', error);
   }
 };

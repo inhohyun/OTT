@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import VideoSpace from '../../components/webRTC/video/VideoSpace';
 import CustomClothesGrid from '../../components/webRTC/CustomClothesGrid';
 import CustomCategoryDropdown from '../../components/webRTC/CustomCategoryDropdown';
-import backgroundImage from '../../assets/images/background_image_main.png'; 
+import backgroundImage from '../../assets/images/background_image_main.png';
 import CustomClothesDetailModal from '../../components/webRTC/CustomClothesDetailModal';
 import { useLocation } from 'react-router-dom';
 import {
@@ -41,12 +41,12 @@ const VideoChatPage = () => {
         const otherUserNicknameResponse = await getUserNickname(otherMemberId);
         setOtherUserNickname(otherUserNicknameResponse.data.nickname);
         const closetResponse = await getClosetId(otherMemberId);
-        console.log('closetResponse', closetResponse);
+        // console.log('closetResponse', closetResponse);
         const closetId = closetResponse.data[0].id;
         setClosetId(closetId);
 
         const categoryList = await getCategoryList(closetResponse.data[0].id);
-        console.log('categoryList', categoryList);
+        // console.log('categoryList', categoryList);
         const fetchedCategories = categoryList.data.map((category) => ({
           categoryId: category.categoryId,
           name: category.name,
@@ -57,7 +57,7 @@ const VideoChatPage = () => {
           ...fetchedCategories,
         ]);
       } catch (error) {
-        console.error('카테고리 목록 가져오기 실패:', error);
+        // console.error('카테고리 목록 가져오기 실패:', error);
       }
     };
 
@@ -69,7 +69,7 @@ const VideoChatPage = () => {
     // 선택된 카테고리 업데이트
     setSelectedCategory(newCategory);
   };
-  
+
   const filteredCategories = categories.filter(
     (category) => category.name !== '전체' && category.name !== '즐겨찾기'
   );
@@ -95,12 +95,12 @@ const VideoChatPage = () => {
       }
       setClothes(clothesList);
     } catch (error) {
-      console.error('옷 목록 가져오기 실패', error);
+      // console.error('옷 목록 가져오기 실패', error);
     }
   };
 
   const handleClothesClick = (clothingItem) => {
-    console.log(clothingItem.clothesId);
+    // console.log(clothingItem.clothesId);
     setSelectedClothing(clothingItem);
     setIsDetailModalOpen(true);
   };
@@ -126,7 +126,9 @@ const VideoChatPage = () => {
       </div>
       <div className="flex-grow h-2/3">
         <div className="text-center my-2">
-          <h2 className="text-xl font-bold mb-2">{otherUserNickname}님의 옷장</h2>{' '}
+          <h2 className="text-xl font-bold mb-2">
+            {otherUserNickname}님의 옷장
+          </h2>{' '}
           {/* 사용자 이름 표시 */}
           <div className="flex justify-center mt-[-5%]">
             <CustomCategoryDropdown

@@ -23,7 +23,7 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
         const data = await getClothesItemData(itemDetails.clothesId);
         setDetailedItem(data);
       } catch (error) {
-        console.error('Error fetching item details:', error);
+        // console.error('Error fetching item details:', error);
       } finally {
         setLoading(false);
       }
@@ -41,7 +41,7 @@ const ClothesDetailsView = ({ itemDetails, onEdit, onClose, onDelete }) => {
       try {
         await onDelete(detailedItem.clothesId);
       } catch (error) {
-        console.error('옷 삭제 중 오류 발생:', error);
+        // console.error('옷 삭제 중 오류 발생:', error);
       }
     }
   };

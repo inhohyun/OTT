@@ -10,7 +10,7 @@ const Posts = ({ isMe, isPublic, currentId }) => {
   const nav = useNavigate();
 
   const handleLookbookRegister = () => {
-    console.log('룩북 등록 버튼이 클릭되었습니다!');
+    // console.log('룩북 등록 버튼이 클릭되었습니다!');
     // 추가적인 동작을 여기에 작성할 수 있습니다.
     nav('/lookbookcreate');
   };

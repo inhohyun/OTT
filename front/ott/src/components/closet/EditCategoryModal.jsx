@@ -32,13 +32,13 @@ const EditCategoryModal = ({
 
     try {
       // API 호출하여 카테고리 수정
-      console.log(closetId, category.categoryId, trimmedName)
+      // console.log(closetId, category.categoryId, trimmedName)
       await fixCategory(closetId, category.categoryId, trimmedName);
       // 저장 성공 시 상위 컴포넌트에 변경 사항 전달
       onSave(trimmedName);
       onClose();
     } catch (error) {
-      console.error('카테고리 수정 중 오류 발생:', error);
+      // console.error('카테고리 수정 중 오류 발생:', error);
       setError('카테고리 수정 중 오류가 발생했습니다.');
     }
   };

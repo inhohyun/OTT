@@ -28,10 +28,10 @@ const PrivatePosts = ({ isMe }) => {
     const getPrivateLookbooks = async () => {
       try {
         const response = await getPrivateLookbookList(memberId);
-        console.log('가져온 비공개 룩북, Lookbook에 보내기', response);
+        // console.log('가져온 비공개 룩북, Lookbook에 보내기', response);
         setLookbooks(response);
       } catch (error) {
-        console.error('Failed to get private lookbooks:', error);
+        // console.error('Failed to get private lookbooks:', error);
       }
     };
     getPrivateLookbooks();
@@ -59,7 +59,7 @@ const PrivatePosts = ({ isMe }) => {
   };
 
   const handleCloseDetail = async () => {
-    console.log('[*]모달 닫기');
+    // console.log('[*]모달 닫기');
     hideDetail();
   };
   if (!isMe) {

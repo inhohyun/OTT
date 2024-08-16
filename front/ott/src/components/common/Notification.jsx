@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { followRequestAccept, followRequestReject, getUserInfo } from '../../api/user/user';
+import {
+  followRequestAccept,
+  followRequestReject,
+  getUserInfo,
+} from '../../api/user/user';
 import useUserStore from '../../data/lookbook/userStore';
 import FollowNotification from './notificationtypes/FollowNotification';
 import CommentNotification from './notificationtypes/CommentNotification';
@@ -14,7 +18,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
   const [swipedIndex, setSwipedIndex] = useState(null); // 스와이프된 알림의 인덱스를 관리하는 상태
   const navigate = useNavigate();
   const memberId = useUserStore((state) => state.userId);
-  
+
   useEffect(() => {
     if (!show) {
       setVisibleNotifications(4); // 알림 모달이 닫힐 때, 보여줄 알림의 개수를 초기화
@@ -74,7 +78,7 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
         )
       );
     } catch (error) {
-      console.error('팔로우 요청 수락 중 에러 발생:', error);
+      // console.error('팔로우 요청 수락 중 에러 발생:', error);
     }
   };
 
@@ -88,14 +92,16 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
         )
       );
     } catch (error) {
-      console.error('팔로우 요청 거절 중 에러 발생:', error);
+      // console.error('팔로우 요청 거절 중 에러 발생:', error);
     }
   };
 
   const joinSession = async (sessionId, rtcRequestMemberId) => {
-    console.log('webrtc 알림 클릭');
+    // console.log('webrtc 알림 클릭');
     const userName = (await getUserInfo(memberId)).data.nickname;
-    navigate(`/video-chat`, { state: { sessionId, userName, otherMemberId : rtcRequestMemberId } });
+    navigate(`/video-chat`, {
+      state: { sessionId, userName, otherMemberId: rtcRequestMemberId },
+    });
     onClose(); // 세션에 참여한 후 모달 닫기
   };
 
@@ -119,53 +125,59 @@ const Notification = ({ show, onClose, notifications, setNotifications }) => {
           </p>
         </div>
         <div>
-          {notifications.slice(0, visibleNotifications).map((notification, index) => {
-            const commonProps = {
-              notification,
-              formatDate,
-              handleTouchStart: (e) => handleTouchStart(index, e),
-              handleTouchMove,
-              handleTouchEnd,
-              isSwiping: swipedIndex === index,
-              moveX: touchData.moveX,
-              startX: touchData.startX,
-            };
-            switch (notification.notificationType) {
-              case 'FOLLOW':
-                return (
-                  <FollowNotification
-                    key={notification.notificationId} 
-                    {...commonProps}
-                    handleAccept={handleAccept}
-                    handleReject={handleReject}
-                  />
-                );
-              case 'RTC':
-                return (
-                  <RTCNotification
-                    key={notification.notificationId} 
-                    {...commonProps}
-                    joinSession={joinSession}
-                  />
-                );
-              case 'COMMENT':
-                return (
-                  <CommentNotification
-                    key={notification.notificationId} 
-                    {...commonProps}
-                  />
-                );
-              case 'AI':
-                return (
-                  <AiNotification
-                    key={notification.notificationId} 
-                    {...commonProps}
-                  />
-                );
-              default:
-                return <div key={notification.notificationId}>알림이 없습니다.</div>;
-            }
-          })}
+          {notifications
+            .slice(0, visibleNotifications)
+            .map((notification, index) => {
+              const commonProps = {
+                notification,
+                formatDate,
+                handleTouchStart: (e) => handleTouchStart(index, e),
+                handleTouchMove,
+                handleTouchEnd,
+                isSwiping: swipedIndex === index,
+                moveX: touchData.moveX,
+                startX: touchData.startX,
+              };
+              switch (notification.notificationType) {
+                case 'FOLLOW':
+                  return (
+                    <FollowNotification
+                      key={notification.notificationId}
+                      {...commonProps}
+                      handleAccept={handleAccept}
+                      handleReject={handleReject}
+                    />
+                  );
+                case 'RTC':
+                  return (
+                    <RTCNotification
+                      key={notification.notificationId}
+                      {...commonProps}
+                      joinSession={joinSession}
+                    />
+                  );
+                case 'COMMENT':
+                  return (
+                    <CommentNotification
+                      key={notification.notificationId}
+                      {...commonProps}
+                    />
+                  );
+                case 'AI':
+                  return (
+                    <AiNotification
+                      key={notification.notificationId}
+                      {...commonProps}
+                    />
+                  );
+                default:
+                  return (
+                    <div key={notification.notificationId}>
+                      알림이 없습니다.
+                    </div>
+                  );
+              }
+            })}
         </div>
         {visibleNotifications < notifications.length && (
           <p

@@ -6,10 +6,10 @@ export const lookbookCreate = async (formData) => {
     const response = await axiosInstance.post('api/lookbook/', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('룩북 저장 성공');
+    // console.log('룩북 저장 성공');
     return response.data;
   } catch (error) {
-    console.error('Error:', error.response?.data);
+    // console.error('Error:', error.response?.data);
   }
 };
 
@@ -25,7 +25,7 @@ export const lookbookUpdate = async (formData, lookbookId) => {
     );
     return response;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };
 
@@ -33,8 +33,8 @@ export const lookbookUpdate = async (formData, lookbookId) => {
 export const lookbookDelete = async (lookbookId) => {
   try {
     axiosInstance.delete(`api/lookbook/${lookbookId}`);
-    console.log('룩북삭제성공');
+    // console.log('룩북삭제성공');
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };
