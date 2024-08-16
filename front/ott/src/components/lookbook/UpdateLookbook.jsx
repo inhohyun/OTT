@@ -232,6 +232,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           lookbook.images
             .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
             .map(async (image, index) => ({
+              id: image.clothesId,
               image: image.imagePath.path,
               imagePath: await convertUrlToBlob(image),
               side: 'FRONT', // side 정보를 'FRONT'로 고정
