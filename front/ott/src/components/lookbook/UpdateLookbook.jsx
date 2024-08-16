@@ -136,10 +136,36 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       try {
         const response = await getClothes(userId, selectedCategory, closetid);
         if (Array.isArray(response)) {
-          const clothesData = response.map((item) => ({
-            id: item.clothesId,
-            image: item.img[0],
-          }));
+          const clothesData = await Promise.all(
+            response.map(async (item) => {
+              try {
+                // S3에서 이미지를 가져오고 Blob으로 변환
+                const imageResponse = await fetch(item.img[0], {
+                  method: 'GET',
+                  mode: 'cors', // CORS 모드를 명시
+                });
+
+                if (!imageResponse.ok) {
+                  throw new Error('Network response was not ok');
+                }
+
+                const blob = await imageResponse.blob();
+                const url = URL.createObjectURL(blob);
+
+                return {
+                  id: item.clothesId,
+                  imagePath: item.img[0],
+                  image: url,
+                };
+              } catch (imageError) {
+                console.error('이미지 가져오기 실패:', imageError);
+                return {
+                  id: item.clothesId,
+                  image: null, // 이미지 로드 실패 시 null을 설정
+                };
+              }
+            })
+          );
           setClothes(clothesData);
         } else {
           console.log('응답 데이터가 배열이 아닙니다:', response.data);
