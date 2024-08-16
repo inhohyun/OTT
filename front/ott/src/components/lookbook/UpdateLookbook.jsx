@@ -265,7 +265,11 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           if (!imageBlob)
             return console.error('Failed to convert canvas to blob.');
 
-          const selectedImages = canvasItems.map((item) => item.clothesId);
+          const selectedImages = canvasItems.map((item) => {
+            console.log("canvas Item", item);
+            
+            return item.clothesId;
+         });
           const formData = new FormData();
           // formData.append('memberId', 1);
           formData.append('memberId', userId);
