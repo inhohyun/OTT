@@ -180,54 +180,67 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   const convertUrlToBlob = async (image) => {
     let item = image;
-    
+  
     try {
+      // item.imagePath가 Promise인 경우 await를 사용해 결과를 얻습니다.
+      const resolvedImagePath = await item.imagePath;
+  
       // S3에서 이미지를 가져오고 Blob으로 변환
-      const imageResponse = await fetch(item.imagePath.path, {
+      const imageResponse = await fetch(resolvedImagePath.path, {
         method: 'GET',
         mode: 'cors', // CORS 모드를 명시
       });
-
+  
       if (!imageResponse.ok) {
         throw new Error('Network response was not ok');
       }
-
+  
       const blob = await imageResponse.blob();
       const url = URL.createObjectURL(blob);
-
+  
       if (url) {
         return url;
       } else {
-        return item.imagePath.path;
+        return resolvedImagePath.path;
       }
     } catch (imageError) {
       console.error('이미지 가져오기 실패:', imageError);
       return item.imagePath.path;
     }
   };
+  
 
-  const {
-    canvasItems,
-    draggedItem,
-    setDraggedItem,
-    handleAddToCanvas,
-    handleDelete,
-    handleMouseDown,
-    handleMouseUpOrLeave,
-    handleMouseMove,
-  } = useCanvasItems(
-    lookbook.images
-      .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
-      .map((image, index) => ({
-        image: image.imagePath.path,
-        imagePath: convertUrlToBlob(image),
-        side: 'FRONT', // side 정보를 'FRONT'로 고정
-        uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
-        x: 10 + index * 30,
-        y: 10 + index * 30,
-      }))
-  );
+  const [canvasItems, setCanvasItems] = useState([]);
+const {
+  draggedItem,
+  setDraggedItem,
+  handleAddToCanvas,
+  handleDelete,
+  handleMouseDown,
+  handleMouseUpOrLeave,
+  handleMouseMove,
+} = useCanvasItems(canvasItems);
 
+useEffect(() => {
+  const fetchCanvasItems = async () => {
+    const items = await Promise.all(
+      lookbook.images
+        .filter((image) => image.imagePath.itemStatus === 'FRONT') // 'FRONT'인 항목만 선택
+        .map(async (image, index) => ({
+          image: image.imagePath.path,
+          imagePath: await convertUrlToBlob(image),
+          side: 'FRONT', // side 정보를 'FRONT'로 고정
+          uniqueKey: `image-${image.clothesId}-FRONT-${index}`, // uniqueKey에 side를 포함
+          x: 10 + index * 30,
+          y: 10 + index * 30,
+        }))
+    );
+
+    setCanvasItems(items);
+  };
+
+  fetchCanvasItems();
+}, [lookbook.images]);
   
 
   useEffect(() => {
