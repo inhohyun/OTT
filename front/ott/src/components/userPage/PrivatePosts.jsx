@@ -70,6 +70,8 @@ const PrivatePosts = ({ isMe }) => {
       </div>
     );
   }
+
+  if (!lookbooks) return null;
   return (
     <div className="flex flex-col items-center w-full space-y-5">
       <style>{`
