@@ -179,7 +179,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   }, [selectedCategory, userId, allClothes]);
 
   const convertUrlToBlob = async (image) => {
-    console.log("룩북 초기데이터" + {...image});
+    console.log("룩북 초기데이터");
+    console.log(...image);
     let item = image;
     
     try {
