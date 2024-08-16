@@ -185,6 +185,7 @@ const Modal = ({ isOpen, onClose }) => {
               <ClothesGridSingleLine
                 clothes={clothes}
                 selectedItemId={selectedItemId} // 선택된 아이템 ID 전달
+                setSelectedItemId={setSelectedItemId} // 선택된 아이템 ID 설정
                 onToggleLike={toggleLike}
                 onClothingClick={handleClothingClick}
               />

@@ -3,9 +3,14 @@ import bingleicon from '@/assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
-const ClothesGridSingleLine = ({ clothes, onToggleLike, onClothingClick }) => {
+const ClothesGridSingleLine = ({
+  clothes,
+  onToggleLike,
+  onClothingClick,
+  selectedItemId,
+}) => {
   const [visibleItems, setVisibleItems] = useState(12);
-  const [selectedItemId, setSelectedItemId] = useState(null);
+  // const [selectedItemId, setSelectedItemId] = useState(null);
   const containerRef = useRef(null);
   const [visibleImages, setVisibleImages] = useState(
     clothes.map((item) => ({ id: item.id, isFront: true }))
