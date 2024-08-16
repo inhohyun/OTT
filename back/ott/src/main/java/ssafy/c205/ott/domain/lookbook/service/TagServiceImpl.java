@@ -25,11 +25,7 @@ public class TagServiceImpl implements TagService {
                 .count(1L)
                 .build());
         } else {
-            tagRepository.save(Tag.builder()
-                .id(tagEntity.getId())
-                .name(tagName)
-                .count(tagEntity.getCount() + 1)
-                .build());
+            tagEntity.tagAdd();
         }
     }
 
@@ -51,11 +47,7 @@ public class TagServiceImpl implements TagService {
         if (tagEntity.getCount() == 1) {
             tagRepository.delete(tagEntity);
         } else {
-            tagRepository.save(Tag.builder()
-                .id(tagEntity.getId())
-                .name(tagName)
-                .count(tagEntity.getCount() - 1)
-                .build());
+            tagEntity.tagMinus();
         }
     }
 }

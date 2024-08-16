@@ -1,6 +1,7 @@
 package ssafy.c205.ott.domain.lookbook.service;
 
-import static ssafy.c205.ott.domain.account.entity.ActiveStatus.*;
+import static ssafy.c205.ott.domain.account.entity.ActiveStatus.ACTIVE;
+import static ssafy.c205.ott.domain.account.entity.ActiveStatus.INACTIVE;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,13 +9,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import ssafy.c205.ott.common.entity.LookbookItem;
 import ssafy.c205.ott.common.entity.LookbookTag;
 import ssafy.c205.ott.common.entity.PublicStatus;
@@ -57,6 +56,7 @@ import ssafy.c205.ott.domain.lookbook.repository.TagRepository;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LookbookServiceImpl implements LookbookService {
 
     private final LookbookRepository lookbookRepository;
@@ -93,12 +93,7 @@ public class LookbookServiceImpl implements LookbookService {
                     .count(1L)
                     .build());
             } else {
-                tagRepository.save(Tag
-                    .builder()
-                    .id(tagEntity.getId())
-                    .name(tagEntity.getName())
-                    .count(tagEntity.getCount() + 1)
-                    .build());
+                tagEntity.tagAdd();
             }
             LookbookTag lookbookTag = LookbookTag
                 .builder()
@@ -163,19 +158,7 @@ public class LookbookServiceImpl implements LookbookService {
 
         // 조회수 + 1
         LocalDateTime time = lookbook.getCreatedAt();
-        Lookbook saveLookbook = lookbookRepository.save(Lookbook
-            .builder()
-            .id(lookbook.getId())
-            .member(lookbook.getMember())
-            .hitCount(lookbook.getHitCount() + 1)
-            .content(lookbook.getContent())
-            .publicStatus(lookbook.getPublicStatus())
-            .lookbookItemList(lookbook.getLookbookItemList())
-            .activeStatus(lookbook.getActiveStatus())
-            .lookbookImages(lookbook.getLookbookImages())
-            .lookbookTags(lookbook.getLookbookTags())
-            .comments(lookbook.getComments())
-            .build());
+        lookbook.hitUp();
 
         // 옷 사진들을 넣어줌
         List<ClothesImageDto> clothesImagePathDtos = new ArrayList<>();
@@ -227,21 +210,21 @@ public class LookbookServiceImpl implements LookbookService {
             ACTIVE).orElseThrow(MemberNotFoundException::new);
 
         boolean isFavorite = false;
-        Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(saveLookbook.getId(),
+        Favorite myFavor = favoriteRepository.findByLookbookIdAndMemberId(lookbook.getId(),
             member.getId());
         if (myFavor != null) {
             isFavorite = true;
         }
 
         boolean isFollow = followRepository.existsByToMemberIdAndFromMemberId(
-            saveLookbook.getMember().getId(), memberId);
+            lookbook.getMember().getId(), memberId);
 
         return LookbookDetailDto
             .builder()
-            .content(saveLookbook.getContent())
+            .content(lookbook.getContent())
             .images(clothesImagePathDtos)
-            .nickname(saveLookbook.getMember().getNickname())
-            .viewCount(saveLookbook.getHitCount())
+            .nickname(lookbook.getMember().getNickname())
+            .viewCount(lookbook.getHitCount())
             .salesClothes(salesClothesDtos)
             .createdAt(time)
             .tags(tags)
@@ -249,9 +232,9 @@ public class LookbookServiceImpl implements LookbookService {
             .cntFavorite(cnt)
             .isFavorite(isFavorite)
             .cntComment(commentService.countComment(lookbookId))
-            .profileImg(saveLookbook.getMember().getProfileImageUrl())
+            .profileImg(lookbook.getMember().getProfileImageUrl())
             .isFollow(isFollow)
-            .memberId(saveLookbook.getMember().getId())
+            .memberId(lookbook.getMember().getId())
             .publicStatus(lookbook.getPublicStatus())
             .build();
     }
@@ -269,21 +252,11 @@ public class LookbookServiceImpl implements LookbookService {
             if (tag.getCount() == 1) {
                 tagRepository.delete(tag);
             } else {
-                tagRepository.save(Tag
-                    .builder()
-                    .id(tag.getId())
-                    .name(tag.getName())
-                    .count(tag.getCount() - 1)
-                    .build());
+                tag.tagMinus();
             }
         }
         //룩북 삭제
-        lookbookRepository.save(Lookbook
-            .builder()
-            .id(lookbook.getId())
-            .member(lookbook.getMember())
-            .activeStatus(ActiveStatus.INACTIVE)
-            .build());
+        lookbook.deleteLookbook();
         log.info("룩북 제거 성공");
         return true;
     }
@@ -302,11 +275,7 @@ public class LookbookServiceImpl implements LookbookService {
             if (tag.getCount() == 1) {
                 tagRepository.delete(tag);
             } else {
-                tagRepository.save(Tag.builder()
-                    .id(tag.getId())
-                    .name(tag.getName())
-                    .count(tag.getCount() - 1)
-                    .build());
+                tag.tagMinus();
             }
         }
 
@@ -320,12 +289,7 @@ public class LookbookServiceImpl implements LookbookService {
                     .count(1L)
                     .build());
             } else {
-                tagRepository.save(Tag
-                    .builder()
-                    .id(tagEntity.getId())
-                    .name(tagEntity.getName())
-                    .count(tagEntity.getCount() + 1)
-                    .build());
+                tagEntity.tagAdd();
             }
             LookbookTag lookbookTag = LookbookTag
                 .builder()
@@ -369,20 +333,7 @@ public class LookbookServiceImpl implements LookbookService {
         List<LookbookImage> lookbookImages = new ArrayList<>();
         lookbookImages.add(saveImage);
 
-        lookbookRepository.save(Lookbook
-            .builder()
-            .id(lookbook.getId())
-            .member(lookbook.getMember())
-            .hitCount(lookbook.getHitCount())
-            .activeStatus(lookbook.getActiveStatus())
-            .publicStatus(
-                lookbookUpdateDto.getPublicStatus().equals("PUBLIC") ? PublicStatus.PUBLIC
-                    : PublicStatus.PRIVATE)
-            .content(lookbookUpdateDto.getContent())
-            .lookbookTags(lookbookTags)
-            .lookbookItemList(lookbookItems)
-            .lookbookImages(lookbookImages)
-            .build());
+        lookbook.updateLookbook(lookbookUpdateDto, lookbookTags, lookbookItems, lookbookImages);
         return true;
     }
 
