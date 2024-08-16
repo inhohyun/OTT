@@ -202,34 +202,35 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   const convertUrlToBlob = async (image) => {
     console.log("룩북 초기데이터" + {...image});
-    const item = image;
+    let item = image;
     
-    try {
-      // S3에서 이미지를 가져오고 Blob으로 변환
-      const imageResponse = await fetch(item.imagePath, {
-        method: 'GET',
-        mode: 'cors', // CORS 모드를 명시
-      });
+    // try {
+    //   // S3에서 이미지를 가져오고 Blob으로 변환
+    //   const imageResponse = await fetch(item.imagePath, {
+    //     method: 'GET',
+    //     mode: 'cors', // CORS 모드를 명시
+    //   });
 
-      if (!imageResponse.ok) {
-        throw new Error('Network response was not ok');
-      }
+    //   if (!imageResponse.ok) {
+    //     throw new Error('Network response was not ok');
+    //   }
 
-      const blob = await imageResponse.blob();
-      const url = URL.createObjectURL(blob);
+    //   const blob = await imageResponse.blob();
+    //   const url = URL.createObjectURL(blob);
 
-      return {
-        id: item.clothesId,
-        imagePath: item.imagePath,
-        image: url,
-      };
-    } catch (imageError) {
-      console.error('이미지 가져오기 실패:', imageError);
-      return {
-        id: item.clothesId,
-        image: null, // 이미지 로드 실패 시 null을 설정
-      };
-    }
+    //   return {
+    //     id: item.clothesId,
+    //     imagePath: item.imagePath,
+    //     image: url,
+    //   };
+    // } catch (imageError) {
+    //   console.error('이미지 가져오기 실패:', imageError);
+    //   return {
+    //     id: item.clothesId,
+    //     imagePath: item.imagePath,
+    //     image: null, // 이미지 로드 실패 시 null을 설정
+    //   };
+    // }
   }
 
   useEffect(() => {
