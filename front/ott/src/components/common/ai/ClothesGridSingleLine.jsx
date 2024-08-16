@@ -8,6 +8,7 @@ const ClothesGridSingleLine = ({
   onToggleLike,
   onClothingClick,
   selectedItemId,
+  setSelectedItemId,
 }) => {
   const [visibleItems, setVisibleItems] = useState(12);
   // const [selectedItemId, setSelectedItemId] = useState(null);
