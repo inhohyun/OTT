@@ -25,7 +25,7 @@ const FeedFollow = () => {
   const fetchFollowFeed = async () => {
     try {
       const data = await followFeed(userId);
-      console.log('Follow feed data:', data);
+      // console.log('Follow feed data:', data);
       setFollowersData(data);
       setVisibleLookbooks(
         data.reduce(
@@ -35,7 +35,7 @@ const FeedFollow = () => {
       );
       scrollRefs.current = data.map(() => React.createRef());
     } catch (error) {
-      console.error('Failed to fetch follow feed', error);
+      // console.error('Failed to fetch follow feed', error);
     } finally {
       setIsLoading(false);
     }
@@ -66,16 +66,16 @@ const FeedFollow = () => {
   };
 
   const handleCloseDetail = async () => {
-    console.log('[*]모달 닫기');
+    // console.log('[*]모달 닫기');
     hideDetail();
     setIsLoading(true);
 
     try {
       const lookbookData = await followFeed(userId);
-      console.log('Updated feed data:', lookbookData);
+      // console.log('Updated feed data:', lookbookData);
       setFollowersData(lookbookData);
     } catch (error) {
-      console.error('Failed to update follow feed', error);
+      // console.error('Failed to update follow feed', error);
     } finally {
       setIsLoading(false);
     }

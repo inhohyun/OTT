@@ -59,20 +59,20 @@ const AiProceeding = () => {
           sample,
           category
         );
-        console.log('ai 서버로부터 반환받은 데이터', response);
+        // console.log('ai 서버로부터 반환받은 데이터', response);
         // 서버에서 받은 이미지 처리
         setResultImages(response.images);
         sessionStorage.setItem('hasModalOpened', 'false'); // 넘어간 이후 모달은 최초 모달임을 표시
         setCurrentStep('AiResult');
         // 서버 응답 처리 로직 추가
       } catch (error) {
-        console.error('AI 옷 피팅 중 에러 발생(컴포넌트):', error);
+        // console.error('AI 옷 피팅 중 에러 발생(컴포넌트):', error);
       }
     };
 
     if (!hasModalOpenedRef.current) {
-      console.log('모달 서버 호출 테스트');
-      console.log('서버에 보낼 옷 url', selectedClothesURL);
+      // console.log('모달 서버 호출 테스트');
+      // console.log('서버에 보낼 옷 url', selectedClothesURL);
       // FIXME : 하드코딩한 버전
       // sendData(
       //   1,

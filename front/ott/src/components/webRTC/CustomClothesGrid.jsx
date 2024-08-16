@@ -3,9 +3,11 @@ import bingleicon from '../../assets/icons/bingle_bingle_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 import { bookmarkClothes, unbookmarkClothes } from '../../api/closet/clothes';
-
 
 const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
   // 처음에 보이는 항목 수
@@ -32,7 +34,9 @@ const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
 
   // clothes 데이터가 변경될 때 보이는 이미지를 업데이트
   useEffect(() => {
-    setVisibleImages(clothes.map((item) => ({ id: item.clothesId, isFront: true })));
+    setVisibleImages(
+      clothes.map((item) => ({ id: item.clothesId, isFront: true }))
+    );
   }, [clothes]);
 
   // 무한 스크롤을 처리하여 더 많은 항목을 로드
@@ -93,7 +97,7 @@ const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
           );
         }
       } catch (error) {
-        console.error('Error changing bookmark status:', error);
+        // console.error('Error changing bookmark status:', error);
       }
     }
   };
@@ -132,7 +136,8 @@ const CustomClothesGrid = ({ clothes, onClothesClick, setClothes }) => {
           }}
         >
           {clothes.slice(0, visibleItems).map((item, index) => {
-            const uniqueKey = item.clothesId !== undefined ? item.clothesId : index;
+            const uniqueKey =
+              item.clothesId !== undefined ? item.clothesId : index;
             const isFrontVisible = visibleImages.find(
               (image) => image.id === uniqueKey
             )?.isFront;

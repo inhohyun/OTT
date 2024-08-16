@@ -29,16 +29,16 @@ const PublicPosts = ({ isMe, currentId }) => {
     const getPublicLookbooks = async (sendId) => {
       try {
         const response = await getPublicLookbookList(sendId);
-        console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
+        // console.log('가져온 공개된 룩북, Lookbook에 보내기', response);
         setLookbooks(response);
       } catch (error) {
-        console.error('Failed to get public lookbooks:', error);
+        // console.error('Failed to get public lookbooks:', error);
       }
     };
 
     // 다른 사람일 경우 다른 사람 id로 가져오기
     const sId = isMe ? memberId : currentId;
-    console.log('공개된 룩북에서 서버에 보낼 id', sId);
+    // console.log('공개된 룩북에서 서버에 보낼 id', sId);
     getPublicLookbooks(sId);
   }, []);
   const containerRef = useRef(null);
@@ -62,7 +62,7 @@ const PublicPosts = ({ isMe, currentId }) => {
   };
 
   const handleCloseDetail = () => {
-    console.log('[*]모달 닫기');
+    // console.log('[*]모달 닫기');
     hideDetail();
   };
 

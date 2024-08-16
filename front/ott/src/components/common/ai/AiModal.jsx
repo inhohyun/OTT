@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose }) => {
   );
 
   useEffect(() => {
-    console.log('ai 옷장에 북마크된 옷들', bookmarkedClothes);
+    // console.log('ai 옷장에 북마크된 옷들', bookmarkedClothes);
     if (bookmarkedClothes.length > 0) {
       setClothes(bookmarkedClothes);
     }
@@ -85,7 +85,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleClothingClick = (clothing) => {
-    console.log('사용자가 클릭한 ai 옷장 옷', clothing.img[0]);
+    // console.log('사용자가 클릭한 ai 옷장 옷', clothing.img[0]);
     const imageUrl = clothing.img[0];
     setSelectedClothing(true);
     setSelectedClothesURL(imageUrl);
@@ -102,7 +102,7 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
 
     if (file) {
       setModelImage(file);

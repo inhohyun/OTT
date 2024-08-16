@@ -16,7 +16,7 @@ export default function SurveyIng() {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      console.log('설문 제출 완료', formData);
+      // console.log('설문 제출 완료', formData);
       setModalOpen(false);
     }
   };

@@ -111,7 +111,7 @@ const ClothesGrid = ({ currentId, clothes, setClothes, onClothesClick }) => {
           setBookmarkedClothes(toggledItem);
         }
       } catch (error) {
-        console.error('Error changing bookmark status:', error);
+        // console.error('Error changing bookmark status:', error);
       }
     }
   };

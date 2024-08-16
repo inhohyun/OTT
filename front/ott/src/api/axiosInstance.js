@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
   // 토큰이 만료되거나 오류가 발생한 경우 동작하는 코드
   async (error) => {
     const originalRequest = error.config; // 실패한 요청의 설정 가져오기
-    console.error('Error response:', error.response);
+    // console.error('Error response:', error.response);
     // 오류가 발생하면 아래 요청 수행
     if (
       (error.response && error.response.status === 401) ||
@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
 
           return axiosInstance(originalRequest); // 원래 요청 재시도
         } catch (err) {
-          console.error('Token reissue error: ', err);
+          // console.error('Token reissue error: ', err);
           alert('로그인 후 이용해주세요.[2]');
           removeAccessToken(); // 실패 시 토큰 제거
           window.location.href = '/'; // 로그인 페이지로 리디렉션
@@ -80,7 +80,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    console.error('API call failed on instance:', error);
+    // console.error('API call failed on instance:', error);
     return Promise.reject(error); // 모든 다른 오류는 그대로 반환
   }
 );

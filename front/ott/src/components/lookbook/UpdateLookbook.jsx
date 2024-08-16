@@ -73,7 +73,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
         const response = await getClosetId(uid);
         setClosetId(response[0].id);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
 
@@ -81,7 +81,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
   }, [userId]);
 
   useEffect(() => {
-    console.log('옷장 아이디', closetId);
+    // console.log('옷장 아이디', closetId);
   }, [closetId]);
 
   // 카테고리 조회
@@ -92,7 +92,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
         const response = await getCategory(closetId);
         setCategories(response);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
     fetchCategory();
@@ -142,10 +142,10 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
           }));
           setClothes(clothesData);
         } else {
-          console.log('응답 데이터가 배열이 아닙니다:', response.data);
+          // console.log('응답 데이터가 배열이 아닙니다:', response.data);
         }
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
 
@@ -196,7 +196,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
       html2canvas(canvasArea, { useCORS: true }).then(async (canvas) => {
         canvas.toBlob(async (imageBlob) => {
           if (!imageBlob)
-            return console.error('Failed to convert canvas to blob.');
+            // return console.error('Failed to convert canvas to blob.');
+            return;
 
           const selectedImages = canvasItems.map((item) => item.clothesId);
           const formData = new FormData();
@@ -210,11 +211,11 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
           try {
             const data = await lookbookUpdate(formData, lookbookid.id);
-            console.log('룩북 수정 성공', data);
-            console.log('clothes', selectedImages);
+            // console.log('룩북 수정 성공', data);
+            // console.log('clothes', selectedImages);
             nav('/userPage', { state: { id: userId } });
           } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
           } finally {
             setShowDeleteButton(true);
           }

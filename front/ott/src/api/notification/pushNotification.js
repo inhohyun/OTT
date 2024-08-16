@@ -28,15 +28,15 @@ const messaging = getMessaging(app);
 const baseUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL;
 
 export async function requestPermission(memberId) {
-  console.log('권한 요청 중...');
+  // console.log('권한 요청 중...');
 
   const permission = await Notification.requestPermission();
   if (permission === 'denied') {
-    console.log('알림 권한 허용 안됨');
+    // console.log('알림 권한 허용 안됨');
     return;
   }
 
-  console.log('알림 권한이 허용됨');
+  // console.log('알림 권한이 허용됨');
 
   try {
     const token = await getToken(messaging, {
@@ -44,24 +44,27 @@ export async function requestPermission(memberId) {
     });
 
     if (token) {
-      console.log('token: ', token);
-      console.log('API 요청을 보냅니다: ', memberId, token);
-      const response = await axiosInstance.post(baseUrl + 'api/push/device', { memberId: memberId, token: token });
-      
+      // console.log('token: ', token);
+      // console.log('API 요청을 보냅니다: ', memberId, token);
+      const response = await axiosInstance.post(baseUrl + 'api/push/device', {
+        memberId: memberId,
+        token: token,
+      });
+
       if (response.status === HttpStatusCode.Ok) {
-        console.log('알림 등록 성공');
+        // console.log('알림 등록 성공');
       } else {
-        console.log('알림 등록 실패');
+        // console.log('알림 등록 실패');
       }
     } else {
-      console.log('토큰을 가져올 수 없습니다.');
+      // console.log('토큰을 가져올 수 없습니다.');
     }
   } catch (error) {
-    console.error('알림 등록 중 오류 발생:', error);
+    // console.error('알림 등록 중 오류 발생:', error);
   }
 
   onMessage(messaging, (payload) => {
-    console.log('메시지가 도착했습니다.', payload);
+    // console.log('메시지가 도착했습니다.', payload);
     // ...
   });
 }

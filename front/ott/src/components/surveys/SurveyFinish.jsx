@@ -23,10 +23,10 @@ export default function SurveyFinish({ formData }) {
     const fetchMemberId = async () => {
       try {
         const response = await getUid();
-        console.log(response);
+        // console.log(response);
         setMemberId(response.data.id);
       } catch (error) {
-        console.error('memberId 가져오는 중 에러 발생:', error);
+        // console.error('memberId 가져오는 중 에러 발생:', error);
       }
     };
 
@@ -54,17 +54,17 @@ export default function SurveyFinish({ formData }) {
         surveyCompleted: true,
       };
 
-      console.log(dataToSend);
+      // console.log(dataToSend);
 
       // axios put 요청
       await updateUserInfo(memberId, dataToSend);
 
       // 백엔드로 넘겨진 데이터 확인
-      console.log('백엔드로 전해진 데이터:', dataToSend);
+      // console.log('백엔드로 전해진 데이터:', dataToSend);
 
       navigate('/mainpage');
     } catch (error) {
-      console.error('설문 데이터 전송 중 에러 발생:', error);
+      // console.error('설문 데이터 전송 중 에러 발생:', error);
     }
   };
 

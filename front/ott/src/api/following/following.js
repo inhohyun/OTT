@@ -8,7 +8,7 @@ export const getFollowingList = async (id) => {
     );
     return response;
   } catch (error) {
-    console.error('팔로워 목록 조회중 에러 :', error);
+    // console.error('팔로워 목록 조회중 에러 :', error);
     throw error;
   }
 };
@@ -18,9 +18,9 @@ export const postFollow = (targetId) => {
   axiosInstance
     .post(`api/members/follow/${targetId}`)
     .then((response) => {
-      console.log(response);
+      // console.log(response);
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
     });
 };

@@ -45,7 +45,7 @@ export default function PersonalInfoSurvey({
   };
 
   const handleValidateNickname = () => {
-    console.log(formData.nickname);
+    // console.log(formData.nickname);
     // Nickname validation is already handled in handleChange, this function is kept for demonstration or additional future checks.
   };
 

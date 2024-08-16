@@ -13,10 +13,10 @@ const Followers = ({ uid }) => {
     const fetchFollowers = async () => {
       try {
         const response = await getFollowerList(uid); // TODO : props로 전달 받을 때 한 번 타고 들어가는거 수정
-        console.log('response:', response);
+        // console.log('response:', response);
         setFollowers(response.data);
       } catch (error) {
-        console.error('팔로워 목록을 불러오는 중 오류 발생:', error);
+        // console.error('팔로워 목록을 불러오는 중 오류 발생:', error);
       }
     };
 

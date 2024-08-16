@@ -60,7 +60,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
         }))
       );
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -92,7 +92,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
           setReplyTo(null);
           await fetchComments();
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       } else {
         // 새로운 댓글 추가
@@ -100,9 +100,9 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
           await commentCreate(formData, lookbookId);
           setNewComment('');
           await fetchComments(); // Fetch the latest comments after adding a new one
-          console.log('댓글 조회');
+          // console.log('댓글 조회');
         } catch (error) {
-          console.error('댓글 생성 실패:', error);
+          // console.error('댓글 생성 실패:', error);
         }
       }
     }
@@ -150,7 +150,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
       setNewComment('');
       await fetchComments();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -159,7 +159,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
       await commentDelete(lookbookId, commentId);
       await fetchComments();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -204,7 +204,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
       setNewComment('');
       await fetchComments();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -213,7 +213,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
       replyDelete(lookbookId, replyId);
       await fetchComments();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -247,7 +247,7 @@ const SellComment = ({ comments = [], lookbookId, lookbook, userId }) => {
         <div className="text-center text-gray-500">댓글이 없습니다</div>
       ) : (
         commentList.map((comment) => {
-          console.log('Comment memberId:', comment.memberId); // 닉네임 콘솔 출력
+          // console.log('Comment memberId:', comment.memberId); // 닉네임 콘솔 출력
           return (
             <div key={comment.id} className="mb-4">
               <div className="flex justify-between items-center">
