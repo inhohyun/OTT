@@ -180,7 +180,7 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
 
   const convertUrlToBlob = async (image) => {
     let item = image;
-
+    
     try {
       // S3에서 이미지를 가져오고 Blob으로 변환
       const imageResponse = await fetch(item.imagePath.path, {
@@ -227,6 +227,8 @@ const UpdateLookbook = ({ lookbook, lookbookid }) => {
         y: 10 + index * 30,
       }))
   );
+
+  
 
   useEffect(() => {
     if (lookbook) {
